@@ -119,5 +119,57 @@ module SearchHelper
     str += '</a>' if issn.present?
     str.html_safe
   end
+
+  def get_max(metrics)
+    return 10 if metrics.empty?
+
+    number = metrics.max { |a, b| a[:y] <=> b[:y] }[:y].to_i
+    divisor = 10**Math.log10(number).floor
+    i = number / divisor
+    remainder = number % divisor
+    return i * divisor if remainder == 0
+
+    (i + 1) * divisor
+  end
+
+  def label_format(d)
+    c = d.split('-')
+    return Date.new(c.first.to_i, c.last.to_i, 1).strftime('%b %Y') if d.length > 4
+
+    d
+  end
+
+  def group_metric(metric)
+    h = metric.group_by { |m| m['yearMonth'][0..3] }
+    h.map { |k, v| { 'yearMonth' => k, 'total' => v.sum { |m| m['total'] } } }
+  end
+
+  # rubocop:disable Metrics/AbcSize
+  def metrics_chart(doi)
+    metrics = Datacite::Metadata.new(doi: doi).metrics
+    views = metrics[:views]
+    downloads = metrics[:downloads]
+    citations = metrics[:citations]
+    return { dates: [Date.today.strftime('%Y')], views: [], downloads: [], citations: [] } unless metrics.dig(:views, 0).present?
+
+    range = (Date.parse("#{metrics[:views].first['yearMonth']}-01")..Date.today).map { |d| d.strftime('%Y-%m') }.uniq
+
+    if range.length > 60
+      range = range.map { |d| d[0..3] }.uniq
+      views = group_metric(views)
+      downloads = group_metric(downloads)
+    end
+
+    {
+      dates: range.map { |d| label_format(d) },
+      views: views.map { |m| { x: label_format(range.reverse.find { |d| d.start_with?(m['yearMonth']) }), y: m['total'] } },
+      downloads: downloads.map { |m| { x: label_format(range.reverse.find { |d| d.start_with?(m['yearMonth']) }), y: m['total'] } },
+      citations: citations.reject { |m| m['year'] == '0000' }.map do |m|
+        { x: label_format(range.reverse.find do |d|
+          d.start_with?(m['year'])
+        end), y: m['total'] }
+      end
+    }
+  end
 end
-# rubocop:enable Metrics/ModuleLength
+# rubocop:enable Metrics/ModuleLength, Metrics/AbcSize
