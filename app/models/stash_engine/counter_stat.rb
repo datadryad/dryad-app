@@ -79,8 +79,8 @@ module StashEngine
     end
 
     def update_citation_count!
-      cites = Stash::EventData::Citations.new(doi: identifier.identifier)
-      self.citation_count = cites.results.count
+      cites = Datacite::Metadata.new(doi: identifier.identifier)
+      self.citation_count = cites.citations.count
     end
 
     # This will return the calendar year and week of that year for checking if something has been updated in the last calendar week.

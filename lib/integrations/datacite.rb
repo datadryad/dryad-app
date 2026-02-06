@@ -20,8 +20,7 @@ module Integrations
     private
 
     def api_url
-      # APP_CONFIG[:identifier_service][:rest]
-      'https://api.datacite.org'
+      APP_CONFIG[:identifier_service][:rest]
     end
 
   end

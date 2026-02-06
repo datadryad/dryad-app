@@ -21,15 +21,12 @@ module StashEngine
     belongs_to :identifier, class_name: 'StashEngine::Identifier'
 
     # this class caches the counter_citations so it doesn't take so long to get them all
-
     def self.citations(stash_identifier:)
-      cite_events = Stash::EventData::Citations.new(doi: stash_identifier.identifier)
-      # logger.debug('before getting citation events')
-      dois = cite_events.results
-      # logger.debug('after getting citation events')
-      # dois, but eliminate blank citations
-      dois.map do |citation_event|
-        citation_metadata(doi: citation_event, stash_identifier: stash_identifier)
+      cite_events = Datacite::Metadata.new(doi: stash_identifier.identifier)
+      dois = cite_events.citations
+
+      dois.map do |doi|
+        citation_metadata(doi: doi, stash_identifier: stash_identifier)
       end.compact
     end
 
