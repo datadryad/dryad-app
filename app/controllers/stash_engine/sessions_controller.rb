@@ -315,7 +315,7 @@ module StashEngine
     end
 
     def update_identifier_metadata(invitation)
-      id_svc = Stash::Doi::DataciteGen.new(resource: invitation.resource)
+      id_svc = Datacite::DoiGen.new(resource: invitation.resource)
       id_svc.update_identifier_metadata!
     end
 

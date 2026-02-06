@@ -11,7 +11,7 @@ module StashApi
     before(:each) do
       mock_datacite!
       mock_salesforce!
-      allow(Stash::Doi::DataciteGen).to receive(:mint_id).and_return('doi:10.5072/dryad.12345678')
+      allow(Datacite::DoiGen).to receive(:mint_id).and_return('doi:10.5072/dryad.12345678')
 
       @user = create(:user,
                      first_name: 'Lisa',

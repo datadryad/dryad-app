@@ -8,7 +8,7 @@ module StashEngine
       def ping_dependency
         super
         dataset = StashEngine::Identifier.where.not(identifier: nil).last
-        svc = Stash::Doi::DataciteGen.new(resource: dataset.latest_resource)
+        svc = Datacite::DoiGen.new(resource: dataset.latest_resource)
         resp = svc.ping(dataset.identifier)
         # If we did not get any errors OR we got a 404 (Datacite may not yet have the dataset's metadata)
         online = !resp['errors'].present? || resp['errors'].first['status'] == 404

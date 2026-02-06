@@ -20,7 +20,7 @@ RSpec.feature 'NewDataset', type: :feature do
     end
 
     it 'displays an error message if unable to mint a new DOI/ARK' do
-      allow(Stash::Doi::DataciteGen).to receive(:new).and_raise(Ezid::Error.new)
+      allow(Datacite::DoiGen).to receive(:new).and_raise(Ezid::Error.new)
       click_button 'Create a new dataset'
       expect(page).to have_text('My datasets')
       expect(page).to have_text('Unable to register a DOI at this time. Please contact help@datadryad.org for assistance.')

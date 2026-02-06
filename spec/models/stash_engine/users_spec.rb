@@ -174,7 +174,7 @@ module StashEngine
 
         @mock_datacitegen = double('datacitegen')
         allow(@mock_datacitegen).to receive(:update_identifier_metadata!).and_raise('submitted DOI')
-        allow(Stash::Doi::DataciteGen).to receive(:new).and_return(@mock_datacitegen)
+        allow(Datacite::DoiGen).to receive(:new).and_return(@mock_datacitegen)
       end
 
       it 'moves the dependendent resources from user2 to user1' do
