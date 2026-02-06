@@ -2,6 +2,41 @@
   "data": {
     "id": "10.6071/m3rp49",
     "type": "dois",
+    "attributes": {
+      "viewCount": 12,
+      "viewsOverTime": [
+        {
+          "yearMonth": "2026-01",
+          "total": 4
+        },
+        {
+          "yearMonth": "2026-02",
+          "total": 8
+        }
+      ],
+      "downloadCount": 8,
+      "downloadsOverTime": [
+        {
+          "yearMonth": "2026-01",
+          "total": 4
+        },
+        {
+          "yearMonth": "2026-02",
+          "total": 4
+        }
+      ],
+      "citationsCount": 2,
+      "citationsOverTime": [
+        {
+          "yearMonth": "2026-01",
+          "total": 1
+        },
+        {
+          "yearMonth": "2026-02",
+          "total": 1
+        }
+      ]
+    },
     "relationships": {
       "citations": {
         "data": [

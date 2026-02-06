@@ -1,0 +1,61 @@
+<% metrics = metrics_chart(doi) %>
+<% max = get_max(metrics[:views]) %>
+<% desc = metrics[:dates].map { |d| "#{d}: #{metrics[:views].find{|m| m[:x] == d}&.[](:y) || 0} views, #{metrics[:downloads].find{|m| m[:x] == d}&.[](:y) || 0} downloads, #{metrics[:citations].find{|m| m[:x] == d}&.[](:y) || 0} citations" }.join('; ') %>
+<div class="author-metrics">
+<canvas id="metrics-chart<%= i %>" role="img" role="img" aria-label="Line chart showing dataset metrics. <%= desc %>"></canvas>
+</div>
+<script>
+  Chart.defaults.font.family = 'KievitWeb';
+  Chart.defaults.font.size = 13;
+
+  new Chart(document.getElementById('metrics-chart<%= i %>').getContext('2d'), {
+    type: 'line',
+    data: { 
+      labels: <%= metrics[:dates].to_json.html_safe %>,
+      datasets: [
+        {
+          label: 'Views',
+          yAxisID: 'y',
+          data: <%= metrics[:views].to_json.html_safe %>          
+        },
+        {
+          label: 'Downloads',
+          yAxisID: 'y',
+          data: <%= metrics[:downloads].to_json.html_safe %>          
+        },
+        {
+          label: 'Citations',
+          yAxisID: 'y1',
+          data: <%= metrics[:citations].to_json.html_safe %>          
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: 'index', intersect: false },
+      stacked: false,
+      scales: {
+        y: {
+          type: 'linear',
+          position: 'left',
+          title: {
+            display: true,
+            text: 'Views & Downloads'
+          }
+        },
+        y1: {
+          type: 'linear',
+          position: 'right',
+          suggestedMax: <%= max/100 %>,
+          title: {
+            display: true,
+            text: 'Citations'
+          },
+          grid: {
+            drawOnChartArea: false,
+          }
+        }
+      }
+    }
+  })
+</script>
