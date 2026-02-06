@@ -70,7 +70,7 @@ module StashEngine
     end
 
     def update_usage!
-      usage = Stash::EventData::Usage.new(doi: identifier.identifier)
+      usage = Datacite::EventData.new(doi: identifier.identifier)
       # only update if usage going up, otherwise something is wrong and don't update
       return if usage.unique_dataset_investigations_count < unique_investigation_count
 
