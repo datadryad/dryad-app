@@ -47,6 +47,8 @@ module StashEngine
     after_commit :resource_file_changes
 
     def recalculate_total
+      return unless resource
+
       StashEngine::Resource.find_by(id: resource.id)&.update(total_file_size: resource.data_files.present_files.sum(:upload_file_size))
     end
 
