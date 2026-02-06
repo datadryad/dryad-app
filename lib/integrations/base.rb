@@ -18,11 +18,11 @@ module Integrations
       parse_response(http.request(request))
     end
 
-    def get_json(url, payload = nil)
+    def get_json(url, payload = nil, headers = nil)
       uri       = URI(url)
       uri.query = URI.encode_www_form(payload) if payload.present?
 
-      response = Net::HTTP.get_response(uri)
+      response = Net::HTTP.get_response(uri, headers)
       parse_response(response)
     end
 
