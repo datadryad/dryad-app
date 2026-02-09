@@ -106,8 +106,7 @@ module SearchHelper
     str.html_safe
   end
 
-  def result_citation(citation, issn)
-    c = JSON.parse(citation)
+  def result_citation(c, issn)
     str = c['author'].first(3).map { |a| a['family'] }.join(', ')
     str += ', et al' if c['author'].size > 3
     str += '. '
