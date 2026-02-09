@@ -1239,7 +1239,7 @@ module StashEngine
     end
 
     def destroy_files
-      DeleteResourceFilesJob.perform_async(self.id)
+      DeleteResourceFilesJob.perform_async(id)
     end
   end
 end
