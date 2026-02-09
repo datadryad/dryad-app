@@ -7,7 +7,7 @@ module StashEngine
 
       def ping_dependency
         super
-        resp = Stash::EventData::Usage.ping
+        resp = Datacite::EventData.ping
         online = resp.code == 200
         msg = resp.body unless online
         record_status(online: online, message: msg)

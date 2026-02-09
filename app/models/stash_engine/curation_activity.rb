@@ -19,7 +19,7 @@
 #  index_stash_engine_curation_activities_on_identifier_id       (identifier_id)
 #  index_stash_engine_curation_activities_on_resource_id_and_id  (resource_id,id)
 #
-require 'stash/doi/datacite_gen'
+require 'datacite/doi_gen'
 require 'stash/payments/invoicer'
 module StashEngine
 

@@ -50,7 +50,7 @@ module StashEngine
         redirect_to "#{stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: existing.id)}?start" and return if existing
       end
       resource = authorize Resource.new(current_editor_id: current_user.id, tenant_id: current_user.tenant_id)
-      my_id = Stash::Doi::DataciteGen.mint_id(resource: resource)
+      my_id = Datacite::DoiGen.mint_id(resource: resource)
       id_type, id_text = my_id.split(':', 2)
       db_id_obj = Identifier.create(identifier: id_text, identifier_type: id_type.upcase)
       resource.update(identifier_id: db_id_obj.id)
