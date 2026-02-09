@@ -51,7 +51,7 @@ module Contributors
       return unless articles.any?
 
       articles.each do |article|
-        doi  = Stash::Import::Crossref.bare_doi(doi_string: article.related_identifier)
+        doi  = bare_doi(doi_string: article.related_identifier)
         pmid = Integrations::PubMed.new.pmid_by_primary_article(doi)
         next if pmid.blank?
 
