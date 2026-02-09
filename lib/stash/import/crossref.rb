@@ -28,8 +28,7 @@ module Stash
         new(resource: identifier.latest_resource, json: message)
       end
 
-      # populate just a few fields for pub_updater, this isn't as drastic as below and is only for pub updater.
-      # to ONLY populate the relationship, use update_type: 'relationship'
+      # populate just a few fields for pub_updater
       # article types accepted are 'primary_article', 'article', 'preprint'
       def populate_pub_update!(work_type = 'primary_article')
         return nil unless @sm.present? && @resource.present?
@@ -39,7 +38,7 @@ module Stash
         @resource.reload
       end
 
-      # populate the full resource from the crossref metadata, this is for a new record and populating data that the user does, I think
+      # populate the full resource from the crossref metadata
       def populate_resource!(work_type = 'primary_article')
         return unless @sm.present? && @resource.present?
 
