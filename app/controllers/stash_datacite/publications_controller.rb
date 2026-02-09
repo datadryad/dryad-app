@@ -208,7 +208,7 @@ module StashDatacite
       end
       bare_doi = bare_doi(doi_string: params[:primary_article_doi])
       json = Integrations::Crossref.query_by_doi(doi: bare_doi)
-      unless cr.present?
+      unless json.present?
         @error = "We couldn't find metadata to import for this DOI. Please fill in your title manually."
         return
       end
