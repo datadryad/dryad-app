@@ -154,7 +154,7 @@ module SearchHelper
 
     range = (Date.parse("#{metrics[:views].first['yearMonth']}-01")..Date.today).map { |d| d.strftime('%Y-%m') }.uniq
 
-    if range.length > 60
+    if range.length > 36
       range = range.map { |d| d[0..3] }.uniq
       views = group_metric(views)
       downloads = group_metric(downloads)
