@@ -238,7 +238,7 @@ defaults: &DEFAULTS
     zip_downloads_per_day: 100
     zip_downloads_per_month: 500
     # all other rates are number of requests allowed per minute
-    all_requests: 120
+    all_requests: 240
     api_requests_anon: 30
     api_requests_auth: 120
     api_requests_v1: 30
