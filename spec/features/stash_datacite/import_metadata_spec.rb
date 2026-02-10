@@ -64,7 +64,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
                    headers: {})
       stub_request(:get, 'https://api.test.datacite.org/dois/10.48550/arxiv.2601.20261')
         .to_return(status: 200,
-                   body: File.new(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'crossref_response.json')),
+                   body: File.new(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'datacite_doi_response.json')),
                    headers: {})
 
       doi = '10.48550/arxiv.2601.20261'

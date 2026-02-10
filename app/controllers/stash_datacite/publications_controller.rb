@@ -209,12 +209,13 @@ module StashDatacite
       bare_doi = Integrations::Crossref.bare_doi(doi_string: params[:primary_article_doi])
       work_type = params[:import_type] == 'preprint' ? 'preprint' : 'primary_article'
 
-      @resource = if @metaimport
-                    Stash::Import.import_metadata(resource: @resource, doi: bare_doi, work_type: work_type)
-                  else
-                    Stash::Import.import_publication(resource: @resource, doi: bare_doi, work_type: work_type)
-                  end
-    rescue ImportError
+      if @metaimport
+        Stash::Import.import_metadata(resource: @resource, doi: bare_doi, work_type: work_type)
+      else
+        Stash::Import.import_publication(resource: @resource, doi: bare_doi, work_type: work_type)
+      end
+      @resource.reload
+    rescue Stash::Import::ImportError
       @error = "We couldn't find metadata to import for this DOI. Please fill in your title manually."
     end
 
