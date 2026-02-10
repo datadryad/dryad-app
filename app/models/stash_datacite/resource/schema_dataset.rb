@@ -200,7 +200,7 @@ module StashDatacite
       def citation
         return unless @resource.identifier&.publication_article_doi
 
-        article_doi = bare_doi(doi_string: @resource.identifier.publication_article_doi)
+        article_doi = Integrations::Crossref.bare_doi(doi_string: @resource.identifier.publication_article_doi)
         "http://doi.org/#{article_doi}"
       end
 

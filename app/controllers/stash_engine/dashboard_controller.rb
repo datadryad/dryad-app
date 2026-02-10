@@ -52,7 +52,7 @@ module StashEngine
     def save_primary_article
       resource = StashEngine::Resource.find_by(id: params.dig(:primary_article, :resource_id))
       std_fmt = StashDatacite::RelatedIdentifier.standardize_format(params.dig(:primary_article, :related_identifier))
-      bare_doi = bare_doi(doi_string: std_fmt)
+      bare_doi = Integrations::Crossref.bare_doi(doi_string: std_fmt)
       begin
         Stash::Import.import_publication(resource: resource, doi: bare_doi)
       rescue Stash::Import::ImportError
