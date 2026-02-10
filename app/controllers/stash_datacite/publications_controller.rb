@@ -207,16 +207,14 @@ module StashDatacite
         return
       end
       bare_doi = bare_doi(doi_string: params[:primary_article_doi])
-      json = Integrations::Crossref.query_by_doi(doi: bare_doi)
-      unless json.present?
-        @error = "We couldn't find metadata to import for this DOI. Please fill in your title manually."
-        return
-      end
-
-      cr = Stash::Import::Crossref.new(resource: @resource, json: json)
       work_type = params[:import_type] == 'preprint' ? 'preprint' : 'primary_article'
-      @resource = @metaimport ? cr.populate_resource!(work_type) : cr.populate_pub_update!(work_type)
-    rescue Serrano::NotFound, Serrano::BadGateway, Serrano::Error, Serrano::GatewayTimeout, Serrano::InternalServerError, Serrano::ServiceUnavailable
+
+      @resource = if @metaimport
+                    Stash::Import.import_metadata(resource: @resource, doi: bare_doi, work_type: work_type)
+                  else
+                    Stash::Import.import_publication(resource: @resource, doi: bare_doi, work_type: work_type)
+                  end
+    rescue ImportError
       @error = "We couldn't find metadata to import for this DOI. Please fill in your title manually."
     end
 

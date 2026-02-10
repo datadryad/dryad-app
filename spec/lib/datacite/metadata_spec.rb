@@ -29,6 +29,16 @@ module Datacite
       end
     end
 
+    describe :retrieve do
+      it 'gets metadata as hash' do
+        expect(@meta.retrieve).to be_kind_of(Hash)
+      end
+
+      it 'has metadata attributes' do
+        expect(@meta.retrieve['titles']).to be_kind_of(Array)
+      end
+    end
+
     describe :citations do
       it 'gets citations as array' do
         expect(@meta.citations).to be_kind_of(Array)

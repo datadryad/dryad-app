@@ -20,6 +20,13 @@ module Datacite
       []
     end
 
+    def retrieve
+      result.dig('data', 'attributes')
+    rescue Timeout::Error, Errno::ECONNREFUSED, Errno::ECONNRESET => e
+      Rails.logger.error("#{Time.new.utc} #{e}")
+      {}
+    end
+
     def metrics
       atts = result.dig('data', 'attributes')
       {
