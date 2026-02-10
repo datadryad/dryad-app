@@ -2,6 +2,7 @@ class CedarController < ApplicationController
   # Since the CEDAR form doesn't know about Rails, we don't use the default Rails CSRF validation.
   # Instead we pass the CSRF token as an "info" value in the form, and validate it explicitly in the save method
   skip_before_action :verify_authenticity_token, only: [:save]
+  before_action :ajax_require_unsubmitted, only: %i[save delete]
 
   def json_config
     json_output = {
