@@ -4,8 +4,8 @@ module StashEngine
     include StashEngine::DownloadsHelper
 
     before_action :require_login
-    before_action :assign_resource, only: %i[logout display_readme dupe_check file_pub_dates]
-    before_action :require_modify_permission, except: %i[index new logout display_readme dupe_check file_pub_dates]
+    before_action :assign_resource, only: %i[logout display_readme display_collection dupe_check file_pub_dates]
+    before_action :require_modify_permission, except: %i[index new logout display_collection display_readme dupe_check file_pub_dates]
 
     attr_writer :resource
 
@@ -172,7 +172,7 @@ module StashEngine
 
     def display_collection
       review = StashDatacite::Resource::Review.new(@resource)
-      render partial: 'stash_datacite/related_identifiers/collection', locals: { review: review, highlight_fields: [] }
+      render partial: 'stash_datacite/related_identifiers/collection', locals: { review: review }
     end
 
     def dupe_check
