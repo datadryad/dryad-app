@@ -128,7 +128,7 @@ module StashDatacite
 
       work_type = params[:import_type] == 'preprint' ? 'preprint' : 'primary_article'
       existing_primary = @resource.related_identifiers.where(work_type: work_type).first
-      bare_form_doi = bare_doi(doi_string: form_doi)
+      bare_form_doi = Integrations::Crossref.bare_doi(doi_string: form_doi)
       standard_doi = RelatedIdentifier.standardize_doi(bare_form_doi)
       return if existing_primary&.related_identifier == standard_doi
 
@@ -136,7 +136,7 @@ module StashDatacite
       @resource.related_identifiers.each do |rd|
         next unless rd.related_identifier.present?
 
-        bare_related_doi = bare_doi(doi_string: rd.related_identifier)
+        bare_related_doi = Integrations::Crossref.bare_doi(doi_string: rd.related_identifier)
         # user is entering a DOI that we already have
         existing = rd if bare_form_doi.include?(bare_related_doi) || bare_related_doi.include?(bare_form_doi)
       end
@@ -206,7 +206,7 @@ module StashDatacite
         @error = 'Please enter a DOI to import metadata'
         return
       end
-      bare_doi = bare_doi(doi_string: params[:primary_article_doi])
+      bare_doi = Integrations::Crossref.bare_doi(doi_string: params[:primary_article_doi])
       json = Integrations::Crossref.query_by_doi(doi: bare_doi)
       unless json.present?
         @error = "We couldn't find metadata to import for this DOI. Please fill in your title manually."

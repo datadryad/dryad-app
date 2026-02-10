@@ -13,10 +13,10 @@ module StashEngine
         %i[
           metadata_url_helpers metadata_render_path stash_url_helpers contact_us_url logo_path
           format_index_date
-          formatted_date formatted_datetime formatted_html5_date minimal_date local_time default_date bare
+          formatted_date formatted_datetime formatted_html5_date minimal_date local_time default_date
           current_tenant current_user
           field_suffix shorten_linked_url english_list
-          display_id display_id_plain display_author_orcid author_orcid_link bare_doi
+          display_id display_id_plain display_author_orcid author_orcid_link
         ]
     end
 
@@ -213,14 +213,6 @@ module StashEngine
       return "https://sandbox.orcid.org/#{author.author_orcid}" if APP_CONFIG.orcid.site == 'https://sandbox.orcid.org/'
 
       "https://orcid.org/#{author.author_orcid}"
-    end
-
-    # returns the bare part (no prefix, just the identifier part) or the full string
-    # if it can't parse out a bare identifier from the DOI
-    def bare_doi(doi_string:)
-      bare_match = %r{^(doi:|https?://dx\.doi\.org/|https?://doi\.org/)(.+)$}
-      my_match = doi_string.match(bare_match)
-      my_match.present? ? my_match[2] : doi_string
     end
 
     # ----------------------
