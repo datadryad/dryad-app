@@ -70,10 +70,10 @@ module StashEngine
     has_one :resource_publication, -> { primary_article }, dependent: :destroy
     has_one :resource_preprint, -> { preprint }, class_name: 'StashEngine::ResourcePublication', dependent: :destroy
     has_many :authors, class_name: 'StashEngine::Author', dependent: :destroy
-    has_many :generic_files, class_name: 'StashEngine::GenericFile', dependent: :destroy
-    has_many :data_files, class_name: 'StashEngine::DataFile', dependent: :destroy
-    has_many :software_files, class_name: 'StashEngine::SoftwareFile', dependent: :destroy
-    has_many :supp_files, class_name: 'StashEngine::SuppFile', dependent: :destroy
+    has_many :generic_files, class_name: 'StashEngine::GenericFile'
+    has_many :data_files, class_name: 'StashEngine::DataFile'
+    has_many :software_files, class_name: 'StashEngine::SoftwareFile'
+    has_many :supp_files, class_name: 'StashEngine::SuppFile'
     has_many :roles, class_name: 'StashEngine::Role', as: :role_object, dependent: :destroy
     has_many :users, through: :roles, class_name: 'StashEngine::User'
     has_one :stash_version, class_name: 'StashEngine::Version', dependent: :destroy
@@ -127,6 +127,7 @@ module StashEngine
     after_create :create_process_date, unless: :process_date
     after_update_commit :update_salesforce_metadata, if: [:saved_change_to_user_id?, proc { |res| res.curator&.min_curator? }]
     after_save_commit :save_first_pub_date, if: proc { |res| res.publication_date.present? }
+    after_destroy :destroy_files
 
     # self.class.reflect_on_all_associations(:has_many).select{ |i| i.name.to_s.include?('file') }.map{ |i| [i.name, i.class_name] }
     ASSOC_TO_FILE_CLASS = reflect_on_all_associations(:has_many).select { |i| i.name.to_s.include?('file') }
@@ -1235,6 +1236,10 @@ module StashEngine
         user_id: target_curator.id, status: target_status, resource_id: id,
         note: "System auto-assigned curator #{target_curator&.name}"
       ).process
+    end
+
+    def destroy_files
+      DeleteResourceFilesJob.perform_async(id)
     end
   end
 end
