@@ -3,7 +3,7 @@ module Stash
 
     class ImportError < StandardError; end
 
-    def self.import_metadata(resource:, doi:, work_type: 'primary_article')
+    def self.import_publication(resource:, doi:, work_type: 'primary_article')
       cr = Integrations::Crossref.query_by_doi(doi: doi)
       return Stash::Import::Crossref.new(resource: resource, json: cr).populate_pub_update!(work_type) if cr.present?
 
@@ -13,7 +13,7 @@ module Stash
       raise ImportError, 'No results found'
     end
 
-    def self.import_publication(resource:, doi:, work_type: 'primary_article')
+    def self.import_metadata(resource:, doi:, work_type: 'primary_article')
       cr = Integrations::Crossref.query_by_doi(doi: doi)
       return Stash::Import::Crossref.new(resource: resource, json: cr).populate_resource!(work_type) if cr.present?
 
