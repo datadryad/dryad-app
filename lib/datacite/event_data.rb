@@ -70,7 +70,7 @@ module Datacite
       end
 
       results
-    rescue Timeout::Error, Errno::ECONNREFUSED, Errno::ECONNRESET => e
+    rescue Timeout::Error, Errno::ECONNREFUSED, Errno::ECONNRESET, JSON::ParserError => e
       Rails.logger.error('DataCite event-data error')
       Rails.logger.error("#{Time.new.utc} Could not get response from DataCite event data #{params}")
       Rails.logger.error("#{Time.new.utc} #{e}\n#{e.full_message}")
