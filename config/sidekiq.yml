@@ -13,6 +13,7 @@ production:
   - zenodo_supp
   - zenodo_copy
   - big_submission_file
+  - deletion
   - critical
   - default
   - low
