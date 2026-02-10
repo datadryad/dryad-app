@@ -62,7 +62,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
         .to_return(status: 404,
                    body: 'not found',
                    headers: {})
-      stub_request(:get, 'https://api.test.datacite.org/dois/10.48550%2Farxiv.2601.20261')
+      stub_request(:get, 'https://api.test.datacite.org/dois/10.48550/arxiv.2601.20261')
         .to_return(status: 200,
                    body: File.new(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'crossref_response.json')),
                    headers: {})
@@ -81,7 +81,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
         .to_return(status: 404,
                    body: 'not found',
                    headers: {})
-      stub_request(:get, 'https://api.test.datacite.org/dois/10.0000%2Fbad.test.doi')
+      stub_request(:get, 'https://api.test.datacite.org/dois/10.0000/bad.test.doi')
         .to_return(status: 404,
                    body: 'not found',
                    headers: {})
