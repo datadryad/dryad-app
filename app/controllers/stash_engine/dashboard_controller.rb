@@ -52,10 +52,10 @@ module StashEngine
     def save_primary_article
       resource = StashEngine::Resource.find_by(id: params.dig(:primary_article, :resource_id))
       std_fmt = StashDatacite::RelatedIdentifier.standardize_format(params.dig(:primary_article, :related_identifier))
-      bare_doi = Stash::Import::Crossref.bare_doi(doi_string: std_fmt)
+      bare_doi = Integrations::Crossref.bare_doi(doi_string: std_fmt)
 
-      cr = Stash::Import::Crossref.query_by_doi(resource: resource, doi: bare_doi)
-      cr.populate_pub_update! if cr.present?
+      cr = Integrations::Crossref.query_by_doi(doi: bare_doi)
+      Stash::Import::Crossref.new(resource: resource, json: cr).populate_pub_update! if cr.present?
       @publication = resource.resource_publication
       @related_work = StashDatacite::RelatedIdentifier.create(
         resource_id: params.dig(:primary_article, :resource_id), work_type: :primary_article,

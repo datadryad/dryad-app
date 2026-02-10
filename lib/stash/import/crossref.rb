@@ -11,81 +11,24 @@ module Stash
 
       include Amatch
 
-      def initialize(resource:, crossref_json:)
+      def initialize(resource:, json:)
         @resource = resource
-        crossref_json = JSON.parse(crossref_json) if crossref_json.is_a?(String)
-        @sm = crossref_json # which came from crossref (x-ref) ... see class methods below
+        json = JSON.parse(json) if json.is_a?(String)
+        @sm = json # which came from crossref (x-ref) ... see class methods below
       end
 
-      class << self
-        def query_by_doi(resource:, doi:)
-          return nil unless resource.present? && doi.present?
+      def self.from_proposed_change(proposed_change:)
+        return new(resource: nil, json: {}) unless proposed_change.is_a?(StashEngine::ProposedChange)
 
-          resp = Serrano.works(ids: doi.gsub(/\s+/, ''))
-          return nil unless resp.first.present? && resp.first['message'].present?
-
-          new(resource: resource, crossref_json: resp.first['message'])
-        rescue Serrano::NotFound, Serrano::InternalServerError
-          nil
-        end
-
-        def query_by_preprint_doi(resource:, doi:)
-          return nil unless resource.present? && doi.present?
-
-          bare = bare_doi(doi_string: doi)
-          resp = Serrano.works(ids: bare.gsub(/\s+/, ''))
-          return nil unless resp.first.present? && resp.first['message'].present?
-
-          id = resp.first['message'].dig('relation', 'is-preprint-of', 0)
-          return nil unless id.present? && id['id-type'] == 'doi'
-
-          b = bare_doi(doi_string: id['id'])
-          query_by_doi(resource: resource, doi: b)
-        rescue Serrano::NotFound, Serrano::InternalServerError
-          nil
-        end
-
-        def query_by_author_title(resource:)
-          return nil if resource.blank? || resource.title&.strip.blank?
-
-          issn, title_query, author_query = title_author_query_params(resource)
-          resp = Serrano.works(issn: issn, query: title_query, query_author: author_query, filter: { type: %w[journal-article posted-content] },
-                               limit: 20, sort: 'score', order: 'desc')
-          resp = resp.first if resp.is_a?(Array)
-          return nil unless valid_serrano_works_response(resp)
-
-          match = match_resource_with_crossref_record(resource: resource, response: resp['message'])
-          return nil if match.blank? || match.first < 0.5
-
-          sm = match.last
-          sm['ISSN'] = get_journal_issn(sm) unless sm['ISSN'].present?
-          new(resource: resource, crossref_json: sm)
-        rescue Serrano::NotFound, Serrano::InternalServerError
-          nil
-        end
-
-        def from_proposed_change(proposed_change:)
-          return new(resource: nil, crossref_json: {}) unless proposed_change.is_a?(StashEngine::ProposedChange)
-
-          identifier = StashEngine::Identifier.find(proposed_change.identifier_id)
-          message = {
-            'publisher' => proposed_change.publication_name,
-            'ISSN' => [proposed_change.publication_issn]
-          }
-          new(resource: identifier.latest_resource, crossref_json: message)
-        end
-
-        # returns the bare part (no prefix, just the identifier part) or the full string
-        # if it can't parse out a bare identifier from the DOI
-        def bare_doi(doi_string:)
-          bare_match = %r{^(doi:|https?://dx\.doi\.org/|https?://doi\.org/)(.+)$}
-          my_match = doi_string.match(bare_match)
-          my_match.present? ? my_match[2] : doi_string
-        end
+        identifier = StashEngine::Identifier.find(proposed_change.identifier_id)
+        message = {
+          'publisher' => proposed_change.publication_name,
+          'ISSN' => [proposed_change.publication_issn]
+        }
+        new(resource: identifier.latest_resource, json: message)
       end
 
-      # populate just a few fields for pub_updater, this isn't as drastic as below and is only for pub updater.
-      # to ONLY populate the relationship, use update_type: 'relationship'
+      # populate just a few fields for pub_updater
       # article types accepted are 'primary_article', 'article', 'preprint'
       def populate_pub_update!(work_type = 'primary_article')
         return nil unless @sm.present? && @resource.present?
@@ -95,7 +38,7 @@ module Stash
         @resource.reload
       end
 
-      # populate the full resource from the crossref metadata, this is for a new record and populating data that the user does, I think
+      # populate the full resource from the crossref metadata
       def populate_resource!(work_type = 'primary_article')
         return unless @sm.present? && @resource.present?
 
@@ -149,92 +92,6 @@ module Stash
 
       private
 
-      class << self
-        def match_resource_with_crossref_record(resource:, response:)
-          return nil unless resource.present? && response.present? && resource.title.present?
-
-          scores = []
-          names = resource.authors.map do |author|
-            { first: author.author_first_name&.downcase, last: author.author_last_name&.downcase }
-          end
-          orcids = resource.authors.map { |author| author.author_orcid&.downcase }
-
-          response['items'].each do |item|
-            next unless item['title'].present?
-
-            scores << crossref_item_scoring(resource, item, names, orcids)
-          end
-          # Sort by the score and return the one with the highest score
-          scores.max_by { |a| a[0] }
-        end
-
-        def crossref_item_scoring(resource, item, names, orcids)
-          return 0.0 unless resource.present? && resource.title.present? && item.present? && item['title'].present?
-
-          # Compare the titles using the Amatch NLP library
-          amatch = resource.title.pair_distance_similar(item['title'].first)
-          # If authors are available compare them as well
-          if item['author'].present? && (names.present? || orcids.present?)
-            item['author'].each do |author|
-              next unless author['family'].present?
-
-              amatch += crossref_author_scoring(names, orcids, author)
-            end
-          end
-          item['provenance_score'] = item['score']
-          item['score'] = amatch
-          [amatch, item]
-        end
-
-        def crossref_author_scoring(names, orcids, author)
-          amatch = 0.0
-          # An ORCID match is stronger than a name match
-          amatch += 0.1 if author['ORCID'].present? && orcids.include?(author['ORCID']&.downcase)
-          return amatch unless names.present? && names.any?
-
-          # Last name matches are useful but both first+last matches are better
-          last_name_match = names.map { |h| h[:last] }.include?(author['family']&.downcase)
-          both_name_match = names.any? { |h| h[:last] == author['family']&.downcase && h[:first] == author['given']&.downcase }
-
-          amatch += 0.05 if both_name_match
-          amatch += 0.025 if last_name_match && !both_name_match
-          amatch.round(3)
-        end
-
-        def valid_serrano_works_response(resp)
-          resp.present? && resp['message'].present? && resp['message']['total-results'].present? &&
-            resp['message']['total-results'] > 0 && resp['message']['items'].present? &&
-            resp['message']['items'].is_a?(Array)
-        end
-
-        def title_author_query_params(resource)
-          return [nil, nil, nil] unless resource.present?
-
-          issn = resource.identifier&.publication_issn
-          issn = CGI.escape(issn) if issn.present?
-          title_query = resource.title&.gsub(/\s+/, ' ')&.strip
-          title_query = CGI.escape(title_query)&.gsub(/\s/, '+') if title_query.present?
-          author_query = resource.authors.map do |a|
-            a.author_last_name&.strip&.presence || a.author_first_name&.strip&.presence || a.author_org_name&.strip
-          end.reject(&:blank?)
-          author_query = author_query.map { |a| CGI.escape(a) }.join('+') if author_query.present?
-
-          [issn, title_query, author_query]
-        end
-
-        def get_journal_issn(hash)
-          return nil unless hash.present? && (hash['container-title'].present? || hash['publisher'].present?)
-
-          pub = hash['container-title'].present? ? hash['container-title'] : hash['publisher']
-          pub = pub.first if pub.present? && pub.is_a?(Array)
-          resp = Serrano.journals(query: pub)
-          return nil unless resp.present? && resp['message'].present? && resp['message']['items'].present?
-          return nil unless resp['message']['items'].first['ISSN'].present?
-
-          resp['message']['items'].first['ISSN']
-        end
-
-      end
       def resource_will_change?(proposed_change:)
         if proposed_change.authors.present?
           json = JSON.parse(proposed_change.authors)
@@ -456,8 +313,8 @@ module Stash
 
       # this is a helper method to detect duplicate reference dois
       def duplicate_reference_doi?(target_doi:)
-        bare_ids = @resource.related_identifiers.map { |i| Crossref.bare_doi(doi_string: i.related_identifier) }.compact
-        bare_target_doi = Crossref.bare_doi(doi_string: target_doi)
+        bare_ids = @resource.related_identifiers.map { |i| Integrations::Crossref.bare_doi(doi_string: i.related_identifier) }.compact
+        bare_target_doi = Integrations::Crossref.bare_doi(doi_string: target_doi)
         bare_ids.include?(bare_target_doi)
       end
     end

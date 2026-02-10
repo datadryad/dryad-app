@@ -216,8 +216,8 @@ module StashEngine
       return if @identifier.proposed_changes.unmatched.present?
 
       # Hit Crossref for info
-      cr = Stash::Import::Crossref.query_by_author_title(resource: @identifier.latest_resource)
-      pc = cr.to_proposed_change if cr.present?
+      cr = Integrations::Crossref.query_by_author_title(resource: @identifier.latest_resource)
+      pc = Stash::Import::Crossref.new(resource: @identifier.latest_resource, json: cr).to_proposed_change if cr.present?
       pc.save if pc.present?
     rescue URI::InvalidURIError
       logger.error("ERROR querying Crossref for identifier: '#{@identifier.identifier}': #{e.message}")
