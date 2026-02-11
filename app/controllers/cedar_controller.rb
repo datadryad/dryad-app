@@ -12,6 +12,8 @@ class CedarController < ApplicationController
       readOnlyMode: params.key?(:viewer),
       hideEmptyFields: params.key?(:viewer),
 
+      terminologyIntegratedSearchUrl: 'https://terminology.metadatacenter.org/bioportal/integrated-search',
+
       showSampleTemplateLinks: false,
       expandedSampleTemplateLinks: false,
       showTemplateRenderingRepresentation: false,
