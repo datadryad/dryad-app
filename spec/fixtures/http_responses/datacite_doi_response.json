@@ -1,0 +1,274 @@
+{
+  "data": {
+    "id": "10.48550/arxiv.2601.20261",
+    "type": "dois",
+    "attributes": {
+      "doi": "10.48550/arxiv.2601.20261",
+      "prefix": "10.48550",
+      "suffix": "arxiv.2601.20261",
+      "identifiers": [
+        {
+          "identifier": "2601.20261",
+          "identifierType": "arXiv"
+        }
+      ],
+      "alternateIdentifiers": [
+        {
+          "alternateIdentifierType": "arXiv",
+          "alternateIdentifier": "2601.20261"
+        }
+      ],
+      "creators": [
+        {
+          "name": "Guenzing, Damian",
+          "nameType": "Personal",
+          "givenName": "Damian",
+          "familyName": "Guenzing",
+          "affiliation": [],
+          "nameIdentifiers": []
+        },
+        {
+          "name": "Sasaki, Dayne Y.",
+          "nameType": "Personal",
+          "givenName": "Dayne Y.",
+          "familyName": "Sasaki",
+          "affiliation": [],
+          "nameIdentifiers": []
+        },
+        {
+          "name": "Ditter, Alexander S.",
+          "nameType": "Personal",
+          "givenName": "Alexander S.",
+          "familyName": "Ditter",
+          "affiliation": [],
+          "nameIdentifiers": []
+        },
+        {
+          "name": "Levitan, Abraham L.",
+          "nameType": "Personal",
+          "givenName": "Abraham L.",
+          "familyName": "Levitan",
+          "affiliation": [],
+          "nameIdentifiers": []
+        },
+        {
+          "name": "Gullikson, Eric M.",
+          "nameType": "Personal",
+          "givenName": "Eric M.",
+          "familyName": "Gullikson",
+          "affiliation": [],
+          "nameIdentifiers": []
+        },
+        {
+          "name": "Dhuey, Scott",
+          "nameType": "Personal",
+          "givenName": "Scott",
+          "familyName": "Dhuey",
+          "affiliation": [],
+          "nameIdentifiers": []
+        },
+        {
+          "name": "Gashi, Arian",
+          "nameType": "Personal",
+          "givenName": "Arian",
+          "familyName": "Gashi",
+          "affiliation": [],
+          "nameIdentifiers": []
+        },
+        {
+          "name": "Ohldag, Hendrik",
+          "nameType": "Personal",
+          "givenName": "Hendrik",
+          "familyName": "Ohldag",
+          "affiliation": [],
+          "nameIdentifiers": []
+        },
+        {
+          "name": "Roy, Sujoy",
+          "nameType": "Personal",
+          "givenName": "Sujoy",
+          "familyName": "Roy",
+          "affiliation": [],
+          "nameIdentifiers": []
+        },
+        {
+          "name": "Shapiro, David A.",
+          "nameType": "Personal",
+          "givenName": "David A.",
+          "familyName": "Shapiro",
+          "affiliation": [],
+          "nameIdentifiers": []
+        },
+        {
+          "name": "Comin, Riccardo",
+          "nameType": "Personal",
+          "givenName": "Riccardo",
+          "familyName": "Comin",
+          "affiliation": [],
+          "nameIdentifiers": []
+        },
+        {
+          "name": "Morley, Sophie A.",
+          "nameType": "Personal",
+          "givenName": "Sophie A.",
+          "familyName": "Morley",
+          "affiliation": [],
+          "nameIdentifiers": []
+        }
+      ],
+      "titles": [
+        {
+          "title": "Soft X-ray Reflection Ptychography"
+        }
+      ],
+      "publisher": "arXiv",
+      "container": {},
+      "publicationYear": 2026,
+      "subjects": [
+        {
+          "lang": "en",
+          "subject": "Optics (physics.optics)",
+          "subjectScheme": "arXiv"
+        },
+        {
+          "lang": "en",
+          "subject": "Mesoscale and Nanoscale Physics (cond-mat.mes-hall)",
+          "subjectScheme": "arXiv"
+        },
+        {
+          "lang": "en",
+          "subject": "Materials Science (cond-mat.mtrl-sci)",
+          "subjectScheme": "arXiv"
+        },
+        {
+          "subject": "FOS: Physical sciences",
+          "subjectScheme": "Fields of Science and Technology (FOS)"
+        },
+        {
+          "subject": "FOS: Physical sciences",
+          "schemeUri": "http://www.oecd.org/science/inno/38235147.pdf",
+          "subjectScheme": "Fields of Science and Technology (FOS)"
+        }
+      ],
+      "contributors": [],
+      "dates": [
+        {
+          "date": "2026-01-28T05:15:47Z",
+          "dateType": "Submitted",
+          "dateInformation": "v1"
+        },
+        {
+          "date": "2026-01-29T01:22:58Z",
+          "dateType": "Updated",
+          "dateInformation": "v1"
+        },
+        {
+          "date": "2026-01",
+          "dateType": "Available",
+          "dateInformation": "v1"
+        },
+        {
+          "date": "2026",
+          "dateType": "Issued"
+        }
+      ],
+      "language": null,
+      "types": {
+        "ris": "GEN",
+        "bibtex": "misc",
+        "citeproc": "article",
+        "schemaOrg": "CreativeWork",
+        "resourceType": "Article",
+        "resourceTypeGeneral": "Preprint"
+      },
+      "relatedIdentifiers": [],
+      "relatedItems": [],
+      "sizes": [],
+      "formats": [],
+      "version": "1",
+      "rightsList": [
+        {
+          "rights": "Creative Commons Attribution 4.0 International",
+          "rightsUri": "https://creativecommons.org/licenses/by/4.0/legalcode",
+          "schemeUri": "https://spdx.org/licenses/",
+          "rightsIdentifier": "cc-by-4.0",
+          "rightsIdentifierScheme": "SPDX"
+        }
+      ],
+      "descriptions": [
+        {
+          "description": "Scanning transmission X-ray microscopy and ptychography have become mature tools for high-resolution, element-specific imaging of nanoscale structures. However, transmission geometries impose stringent constraints on sample thickness and preparation, thereby limiting investigations of extended or bulk specimens, especially in the soft X-ray region. Here, we demonstrate reflection geometry soft X-ray ptychography as a robust imaging mode. Instrumental feasibility and spatial resolution are established using a lithographically defined Siemens star and barcode test pattern on a multilayer substrate. We empirically demonstrate a full-pitch spatial resolution of ca. 45 nm from Fourier ring correlation analysis of the reconstructed object. The results highlight the potential of the reflection geometry for nondestructive X-ray studies of materials without the need for transmissive samples.",
+          "descriptionType": "Abstract"
+        },
+        {
+          "description": "8 pages, 3 figures",
+          "descriptionType": "Other"
+        }
+      ],
+      "geoLocations": [],
+      "fundingReferences": [],
+      "xml": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHJlc291cmNlIHhtbG5zPSJodHRwOi8vZGF0YWNpdGUub3JnL3NjaGVtYS9rZXJuZWwtNCIgeG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSIgeHNpOnNjaGVtYUxvY2F0aW9uPSJodHRwOi8vZGF0YWNpdGUub3JnL3NjaGVtYS9rZXJuZWwtNCBodHRwOi8vc2NoZW1hLmRhdGFjaXRlLm9yZy9tZXRhL2tlcm5lbC00LjMvbWV0YWRhdGEueHNkIj4KICA8aWRlbnRpZmllciBpZGVudGlmaWVyVHlwZT0iRE9JIj4xMC40ODU1MC9BUlhJVi4yNjAxLjIwMjYxPC9pZGVudGlmaWVyPgogIDxhbHRlcm5hdGVJZGVudGlmaWVycz4KICAgIDxhbHRlcm5hdGVJZGVudGlmaWVyIGFsdGVybmF0ZUlkZW50aWZpZXJUeXBlPSJhclhpdiI+MjYwMS4yMDI2MTwvYWx0ZXJuYXRlSWRlbnRpZmllcj4KICA8L2FsdGVybmF0ZUlkZW50aWZpZXJzPgogIDxjcmVhdG9ycz4KICAgIDxjcmVhdG9yPgogICAgICA8Y3JlYXRvck5hbWUgbmFtZVR5cGU9IlBlcnNvbmFsIj5HdWVuemluZywgRGFtaWFuPC9jcmVhdG9yTmFtZT4KICAgICAgPGdpdmVuTmFtZT5EYW1pYW48L2dpdmVuTmFtZT4KICAgICAgPGZhbWlseU5hbWU+R3Vlbnppbmc8L2ZhbWlseU5hbWU+CiAgICA8L2NyZWF0b3I+CiAgICA8Y3JlYXRvcj4KICAgICAgPGNyZWF0b3JOYW1lIG5hbWVUeXBlPSJQZXJzb25hbCI+U2FzYWtpLCBEYXluZSBZLjwvY3JlYXRvck5hbWU+CiAgICAgIDxnaXZlbk5hbWU+RGF5bmUgWS48L2dpdmVuTmFtZT4KICAgICAgPGZhbWlseU5hbWU+U2FzYWtpPC9mYW1pbHlOYW1lPgogICAgPC9jcmVhdG9yPgogICAgPGNyZWF0b3I+CiAgICAgIDxjcmVhdG9yTmFtZSBuYW1lVHlwZT0iUGVyc29uYWwiPkRpdHRlciwgQWxleGFuZGVyIFMuPC9jcmVhdG9yTmFtZT4KICAgICAgPGdpdmVuTmFtZT5BbGV4YW5kZXIgUy48L2dpdmVuTmFtZT4KICAgICAgPGZhbWlseU5hbWU+RGl0dGVyPC9mYW1pbHlOYW1lPgogICAgPC9jcmVhdG9yPgogICAgPGNyZWF0b3I+CiAgICAgIDxjcmVhdG9yTmFtZSBuYW1lVHlwZT0iUGVyc29uYWwiPkxldml0YW4sIEFicmFoYW0gTC48L2NyZWF0b3JOYW1lPgogICAgICA8Z2l2ZW5OYW1lPkFicmFoYW0gTC48L2dpdmVuTmFtZT4KICAgICAgPGZhbWlseU5hbWU+TGV2aXRhbjwvZmFtaWx5TmFtZT4KICAgIDwvY3JlYXRvcj4KICAgIDxjcmVhdG9yPgogICAgICA8Y3JlYXRvck5hbWUgbmFtZVR5cGU9IlBlcnNvbmFsIj5HdWxsaWtzb24sIEVyaWMgTS48L2NyZWF0b3JOYW1lPgogICAgICA8Z2l2ZW5OYW1lPkVyaWMgTS48L2dpdmVuTmFtZT4KICAgICAgPGZhbWlseU5hbWU+R3VsbGlrc29uPC9mYW1pbHlOYW1lPgogICAgPC9jcmVhdG9yPgogICAgPGNyZWF0b3I+CiAgICAgIDxjcmVhdG9yTmFtZSBuYW1lVHlwZT0iUGVyc29uYWwiPkRodWV5LCBTY290dDwvY3JlYXRvck5hbWU+CiAgICAgIDxnaXZlbk5hbWU+U2NvdHQ8L2dpdmVuTmFtZT4KICAgICAgPGZhbWlseU5hbWU+RGh1ZXk8L2ZhbWlseU5hbWU+CiAgICA8L2NyZWF0b3I+CiAgICA8Y3JlYXRvcj4KICAgICAgPGNyZWF0b3JOYW1lIG5hbWVUeXBlPSJQZXJzb25hbCI+R2FzaGksIEFyaWFuPC9jcmVhdG9yTmFtZT4KICAgICAgPGdpdmVuTmFtZT5BcmlhbjwvZ2l2ZW5OYW1lPgogICAgICA8ZmFtaWx5TmFtZT5HYXNoaTwvZmFtaWx5TmFtZT4KICAgIDwvY3JlYXRvcj4KICAgIDxjcmVhdG9yPgogICAgICA8Y3JlYXRvck5hbWUgbmFtZVR5cGU9IlBlcnNvbmFsIj5PaGxkYWcsIEhlbmRyaWs8L2NyZWF0b3JOYW1lPgogICAgICA8Z2l2ZW5OYW1lPkhlbmRyaWs8L2dpdmVuTmFtZT4KICAgICAgPGZhbWlseU5hbWU+T2hsZGFnPC9mYW1pbHlOYW1lPgogICAgPC9jcmVhdG9yPgogICAgPGNyZWF0b3I+CiAgICAgIDxjcmVhdG9yTmFtZSBuYW1lVHlwZT0iUGVyc29uYWwiPlJveSwgU3Vqb3k8L2NyZWF0b3JOYW1lPgogICAgICA8Z2l2ZW5OYW1lPlN1am95PC9naXZlbk5hbWU+CiAgICAgIDxmYW1pbHlOYW1lPlJveTwvZmFtaWx5TmFtZT4KICAgIDwvY3JlYXRvcj4KICAgIDxjcmVhdG9yPgogICAgICA8Y3JlYXRvck5hbWUgbmFtZVR5cGU9IlBlcnNvbmFsIj5TaGFwaXJvLCBEYXZpZCBBLjwvY3JlYXRvck5hbWU+CiAgICAgIDxnaXZlbk5hbWU+RGF2aWQgQS48L2dpdmVuTmFtZT4KICAgICAgPGZhbWlseU5hbWU+U2hhcGlybzwvZmFtaWx5TmFtZT4KICAgIDwvY3JlYXRvcj4KICAgIDxjcmVhdG9yPgogICAgICA8Y3JlYXRvck5hbWUgbmFtZVR5cGU9IlBlcnNvbmFsIj5Db21pbiwgUmljY2FyZG88L2NyZWF0b3JOYW1lPgogICAgICA8Z2l2ZW5OYW1lPlJpY2NhcmRvPC9naXZlbk5hbWU+CiAgICAgIDxmYW1pbHlOYW1lPkNvbWluPC9mYW1pbHlOYW1lPgogICAgPC9jcmVhdG9yPgogICAgPGNyZWF0b3I+CiAgICAgIDxjcmVhdG9yTmFtZSBuYW1lVHlwZT0iUGVyc29uYWwiPk1vcmxleSwgU29waGllIEEuPC9jcmVhdG9yTmFtZT4KICAgICAgPGdpdmVuTmFtZT5Tb3BoaWUgQS48L2dpdmVuTmFtZT4KICAgICAgPGZhbWlseU5hbWU+TW9ybGV5PC9mYW1pbHlOYW1lPgogICAgPC9jcmVhdG9yPgogIDwvY3JlYXRvcnM+CiAgPHRpdGxlcz4KICAgIDx0aXRsZT5Tb2Z0IFgtcmF5IFJlZmxlY3Rpb24gUHR5Y2hvZ3JhcGh5PC90aXRsZT4KICA8L3RpdGxlcz4KICA8cHVibGlzaGVyPmFyWGl2PC9wdWJsaXNoZXI+CiAgPHB1YmxpY2F0aW9uWWVhcj4yMDI2PC9wdWJsaWNhdGlvblllYXI+CiAgPHN1YmplY3RzPgogICAgPHN1YmplY3QgeG1sOmxhbmc9ImVuIiBzdWJqZWN0U2NoZW1lPSJhclhpdiI+T3B0aWNzIChwaHlzaWNzLm9wdGljcyk8L3N1YmplY3Q+CiAgICA8c3ViamVjdCB4bWw6bGFuZz0iZW4iIHN1YmplY3RTY2hlbWU9ImFyWGl2Ij5NZXNvc2NhbGUgYW5kIE5hbm9zY2FsZSBQaHlzaWNzIChjb25kLW1hdC5tZXMtaGFsbCk8L3N1YmplY3Q+CiAgICA8c3ViamVjdCB4bWw6bGFuZz0iZW4iIHN1YmplY3RTY2hlbWU9ImFyWGl2Ij5NYXRlcmlhbHMgU2NpZW5jZSAoY29uZC1tYXQubXRybC1zY2kpPC9zdWJqZWN0PgogICAgPHN1YmplY3Qgc3ViamVjdFNjaGVtZT0iRmllbGRzIG9mIFNjaWVuY2UgYW5kIFRlY2hub2xvZ3kgKEZPUykiPkZPUzogUGh5c2ljYWwgc2NpZW5jZXM8L3N1YmplY3Q+CiAgPC9zdWJqZWN0cz4KICA8ZGF0ZXM+CiAgICA8ZGF0ZSBkYXRlVHlwZT0iU3VibWl0dGVkIiBkYXRlSW5mb3JtYXRpb249InYxIj4yMDI2LTAxLTI4VDA1OjE1OjQ3WjwvZGF0ZT4KICAgIDxkYXRlIGRhdGVUeXBlPSJVcGRhdGVkIiBkYXRlSW5mb3JtYXRpb249InYxIj4yMDI2LTAxLTI5VDAxOjIyOjU4WjwvZGF0ZT4KICAgIDxkYXRlIGRhdGVUeXBlPSJBdmFpbGFibGUiIGRhdGVJbmZvcm1hdGlvbj0idjEiPjIwMjYtMDE8L2RhdGU+CiAgPC9kYXRlcz4KICA8cmVzb3VyY2VUeXBlIHJlc291cmNlVHlwZUdlbmVyYWw9IlByZXByaW50Ij5BcnRpY2xlPC9yZXNvdXJjZVR5cGU+CiAgPHZlcnNpb24+MTwvdmVyc2lvbj4KICA8cmlnaHRzTGlzdD4KICAgIDxyaWdodHMgcmlnaHRzVVJJPSJodHRwOi8vY3JlYXRpdmVjb21tb25zLm9yZy9saWNlbnNlcy9ieS80LjAvIiByaWdodHNJZGVudGlmaWVyU2NoZW1lPSJTUERYIiByaWdodHNJZGVudGlmaWVyPSJDQy1CWS00LjAiPkNyZWF0aXZlIENvbW1vbnMgQXR0cmlidXRpb24gNC4wIEludGVybmF0aW9uYWw8L3JpZ2h0cz4KICA8L3JpZ2h0c0xpc3Q+CiAgPGRlc2NyaXB0aW9ucz4KICAgIDxkZXNjcmlwdGlvbiBkZXNjcmlwdGlvblR5cGU9IkFic3RyYWN0Ij5TY2FubmluZyB0cmFuc21pc3Npb24gWC1yYXkgbWljcm9zY29weSBhbmQgcHR5Y2hvZ3JhcGh5IGhhdmUgYmVjb21lIG1hdHVyZSB0b29scyBmb3IgaGlnaC1yZXNvbHV0aW9uLCBlbGVtZW50LXNwZWNpZmljIGltYWdpbmcgb2YgbmFub3NjYWxlIHN0cnVjdHVyZXMuIEhvd2V2ZXIsIHRyYW5zbWlzc2lvbiBnZW9tZXRyaWVzIGltcG9zZSBzdHJpbmdlbnQgY29uc3RyYWludHMgb24gc2FtcGxlIHRoaWNrbmVzcyBhbmQgcHJlcGFyYXRpb24sIHRoZXJlYnkgbGltaXRpbmcgaW52ZXN0aWdhdGlvbnMgb2YgZXh0ZW5kZWQgb3IgYnVsayBzcGVjaW1lbnMsIGVzcGVjaWFsbHkgaW4gdGhlIHNvZnQgWC1yYXkgcmVnaW9uLiBIZXJlLCB3ZSBkZW1vbnN0cmF0ZSByZWZsZWN0aW9uIGdlb21ldHJ5IHNvZnQgWC1yYXkgcHR5Y2hvZ3JhcGh5IGFzIGEgcm9idXN0IGltYWdpbmcgbW9kZS4gSW5zdHJ1bWVudGFsIGZlYXNpYmlsaXR5IGFuZCBzcGF0aWFsIHJlc29sdXRpb24gYXJlIGVzdGFibGlzaGVkIHVzaW5nIGEgbGl0aG9ncmFwaGljYWxseSBkZWZpbmVkIFNpZW1lbnMgc3RhciBhbmQgYmFyY29kZSB0ZXN0IHBhdHRlcm4gb24gYSBtdWx0aWxheWVyIHN1YnN0cmF0ZS4gV2UgZW1waXJpY2FsbHkgZGVtb25zdHJhdGUgYSBmdWxsLXBpdGNoIHNwYXRpYWwgcmVzb2x1dGlvbiBvZiBjYS4gNDUgbm0gZnJvbSBGb3VyaWVyIHJpbmcgY29ycmVsYXRpb24gYW5hbHlzaXMgb2YgdGhlIHJlY29uc3RydWN0ZWQgb2JqZWN0LiBUaGUgcmVzdWx0cyBoaWdobGlnaHQgdGhlIHBvdGVudGlhbCBvZiB0aGUgcmVmbGVjdGlvbiBnZW9tZXRyeSBmb3Igbm9uZGVzdHJ1Y3RpdmUgWC1yYXkgc3R1ZGllcyBvZiBtYXRlcmlhbHMgd2l0aG91dCB0aGUgbmVlZCBmb3IgdHJhbnNtaXNzaXZlIHNhbXBsZXMuPC9kZXNjcmlwdGlvbj4KICAgIDxkZXNjcmlwdGlvbiBkZXNjcmlwdGlvblR5cGU9Ik90aGVyIj44IHBhZ2VzLCAzIGZpZ3VyZXM8L2Rlc2NyaXB0aW9uPgogIDwvZGVzY3JpcHRpb25zPgo8L3Jlc291cmNlPg==",
+      "url": "https://arxiv.org/abs/2601.20261",
+      "contentUrl": null,
+      "metadataVersion": 0,
+      "schemaVersion": "http://datacite.org/schema/kernel-4",
+      "source": "mds",
+      "isActive": true,
+      "state": "findable",
+      "reason": null,
+      "viewCount": 0,
+      "viewsOverTime": [],
+      "downloadCount": 0,
+      "downloadsOverTime": [],
+      "referenceCount": 0,
+      "citationCount": 0,
+      "citationsOverTime": [],
+      "partCount": 0,
+      "partOfCount": 0,
+      "versionCount": 0,
+      "versionOfCount": 0,
+      "created": "2026-01-29T02:48:48.000Z",
+      "registered": "2026-01-29T02:48:49.000Z",
+      "published": "2026",
+      "updated": "2026-01-29T02:48:49.000Z"
+    },
+    "relationships": {
+      "client": {
+        "data": {
+          "id": "arxiv.content",
+          "type": "clients"
+        }
+      },
+      "provider": {
+        "data": {
+          "id": "arxiv",
+          "type": "providers"
+        }
+      },
+      "media": {
+        "data": {
+          "id": "10.48550/arxiv.2601.20261",
+          "type": "media"
+        }
+      },
+      "references": {
+        "data": []
+      },
+      "citations": {
+        "data": []
+      },
+      "parts": {
+        "data": []
+      },
+      "partOf": {
+        "data": []
+      },
+      "versions": {
+        "data": []
+      },
+      "versionOf": {
+        "data": []
+      }
+    }
+  }
+}

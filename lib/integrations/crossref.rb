@@ -11,7 +11,8 @@ module Integrations
 
         resp.first['message']
         # Stash::Import::CrossRef.new(resource: resource, json: resp.first['message'])
-      rescue Serrano::NotFound, Serrano::InternalServerError
+      rescue Serrano::NotFound, Serrano::BadGateway, Serrano::Error, Serrano::GatewayTimeout, Serrano::InternalServerError,
+             Serrano::ServiceUnavailable
         nil
       end
 
@@ -27,7 +28,8 @@ module Integrations
 
         b = bare_doi(doi_string: id['id'])
         query_by_doi(doi: b)
-      rescue Serrano::NotFound, Serrano::InternalServerError
+      rescue Serrano::NotFound, Serrano::BadGateway, Serrano::Error, Serrano::GatewayTimeout, Serrano::InternalServerError,
+             Serrano::ServiceUnavailable
         nil
       end
 
@@ -47,7 +49,8 @@ module Integrations
         sm['ISSN'] = get_journal_issn(sm) unless sm['ISSN'].present?
         sm
         # Stash::Import::CrossRef.new(resource: resource, json: sm)
-      rescue Serrano::NotFound, Serrano::InternalServerError
+      rescue Serrano::NotFound, Serrano::BadGateway, Serrano::Error, Serrano::GatewayTimeout, Serrano::InternalServerError,
+             Serrano::ServiceUnavailable
         nil
       end
 

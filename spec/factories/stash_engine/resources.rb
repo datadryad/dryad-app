@@ -49,14 +49,14 @@ FactoryBot.define do
     transient { user { nil } }
     identifier
 
-    has_geolocation { true }
+    has_geolocation { false }
     title { Faker::Lorem.sentence(word_count: 6) }
     download_uri { "http://storage-fake.datadryad.org/d/ark%3A%2F99999%2Ffk#{Faker::Alphanumeric.alphanumeric(number: 8)}" }
     update_uri do
       "http://storage-fake.org:39001/mrtsword/edit/#{Faker::Alphanumeric.alpha(number: 8)}/" \
         "doi%3A10.5061%2Fdryad.#{Faker::Alphanumeric.alphanumeric(number: 6)}"
     end
-    publication_date { Time.new.utc }
+    publication_date { nil }
     deleted_at { nil }
 
     before(:create) do |resource, e|
@@ -80,6 +80,17 @@ FactoryBot.define do
       create(:resource_type, resource: resource)
       resource.subjects << create(:subject, subject: Faker::Lorem.unique.word, subject_scheme: 'fos')
       3.times { resource.subjects << create(:subject, subject: Faker::Lorem.unique.word) }
+    end
+
+    trait :blank do
+      after(:create) do |resource|
+        resource.descriptions.destroy_all
+        resource.authors.destroy_all
+        resource.contributors.destroy_all
+        resource.subjects.destroy_all
+        resource.update(title: '')
+        resource.reload
+      end
     end
 
     trait :paid do
