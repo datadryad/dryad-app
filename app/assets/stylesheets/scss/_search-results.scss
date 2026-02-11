@@ -241,6 +241,31 @@
   margin: 0;
   padding: 0;
 
+  .author-profile-result {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    align-items: flex-start;
+    gap: 2ch;
+    margin-bottom: 3ch;
+    .author-metrics {
+      flex-basis: 450px;
+      width: 450px;
+    }
+    .search-result {
+      flex-basis: 60%;
+    }
+    @media (max-width: $screen-md-min) {
+      flex-direction: column;
+      .author-metrics {
+        width: 100%;
+      }
+      .search-result {
+        flex-basis: 100%;
+      }
+    }
+  }
+
   .search-result {
     margin: 1rem 0;
     font-size: 1rem;

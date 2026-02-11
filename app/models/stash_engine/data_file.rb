@@ -47,6 +47,8 @@ module StashEngine
     after_commit :resource_file_changes
 
     def recalculate_total
+      return unless resource
+
       StashEngine::Resource.find_by(id: resource.id)&.update(total_file_size: resource.data_files.present_files.sum(:upload_file_size))
     end
 
@@ -219,7 +221,7 @@ module StashEngine
       return 'txt' if download_filename.end_with?('.txt', '.md') ||
         upload_content_type == 'text/plain'
 
-      return 'zip' if download_filename.end_with?(*APP_CONFIG.container_file_extensions)
+      return 'zip' if archive?
 
       # Images < 5MB
       return nil if upload_file_size && upload_file_size > 5 * 1024 * 1024
@@ -311,11 +313,14 @@ module StashEngine
       nil
     end
 
+    def archive?
+      download_filename&.end_with?(*APP_CONFIG[:container_file_extensions].map { |ext| ".#{ext}" })
+    end
+
     # This is mostly used to duplicate these files when a new version is created.
     # It will fail getting previous version if the record isn't saved and has no id or resource_id yet.
     def populate_container_files_from_last
-      @container_file_exts ||= APP_CONFIG[:container_file_extensions].map { |ext| ".#{ext}" }
-      return unless download_filename&.end_with?(*@container_file_exts)
+      return unless archive?
 
       old_files = case_insensitive_previous_files
       return if old_files.empty? || old_files.first.file_state == 'deleted'

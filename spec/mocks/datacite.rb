@@ -2,7 +2,7 @@ module Mocks
 
   module Datacite
     def mock_datacite!
-      allow_any_instance_of(Stash::Doi::DataciteGen).to receive(:update_metadata).and_return(true)
+      allow_any_instance_of(::Datacite::DoiGen).to receive(:update_metadata).and_return(true)
 
       stub_request(:post, %r{mds\.test\.datacite\.org/metadata})
         .with(
@@ -27,15 +27,6 @@ module Mocks
             'User-Agent' => /.*/
           }
         ).to_return(status: 201, body: '', headers: {})
-
-      stub_request(:get, %r{doi\.org/10\.1111%2Fmec\.13594})
-        .with(
-          headers: {
-            'Accept' => 'application/citeproc+json',
-            'Host' => 'doi.org',
-            'User-Agent' => /.*/
-          }
-        ).to_return(status: 200, body: File.read(Rails.root.join('spec', 'fixtures', 'http_responses', 'datacite_response.json')), headers: {})
     end
 
     def mock_datacite_gen!
@@ -44,7 +35,7 @@ module Mocks
       @mock_datacitegen = double('datacitegen')
       allow(@mock_datacitegen).to receive(:update_identifier_metadata!).and_return(true)
       allow(@mock_datacitegen).to receive(:mint_id).and_return("doi:#{Faker::Pid.doi}")
-      allow(Stash::Doi::DataciteGen).to receive(:new).and_return(@mock_datacitegen)
+      allow(::Datacite::DoiGen).to receive(:new).and_return(@mock_datacitegen)
     end
 
     def mock_good_doi_resolution(doi:)

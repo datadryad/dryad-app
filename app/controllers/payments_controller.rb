@@ -5,6 +5,7 @@ class PaymentsController < ApplicationController
 
   skip_before_action :verify_authenticity_token
   before_action :load_resource
+  before_action :ajax_require_unsubmitted, only: :create
 
   layout 'stash_engine/application'
 

@@ -18,14 +18,14 @@ namespace :publication_updater do
 
       begin
         # Hit Crossref for info
-        cr = Stash::Import::Crossref.query_by_preprint_doi(resource: resource, doi: preprint)
+        cr = Integrations::Crossref.query_by_preprint_doi(doi: preprint)
       rescue URI::InvalidURIError => e
         # If the URI is invalid, just skip to the next record
         p "ERROR querying Crossref for identifier: '#{resource.identifier.identifier}': #{e.message}"
         next
       end
 
-      pc = cr.to_proposed_change if cr.present?
+      pc = Stash::Import::CrossRef.new(resource: resource, json: cr).to_proposed_change if cr.present?
       p "  found changes for: #{resource.identifier.identifier} (#{resource.last_curation_activity.status}) - #{resource.title}" if pc.present?
       pc.save if pc.present?
     end
@@ -43,14 +43,14 @@ namespace :publication_updater do
     results.find_each do |resource|
       begin
         # Hit Crossref for info
-        cr = Stash::Import::Crossref.query_by_author_title(resource: resource)
+        cr = Integrations::Crossref.query_by_author_title(resource: resource)
       rescue URI::InvalidURIError => e
         # If the URI is invalid, just skip to the next record
         p "ERROR querying Crossref for identifier: '#{resource.identifier.identifier}': #{e.message}"
         next
       end
 
-      pc = cr.to_proposed_change if cr.present?
+      pc = Stash::Import::CrossRef.new(resource: resource, json: cr).to_proposed_change if cr.present?
       p "  found changes for: #{resource.identifier.identifier} (#{resource.last_curation_activity.status}) - #{resource.title}" if pc.present?
       pc.save if pc.present?
     end
@@ -82,18 +82,15 @@ namespace :publication_updater do
 
       begin
         # Hit Crossref for info
-        if primary_article&.related_identifier.present?
-          cr = Stash::Import::Crossref.query_by_doi(resource: resource,
-                                                    doi: primary_article.related_identifier)
-        end
-        cr = Stash::Import::Crossref.query_by_author_title(resource: resource) unless cr.present?
+        cr = Integrations::Crossref.query_by_doi(doi: primary_article.related_identifier) if primary_article&.related_identifier.present?
+        cr = Integrations::Crossref.query_by_author_title(resource: resource) unless cr.present?
       rescue URI::InvalidURIError => e
         # If the URI is invalid, just skip to the next record
         p "ERROR querying Crossref for publication DOI: '#{result.doi}' for identifier: '#{resource&.identifier}' : #{e.message}"
         next
       end
 
-      pc = cr.to_proposed_change if cr.present?
+      pc = Stash::Import::CrossRef.new(resource: resource, json: cr).to_proposed_change if cr.present?
       p "  found changes for: #{resource.id} (#{resource.title}" if pc.present?
       pc.save if pc.present?
     end

@@ -4,8 +4,8 @@ module StashEngine
     include StashEngine::DownloadsHelper
 
     before_action :require_login
-    before_action :assign_resource, only: %i[logout display_readme dupe_check file_pub_dates]
-    before_action :require_modify_permission, except: %i[index new logout display_readme dupe_check file_pub_dates]
+    before_action :assign_resource, only: %i[logout display_readme display_collection dupe_check file_pub_dates]
+    before_action :require_modify_permission, except: %i[index new logout display_collection display_readme dupe_check file_pub_dates]
 
     attr_writer :resource
 
@@ -50,7 +50,7 @@ module StashEngine
         redirect_to "#{stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: existing.id)}?start" and return if existing
       end
       resource = authorize Resource.new(current_editor_id: current_user.id, tenant_id: current_user.tenant_id)
-      my_id = Stash::Doi::DataciteGen.mint_id(resource: resource)
+      my_id = Datacite::DoiGen.mint_id(resource: resource)
       id_type, id_text = my_id.split(':', 2)
       db_id_obj = Identifier.create(identifier: id_text, identifier_type: id_type.upcase)
       resource.update(identifier_id: db_id_obj.id)
@@ -172,7 +172,7 @@ module StashEngine
 
     def display_collection
       review = StashDatacite::Resource::Review.new(@resource)
-      render partial: 'stash_datacite/related_identifiers/collection', locals: { review: review, highlight_fields: [] }
+      render partial: 'stash_datacite/related_identifiers/collection', locals: { review: review }
     end
 
     def dupe_check

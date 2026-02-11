@@ -34,7 +34,7 @@ module StashEngine
             END as sort_order")
             .order('sort_order asc, stash_engine_resources.updated_at desc').page(@page).per(@page_size)
           @datasets = @datasets.preload(%i[last_curation_activity stash_version current_resource_state identifier])
-            .includes(identifier: :resources)
+            .includes(:resource_type, :users, :editor, identifier: :resources)
         end
       end
     end
@@ -52,10 +52,12 @@ module StashEngine
     def save_primary_article
       resource = StashEngine::Resource.find_by(id: params.dig(:primary_article, :resource_id))
       std_fmt = StashDatacite::RelatedIdentifier.standardize_format(params.dig(:primary_article, :related_identifier))
-      bare_doi = Stash::Import::Crossref.bare_doi(doi_string: std_fmt)
-
-      cr = Stash::Import::Crossref.query_by_doi(resource: resource, doi: bare_doi)
-      cr.populate_pub_update! if cr.present?
+      bare_doi = Integrations::Crossref.bare_doi(doi_string: std_fmt)
+      begin
+        Stash::Import.import_publication(resource: resource, doi: bare_doi)
+      rescue Stash::Import::ImportError
+        # no result found
+      end
       @publication = resource.resource_publication
       @related_work = StashDatacite::RelatedIdentifier.create(
         resource_id: params.dig(:primary_article, :resource_id), work_type: :primary_article,

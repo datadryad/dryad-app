@@ -255,7 +255,7 @@ GEM
       railties (>= 5.0.0)
     faker (3.5.1)
       i18n (>= 1.8.11, < 2)
-    faraday (2.14.0)
+    faraday (2.14.1)
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
@@ -350,7 +350,7 @@ GEM
     jquery-turbolinks (2.1.0)
       railties (>= 3.1.0)
       turbolinks
-    json (2.9.1)
+    json (2.18.1)
     jwt (2.3.0)
     kaminari (1.2.2)
       activesupport (>= 4.1.0)
@@ -418,7 +418,7 @@ GEM
     net-ftp (0.3.8)
       net-protocol
       time
-    net-http (0.8.0)
+    net-http (0.9.1)
       uri (>= 0.11.1)
     net-imap (0.5.7)
       date
@@ -743,7 +743,7 @@ GEM
     uber (0.1.0)
     unicode-display_width (2.6.0)
     uniform_notifier (1.16.0)
-    uri (1.0.4)
+    uri (1.1.1)
     useragent (0.16.11)
     vcr (6.3.1)
       base64
@@ -819,7 +819,7 @@ DEPENDENCIES
   ezid-client (~> 1.9.2)
   factory_bot_rails
   faker
-  faraday (~> 2.13)
+  faraday (~> 2.14)
   faraday-retry
   filesize (~> 0.2.0)
   font-awesome-sass (~> 6.7.2)

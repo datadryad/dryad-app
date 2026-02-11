@@ -97,13 +97,13 @@ describe CurationService do
       end
 
       it 'catches errors and emails the admins' do
-        dc_error = Stash::Doi::DataciteGenError.new('Testing errors')
-        allow(Stash::Doi::DataciteGen).to receive(:new).with(any_args).and_raise(dc_error)
+        dc_error = Datacite::DoiGenError.new('Testing errors')
+        allow(Datacite::DoiGen).to receive(:new).with(any_args).and_raise(dc_error)
 
         message = instance_double(ActionMailer::MessageDelivery)
         expect(StashEngine::UserMailer).to receive(:error_report).with(any_args).and_return(message)
         expect(message).to receive(:deliver_now)
-        expect { service.process }.to raise_error(Stash::Doi::DataciteGenError)
+        expect { service.process }.to raise_error(Datacite::DoiGenError)
       end
     end
   end

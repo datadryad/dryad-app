@@ -173,7 +173,7 @@ module StashApi
       # The submitter is initially set to the user that made the API call, though may be changed
       # to a different user in the `parse` method based on metadata sent in the API call.
       @resource = StashEngine::Resource.new(current_editor_id: @user.id, tenant_id: @user.tenant_id)
-      my_id = doi_string || Stash::Doi::DataciteGen.mint_id(resource: @resource)
+      my_id = doi_string || Datacite::DoiGen.mint_id(resource: @resource)
       id_type, id_text = my_id.split(':', 2)
       db_id_obj = StashEngine::Identifier.create(identifier: id_text, identifier_type: id_type.upcase)
       @resource.identifier_id = db_id_obj.id

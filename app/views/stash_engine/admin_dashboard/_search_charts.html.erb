@@ -3,7 +3,7 @@ pie = charts.first
 ts = FeeCalculator::InstitutionService.new.storage_fee_tiers
 tiers = ts.map { |t| t[:range].to_s.split('..').map {|n| filesize(n.to_i) }.join('-') }
 pieces = [pie[:tier0], pie[:tier1], pie[:tier2], pie[:tier3], pie[:tier4], pie[:tier5], pie[:tier6]]
-pie_desc = pieces.map.with_index { |pi,i| pi.zero? ? nil : "#{tiers[i]}: #{pi}" }.reject(&:blank?).join(', ')
+pie_desc = pieces.map.with_index { |pi,i| pi.nil? || pi.zero? ? nil : "#{tiers[i]}: #{pi}" }.reject(&:blank?).join(', ')
 
 time = charts.last
 time_desc = time[:dates].map.with_index { |d,i| "#{d}: #{time[:subs][i]} submitted, #{time[:pubs][i]} published" }.join('; ')
