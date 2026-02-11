@@ -103,6 +103,7 @@ module Submission
           update[:digest_type] = digest_type
           update[:digest] = algorithm.hexdigest
           update[:validated_at] = Time.now.utc
+          file.update(update)
         end
       else
         Rails.logger.info("file copy skipped #{file.id} ==> #{permanent_bucket}/#{permanent_key} already exists")
@@ -114,10 +115,10 @@ module Submission
     end
 
     def calculate_digest(s3_connection, file_path)
+      file.reload
       return {} if file.digest.present?
 
       update_info = {}
-
       Rails.logger.info("generating checksum for #{file.id} ==> #{s3_connection.s3_bucket.name}/#{file_path} copied from url")
       digest_type = 'sha-256'
       digest_input = s3_connection.presigned_download_url(s3_key: file_path)
