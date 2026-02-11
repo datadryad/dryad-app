@@ -518,7 +518,7 @@ Rails.application.routes.draw do
     get '/check/:resource_id', to: 'check'
     get '/preview/:resource_id', to: 'preview', as: 'cedar_preview'
     post '/save/:resource_id', to: 'save'
-    delete '/save/:resource_id', to: 'delete'
+    delete '/delete/:resource_id', to: 'delete'
   end
 
   post '/metadata_entry_pages/cedar_popup', to: 'metadata_entry_pages#cedar_popup', as: 'cedar_popup'
