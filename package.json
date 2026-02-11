@@ -95,7 +95,6 @@
     "micromark-util-symbol": "^2.0.1",
     "mini-css-extract-plugin": "^2.7.6",
     "moment": "^2.29.4",
-    "nanoid": "^5.0.9",
     "pagefind": "^1.4.0",
     "pnp-webpack-plugin": "^1.7.0",
     "postcss-assets": "^6.0.0",
@@ -162,7 +161,7 @@
     "webpack-dev-server": "^5"
   },
   "resolutions": {
-    "nanoid": "^5.0.9",
+    "nanoid": "<4.0.0",
     "prosemirror-model": "^1.25.4",
     "js-yaml": "^4.1.1"
   }
