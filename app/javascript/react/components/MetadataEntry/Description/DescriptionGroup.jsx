@@ -49,7 +49,8 @@ export default function DescriptionGroup({
       });
     }
     if (current) cedarCheck();
-  }, [current, abstract?.description, resource.title, resource.subjects, resource.resource_publication?.publication_name]);
+  }, [current, resource.title, resource.subjects, resource.resource_publication?.publication_name,
+    resource.descriptions.find((d) => d.description_type === 'abstract')?.description]);
 
   if (!abstract?.id) {
     return <p><i className="fas fa-spinner fa-spin" role="img" aria-label="Loading..." /></p>;
