@@ -31,6 +31,8 @@ module Datacite
       return {} if result.nil?
 
       atts = result.dig('data', 'attributes')
+      return {} if atts.nil?
+
       {
         views: atts['viewsOverTime'],
         downloads: atts['downloadsOverTime'],
