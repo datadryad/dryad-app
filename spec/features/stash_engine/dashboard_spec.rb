@@ -168,6 +168,7 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
       it 'links a primary article' do
         sign_in(user)
         doi = Faker::Pid.doi
+        allow(Integrations::Datacite).to receive_message_chain(:new, :query).and_return(nil)
         click_button 'Link article'
         expect(page).to have_text('Does your dataset contain the foundational data for a primary article?')
         fill_in 'related_identifier', with: doi

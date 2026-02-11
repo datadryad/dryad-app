@@ -8,12 +8,15 @@ production:
   - submission
   - submission_check
   - submission_file
+  - archive_analyzer
   - zenodo_software
   - zenodo_supp
   - zenodo_copy
   - big_submission_file
+  - deletion
   - critical
   - default
   - low
 :limits:
   big_submission_file: 7
+  archive_analyzer: 5

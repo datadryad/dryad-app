@@ -104,7 +104,7 @@ gem 'zaru', '~> 1.0.0' # for sanitizing file names
 # gem 'base64'
 # gem 'bigdecimal'
 # gem 'mutex_m'
-gem 'faraday', '~> 2.13'
+gem 'faraday', '~> 2.14'
 gem 'faraday-retry'
 
 # ############################################################

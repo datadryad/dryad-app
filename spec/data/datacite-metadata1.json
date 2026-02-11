@@ -1,0 +1,147 @@
+{
+  "data": {
+    "id": "10.6071/m3rp49",
+    "type": "dois",
+    "attributes": {
+      "doi": "10.6071/m3rp49",
+      "prefix": "10.6071",
+      "suffix": "10.6071/m3rp49",
+      "identifiers": [],
+      "alternateIdentifiers": [],
+      "creators": [
+        {
+          "name": "Person, Test",
+          "nameType": "Personal",
+          "givenName": "Test",
+          "familyName": "Person",
+          "affiliation": [
+            "A Test Place"
+          ],
+          "nameIdentifiers": []
+        },
+        {
+          "name": "Test Organization",
+          "nameType": "Organizational",
+          "nameIdentifiers": []
+        }
+      ],
+      "titles": [
+        {
+          "title": "Test title for a preprint or article"
+        }
+      ],
+      "publisher": "Test Server",
+      "container": {},
+      "publicationYear": 2026,
+      "subjects": [
+        {
+          "subject": "Test"
+        },
+        {
+          "subject": "Testing"
+        }
+      ],
+      "contributors": [],
+      "dates": [
+        {
+          "date": "2026",
+          "dateType": "Issued"
+        }
+      ],
+      "language": "en",
+      "types": {
+        "ris": "GEN",
+        "bibtex": "misc",
+        "citeproc": "article",
+        "schemaOrg": "CreativeWork",
+        "resourceType": "Article",
+        "resourceTypeGeneral": "Preprint"
+      },
+      "relatedIdentifiers": [],
+      "relatedItems": [],
+      "sizes": [],
+      "formats": [],
+      "version": "1",
+      "rightsList": [
+        {
+          "rights": "Creative Commons Attribution 4.0 International",
+          "rightsUri": "https://creativecommons.org/licenses/by/4.0/legalcode",
+          "schemeUri": "https://spdx.org/licenses/",
+          "rightsIdentifier": "cc-by-4.0",
+          "rightsIdentifierScheme": "SPDX"
+        }
+      ],
+      "descriptions": [
+        {
+          "description": "This is just some text content for an abstract.",
+          "descriptionType": "Abstract"
+        }
+      ],
+      "geoLocations": [],
+      "fundingReferences": [
+        {
+          "schemeUri": "https://ror.org",
+          "funderName": "Rhodes Trust",
+          "funderIdentifier": "https://ror.org/04v48nr57",
+          "funderIdentifierType": "ROR"
+        }
+      ],
+      "xml": null,
+      "url": null,
+      "contentUrl": null,
+      "metadataVersion": 0,
+      "schemaVersion": "http://datacite.org/schema/kernel-4",
+      "source": "mds",
+      "isActive": true,
+      "state": "findable",
+      "reason": null,
+      "viewCount": 12,
+      "viewsOverTime": [
+        {
+          "yearMonth": "2026-01",
+          "total": 4
+        },
+        {
+          "yearMonth": "2026-02",
+          "total": 8
+        }
+      ],
+      "downloadCount": 8,
+      "downloadsOverTime": [
+        {
+          "yearMonth": "2026-01",
+          "total": 4
+        },
+        {
+          "yearMonth": "2026-02",
+          "total": 4
+        }
+      ],
+      "citationsCount": 2,
+      "citationsOverTime": [
+        {
+          "yearMonth": "2026-01",
+          "total": 1
+        },
+        {
+          "yearMonth": "2026-02",
+          "total": 1
+        }
+      ]
+    },
+    "relationships": {
+      "citations": {
+        "data": [
+          {
+            "id": "10.1126/sciadv.1602232",
+            "type": "dois"
+          },
+          {
+            "id": "10.1098/rsif.2017.0030",
+            "type": "dois"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -288,7 +288,7 @@ module FeeCalculator
           let(:prev_files_size) { nil }
           let(:coupon_id) { 'PPR_DISCOUNT_2025' }
           let(:first_resource) { create(:resource, total_file_size: new_files_size, identifier: identifier, created_at: 2.minutes.ago) }
-          let!(:payment) { create(:resource_payment, resource: first_resource, ppr_fee_paid: true, amount: 50) }
+          let!(:payment) { create(:resource_payment, resource: first_resource, ppr_fee_paid: true, amount: 50, status: :paid) }
           let(:resource) { create(:resource, total_file_size: new_files_size, identifier: identifier) }
 
           context 'when ppr continues' do
@@ -299,6 +299,13 @@ module FeeCalculator
 
           context 'when ppr is over' do
             it { is_expected.to eq({ coupon_id: coupon_id, storage_fee: 150, ppr_discount: -50, total: 100 }) }
+          end
+
+          context 'when discount payment is not paid' do
+            let(:options) { { pay_ppr_fee: true } }
+            let!(:payment) { create(:resource_payment, resource: first_resource, ppr_fee_paid: true, amount: 50, status: :created) }
+
+            it { is_expected.to eq({ ppr_fee: 50, total: 50 }) }
           end
 
           it_behaves_like 'it has 2 TB max limit'

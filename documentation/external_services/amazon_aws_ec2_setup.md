@@ -118,6 +118,32 @@ sed 's/\sDEFINER=`[^`]*`@`[^`]*`//g' -i myfile.sql
 mysql_stg.sh < myfile.sql
 ```
 
+AWS RDS database engine update
+=====================================
+This can be done in 2 ways:
+
+## Direct update from AWS console
+- Will update the database engine version to a new version on current database instance
+- Will restart the database instance triggering 1-5 minutes of downtime
+- Automatic snapshots are still available for the updated instance
+
+## Using AWS Blue/Green migration
+
+Steps to perform:
+1. Create Blue/Green instance while upgrading engine version
+2. App remains connected to Blue (original instance)
+3. Test Green instance connection, queryes and database sync
+4. Switch to Green instance by Actions -> Promote
+   1. Endpoints are switched and read-only flags are set to false
+   2. After this point old instance will no longer be kept in sync with the new one
+5. Restart puma needed to connect to the new promoted instance (same endpoint) and get rid of read-only state
+6. Test app
+7. Delete old instance
+   - It is recommended to keep it for 24-48 hours
+
+Keep in mind that 
+   - Automatic snapshots are not being moved to new instance
+   - Old instance needs to be deleted so we do not pay extra
 
 SOLR setup
 ============

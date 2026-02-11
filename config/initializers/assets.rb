@@ -10,7 +10,7 @@ Rails.application.config.assets.digest = true
 Rails.application.config.assets.raise_runtime_errors = true
 
 # Version of your assets, change this if you want to expire all your assets.
-Rails.application.config.assets.version = '20260129'
+Rails.application.config.assets.version = '20260211'
 
 # Add additional assets to the asset load path.
 # Rails.application.config.assets.paths << Emoji.images_path

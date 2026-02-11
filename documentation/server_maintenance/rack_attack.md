@@ -23,8 +23,12 @@ Rack::Attack.cache.store.flushdb
 To find entries for a particular IP:
 ```
 rails_console.sh
+
 Rack::Attack.cache.store.keys.select{|a| a.include?('95.92.252.102')}
 => ["rack::attack:682:file_downloads_per_month:file_download_per_month_95.92.252.102"]
+
+Rack::Attack.cache.store.get("rack::attack:682:file_downloads_per_month:file_download_per_month_95.92.252.102")
+=> "5"
 ```
 
 Individual entries may be deleted to reset them.

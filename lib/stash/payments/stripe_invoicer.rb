@@ -43,15 +43,28 @@ module Stash
       end
 
       def invoice_paid?
-        invoice = Stripe::Invoice.retrieve(resource.payment.invoice_id)
-        return false unless invoice&.status.present?
+        @stripe_invoice = Stripe::Invoice.retrieve(resource.payment.invoice_id)
+        return false unless @stripe_invoice&.status.present?
 
-        if invoice.status == 'void' && invoice.latest_revision.present?
-          resource.payment.update(invoice_id: invoice.latest_revision)
+        if @stripe_invoice.status == 'void' && @stripe_invoice.latest_revision.present?
+          resource.payment.update(invoice_id: @stripe_invoice.latest_revision)
           return invoice_paid?
         end
         # one of 'draft', 'open', 'paid', 'uncollectible', or 'void'
-        invoice.status == 'paid'
+        @stripe_invoice.status == 'paid'
+      end
+
+      def paid_at
+        return unless invoice_paid?
+
+        timestamp = @stripe_invoice&.status_transitions&.paid_at
+        return unless timestamp
+
+        Time.at(timestamp)
+      end
+
+      def mark_invoice_paid!
+        resource.payment.update(status: :paid, paid_at: paid_at)
       end
 
       def handle_customer(invoice_details)

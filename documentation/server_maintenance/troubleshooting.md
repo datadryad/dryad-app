@@ -478,13 +478,13 @@ Occasionally, there will be a problem sending metadata to DataCite for
 an item. You can force the metadata in DataCite to update in the Rails console with:
 
 ```ruby
-Stash::Doi::DataciteGen.new(resource: StashEngine::Resource.find(<resource_id>)).update_identifier_metadata!
+Datacite::DoiGen.new(resource: StashEngine::Resource.find(<resource_id>)).update_identifier_metadata!
 ```
 
 Or select a set of resources and send it for each, for example:
 ```ruby
 StashEngine::Resource.where('publication_date >= ?', 3.days.ago).each do |r|
-  Stash::Doi::DataciteGen.new(resource: r).update_identifier_metadata!
+  Datacite::DoiGen.new(resource: r).update_identifier_metadata!
 end
 ```
 

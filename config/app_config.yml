@@ -117,11 +117,11 @@ test:
     - 'tgz'
   datacite_data_repo_id: dryad_testing_repo_id
   identifier_service:
-    provider: datacite
+    rest: https://api.test.datacite.org
+    mds: https://mds.test.datacite.org
     prefix: "10.5072"
     account: my.account
     password: "my.password"
-    sandbox: true
   solr_url: <%= ENV['SOLR_URL'] || "http://someserver.org:8983/solr/dryad" %>
   ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://someserver.org:8983/solr/rors" %>
   stripe_payment_url: https://dashboard.stripe.com/acc_123456/test
@@ -238,7 +238,7 @@ defaults: &DEFAULTS
     zip_downloads_per_day: 100
     zip_downloads_per_month: 500
     # all other rates are number of requests allowed per minute
-    all_requests: 120
+    all_requests: 240
     api_requests_anon: 30
     api_requests_auth: 120
     api_requests_v1: 30
@@ -261,11 +261,11 @@ defaults: &DEFAULTS
     - 'tgz'
   datacite_data_repo_id: dryad_testing_repo_id
   identifier_service:
-    provider: datacite
+    rest: https://api.test.datacite.org
+    mds: https://mds.test.datacite.org
     prefix: "10.7959"
     account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: true
   solr_url: <%= ENV['SOLR_URL'] || "http://localhost:8983/solr/dryad" %>
   ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://localhost:8983/solr/rors" %>
   cache:
@@ -425,11 +425,11 @@ production:
     comment_field_id: 00N3h00000Ix75j
   datacite_data_repo_id: da-80l49bsf
   identifier_service:
-    provider: datacite
+    rest: https://api.datacite.org
+    mds: https://mds.datacite.org
     prefix: "10.5061"
     account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: false
   solr_url: <%= ENV['SOLR_URL'] || "http://35.91.212.8:8983/solr/dryad" %>
   ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://35.91.212.8:8983/solr/rors" %>
   cache:

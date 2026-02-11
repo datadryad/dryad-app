@@ -98,7 +98,7 @@ namespace :dev_ops do
     # rubocop:disable Security/YAMLLoad
     db = YAML.load(ERB.new(File.read(File.join(Rails.root, 'config', 'database.yml'))).result, aliases: true)[Rails.env]
     # rubocop:enable Security/YAMLLoad
-    file = File.join(directory, "#{Rails.env}_#{Time.now.strftime('%H_%M')}.sql")
+    file = File.join(directory, "#{Rails.env}_#{Time.now.strftime('%H')}_00.sql")
     p command = 'mysqldump --opt --skip-add-locks --single-transaction --no-create-db --set-gtid-purged=off ' \
                 '--ignore-table=dryad.stash_engine_container_files ' \
                 '--ignore-table=dryad.stash_engine_ror_orgs --ignore-table=dryad.stash_engine_curation_stats ' \
@@ -211,7 +211,7 @@ namespace :dev_ops do
     new_res.save
 
     # Now create new identifier
-    my_id = Stash::Doi::DataciteGen.mint_id(resource: new_res)
+    my_id = Datacite::DoiGen.mint_id(resource: new_res)
     id_type, id_text = my_id.split(':', 2)
     db_id_obj = StashEngine::Identifier.create(identifier: id_text, identifier_type: id_type.upcase)
 

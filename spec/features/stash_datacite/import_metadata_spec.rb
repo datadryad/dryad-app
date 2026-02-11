@@ -36,6 +36,12 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       start_new_dataset
     end
 
+    it 'does not allow import with no doi filled in' do
+      doi = ''
+      fill_crossref_info(doi: doi)
+      expect(page).not_to have_button('Import metadata')
+    end
+
     it 'works for successful dataset request to crossref', js: true do
       stub_request(:get, 'https://api.crossref.org/works/10.1098%2Frsif.2017.0030')
         .to_return(status: 200,
@@ -51,14 +57,31 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       expect(page).to have_content('High-skilled labour mobility in Europe before and after the 2004 enlargement')
     end
 
-    it 'does not allow import with no doi filled in' do
-      doi = ''
+    it 'works for successful dataset request to datacite', js: true do
+      stub_request(:get, 'https://api.crossref.org/works/10.48550%2Farxiv.2601.20261')
+        .to_return(status: 404,
+                   body: 'not found',
+                   headers: {})
+      stub_request(:get, 'https://api.test.datacite.org/dois/10.48550/arxiv.2601.20261')
+        .to_return(status: 200,
+                   body: File.new(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'datacite_doi_response.json')),
+                   headers: {})
+
+      doi = '10.48550/arxiv.2601.20261'
+      mock_good_doi_resolution(doi: "https://doi.org/#{doi}")
       fill_crossref_info(doi: doi)
-      expect(page).not_to have_button('Import metadata')
+      click_button 'Next'
+      expect(page).to have_button('Import metadata')
+      click_button('Import metadata')
+      expect(page).to have_content('Soft X-ray Reflection Ptychography')
     end
 
     it "gives a message when it can't find a doi" do
       stub_request(:get, 'https://api.crossref.org/works/10.0000%2Fbad.test.doi')
+        .to_return(status: 404,
+                   body: 'not found',
+                   headers: {})
+      stub_request(:get, 'https://api.test.datacite.org/dois/10.0000/bad.test.doi')
         .to_return(status: 404,
                    body: 'not found',
                    headers: {})
