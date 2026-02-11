@@ -65,7 +65,7 @@ module Submission
       #   it exists on permanent store
       #   it has the same size
       # in case a previous job uploaded the file but failed on generating checksum
-      if !permanent_s3.exists?(s3_key: permanent_key) || !permanent_s3.size(s3_key: permanent_key) == file.upload_file_size
+      if !permanent_s3.exists?(s3_key: permanent_key) || permanent_s3.size(s3_key: permanent_key) != file.upload_file_size
         # Copy the file from the URL directly to permanent storage
         s3_perm = Stash::Aws::S3.new(s3_bucket_name: permanent_bucket)
         chunk_size = get_chunk_size(file.upload_file_size)
@@ -86,10 +86,13 @@ module Submission
             write_stream << chunk
             input_size += chunk.length
             Rails.logger.info("file #{file.id} chunk #{chunk_num} size #{chunk.length} ==> #{input_size} (#{Time.now - cycle_time})")
+
             cycle_time = Time.now
             algorithm.update(chunk)
             chunk = read_stream.read(chunk_size)
             chunk_num += 1
+
+            sleep 1 if chunk_num % 500 == 0
           end
         end
 
@@ -100,6 +103,7 @@ module Submission
           update[:digest_type] = digest_type
           update[:digest] = algorithm.hexdigest
           update[:validated_at] = Time.now.utc
+          file.update(update)
         end
       else
         Rails.logger.info("file copy skipped #{file.id} ==> #{permanent_bucket}/#{permanent_key} already exists")
@@ -111,10 +115,10 @@ module Submission
     end
 
     def calculate_digest(s3_connection, file_path)
+      file.reload
       return {} if file.digest.present?
 
       update_info = {}
-
       Rails.logger.info("generating checksum for #{file.id} ==> #{s3_connection.s3_bucket.name}/#{file_path} copied from url")
       digest_type = 'sha-256'
       digest_input = s3_connection.presigned_download_url(s3_key: file_path)
