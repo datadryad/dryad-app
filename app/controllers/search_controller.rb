@@ -72,7 +72,7 @@ class SearchController < ApplicationController
       doi = id&.publication_article_doi
       next nil unless doi.present?
 
-      StashEngine::CounterCitation.citation_metadata(doi: doi, stash_identifier: id).metadata
+      StashEngine::CounterCitation.citation_metadata(doi: doi, stash_identifier: id)&.metadata
     end
   end
 
