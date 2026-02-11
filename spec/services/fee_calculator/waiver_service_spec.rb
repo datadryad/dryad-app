@@ -75,7 +75,7 @@ module FeeCalculator
         context 'on second submit' do
           let(:prev_files_size) { 100 }
           let(:first_resource) { create(:resource, identifier: identifier, total_file_size: prev_files_size, created_at: 2.minutes.ago) }
-          let!(:payment) { create(:resource_payment, resource: first_resource, has_discount: true) }
+          let!(:payment) { create(:resource_payment, resource: first_resource, has_discount: true, status: :paid) }
           let(:resource) { create(:resource, identifier: identifier, total_file_size: new_files_size) }
 
           context 'when files_size do not change' do
@@ -127,7 +127,7 @@ module FeeCalculator
           context 'when discount was previously applied' do
             let(:prev_files_size) { 15_000_000_000 }
             let(:first_resource) { create(:resource, identifier: identifier, total_file_size: prev_files_size, created_at: 2.minutes.ago) }
-            let!(:payment) { create(:resource_payment, resource: first_resource, has_discount: true) }
+            let!(:payment) { create(:resource_payment, resource: first_resource, has_discount: true, status: :paid) }
 
             context 'but does not exceed the current limit' do
               let(:new_files_size) { 50_000_000_000 }
@@ -139,6 +139,13 @@ module FeeCalculator
               let(:new_files_size) { 50_000_000_001 }
 
               it { is_expected.to eq(no_discount_response(808 - 520)) }
+            end
+
+            context 'when discount payment is not paid' do
+              let(:new_files_size) { 50_000_000_001 }
+              let!(:payment) { create(:resource_payment, resource: first_resource, has_discount: true, status: :created) }
+
+              it { is_expected.to eq(charge_response(808 - 520, 180)) }
             end
 
             it_behaves_like 'it has 2 TB max limit'
@@ -174,7 +181,7 @@ module FeeCalculator
         context 'on second submit' do
           let(:prev_files_size) { 100 }
           let(:first_resource) { create(:resource, identifier: identifier, total_file_size: prev_files_size, created_at: 2.minutes.ago) }
-          let!(:payment) { create(:resource_payment, resource: first_resource, has_discount: true) }
+          let!(:payment) { create(:resource_payment, resource: first_resource, has_discount: true, status: :paid) }
           let(:resource) { create(:resource, identifier: identifier, total_file_size: new_files_size) }
 
           context 'when files_size do not change' do
@@ -218,7 +225,7 @@ module FeeCalculator
           context 'when discount was previously applied' do
             let(:prev_files_size) { 15_000_000_000 }
             let(:first_resource) { create(:resource, identifier: identifier, total_file_size: prev_files_size, created_at: 2.minutes.ago) }
-            let!(:payment) { create(:resource_payment, resource: first_resource, has_discount: true) }
+            let!(:payment) { create(:resource_payment, resource: first_resource, has_discount: true, status: :paid) }
 
             context 'but does not exceed the current limit' do
               let(:new_files_size) { 50_000_000_000 }
@@ -230,6 +237,13 @@ module FeeCalculator
               let(:new_files_size) { 50_000_000_001 }
 
               it { is_expected.to eq(no_discount_response(808 - 520, invoice_fee: true)) }
+            end
+
+            context 'when discount payment is not paid' do
+              let(:new_files_size) { 50_000_000_001 }
+              let!(:payment) { create(:resource_payment, resource: first_resource, has_discount: true, status: :created) }
+
+              it { is_expected.to eq(charge_response(808 - 520, 180, invoice_fee: true)) }
             end
 
             it_behaves_like 'it has 2 TB max limit'
