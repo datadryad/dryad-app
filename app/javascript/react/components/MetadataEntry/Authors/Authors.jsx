@@ -83,7 +83,7 @@ export default function Authors({
         event.target.parentElement.previousElementSibling.hidden = true;
         event.target.nextElementSibling.innerHTML = 'Close';
         // eslint-disable-next-line max-len
-        document.getElementById(`invite-${author.id}-alert`).innerHTML = '<p>Collaboration invitation sent! Only one collaborator may edit the submission at a time. To save your work and end your editing session, click &nbsp; <b><i class="fas fa-floppy-disk"></i> Save &amp; exit</b> &nbsp; at the top of the screen</p>';
+        document.getElementById(`invite-${author.id}-alert`).innerHTML = '<p>Collaboration invitation sent! Only one collaborator may edit the submission at a time. To save your work and end your editing session, click &nbsp; <b><i class="fas fa-floppy-disk"></i> Save &amp; exit</b> &nbsp; at the bottom of the screen</p>';
         document.getElementById(`invite-${author.id}-alert`).className = 'callout alt';
         document.getElementById(`invite-dialog${author.id}`).addEventListener('close', () => {
           setAuthors((as) => as.map((a) => (a.id === author.id ? data.data.author : a)));

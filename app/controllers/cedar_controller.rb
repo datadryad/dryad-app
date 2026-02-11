@@ -1,4 +1,5 @@
 class CedarController < ApplicationController
+  include StashEngine::SharedSecurityController
   # Since the CEDAR form doesn't know about Rails, we don't use the default Rails CSRF validation.
   # Instead we pass the CSRF token as an "info" value in the form, and validate it explicitly in the save method
   skip_before_action :verify_authenticity_token, only: [:save]
@@ -41,7 +42,6 @@ class CedarController < ApplicationController
   end
 
   def check
-    resource = StashEngine::Resource.find_by(id: params[:resource_id])
     abstract = resource.descriptions.type_abstract.first&.description
     journal = resource.resource_publication&.publication_name
     search_string = [resource.title, abstract, journal, resource.subjects&.map(&:subject)].flatten.reject(&:blank?).join(' ')
@@ -56,12 +56,10 @@ class CedarController < ApplicationController
   end
 
   def metadata
-    resource = StashEngine::Resource.find_by(id: params[:resource_id])
     render json: resource.cedar_json.json
   end
 
   def save
-    resource = StashEngine::Resource.find_by(id: params[:resource_id])
     render json: { error: 'resource-not-found' }.to_json, status: 404 unless resource.present?
     if resource.cedar_json.present?
       resource.cedar_json.update(json_params)
@@ -72,7 +70,6 @@ class CedarController < ApplicationController
   end
 
   def delete
-    resource = StashEngine::Resource.find_by(id: params[:resource_id])
     render json: { error: 'resource-not-found' }.to_json, status: 404 and return unless resource.present? && resource.cedar_json.present?
 
     resource.cedar_json.destroy
@@ -80,12 +77,15 @@ class CedarController < ApplicationController
   end
 
   def preview
-    @resource = StashEngine::Resource.find_by(id: params[:resource_id])
     @template = @resource.cedar_json.cedar_template
     render template: 'stash_engine/downloads/preview_cedar', formats: [:js]
   end
 
   private
+
+  def resource
+    @resource ||= StashEngine::Resource.find(params[:resource_id])
+  end
 
   def json_params
     j = params.permit(:json, :template_id)

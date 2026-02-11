@@ -4,7 +4,7 @@ class PaymentsController < ApplicationController
   include StashEngine::SharedSecurityController
 
   skip_before_action :verify_authenticity_token
-  before_action :load_resource
+  before_action :resource
   before_action :ajax_require_unsubmitted, only: :create
 
   layout 'stash_engine/application'
@@ -85,8 +85,8 @@ class PaymentsController < ApplicationController
 
   private
 
-  def load_resource
-    @resource = StashEngine::Resource.find(params[:resource_id])
+  def resource
+    @resource ||= StashEngine::Resource.find(params[:resource_id])
   end
 
   def identifier

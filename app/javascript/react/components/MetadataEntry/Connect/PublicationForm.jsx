@@ -70,6 +70,7 @@ function PublicationForm({
       formRef.current.values.pub_issn = '';
     };
     if (current && hidden) {
+      const initial = JSON.stringify(formRef.current.initialValues);
       if (importType === 'manuscript') {
         formRef.current.values.msid = '';
         if (!connections.includes('published')) unsetJournal();
@@ -77,7 +78,7 @@ function PublicationForm({
         formRef.current.values.primary_article_doi = '';
         if (!connections.includes('manuscript')) unsetJournal();
       }
-      if (JSON.stringify(formRef.current.initialValues) !== JSON.stringify(formRef.current.values)) submitForm(formRef.current.values);
+      if (initial !== JSON.stringify(formRef.current.values)) submitForm(formRef.current.values);
     }
   }, [current, hidden]);
 
