@@ -70,7 +70,7 @@ export default function Cedar({resource, setResource, templates}) {
     if (!isEqual(template, templateRef.current)) {
       if (template === null) {
         axios.delete(
-          `/cedar/save/${resource.id}`,
+          `/cedar/delete/${resource.id}`,
           {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
         ).then(() => {
           setMetadata(null);
