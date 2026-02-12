@@ -1,5 +1,5 @@
 <% metrics = metrics_chart(doi) %>
-<% max = get_max(metrics[:views]) %>
+<% max = get_max(metrics[:citations]) %>
 <% desc = metrics[:dates].map { |d| "#{d}: #{metrics[:views].find{|m| m[:x] == d}&.[](:y) || 0} views, #{metrics[:downloads].find{|m| m[:x] == d}&.[](:y) || 0} downloads, #{metrics[:citations].find{|m| m[:x] == d}&.[](:y) || 0} citations" }.join('; ') %>
 <div class="author-metrics">
 <canvas id="metrics-chart<%= i %>" role="img" role="img" aria-label="Line chart showing dataset metrics. <%= desc %>"></canvas>
@@ -34,10 +34,16 @@
       responsive: true,
       interaction: { mode: 'index', intersect: false },
       stacked: false,
+      ticks: {
+        count: <%= max.even? ? 5 : 6 %>,
+        precision: 0
+      },
       scales: {
         y: {
           type: 'linear',
           position: 'left',
+          suggestedMin: 0,
+          suggestedMax: <%= max.even? ? 4 : 5 %>,
           title: {
             display: true,
             text: 'Views & Downloads'
@@ -46,7 +52,8 @@
         y1: {
           type: 'linear',
           position: 'right',
-          suggestedMax: <%= max/100 %>,
+          suggestedMin: 0,
+          suggestedMax: <%= max.even? ? 4 : 5 %>,
           title: {
             display: true,
             text: 'Citations'

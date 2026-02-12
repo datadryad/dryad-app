@@ -120,7 +120,7 @@ module SearchHelper
   end
 
   def get_max(metrics)
-    return 10 if metrics.empty?
+    return 0 if metrics.empty?
 
     number = metrics.max { |a, b| a[:y] <=> b[:y] }[:y].to_i
     divisor = 10**Math.log10(number).floor
