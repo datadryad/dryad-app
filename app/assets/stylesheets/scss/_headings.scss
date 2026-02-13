@@ -107,8 +107,9 @@ h6 {
 
   &::after {
     font-family: 'Font Awesome 6 Free';
-    content: " \f0d7";
-    content: " \f0d7" / '';
+    content: " \f0da";
+    content: " \f0da" / '';
+    vertical-align: -1px;
     font-weight: 900;
   }
 
@@ -122,8 +123,8 @@ h6 {
   }
 
   &[aria-expanded=true]::after {
-    content: " \f0d8";
-    content: " \f0d8" / '';
+    content: " \f0d7";
+    content: " \f0d7" / '';
   }
 
   &:hover, &:focus-visible {

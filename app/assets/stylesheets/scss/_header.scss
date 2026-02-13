@@ -355,16 +355,20 @@
   background-color: transparent;
 
   &::after {
+    display: inline-block;
     color: white;
     font-family: 'Font Awesome 6 Free';
-    content: " \f0d7";
-    content: " \f0d7" / '';
+    content: " \f0da";
+    content: " \f0da" / '';
+    vertical-align: -1px;
+    width: 10px;
+    padding-left: .25ch;
     font-weight: 900;
   }
 
   &[aria-expanded=true]::after {
-    content: " \f0d8";
-    content: " \f0d8" / '';
+    content: " \f0d7";
+    content: " \f0d7" / '';
   }
 
   @include bp(screen3) {

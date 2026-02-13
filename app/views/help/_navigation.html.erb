@@ -5,19 +5,19 @@
         <li><%= render partial: 'search_form' %></li>
       <% end %>
       <li>
-        <span>My account</span>
+        <%= create_nav('account', 'My account').html_safe %>
         <%= create_menu(account).html_safe %>
       </li>
       <li>
-        <span>Submission steps</span>
+        <%= create_nav('submission_steps').html_safe %>
         <%= create_menu(submission_steps).html_safe %>
       </li>  
       <li>
-        <span>Requirements</span>
+        <%= create_nav('requirements').html_safe %>
         <%= create_menu(requirements).html_safe %>
       </li>
       <li>
-        <span>Guides</span>
+        <%= create_nav('guides').html_safe %>
         <%= create_menu(guides).html_safe %>
       </li>
     </ul>
