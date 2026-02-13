@@ -20,7 +20,7 @@ module HelpHelper
     request.path == '/help' || request.path.include?(path)
   end
 
-  def create_nav(path, label = nil) 
+  def create_nav(path, label = nil)
     label ||= path.humanize
 
     "<span class=\"expand-button\"><button aria-controls=\"#{path}\" aria-expanded=\"#{expanded?(path)}\">#{label}</button></span>"
