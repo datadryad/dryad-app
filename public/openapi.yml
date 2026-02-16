@@ -1311,7 +1311,7 @@ components:
           description: The methods by which the data was produced. Not required for publication.
         usageNotes:
           type: string
-          description: Usage notes for the dataset. Deprecated; It is preferred for this content to appear in the README file for the dataset. 
+          description: Usage notes for the dataset (Deprecated; It is preferred for this content to appear in the README file for the dataset). If the dataset has been retracted, the retraction statement will appear here.
         locations:
           type: array
           items:
