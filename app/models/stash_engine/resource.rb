@@ -13,7 +13,6 @@
 #  hold_for_peer_review      :boolean          default(FALSE)
 #  loosen_validation         :boolean          default(FALSE)
 #  meta_view                 :boolean          default(FALSE)
-#  peer_review_end_date      :datetime
 #  preserve_curation_status  :boolean          default(FALSE)
 #  publication_date          :datetime
 #  skip_datacite_update      :boolean          default(FALSE)
@@ -697,7 +696,7 @@ module StashEngine
     end
 
     def previous_resource_published?
-      %w[published embargoed].include?(previous_resource&.last_curation_activity&.status)
+      %w[published embargoed retracted].include?(previous_resource&.last_curation_activity&.status)
     end
 
     def manuscript

@@ -249,7 +249,11 @@ module StashEngine
     end
 
     def published?
-      %w[published embargoed].include?(pub_state)
+      %w[published embargoed retracted].include?(pub_state)
+    end
+
+    def retracted?
+      pub_state == 'retracted'
     end
 
     def to_s
@@ -406,6 +410,7 @@ module StashEngine
       states = resources.map(&:current_curation_status).compact
 
       return 'withdrawn' if states.last == 'withdrawn'
+      return 'retracted' if states.last == 'retracted'
 
       states.reverse_each do |state|
         return state if %w[published embargoed].include?(state)
@@ -439,7 +444,7 @@ module StashEngine
       # because there is nothing of interest to see in this version of no-file changes between published versions
       unchanged = true
       resources.each do |res|
-        unchanged &&= res.files_unchanged?(association: 'data_files')
+        unchanged &&= !res.has_file_changes?
         if res.file_view == true
           res.update_column(:file_view, false) if unchanged
           unchanged = true
