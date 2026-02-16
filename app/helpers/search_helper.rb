@@ -123,6 +123,8 @@ module SearchHelper
     return 0 if metrics.empty?
 
     number = metrics.max { |a, b| a[:y] <=> b[:y] }[:y].to_i
+    return 0 if number.zero?
+
     divisor = 10**Math.log10(number).floor
     i = number / divisor
     remainder = number % divisor
