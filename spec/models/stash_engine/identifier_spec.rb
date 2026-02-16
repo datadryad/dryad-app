@@ -780,6 +780,8 @@ module StashEngine
         resources[0].data_files << DataFile.create(file_state: 'created', download_filename: 'fun.cat', upload_file_size: 666)
         resources[1].data_files << DataFile.create(file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
         resources[2].data_files.destroy_all
+        resources[2].update(has_file_changes: false)
+        # adding a copied file should not update has_file_changes
         resources[2].data_files << DataFile.create(file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
 
         @identifier.fill_resource_view_flags

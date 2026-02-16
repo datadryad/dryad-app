@@ -63,7 +63,7 @@ FactoryBot.define do
     end
 
     trait :retracted do
-      status { 'embargoed' }
+      status { 'retracted' }
       after(:create) do |act|
         act.resource.update(meta_view: true)
         act.resource.identifier.update(pub_state: 'retracted')
