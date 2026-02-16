@@ -9,7 +9,7 @@
       <% if @resource.identifier.embargoed_until_article_appears? %>
         This dataset is embargoed and will be released when the associated article is published. Contact <a class="emailr" href="mailto:dev@null?subject=Article published for <%= @resource.identifier.to_s %>" aria-label="Email Dryad help desk">gro.dayrdatad@pleh</a> to notify us of article publication.
       <% else %><% auth = @resource.authors.first %>
-        This dataset is embargoed <% if @resource.publication_date.present? && @resource.publication_date > Time.new.utc -%> and will be released on <%= formatted_date(@resource.publication_date) %><% end %>.<% if auth&.author_email&.present? %> Please contact <%= auth.author_standard_name %> at <a class="emailr" href="mailto:dev@null"  aria-label="Email <%= auth.author_standard_name %>"><%= auth.author_email.reverse! %></a>
+        This dataset is embargoed<% if @resource.publication_date.present? && @resource.publication_date > Time.new.utc -%> and will be released on <%= formatted_date(@resource.publication_date) %><% end %>.<% if auth&.author_email&.present? %> Please contact <%= auth.author_standard_name %> at <a class="emailr" href="mailto:dev@null"  aria-label="Email <%= auth.author_standard_name %>"><%= auth.author_email.reverse! %></a>
       with any questions.<% end %>
       <% end %>
     </p>
