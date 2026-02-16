@@ -185,11 +185,3 @@ thresholds:
       # https://anubis.techaro.lol/docs/admin/configuration/challenges/proof-of-work
       algorithm: fast
       difficulty: 6
-
-#impressum:
-#  footer: >-
-#    Footer message on all pages
-#  page:
-#    title: Custom title
-#    body: >-
-#      Custom page
