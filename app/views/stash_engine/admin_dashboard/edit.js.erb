@@ -1,5 +1,6 @@
 // open a modal dialog
 document.getElementById('genericModalContent').innerHTML = "<%= escape_javascript(render partial: 'curation_form') %>";
+ReactRailsUJS.mountComponents()
 document.getElementById('genericModalDialog').showModal();
 document.getElementById('cancel_dialog').removeEventListener('click', cancelClick);
 document.getElementById('cancel_dialog').addEventListener('click', cancelClick);

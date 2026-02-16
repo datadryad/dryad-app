@@ -59,6 +59,11 @@
     } else {
       document.getElementById('c-input_publication_date').setAttribute('hidden', 'hidden');
     }
+    if (e.currentTarget.value === 'retracted') {
+      document.getElementById('retraction_options').removeAttribute('hidden')
+    } else {
+      document.getElementById('retraction_options').setAttribute('hidden', 'hidden')
+    }
   }
   const searchSave = () => {
     if (document.getElementById('search_save')) {

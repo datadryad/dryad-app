@@ -5,35 +5,50 @@
   <% when 'curation_activity' %>
     <p>Edit curation status of <b><%= @resource.title&.html_safe || '[No title provided]' %></b></p>
     <%= hidden_field_tag :identifier_id, @resource.identifier_id %>
-    <%# Users cannot change the status or publication date once the files are published %>
+    <%# Users cannot change the status if the files have not been submitted %>
     <% if policy(@resource).change_status? && filter_status_select(@resource.current_curation_status) %>
       <%= form.fields_for :curation_activity, @curation_activity do |ca| %>
-          <div class="c-input">
-            <%= ca.label :status, 'Status', class: 'c-input__label' %>
-            <%= ca.select :status, options_for_select(filter_status_select(@resource.current_curation_status)), {include_blank: true}, {class: 'c-input__select', required: true} %>
-          </div>
+        <div class="c-input">
+          <%= ca.label :status, 'Status', class: 'input-label' %>
+          <%= ca.select :status, options_for_select(filter_status_select(@resource.current_curation_status)), {include_blank: true}, {class: 'c-input__select', required: true} %>
+        </div>
       <% end %>
     <% else %>
       <p>Due to the state of the files, the submission status cannot be changed.<br/> Notes may be added.</p>
     <% end %>
-    <%# User can change the publication date if the resource is published or embargoed %>
+    <%# User can add a publication date if the resource is published or embargoed %>
     <div class="c-input" id="c-input_publication_date" hidden>
       <%= form.label :publication_date, 'Publication date', class: 'c-input__label' %>
-      <%= form.date_field :publication_date, class: 'c-input__text' %>
+      <%= form.date_field :publication_date, value: @resource.publication_date, class: 'c-input__text' %>
+    </div>
+    <%# Users must add a note if the resource is retracted %>
+    <div id="retraction_options" hidden>
+      <%= react_component('components/MetadataEntry/Description/Description', { 
+        setResource: escape_javascript(() => {}), 
+        dcsDescription: StashDatacite::Description.find_or_create_by(resource_id: @resource.id, description_type: 'concern'), 
+        mceLabel: {
+          label: 'Retraction notice',
+          required: true,
+          describe: 'A statement explaining the retraction of the dataset'
+        }
+      }) %>
+      <div class="c-input">
+        <p><%= form.check_box :file_view, { checked: @resource.file_view? }, 1, 0 %> <%= form.label :file_view, "Display files, README, etc.", class: 'input_label' %></p>
+      </div>
     </div>
   <% when 'curator' %>
     <p>Change curator for <em><%= @resource.title&.html_safe %></em></p>
     <%= hidden_field_tag :identifier_id, @resource.identifier_id %>
     <%= form.fields_for :curator, @resource.curator do |r| %>
       <div class="c-input">
-        <%= r.label :id, 'Curator', class: 'c-input__label' %>
+        <%= r.label :id, 'Curator', class: 'input-label' %>
         <%= r.select :id, options_for_select([['(unassign)', '0']] + editor_select, @resource.user_id), {include_blank: true}, {class: 'c-input__select'} %>
       </div>
     <% end %>
   <% end %>
   <%= form.fields_for :curation_activity, @curation_activity do |ca| %>
     <div class="c-input">
-      <%= ca.label :note, 'Notes', class: 'c-input__label' %>
+      <%= ca.label :note, 'Notes', class: 'input-label' %>
       <%= ca.text_area :note, class: 'c-input__textarea', style: 'width: 100%;' %>
     </div>
   <% end %>

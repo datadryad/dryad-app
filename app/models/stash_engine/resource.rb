@@ -576,7 +576,8 @@ module StashEngine
         SUBMITTED: identifier.process_date.queued,
         ISSUED: identifier.datacite_issued_date,
         AVAILABLE: available,
-        UPDATED: update == available ? nil : update
+        UPDATED: update == available ? nil : update,
+        WITHDRAWN: identifier.process_date.retracted
       }
     end
 
