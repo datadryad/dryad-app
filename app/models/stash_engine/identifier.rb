@@ -429,7 +429,7 @@ module StashEngine
           res.update_columns(meta_view: false, file_view: false)
         when 'embargoed'
           res.update_columns(meta_view: true, file_view: false)
-        when 'published'
+        when 'published', 'retracted'
           res.update_columns(meta_view: true, file_view: true)
           my_pub = true
         end
