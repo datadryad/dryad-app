@@ -41,7 +41,9 @@
             </p>
           <% end %>
         </div>
-        <%= render partial: 'metrics_chart', locals: {i: i, doi: result['dc_identifier_s']} %>
+        <div class="author-metrics" id="author_metrics<%= i %>" data-load="<%= metrics_chart_path(format: :js, index: i, doi: result['dc_identifier_s']) %>" aria-busy="true" aria-live="polite">
+          <p><i class="fas fa-spin fa-spinner" aria-hidden="true"></i></p>
+        </div>
       </li>
     <% end %>
   </ul>

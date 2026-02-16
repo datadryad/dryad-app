@@ -1,0 +1,2 @@
+document.getElementById('author_metrics<%= params[:index]%>').innerHTML = ''
+document.getElementById('author_metrics<%= params[:index]%>').append(document.createRange().createContextualFragment("<%= escape_javascript(render partial: 'metrics_chart') %>"));

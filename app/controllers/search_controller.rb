@@ -28,6 +28,39 @@ class SearchController < ApplicationController
     @articles = articles
   end
 
+  # rubocop:disable Metrics/AbcSize
+  def metrics_chart
+    metrics = Datacite::Metadata.new(doi: params[:doi]).metrics
+    views = metrics[:views]
+    downloads = metrics[:downloads]
+    citations = metrics[:citations]
+    respond_to do |format|
+      format.js do
+        return @metrics = { dates: [Date.today.strftime('%Y')], views: [], downloads: [], citations: [] } unless metrics.dig(:views, 0).present?
+
+        range = (Date.parse("#{metrics[:views].first['yearMonth']}-01")..Date.today).map { |d| d.strftime('%Y-%m') }.uniq
+
+        if range.length > 36
+          range = range.map { |d| d[0..3] }.uniq
+          views = group_metric(views)
+          downloads = group_metric(downloads)
+        end
+
+        @metrics = {
+          dates: range.map { |d| label_format(d) },
+          views: views.map { |m| { x: label_format(range.reverse.find { |d| d.start_with?(m['yearMonth']) }), y: m['total'] } },
+          downloads: downloads.map { |m| { x: label_format(range.reverse.find { |d| d.start_with?(m['yearMonth']) }), y: m['total'] } },
+          citations: citations.reject { |m| m['year'] == '0000' }.map do |m|
+            { x: label_format(range.reverse.find do |d|
+              d.start_with?(m['year'])
+            end), y: m['total'] }
+          end
+        }
+      end
+    end
+  end
+  # rubocop:enable Metrics/AbcSize
+
   # Endpoint called from LinkOut buttons on Pubmed site but could be used to locate a Dataset
   # based on manuscript number or pubmed id
   # GET discover?query=doi/pmid/manuscript
@@ -83,6 +116,18 @@ class SearchController < ApplicationController
   def per_page
     @page_size = 10 if params[:page_size].blank? || params[:page_size].to_i == 0
     @page_size ||= params[:page_size].to_i
+  end
+
+  def label_format(d)
+    c = d.split('-')
+    return Date.new(c.first.to_i, c.last.to_i, 1).strftime('%b %Y') if d.length > 4
+
+    d
+  end
+
+  def group_metric(metric)
+    h = metric.group_by { |m| m['yearMonth'][0..3] }
+    h.map { |k, v| { 'yearMonth' => k, 'total' => v.sum { |m| m['total'] } } }
   end
 
   def find_related(related)
