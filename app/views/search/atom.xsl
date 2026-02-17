@@ -4,6 +4,7 @@
   <xsl:param name="page" select="1"/>
   <xsl:param name="size" select="10"/>
   <xsl:param name="title" select="'Dryad search results'"/>
+  <xsl:param name="desc"/>
   <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
   
   <xsl:template match="/">
@@ -13,6 +14,9 @@
   <xsl:template match="response">
     <feed xml:lang="en">
       <title><xsl:value-of select="$title"/></title>
+      <xsl:if test="$desc != ''">
+        <subtitle><xsl:value-of select="$desc"/></subtitle>
+      </xsl:if>
       <id><xsl:value-of select="$url"/></id>
       <updated>
         <xsl:apply-templates select="//doc[1]/date[@name='dct_issued_dt']"/>

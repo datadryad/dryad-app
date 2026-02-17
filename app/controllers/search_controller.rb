@@ -133,12 +133,14 @@ class SearchController < ApplicationController
   end
 
   def atom_xml(result)
+    ss = StashEngine::SavedSearch.find_by(id: params[:id])
     url = new_search_url(request.parameters.except(:action, :controller, :page, :page_size, :format)).gsub('/search', '/search.xml')
     xml = Nokogiri::XML::Document.parse(result)
     xsl = Nokogiri::XSLT.parse(File.read(File.expand_path('../views/search/atom.xsl', File.dirname(__FILE__))))
     xsl_params = Nokogiri::XSLT.quote_params(
       { 'url' => url.to_s,
-        'title' => StashEngine::SavedSearch.find_by(id: params[:id])&.title || 'Dryad search results',
+        'title' => ss&.title || 'Dryad search results',
+        'desc' => ss&.description,
         'page' => page }
     )
     xsl.transform(xml, xsl_params).to_xml

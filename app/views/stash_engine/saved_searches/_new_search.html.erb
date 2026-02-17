@@ -3,7 +3,8 @@
   <% if current_user.public_searches.count == 50 %>
     <p>You have 50 saved searches. Please delete one of your <a href="/account#saved" style="font-weight: normal;">existing saved searches</a> to create more.</p>
   <% else %>
-    <p>Save search terms and filters to repeat searches and discover new datasets as they are published. Add a name and description to help you identify this search.</p>
+    <p>Save your search to easily repeat it. Once saved, you can subscribe to be notified of new dataset results for this search as they are published.</p>
+    <p>Add a name and description to help you identify this search.</p>
     <%= form_with(model: StashEngine::PublicSearch, url: stash_url_helpers.saved_search_path, method: :post, local: false ) do %>
       <input type="hidden" name="type" value="StashEngine::PublicSearch">
       <input type="hidden" name="user_id" value="<%= current_user.id %>">
