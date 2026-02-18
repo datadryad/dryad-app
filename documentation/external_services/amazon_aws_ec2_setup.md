@@ -444,8 +444,8 @@ Change configuration files
 ```
 POLICY_FNAME=/home/ec2-user/deploy/current/public/anubis/datadryad.botPolicies.yaml
 OVERLAY_FOLDER=/home/ec2-user/deploy/current/public/anubis
-CHALLENGE_TITLE="Making sure you're not a bot!"
-ERROR_TITLE="Client error"
+CHALLENGE_TITLE="Validating..."
+ERROR_TITLE="Sorry, something went wrong."
 ```
 
 In case you are not using the configuration file from the codebase as configured above,
