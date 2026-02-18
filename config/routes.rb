@@ -486,9 +486,9 @@ Rails.application.routes.draw do
   scope module: 'search', path: 'search' do
     get '/', to: 'search', as: 'new_search'
     get '/advanced', to: 'advanced', as: "advanced_search"
-    get '/metrics', to: 'metrics_chart', as: 'metrics_chart'
   end
   get 'author/:orcid', to: 'search#author_profile', as: 'author_profile'
+  get 'metrics_chart', to: 'search#metrics_chart', as: 'metrics_chart'
 
   get '/latest', to: 'latest#index', as: 'latest_index'
   
