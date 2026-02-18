@@ -1,6 +1,7 @@
 class SearchController < ApplicationController
   include StashEngine::SharedController
   include StashEngine::SharedSecurityController
+  protect_from_forgery except: :metrics_chart
 
   def search
     service = StashApi::SolrSearchService.new(query: params[:q], filters: params.except(:q, :action, :controller))
