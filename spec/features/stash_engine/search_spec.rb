@@ -50,7 +50,7 @@ RSpec.feature 'Search', type: :feature, js: true do
       # create
       visit new_search_path
       click_button 'Save search'
-      expect(page).to have_text('Save search terms and filters')
+      expect(page).to have_text('Save your search to easily repeat it')
       fill_in('title', with: 'Test search')
       click_button 'Submit'
       expect(page).to have_link('your saved searches')
