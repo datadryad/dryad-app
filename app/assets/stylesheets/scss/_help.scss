@@ -12,11 +12,12 @@
 		a[aria-current] {
 			&:before {
 				display: inline-block;
-				vertical-align: 1px;
+				vertical-align: 2px;
+				margin-top: -2px;
 				margin-left: -2.15ch;
 				margin-right: .35ch;
 				font-family: 'Font Awesome 6 Free';
-				font-size: .7rem;
+				font-size: .65rem;
 	    	font-weight: 900;
 	    	content: '\f005';
 	    	content: '\f005' / '';
@@ -54,6 +55,9 @@
 		color: white;
 		height: 34px;
 		width: 36px;
+		i {
+			vertical-align: -2px;
+		}
 	}
 	[type="reset"] {
 		font-family: 'Font Awesome 6 Free';

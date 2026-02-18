@@ -129,6 +129,7 @@ HELP_PAGES_STEPS =
 
 HELP_PAGES_GUIDES =
   [
+    { path: '/help/guides/search', name: 'Searching for data'},
     { path: '/help/guides/submission', name: 'Submitting data' },
     { path: '/help/guides/curation', name: 'Dataset curation' },
     { path: '/help/guides/publication', name: 'Published datasets' },

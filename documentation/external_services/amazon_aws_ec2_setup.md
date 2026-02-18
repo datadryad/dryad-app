@@ -66,7 +66,7 @@ cp ~/dryad-app/script/server-utils/deploy_dryad.sh ~/bin/
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 . ~/.nvm/nvm.sh
 nvm install --lts
-nvm install 20.13.1
+nvm install 24.13.0
 npm install --global yarn
 cd ~/dryad-app
 yarn install
@@ -74,13 +74,13 @@ npm install --legacy-peer-deps
 
 # add a symlink so other account use the correct node version
 sudo su -
-ln -s /home/ec2-user/.nvm/versions/node/v20.13.1/bin/node /usr/bin/node
+ln -s /home/ec2-user/.nvm/versions/node/v24.13.0/bin/node /usr/bin/node
 exit
 ```
 - ensure config is correct in startup scripts; add the following to .bashrc
 ```
 . ~/.nvm/nvm.sh
-nvm use 20.13.1 >/dev/null
+nvm use 24.13.0 >/dev/null
 export RAILS_ENV=stage 
 ```
 
