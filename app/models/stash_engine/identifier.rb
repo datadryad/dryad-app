@@ -326,7 +326,7 @@ module StashEngine
     end
 
     def automatic_ppr?
-      return false unless latest_manuscript.present? || journal&.default_to_ppr?
+      return false unless journal&.default_to_ppr?
       return false if accepted_for_publication?
       return false if has_rejected_manuscript?
 

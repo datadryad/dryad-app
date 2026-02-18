@@ -157,11 +157,8 @@ module StashEngine
       @resource.check_add_cedar_json
       dpc_checks = {
         total_file_size: @resource.total_file_size,
-        journal_will_pay: @resource.identifier.journal_will_pay?,
         institution_will_pay: @resource.identifier.institution_will_pay?,
         funder_will_pay: @resource.identifier.funder_will_pay?,
-        user_must_pay: @resource.identifier.user_must_pay?,
-        paying_funder: @resource.identifier.funder_payment_info&.contributor_name,
         aff_tenant: StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id)&.connect_list&.first,
         allow_review: @resource.identifier.allow_review?,
         automatic_ppr: @resource.identifier.automatic_ppr?,
