@@ -16,12 +16,12 @@ GIT
 
 GIT
   remote: https://github.com/seuros/capistrano-puma.git
-  revision: 73aebc9c82cda11b2719ce7fa0822010082f4678
+  revision: 5ab9b0e9e2b33dada723a2bffc2ab05390eaa4ec
   specs:
-    capistrano3-puma (6.2.0)
+    capistrano3-puma (7.0.0)
       capistrano (~> 3.7)
       capistrano-bundler
-      puma (>= 5.1, < 7.0)
+      puma (>= 6.1, < 8.0)
 
 GIT
   remote: https://github.com/smartinez87/exception_notification.git
@@ -495,7 +495,7 @@ GEM
     pundit (2.4.0)
       activesupport (>= 3.0.0)
     racc (1.8.1)
-    rack (3.2.1)
+    rack (3.2.5)
     rack-attack (6.7.0)
       rack (>= 1.0, < 4)
     rack-mini-profiler (3.3.1)

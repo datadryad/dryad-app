@@ -24,6 +24,10 @@ Data may be submitted and published at any time. However, if your data is associ
 * Dryad usually does not grant short- or long-term embargoes of data, but we will consider requests in specific instances (i.e., graduate students publishing thesis data that they intend to use for other parts of their thesis/dissertation; media blackouts around a study). If you wish to embargo data beyond the publication date of the associated article, we require confirmation from the publishing journal. Please submit an embargo request to <a class="emailr" href="mailto:dev@null?subject=Embargo+request&body=My+Dryad+dataset+DOI:%0D%0AEmbargo+reason:" aria-label="Email Dryad help desk">gro.dayrdatad@pleh</a> at the time of submission.
 * Regardless of journal, you may choose to make your data temporarily [Private for Peer Review](#private-for-peer-review).
 
+### Submission via API
+
+Dryad offers our partner organizations the ability to programmatically submit data via the [Dryad API](/api). Please [contact our partnerships team](/contact#get-involved) for more information.
+
 
 ## Create your submission
 

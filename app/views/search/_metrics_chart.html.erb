@@ -1,32 +1,29 @@
-<% metrics = metrics_chart(doi) %>
-<% max = get_max(metrics[:views]) %>
-<% desc = metrics[:dates].map { |d| "#{d}: #{metrics[:views].find{|m| m[:x] == d}&.[](:y) || 0} views, #{metrics[:downloads].find{|m| m[:x] == d}&.[](:y) || 0} downloads, #{metrics[:citations].find{|m| m[:x] == d}&.[](:y) || 0} citations" }.join('; ') %>
-<div class="author-metrics">
-<canvas id="metrics-chart<%= i %>" role="img" role="img" aria-label="Line chart showing dataset metrics. <%= desc %>"></canvas>
-</div>
+<% max = get_max(@metrics[:citations]) %>
+<% desc = @metrics[:dates].map { |d| "#{d}: #{@metrics[:views].find{|m| m[:x] == d}&.[](:y) || 0} views, #{@metrics[:downloads].find{|m| m[:x] == d}&.[](:y) || 0} downloads, #{@metrics[:citations].find{|m| m[:x] == d}&.[](:y) || 0} citations" }.join('; ') %>
+<canvas id="metrics-chart<%= params[:index] %>" role="img" role="img" aria-label="Line chart showing dataset metrics. <%= desc %>"></canvas>
 <script>
   Chart.defaults.font.family = 'KievitWeb';
   Chart.defaults.font.size = 13;
 
-  new Chart(document.getElementById('metrics-chart<%= i %>').getContext('2d'), {
+  new Chart(document.getElementById('metrics-chart<%= params[:index] %>').getContext('2d'), {
     type: 'line',
     data: { 
-      labels: <%= metrics[:dates].to_json.html_safe %>,
+      labels: <%= @metrics[:dates].to_json.html_safe %>,
       datasets: [
         {
           label: 'Views',
           yAxisID: 'y',
-          data: <%= metrics[:views].to_json.html_safe %>          
+          data: <%= @metrics[:views].to_json.html_safe %>          
         },
         {
           label: 'Downloads',
           yAxisID: 'y',
-          data: <%= metrics[:downloads].to_json.html_safe %>          
+          data: <%= @metrics[:downloads].to_json.html_safe %>          
         },
         {
           label: 'Citations',
           yAxisID: 'y1',
-          data: <%= metrics[:citations].to_json.html_safe %>          
+          data: <%= @metrics[:citations].to_json.html_safe %>          
         },
       ]
     },
@@ -34,10 +31,16 @@
       responsive: true,
       interaction: { mode: 'index', intersect: false },
       stacked: false,
+      ticks: {
+        count: <%= max.even? ? 5 : 6 %>,
+        precision: 0
+      },
       scales: {
         y: {
           type: 'linear',
           position: 'left',
+          suggestedMin: 0,
+          suggestedMax: <%= max.even? ? 4 : 5 %>,
           title: {
             display: true,
             text: 'Views & Downloads'
@@ -46,7 +49,8 @@
         y1: {
           type: 'linear',
           position: 'right',
-          suggestedMax: <%= max/100 %>,
+          suggestedMin: 0,
+          suggestedMax: <%= max.even? ? 4 : 5 %>,
           title: {
             display: true,
             text: 'Citations'

@@ -863,18 +863,6 @@ paths:
           description:
             The journal ISSN.
         - in: query
-          name: relatedWorkIdentifier
-          schema:
-            type: string
-          description:
-            A DOI or other URL that links a dataset to a related work. It allows `*` as a wildcard at the beginning and/or end of the value.
-        - in: query
-          name: relatedWorkRelationship
-          schema:
-            type: string
-          description:
-            The type of relationship expressed by a related work.
-        - in: query
           name: relatedId
           schema:
             type: string
@@ -898,6 +886,18 @@ paths:
             only be returned that have been published before the given
             time. The time must be specified in ISO 8601 format, and the time
             zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`.
+        - in: query
+          name: relatedWorkIdentifier
+          schema:
+            type: string
+          description:
+            A DOI or other URL that links a dataset to a related work. It allows `*` as a wildcard at the beginning and/or end of the value.
+        - in: query
+          name: relatedWorkRelationship
+          schema:
+            type: string
+          description:
+            The type of relationship expressed by a related work.
         - in: query
           name: modifiedSince
           schema:

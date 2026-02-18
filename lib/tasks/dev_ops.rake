@@ -101,6 +101,7 @@ namespace :dev_ops do
     file = File.join(directory, "#{Rails.env}_#{Time.now.strftime('%H')}_00.sql")
     p command = 'mysqldump --opt --skip-add-locks --single-transaction --no-create-db --set-gtid-purged=off ' \
                 '--ignore-table=dryad.stash_engine_container_files ' \
+                '--ignore-table=dryad.paper_trail_version ' \
                 '--ignore-table=dryad.stash_engine_ror_orgs --ignore-table=dryad.stash_engine_curation_stats ' \
                 '--ignore-table=dryad.stash_engine_frictionless_reports --ignore-table=dryad.stash_engine_download_tokens ' \
                 "-h #{db['host']} -u #{db['username']} -p#{db['password']} #{db['database']} | gzip > #{file}.gz"

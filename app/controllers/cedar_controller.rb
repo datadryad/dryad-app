@@ -79,7 +79,7 @@ class CedarController < ApplicationController
   end
 
   def preview
-    @template = @resource.cedar_json.cedar_template
+    @template = resource.cedar_json.cedar_template
     render template: 'stash_engine/downloads/preview_cedar', formats: [:js]
   end
 

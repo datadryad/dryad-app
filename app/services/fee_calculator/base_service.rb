@@ -97,7 +97,9 @@ module FeeCalculator
     private
 
     def verify_new_payment_system
-      raise ActionController::BadRequest, OLD_PAYMENT_SYSTEM_MESSAGE if resource && !@payment_plan_is_2025
+      return if resource.blank? || @payment_plan_is_2025 || resource.identifier.old_payment_system?
+
+      raise ActionController::BadRequest, OLD_PAYMENT_SYSTEM_MESSAGE
     end
 
     def verify_payer
