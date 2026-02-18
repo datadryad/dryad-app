@@ -68,5 +68,26 @@ RSpec.feature 'Search', type: :feature, js: true do
       click_button 'Delete saved search: Edited search'
       expect(page).not_to have_css('#public_searches_list li')
     end
+
+    it 'saves a search and loads the atom feed' do
+      sign_in(create(:user))
+      # create
+      visit new_search_path
+      click_button 'Save search'
+      expect(page).to have_text('Save your search to easily repeat it')
+      fill_in('title', with: 'Test saved search')
+      fill_in('description', with: 'This is a test search of Dryad')
+      click_button 'Submit'
+      expect(page).to have_link('your saved searches')
+      # edit
+      click_link 'your saved searches'
+      within(find('#public_searches_list li:first-child')) do
+        expect(page).to have_link('Test saved search')
+        expect(page).to have_link('Copy link to web feed')
+      end
+      visit find_link('Copy link to web feed')[:href]
+      expect(page).to have_content('<?xml version="1.0" encoding="UTF-8"?>')
+      # the rest of the file will not load without rsolr
+    end
   end
 end
