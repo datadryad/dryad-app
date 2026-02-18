@@ -47,8 +47,6 @@ module StashEngine
         str = identifier.payment_type
       end
       str
-    rescue ActionController::BadRequest
-      identifier.payment_type
     end
 
     def display_payment_err(resource)
