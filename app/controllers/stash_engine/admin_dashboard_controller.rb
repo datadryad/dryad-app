@@ -320,11 +320,13 @@ module StashEngine
 
       tenant_orgs = [] if @filters[:submitter_limit].present?
 
-      @datasets = @datasets.left_outer_joins(authors: :affiliations).left_outer_joins(:funders).where(
-        'stash_engine_resources.tenant_id in (?) or stash_engine_identifiers.payment_id in (?)
-        or dcs_affiliations.ror_id in (?) or dcs_contributors.name_identifier_id in (?)',
-        tenant_limit.map(&:id), tenant_limit.map(&:id), tenant_orgs, tenant_orgs
-      )
+      @datasets = @datasets.left_outer_joins(authors: :affiliations)
+        .joins('left outer join dcs_contributors contributors on stash_engine_resources.id = contributors.resource_id')
+        .where(
+          'stash_engine_resources.tenant_id in (?) or stash_engine_identifiers.payment_id in (?)
+        or dcs_affiliations.ror_id in (?) or contributors.name_identifier_id in (?)',
+          tenant_limit.map(&:id), tenant_limit.map(&:id), tenant_orgs, tenant_orgs
+        )
     end
 
     def journal_filter
