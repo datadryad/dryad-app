@@ -45,7 +45,7 @@ module StashEngine
     def api_token
       render :edit and return unless current_user.api_application
 
-      Doorkeeper::AccessToken.find_or_create_for(application: current_user.api_application, scopes: 'all', expires_in: 36_000)
+      Doorkeeper::AccessToken.find_or_create_for(application: current_user.api_application, resource_owner: nil, scopes: 'all', expires_in: 36_000)
 
       render :edit
     end
