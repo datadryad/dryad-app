@@ -125,7 +125,7 @@ module StashEngine
       @journal_limit = journal_limit || []
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Layout/LineLength
     def setup_search
       @sort = params[:sort]
       @search = params[:search].to_i
@@ -143,8 +143,9 @@ module StashEngine
 
       @search_string = params[:q] || session[:admin_search_string] || @shared_search&.search_string || @saved_search&.search_string
       @filters = params[:filters] || session[:admin_search_filters] || @shared_search&.filters || @saved_search&.filters
-      @filters = JSON.parse(@filters.to_json, symbolize_names: true) unless @filters.blank?
       @fields = params[:fields] || session[:admin_search_fields] || @shared_search&.fields || @saved_search&.fields
+      @stop_reload = @search_string == session[:admin_search_string] && @fields == session[:admin_search_fields] && @filters == session[:admin_search_filters]
+      @filters = JSON.parse(@filters.to_json, symbolize_names: true) unless @filters.blank?
 
       session[:admin_search_filters] = params[:filters] if params[:filters].present?
       session[:admin_search_fields] = params[:fields] if params[:fields].present?
@@ -290,7 +291,7 @@ module StashEngine
         "stash_engine_identifiers.publication_date #{date_string(@filters[:first_pub_date])}"
       ) if @filters[:first_pub_date]&.values&.any?(&:present?)
     end
-    # rubocop:enable Style/MultilineIfModifier, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/AbcSize
+    # rubocop:enable Style/MultilineIfModifier, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/AbcSize, Layout/LineLength
 
     def size_filter
       from = @filters.dig(:size, :least).to_i
