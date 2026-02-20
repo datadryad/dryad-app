@@ -26,6 +26,9 @@ class PaymentConfiguration < ApplicationRecord
   private
 
   def reset_limit
-    self.ldf_limit = nil unless covers_ldf
+    return if covers_ldf
+
+    self.ldf_limit = nil
+    self.yearly_ldf_limit = nil
   end
 end

@@ -1,3 +1,5 @@
+# rubocop:disable Metrics/ClassLength
+
 module FeeCalculator
   class BaseService
     attr_reader :options, :resource
@@ -53,11 +55,25 @@ module FeeCalculator
       if resource.present?
         add_zero_fee(:service_tier)
         add_zero_fee(:dpc_tier)
+        limits_service = PaymentLimitsService.new(resource, @payer)
+
         if @covers_ldf
-          if @ldf_limit.nil?
+          @sum_options[:storage_fee_label] = PRODUCT_NAME_MAPPER[:storage_fee_overage] unless @ldf_limit.nil?
+          if limits_service.payment_allowed?
+            # @sum_options[:storage_fee_label] = PRODUCT_NAME_MAPPER[:storage_fee_overage]
+            # if no limit is hit,
+            # the user pays no storage fee
             verify_max_storage_size
             add_zero_fee(:storage_size)
+          elsif limits_service.amount_limits_exceeded?
+            # if the yearly amount limit is hit,
+            # the user needs to pay the full storage difference
+            # @sum_options[:storage_fee_label] = PRODUCT_NAME_MAPPER[:storage_fee_overage]
+            add_storage_fee_difference
+            add_invoice_fee
           else
+            # if the size limit is exceeded, and the amount is not
+            # user mult pay the difference between sponsored size and resource size
             handle_ldf_limit
           end
         else
@@ -90,8 +106,24 @@ module FeeCalculator
       add_invoice_fee
     end
 
+    def ldf_amount
+      paid_storage_size = resource.identifier.last_invoiced_file_size.to_i
+      paid_tier_price = price_by_range(storage_fee_tiers, paid_storage_size)
+      new_tier_price = price_by_range(storage_fee_tiers, resource.total_file_size)
+
+      diff = new_tier_price - paid_tier_price
+      diff = 0 if diff < 0
+      diff
+    end
+
     def storage_fee_tier
       get_tier_by_range(storage_fee_tiers, resource.total_file_size)
+    end
+
+    # if tier is not matched, consider first tier
+    def get_tier_by_value(tier_definition, value)
+      tier = tier_definition.find { |t| t[:tier] == value.to_i }
+      tier || tier_definition.find { |t| t[:tier] == 1 }
     end
 
     private
@@ -192,12 +224,6 @@ module FeeCalculator
       tier[:price].to_i
     end
 
-    # if tier is not matched, consider first tier
-    def get_tier_by_value(tier_definition, value)
-      tier = tier_definition.find { |t| t[:tier] == value.to_i }
-      tier || tier_definition.find { |t| t[:tier] == 1 }
-    end
-
     def add_fee_by_range(tier_definition, value_key)
       value = price_by_range(tier_definition, options[value_key])
       add_fee_to_total(value_key, value)
@@ -241,3 +267,4 @@ module FeeCalculator
     end
   end
 end
+# rubocop:enable Metrics/ClassLength

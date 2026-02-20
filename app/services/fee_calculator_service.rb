@@ -12,6 +12,18 @@ class FeeCalculatorService
     calculator_class.constantize.new({}, resource: resource).storage_fee_tier
   end
 
+  def ldf_amount(resource: nil, payer: nil)
+    calculator_class.constantize.new({}, resource: resource, payer_record: payer).ldf_amount
+  end
+
+  def sponsored_tier(payer)
+    calculator_class.constantize.new({})
+      .get_tier_by_value(
+        FeeCalculator::BaseService::ESTIMATED_FILES_SIZE,
+        payer.payment_configuration.ldf_limit
+      )
+  end
+
   private
 
   def calculator_class

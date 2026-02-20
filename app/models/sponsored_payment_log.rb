@@ -10,10 +10,12 @@
 #  updated_at  :datetime         not null
 #  payer_id    :string(191)
 #  resource_id :integer
+#  sponsor_id  :string(191)
 #
 # Indexes
 #
 #  index_sponsored_payment_logs_on_payer_id_and_payer_type  (payer_id,payer_type)
+#  index_sponsored_payment_logs_on_sponsor_id               (sponsor_id)
 #
 class SponsoredPaymentLog < ApplicationRecord
 

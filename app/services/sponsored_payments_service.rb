@@ -24,25 +24,27 @@ class SponsoredPaymentsService
       return if !payment.pay_with_invoice? && payment.failed?
     end
 
-    resource_fees = calculate_fees
+    amount = ldf_fees
+    return if amount.zero?
+
     SponsoredPaymentLog.create(
       resource: resource,
       payer: payer,
-      ldf: resource_fees[:storage_fee]
+      ldf: ldf_fees,
+      sponsor_id: payer.sponsor_id
     )
     resource.identifier.update(last_invoiced_file_size: resource.total_file_size)
   end
 
   private
 
-  def calculate_fees
+  def ldf_fees
     payer_type = case payer.class.name
                  when 'StashEngine::Funder', 'StashEngine::Journal'
                    'publisher'
                  when 'StashEngine::Tenant'
                    'institution'
                  end
-
-    FeeCalculatorService.new(payer_type).calculate({}, resource: resource, payer_record: payer)
+    FeeCalculatorService.new(payer_type).ldf_amount(resource: resource, payer: payer)
   end
 end

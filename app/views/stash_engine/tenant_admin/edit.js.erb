@@ -19,5 +19,10 @@ var ldf = document.getElementById('payment_configuration_attributes_covers_ldf')
 ldf.addEventListener('change', () => {
   var limit = document.getElementById('payment_configuration_attributes_ldf_limit')
   limit.disabled = !ldf.checked
-  if (!ldf.checked) limit.value = ''
+  var amount_limit = document.getElementById('payment_configuration_attributes_yearly_ldf_limit')
+  amount_limit.disabled = !ldf.checked
+  if (!ldf.checked) {
+    limit.value = ''
+    amount_limit.value = ''
+  }
 })
