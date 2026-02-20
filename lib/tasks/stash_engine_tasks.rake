@@ -137,13 +137,15 @@ namespace :identifiers do
     Time.now
     log 'Checking invoiced datasets for payment'
 
-    StashEngine::Resource.latest_per_dataset.invoice_due.find_each do |res|
-      invoicer = Stash::Payments::StripeInvoicer.new(res)
+    StashEngine::Identifier.invoice_due.find_each do |id|
+      next unless id.payments.last.invoice_id.present?
+
+      invoicer = Stash::Payments::StripeInvoicer.new(id.payments.last.resource)
       next unless invoicer.invoice_created? && invoicer.invoice_paid?
 
       invoicer.mark_invoice_paid!
       CurationService.new(
-        resource: res,
+        resource: id.latest_resource,
         user_id: 0,
         status: 'queued',
         note: 'Invoice has been paid, or cannot be found'
