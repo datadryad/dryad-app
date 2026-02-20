@@ -182,7 +182,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       end
 
       it 'sets a flag' do
-        expect(page).to have_text('Not flagged')
+        expect(page).to have_text('No dataset flag')
         click_button 'Edit Flag'
         expect(page).to have_text('Flag dataset')
         select 'Careful attention'
