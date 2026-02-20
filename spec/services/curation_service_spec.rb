@@ -36,103 +36,26 @@ describe CurationService do
     end
   end
 
-  context :submit_to_datacite do
-    let(:resource_state) { create(:resource_state, :submitted, resource: resource) }
-    let(:status) { 'published' }
-
-    before(:each) do
+  context :publication_job do
+    before do
       neuter_emails!
-      resource.update(current_resource_state_id: resource_state.id)
+      allow(Sidekiq).to receive(:redis).and_yield(double('Redis', set: true))
     end
-
-    it 'does submit when Published is set' do
-      service.process
-      expect(@mock_datacitegen).to have_received(:update_identifier_metadata!)
-    end
-
-    it "doesn't submit when a status besides Embargoed or Published is set" do
-      CurationService.new(resource: resource, user: curator, status: 'to_be_published').process
-      expect(@mock_datacitegen).to_not have_received(:update_identifier_metadata!)
-    end
-
-    it "doesn't submit when status isn't changed" do
-      service.process
-      expect(@mock_datacitegen).to have_received(:update_identifier_metadata!).once
-      CurationService.new(resource: resource, user: curator, status: status).process
-      expect(@mock_datacitegen).to have_received(:update_identifier_metadata!).once # should not be called for the second 'published'
-    end
-
-    it "doesn't submit if never sent to repo" do
-      resource_state.update(resource_state: 'in_progress')
-      service.process
-      expect(@mock_datacitegen).to_not have_received(:update_identifier_metadata!)
-    end
-
-    it "doesn't submit if no version number" do
-      resource.stash_version.update!(version: nil, merritt_version: nil)
-      service.process
-      expect(@mock_datacitegen).to_not have_received(:update_identifier_metadata!)
-    end
-
-    xit "doesn't submit non-production (test) identifiers after first version" do
-      Timecop.travel(Time.now + 1.minute)
-      resource2 = create(:resource, identifier: identifier)
-      create(:resource_state, resource: resource2)
-      resource2.stash_version.update(version: 2, merritt_version: 2)
-      CurationService.new(resource: resource2, user: curator, status: status).process
-      expect(@mock_datacitegen).to_not have_received(:update_identifier_metadata!)
-      Timecop.return
-    end
-
-    context 'Datacite and EzId failures are properly handled' do
-      let(:user) { create(:user, first_name: 'Test', last_name: 'User', email: 'test.user@example.org') }
-      let(:status) { 'embargoed' }
-
-      before(:each) do
-        allow_any_instance_of(StashEngine::CurationActivity).to receive(:should_update_doi?).and_return(true)
-        logger = double(ActiveSupport::Logger)
-        allow(logger).to receive(:error).with(any_args).and_return(true)
-        allow(Rails).to receive(:logger).and_return(logger)
-        allow_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now)
-      end
-
-      it 'catches errors and emails the admins' do
-        dc_error = Datacite::DoiGenError.new('Testing errors')
-        allow(Datacite::DoiGen).to receive(:new).with(any_args).and_raise(dc_error)
-
-        message = instance_double(ActionMailer::MessageDelivery)
-        expect(StashEngine::UserMailer).to receive(:error_report).with(any_args).and_return(message)
-        expect(message).to receive(:deliver_now)
-        expect { service.process }.to raise_error(Datacite::DoiGenError)
-      end
-    end
-  end
-
-  context :submit_to_solr do
-    before(:each) { neuter_emails! }
 
     it 'calls when published' do
-      allow(resource).to receive(:submit_to_solr)
-      expect(resource).to receive(:submit_to_solr)
-      CurationService.new(resource: resource, user: curator, status: 'published').process
+      expect { CurationService.new(resource: resource, user: curator, status: 'published').process }.to change { PublicationJob.jobs.size }.by(1)
     end
 
-    it 'calls when embargoed' do
-      allow(resource).to receive(:submit_to_solr)
-      expect(resource).to receive(:submit_to_solr)
-      CurationService.new(resource: resource, user: curator, status: 'embargoed').process
+    it 'calls when embargoed' do      
+      expect { CurationService.new(resource: resource, user: curator, status: 'embargoed').process }.to change { PublicationJob.jobs.size }.by(1)
     end
 
-    it 'calls when retracted' do
-      allow(resource).to receive(:submit_to_solr)
-      expect(resource).to receive(:submit_to_solr)
-      CurationService.new(resource: resource, user: curator, status: 'retracted').process
+    it 'calls when retracted' do      
+      expect { CurationService.new(resource: resource, user: curator, status: 'retracted').process }.to change { PublicationJob.jobs.size }.by(1)
     end
 
     it 'does not call if not published' do
-      allow(resource).to receive(:submit_to_solr)
-      expect(resource).not_to receive(:submit_to_solr)
-      CurationService.new(resource: resource, user: curator, status: 'to_be_published').process
+      expect { CurationService.new(resource: resource, user: curator, status: 'to_be_published').process }.to change { PublicationJob.jobs.size }.by(0)
     end
   end
 
