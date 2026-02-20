@@ -11,7 +11,7 @@ export default function CalculateFees({resource, ppr = false}) {
   if (paid && fees.storage_fee_label) {
     return (
       <>
-        <p>This dataset has been previously submitted and the <a href="/costs" target="blank">{fees.storage_fee_label}<ExitIcon /></a> has been {resource.identifier.payment_id.startsWith('in_') ? 'invoiced' : 'paid'} for {formatSizeUnits(resource.identifier.last_invoiced_file_size)}.</p>
+        <p>This dataset has been previously submitted and the <a href="/costs" target="blank">{fees.storage_fee_label}<ExitIcon /></a> has been {resource.identifier.payment_id?.startsWith('in_') ? 'invoiced' : 'paid'} for {formatSizeUnits(resource.identifier.last_invoiced_file_size)}.</p>
         {fees.total ? (
           <p>Since the dataset size has increased to {formatSizeUnits(resource.total_file_size)}, submitting this new version will come with an additional charge of <b>{fees.storage_fee.toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</b>.</p>
         ) : null}
