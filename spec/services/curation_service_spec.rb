@@ -123,6 +123,12 @@ describe CurationService do
       CurationService.new(resource: resource, user: curator, status: 'embargoed').process
     end
 
+    it 'calls when retracted' do
+      allow(resource).to receive(:submit_to_solr)
+      expect(resource).to receive(:submit_to_solr)
+      CurationService.new(resource: resource, user: curator, status: 'retracted').process
+    end
+
     it 'does not call if not published' do
       allow(resource).to receive(:submit_to_solr)
       expect(resource).not_to receive(:submit_to_solr)
@@ -492,6 +498,23 @@ describe CurationService do
       expect(identifier.pub_state).to eq('withdrawn')
       expect(resource.meta_view).to eq(false)
       expect(resource.file_view).to eq(false)
+    end
+
+    describe 'retractions' do
+      it 'sets flags for retracted' do
+        CurationService.new(resource: resource, user: curator, status: 'retracted').process
+        expect(identifier.pub_state).to eq('retracted')
+        expect(resource.meta_view).to eq(true)
+        expect(resource.file_view).to eq(false)
+      end
+
+      it 'does not hide files if they are set to view' do
+        resource.update(file_view: true)
+        CurationService.new(resource: resource, user: curator, status: 'retracted').process
+        expect(identifier.pub_state).to eq('retracted')
+        expect(resource.meta_view).to eq(true)
+        expect(resource.file_view).to eq(true)
+      end
     end
 
     context :peer_review_status do

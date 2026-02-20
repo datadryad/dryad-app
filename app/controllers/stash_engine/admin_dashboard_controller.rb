@@ -411,7 +411,6 @@ module StashEngine
         release_resource(@resource)
       else
         decipher_curation_activity
-        @note = params.dig(:stash_engine_resource, :curation_activity, :note)
         @resource.publication_date = @pub_date
         if @status == 'curation'
           @resource.user_id = current_user.id
@@ -425,7 +424,10 @@ module StashEngine
 
     def decipher_curation_activity
       @pub_date = params[:stash_engine_resource][:publication_date]
+      @note = params.dig(:stash_engine_resource, :curation_activity, :note)
       case @status
+      when 'retracted'
+        check_retract_files
       when 'published'
         publish
       when 'embargoed'
@@ -440,6 +442,15 @@ module StashEngine
       return if @pub_date.present?
 
       @pub_date = Time.now.utc.to_date.to_s
+    end
+
+    def check_retract_files
+      show_files = ActiveModel::Type::Boolean.new.cast(params[:stash_engine_resource][:file_view])
+      if show_files && !@resource.file_view?
+        @identifier.fill_resource_view_flags
+      elsif !show_files
+        @identifier.resources.update(file_view: false)
+      end
     end
 
     def publishing_error

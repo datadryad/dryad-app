@@ -15,8 +15,14 @@
     <div>
       <%= form_with(url: add_concern_path(id: @identifier.id), method: :get, local: false) do -%>
         <p>
-          <button class="o-button__plain-text7"><i class="fas fa-circle-exclamation" aria-hidden="true"></i> Dataset usage warning</button>
-          &nbsp;Add or edit an expression of concern or a notice of article retraction that will appear on the dataset landing page.
+          <button class="o-button__plain-text7"><i class="fas fa-circle-exclamation" aria-hidden="true"></i> 
+          <% if @identifier.retracted? %>
+          Dataset retraction</button>
+            &nbsp;Edit the dataset retraction statement that appears on the dataset landing page.
+          <% else %>
+          Dataset usage warning</button>
+            &nbsp;Add or edit an expression of concern or a notice of article retraction that will appear on the dataset landing page.
+          <% end %>
         </p>
       <% end %>
     </div>

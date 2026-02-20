@@ -31,7 +31,7 @@ module StashEngine
         {
           submitted: %w[peer_review awaiting_payment queued],
           curated: %w[published to_be_published embargoed action_required],
-          published: %w[published to_be_published embargoed]
+          published: %w[published to_be_published embargoed retracted]
         }
       end
     end

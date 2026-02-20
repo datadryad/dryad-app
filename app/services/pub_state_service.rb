@@ -17,7 +17,7 @@ class PubStateService
   private
 
   def from_ca_status(status)
-    return status if status.in?(%w[withdrawn embargoed published])
+    return status if status.in?(%w[withdrawn embargoed published retracted])
 
     'unpublished'
   end

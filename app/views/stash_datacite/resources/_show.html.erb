@@ -1,4 +1,4 @@
-<h1 class="o-heading__level1"><%= resource.title&.html_safe %></h1>
+<h1 class="o-heading__level1"><%= @resource.title&.html_safe %></h1>
 <div class="t-landing__metadata o-metadata">
   <%= render partial: "stash_datacite/authors/show", locals: { authors: @resource.authors } %>
   <%= render partial: "stash_datacite/publishers/publication_info", locals: { resource: @resource } %>
@@ -6,7 +6,7 @@
 
 <% notice = @resource.descriptions.find_by(description_type: 'concern') %>
 <% if notice&.description&.present? %>
-  <div class="callout warn" id="landing_concern">
+  <div class="callout <%= @resource.identifier.retracted? ? 'err' : 'warn' %>" id="landing_concern">
     <%= raw(display_desc(notice.description)) %>
   </div>
 <% end %>
@@ -26,12 +26,16 @@
 <%= render partial: "stash_datacite/descriptions/show",
      locals: { abstract: review.abstract, methods: '', other: '', changelog: '' } %>
 
+<% unless @resource.identifier.retracted? && !@resource.file_view? %>
+
 <% if @resource.display_readme? %>
   <%= render partial: "stash_datacite/descriptions/readme", locals: { review: review } %>
 <% end %>
 
 <%= render partial: "stash_datacite/descriptions/show",
    locals: { abstract: '', methods: review.methods, other: review.other, changelog: review.changelog } %>
+
+<% end %>
 
 <%# takes local of identifier, no_link == true means don't link metrics %>
 <% no_link = false unless defined?(no_link) %>

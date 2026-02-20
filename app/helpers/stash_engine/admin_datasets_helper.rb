@@ -19,7 +19,8 @@ module StashEngine
     def filter_status_select(current_status)
       statuses = StashEngine::CurationActivity.allowed_states(current_status, current_user).sort
 
-      statuses.delete(current_status) # because we don't show the current state as an option, it is implied by leaving state blank
+      statuses.delete(current_status) unless current_status == 'retracted'
+      # because we don't show the current state as an option, it is implied by leaving state blank
 
       # makes select list
       status_select(statuses) unless statuses.empty?

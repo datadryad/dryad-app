@@ -110,6 +110,14 @@ module Datacite
             type: d.description_type_mapping_obj
           )
         end
+        # retraction statement
+        concern = se_resource.descriptions.find_by(description_type: 'concern')&.description
+        return unless se_resource.identifier.retracted? && concern.present?
+
+        dcs_resource.descriptions << Description.new(
+          value: concern,
+          type: StashDatacite::Description.description_type_mapping_obj('other')
+        )
       end
 
       def add_rights(dcs_resource)

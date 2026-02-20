@@ -55,8 +55,7 @@ module StashApi
       def version_changes
         return 'none' if @resource.stash_version.version == 1
 
-        file_states = @resource.generic_files&.map(&:file_state)
-        return 'files_changed' if file_states && (file_states - ['copied']).present?
+        return 'files_changed' if @resource.has_file_changes?
 
         'metadata_changed'
       end
@@ -86,7 +85,7 @@ module StashApi
           # if it's in_progress, return the sharing_link for the previous submitted version
           prev_submitted_res = @resource&.identifier&.last_submitted_resource
           prev_submitted_res&.identifier&.shares&.first&.sharing_link
-        when 'embargoed', 'withdrawn'
+        when 'embargoed', 'withdrawn', 'retracted'
         # suppress the link -- even if the user has the rights to view
         # the metadata, they should not be downloading it
         else
