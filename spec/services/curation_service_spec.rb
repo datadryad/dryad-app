@@ -59,6 +59,11 @@ describe CurationService do
         PublicationJob.jobs.size
       }.by(0)
     end
+
+    it "doesn't submit when status isn't changed" do
+      expect { CurationService.new(resource: resource, user: curator, status: 'published').process }.to change { PublicationJob.jobs.size }.by(1)
+      expect { CurationService.new(resource: resource, user: curator, status: 'published').process }.to change { PublicationJob.jobs.size }.by(0)
+    end
   end
 
   context :process_payment do

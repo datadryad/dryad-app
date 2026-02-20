@@ -1,14 +1,13 @@
 class PublicationJob < BaseJob
-  attr_reader :activity
   include Sidekiq::Worker
   sidekiq_options queue: :publication, retry: true, lock: :until_and_while_executing
 
   def perform(activity_id)
-    puts "#{Time.current} - performing dependency updates to publish resource #{id}"
-    activity = StashEngine::CurationActivity.find_by(id: activity_id)
-    resource = StashEngine::Resource.with_public_metadata.find_by(id: activity.resource_id)
+    @activity = StashEngine::CurationActivity.find_by(id: activity_id)
+    resource = StashEngine::Resource.with_public_metadata.find_by(id: @activity.resource_id)
     return if resource.nil?
 
+    puts "#{Time.current} - performing indexing of published resource #{resource.id}"
     resource.submit_to_solr
     submit_to_datacite
   end
@@ -16,7 +15,7 @@ class PublicationJob < BaseJob
   private
 
   def submit_to_datacite
-    return unless activity.should_update_doi?
+    return unless @activity.should_update_doi?
 
     idg = Datacite::DoiGen.new(resource: resource)
     idg.update_identifier_metadata!
