@@ -4,15 +4,15 @@ module FeeCalculator
 
     # rubocop:disable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
     ESTIMATED_DATASETS = [
-      { tier: 1, range: 0..5, price: 0 },
-      { tier: 2, range: 6..15, price: 1_650 },
-      { tier: 3, range: 16..25, price: 2_700 },
-      { tier: 4, range: 26..50, price: 5_350 },
-      { tier: 5, range: 51..75, price: 7_950 },
-      { tier: 6, range: 76..100, price: 10_500 },
-      { tier: 7, range: 101..150, price: 15_600 },
-      { tier: 8, range: 151..200, price: 20_500 },
-      { tier: 9, range: 201..250, price: 25_500 },
+      { tier:  1, range:   0..  5, price:      0 },
+      { tier:  2, range:   6.. 15, price:  1_650 },
+      { tier:  3, range:  16.. 25, price:  2_700 },
+      { tier:  4, range:  26.. 50, price:  5_350 },
+      { tier:  5, range:  51.. 75, price:  7_950 },
+      { tier:  6, range:  76..100, price: 10_500 },
+      { tier:  7, range: 101..150, price: 15_600 },
+      { tier:  8, range: 151..200, price: 20_500 },
+      { tier:  9, range: 201..250, price: 25_500 },
       { tier: 10, range: 251..300, price: 30_250 },
       { tier: 11, range: 301..350, price: 35_000 },
       { tier: 12, range: 351..400, price: 39_500 },
@@ -21,16 +21,6 @@ module FeeCalculator
       { tier: 15, range: 501..550, price: 53_500 },
       { tier: 16, range: 551..600, price: 58_250 }
     ].freeze
-
-    # ESTIMATED_FILES_SIZE = [
-    #   { tier: 0, range: 0..10_000_000, price: 0 },
-    #   { tier: 1, range: 10_000_001..50_000_000, price: 259 },
-    #   { tier: 2, range: 50_000_001..100_000_000, price: 464 },
-    #   { tier: 3, range: 100_000_001..250_000_000_000, price: 1_123 },
-    #   { tier: 4, range: 250_000_000_001..500_000_000_000, price: 2_153 },
-    #   { tier: 5, range: 500_000_000_001..1_000_000_000_000, price: 4_347 },
-    #   { tier: 6, range: 1_000_000_000_001..2_000_000_000_000, price: 8_809 }
-    # ].freeze
 
     ESTIMATED_FILES_SIZE = [
       { tier: 0, range:                 0..   10_000_000_000, price:     0 },
