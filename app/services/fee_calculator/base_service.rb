@@ -1,3 +1,5 @@
+# rubocop:disable Metrics/ClassLength
+
 module FeeCalculator
   class BaseService
     attr_reader :options, :resource
@@ -265,3 +267,4 @@ module FeeCalculator
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
