@@ -121,4 +121,9 @@
       <%= formatted_datetime(dataset.identifier.process_date.queued) %>
     </td>
   <% end %>
+  <% if @fields.include?('status_date') %>
+    <td class="c-lined-table__digits">
+      <%= formatted_datetime(dataset.process_date.last_status_date) %>
+    </td>
+  <% end %>
 </tr>

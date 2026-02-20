@@ -1,6 +1,6 @@
 <%
 def check(id, indent = false)
-  h = {funders: 'Grant funders', awards: 'Award IDs', sponsor: 'Journal sponsor', dpc: 'DPC paid by', updated_at: 'Last modified', submit_date: 'Submitted', publication_date: 'Published', first_sub_date: 'First submitted', first_pub_date: 'First published', queue_date: 'First queued', created_at: 'First created', identifiers: 'Publication IDs'}
+  h = {funders: 'Grant funders', awards: 'Award IDs', sponsor: 'Journal sponsor', dpc: 'DPC paid by', updated_at: 'Last modified', submit_date: 'Submitted', publication_date: 'Published', first_sub_date: 'First submitted', first_pub_date: 'First published', queue_date: 'First queued', created_at: 'First created', identifiers: 'Publication IDs', status_date: 'Entered status'}
   label = h[id.to_sym]
   label ||= id.length < 4 ? id.upcase : id.capitalize
 
@@ -118,6 +118,12 @@ end
     <div>
       <%= check('queue_date').html_safe %>
       <span class="help" id="queue_date-desc">First time the dataset entered the curator queue.</span>
+    </div>
+  <% end %>
+  <% if @role_object.blank? %>
+    <div>
+      <%= check('status_date').html_safe %>
+      <span class="help" id="status_date-desc">The date the dataset version entered its current status.</span>
     </div>
   <% end %>
 </fieldset>

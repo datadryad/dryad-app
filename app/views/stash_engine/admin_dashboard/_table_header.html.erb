@@ -92,5 +92,10 @@
         <%= sortable_column_head sort_field: 'queue_date', title: 'First queued', remote: true %>
       </th>
     <% end %>
+    <% if @fields.include?('status_date') %>
+      <th class="c-lined-table__sort" <%= sort_display('last_status_date') %>>
+        <%= sortable_column_head sort_field: 'last_status_date', title: 'Entered status', remote: true %>
+      </th>
+    <% end %>
   </tr>
 </thead>
