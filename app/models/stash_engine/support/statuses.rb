@@ -10,6 +10,8 @@ module StashEngine
         last_curation_activity&.status
       end
 
+      def status_published? = status_group[:published].includes?(current_curation_status)
+
       def first_submitted_status = first_status_activity(status_group[:submitted])
       def first_curated_status = first_status_activity(status_group[:curated])
       def first_published_status = first_status_activity(status_group[:published])
@@ -31,7 +33,7 @@ module StashEngine
         {
           submitted: %w[peer_review awaiting_payment queued],
           curated: %w[published to_be_published embargoed action_required],
-          published: %w[published to_be_published embargoed retracted]
+          published: %w[published embargoed retracted]
         }
       end
     end
