@@ -46,16 +46,18 @@ describe CurationService do
       expect { CurationService.new(resource: resource, user: curator, status: 'published').process }.to change { PublicationJob.jobs.size }.by(1)
     end
 
-    it 'calls when embargoed' do      
+    it 'calls when embargoed' do
       expect { CurationService.new(resource: resource, user: curator, status: 'embargoed').process }.to change { PublicationJob.jobs.size }.by(1)
     end
 
-    it 'calls when retracted' do      
+    it 'calls when retracted' do
       expect { CurationService.new(resource: resource, user: curator, status: 'retracted').process }.to change { PublicationJob.jobs.size }.by(1)
     end
 
     it 'does not call if not published' do
-      expect { CurationService.new(resource: resource, user: curator, status: 'to_be_published').process }.to change { PublicationJob.jobs.size }.by(0)
+      expect { CurationService.new(resource: resource, user: curator, status: 'to_be_published').process }.to change {
+        PublicationJob.jobs.size
+      }.by(0)
     end
   end
 
