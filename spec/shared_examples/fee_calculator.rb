@@ -53,7 +53,7 @@ RSpec.shared_examples('it only covers limited LDF') do
       it { is_expected.to include(no_charges_response) }
     end
 
-    context 'with limit over the new file size' do
+    context 'with limit under the new file size' do
       let(:ldf_limit) { 1 }
 
       it { is_expected.to include({ storage_fee: 205, storage_fee_label: 'Large data fee overage' }) }

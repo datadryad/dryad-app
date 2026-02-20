@@ -539,7 +539,7 @@ describe CurationService do
   end
 
   describe '#processed_sponsored_resource' do
-    %w[queued peer_review].each do |status|
+    %w[processing queued peer_review].each do |status|
       it "calls log_payment if status is #{status}" do
         service.process
 
@@ -548,7 +548,7 @@ describe CurationService do
       end
     end
 
-    (StashEngine::CurationActivity.statuses.keys - %w[queued peer_review]).each do |status|
+    (StashEngine::CurationActivity.statuses.keys - %w[processing queued peer_review]).each do |status|
       it "does not call log_payment if status is #{status}" do
         service.process
 
