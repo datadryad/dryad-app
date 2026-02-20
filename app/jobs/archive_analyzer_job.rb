@@ -1,4 +1,4 @@
-class ArchiveAnalyzerJob < Submission::BaseJob
+class ArchiveAnalyzerJob < BaseJob
   include Sidekiq::Worker
   include StashEngine::ApplicationHelper
   sidekiq_options queue: :archive_analyzer, retry: 1, lock: :until_and_while_executing

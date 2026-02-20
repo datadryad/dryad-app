@@ -198,12 +198,11 @@ module StashEngine
     end
 
     def ready_for_payment?
-      return false unless resource
-      return false unless resource.identifier
+      return false unless first_time_in_status?
+      return false unless resource&.identifier
 
       resource.identifier.reload
       return false unless resource.identifier.old_payment_system
-      return false unless first_time_in_status?
 
       APP_CONFIG&.payments&.service == 'stripe' &&
         (resource.identifier.payment_type.nil? || %w[unknown waiver stripe].include?(resource.identifier.payment_type)) &&

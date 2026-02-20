@@ -107,10 +107,9 @@ module StashDatacite
     end
 
     def check_reindex
-      return unless @resource.current_curation_status == 'published'
+      return unless @resource.status_published?
 
-      @resource.submit_to_solr
-      DataciteService.new(@resource).submit
+      PublicationJob.perform_async(@resource.last_curation_activity_id)
     end
 
     def check_details

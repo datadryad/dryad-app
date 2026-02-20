@@ -1,4 +1,4 @@
-class DeleteResourceFilesJob < Submission::BaseJob
+class DeleteResourceFilesJob < BaseJob
   include Sidekiq::Worker
   sidekiq_options queue: :deletion, retry: 2, lock: :until_and_while_executing
 
