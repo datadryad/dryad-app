@@ -40,7 +40,9 @@ RSpec.feature 'ReviewDataset', type: :feature do
       # submits
       submit_form
       expect(page).to have_content(CGI.unescapeHTML(StashEngine::Resource.last.title.html_safe))
-      expect(page).to have_content("Your dataset with the DOI #{StashEngine::Resource.last.identifier_uri} was submitted and is awaiting payment of your issued invoice.")
+      expect(page).to have_content(
+        "Your dataset with the DOI #{StashEngine::Resource.last.identifier_uri} was submitted and is awaiting payment of your issued invoice."
+      )
     end
   end
 
