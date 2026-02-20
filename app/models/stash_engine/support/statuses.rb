@@ -10,7 +10,7 @@ module StashEngine
         last_curation_activity&.status
       end
 
-      def status_published? = status_group[:published].includes?(current_curation_status)
+      def status_published? = status_group[:published].include?(current_curation_status)
 
       def first_submitted_status = first_status_activity(status_group[:submitted])
       def first_curated_status = first_status_activity(status_group[:curated])
