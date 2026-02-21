@@ -53,7 +53,7 @@
 </p>
 </div>
 <h3>Peer review</h3>
-<p><%= form.check_box :default_to_ppr, {checked: @journal.default_to_ppr, disabled: !@journal.allow_review_workflow}, 1, 0 %> <%= form.label :default_to_ppr, "When checked, submissions enter PPR by default" %></p>
+<p><%= form.check_box :default_to_ppr, {checked: @journal.default_to_ppr, disabled: !@journal.allow_review_workflow}, 1, 0 %> <%= form.label :default_to_ppr, "When checked, PPR is enforced for submissions" %></p>
 <p><%= form.check_box :allow_review_workflow, {checked: !@journal.allow_review_workflow}, 0, 1 %> <%= form.label :allow_review_workflow, "When checked, PPR is not allowed for submissions" %></p>
 <%= form.label :peer_review_custom_text, "Custom HTML included in peer review emails sent to users"%>
 <%= form.text_area(:peer_review_custom_text, value: @journal.peer_review_custom_text, class: 'c-input__textarea', style: 'width:100%', rows: 4) %>
