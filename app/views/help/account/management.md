@@ -2,6 +2,8 @@
 
 From the Dryad [My account](/account) page, users can update their names, email addresses, and Dryad partner institutions, or create IDs and tokens to use the [Dryad API](/api).
 
+The My account page also includes a link to your public [Dryad author profile page](/help/guides/search#author-profile-pages).
+
 ## Account information
 
 The first name (any given names) and last name (surname/family name) from your account will be automatically included as an author with your ORCID in your Dryad submissions.
