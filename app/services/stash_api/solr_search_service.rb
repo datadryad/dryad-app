@@ -11,8 +11,8 @@ module StashApi
       @solr = RSolr.connect(url: APP_CONFIG.solr_url)
     end
 
-    def search(page: 1, per_page: DEFAULT_PAGE_SIZE, fields: 'dc_identifier_s', facet: false)
-      params = { q: @query.to_s, fq: filter_query, fl: fields, facet: facet }
+    def search(page: 1, per_page: DEFAULT_PAGE_SIZE, fields: 'dc_identifier_s', facet: false, wt: :json)
+      params = { q: @query.to_s, fq: filter_query, fl: fields, facet: facet, wt: wt }
       params[:sort] = sort_query if filters.key?('sort')
       @solr.paginate(page, per_page, 'select', params: params)
     rescue RSolr::Error::Http

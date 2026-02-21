@@ -27,7 +27,7 @@
     <% if current_user.public_searches.empty? %>
       <p>Save search terms and filters from <%= link_to 'Dryad\'s search', new_search_path %> to repeat your searches and discover new datasets as they are published.</p>
     <% else %>
-      <p>Click the search name to view the latest results from your saved search.</p>
+      <p>Click the search name to view the latest results from your saved search. Copy the web feed link to subscribe and be notified when new datasets meet your search criteria.</p>
       <ol class="saved_searches_list" id="public_searches_list">
         <% current_user.public_searches.each_with_index do |s,i| %>
           <%= render partial: 'saved_search', locals: { saved_search: s, index: i } %>
@@ -40,14 +40,15 @@
   document.querySelectorAll('.copy-share-code').forEach(url => url.addEventListener('click', (e) => {
     e.preventDefault()
     window.navigator.clipboard.writeText(url.href).then(async () => {
+      icon = url.firstElementChild.classList.contains('fa-share') ? 'fa-share' : 'fa-rss-square'
       url.setAttribute('aria-label', 'Copied')
       url.setAttribute('title', 'Copied')
-      url.firstElementChild.classList.toggle('fa-share')
+      url.firstElementChild.classList.toggle(icon)
       url.firstElementChild.classList.toggle('fa-check')
       await new Promise(res => setTimeout(res, 3000));
       url.setAttribute('title', 'Copy link to share search')
       url.setAttribute('aria-label', 'Copy link to share search')
-      url.firstElementChild.classList.toggle('fa-share')
+      url.firstElementChild.classList.toggle(icon)
       url.firstElementChild.classList.toggle('fa-check')
     });
   }));
