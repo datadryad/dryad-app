@@ -17,6 +17,12 @@ class SearchController < ApplicationController
         @profiles = profiles
       end
       format.xml do
+        service = StashApi::SolrSearchService.new(query: params[:q], filters: params.except(:q, :action, :controller, :id).merge(sort: 'date desc'))
+        xml_result = service.search(page: page, per_page: 10, fields: fields, facet: true, wt: :xml)
+        if (error = service.error)
+          render status: error.status, plain: error.message and return
+        end
+
         render xml: atom_xml(xml_result), content_type: 'application/atom+xml'
       end
     end
@@ -124,17 +130,6 @@ class SearchController < ApplicationController
   def per_page
     @page_size = 10 if params[:page_size].blank? || params[:page_size].to_i == 0
     @page_size ||= params[:page_size].to_i
-  end
-
-  def xml_result
-    filters = URI.encode_www_form(params.except(:q, :action, :controller, :id, :page_size, :format, :utf8).to_unsafe_hash.sort.to_h)
-    Rails.cache.fetch("xml_search/#{filters}", expires_in: 12.hours) do
-      service = StashApi::SolrSearchService.new(query: params[:q], filters: params.except(:q, :action, :controller, :id).merge(sort: 'date desc'))
-      service.search(page: page, per_page: 10, fields: fields, facet: true, wt: :xml)
-      if (error = service.error)
-        render status: error.status, plain: error.message and return
-      end
-    end
   end
 
   def atom_xml(result)
