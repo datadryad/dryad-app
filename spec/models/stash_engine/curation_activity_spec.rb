@@ -61,14 +61,9 @@ module StashEngine
         expect(curation_activity.readable_status).to eql('Private for peer review')
       end
 
-      it 'returns a readable version of :action_required' do
-        curation_activity.action_required!
-        expect(curation_activity.readable_status).to eql('Action required')
-      end
-
       it 'returns a default readable version of the remaining statuses' do
         CurationActivity.statuses.each_key do |s|
-          unless %w[peer_review queued unchanged].include?(s)
+          unless %w[peer_review queued].include?(s)
             curation_activity.send("#{s}!")
             expect(curation_activity.readable_status).to eql(s.humanize)
           end
@@ -105,6 +100,9 @@ module StashEngine
 
           expect(CurationActivity.allowed_states('withdrawn', user)).to \
             eq(%w[withdrawn curation])
+
+          expect(CurationActivity.allowed_states('retracted', user)).to \
+            eq(%w[retracted])
         end
       end
 

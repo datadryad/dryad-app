@@ -13,6 +13,7 @@
 #  processable_type        :string(191)
 #  processing              :datetime
 #  queued                  :datetime
+#  retracted               :datetime
 #  withdrawn               :datetime
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null

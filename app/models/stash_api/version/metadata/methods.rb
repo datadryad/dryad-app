@@ -9,7 +9,7 @@ module StashApi
 
         def value
           items = @resource.descriptions.type_methods.map(&:description)
-          return items.first unless items.blank?
+          return items.first unless items.blank? || (@resource.identifier.retracted? && !@resource.file_view?)
 
           nil
         end

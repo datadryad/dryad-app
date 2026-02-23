@@ -67,6 +67,8 @@
     <div id="file_preview_box" role="status"></div>
     <!-- full download second -->
     <%= render partial: 'stash_engine/downloads/download', locals: { dataset_identifier: dataset_identifier, resource: dl_resource, share: share.present? ? share[:code] : nil } %>
+  <% elsif dataset_identifier.retracted? %>
+    <p>This dataset has been retracted. Please see the notice above for more information.</p>
   <% else %>
     <p>No data files are available for display.</p>
   <% end %>

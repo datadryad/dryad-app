@@ -1,11 +1,11 @@
-<h1>Dataset usage warning</h1>
+<h1><% if @resource.identifier.retracted? %>Dataset retraction<% else %>Dataset usage warning<% end %></h1>
 <% if @resource.publication_date.blank? %>
 <div class="callout warn"><p>The notice below is added to the latest version. Changes will not appear on the public landing page until the version is published.</p></div>
 <% end %>
 <%= react_component('components/MetadataEntry/Description/Description', { setResource: escape_javascript(() => {}), dcsDescription: @description, mceLabel: {
-    label: 'Notice/Expression of concern',
+    label: @resource.identifier.retracted? ? 'Retraction notice' : 'Notice/Expression of concern',
     required: true,
-    describe: 'An expression of concern or a notice of article retraction.'}
+    describe: @resource.identifier.retracted? ? 'A statement explaining the retraction of the dataset' : 'An expression of concern or a notice of article retraction.'}
 }) %>
 <div class="c-modal__buttons-right">
   <div role="status">

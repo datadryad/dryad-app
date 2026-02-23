@@ -4,6 +4,7 @@ document.getElementById('genericModalDialog').showModal();
 document.getElementById('cancel_dialog').removeEventListener('click', cancelClick);
 document.getElementById('cancel_dialog').addEventListener('click', cancelClick);
 <% if @field == 'curation_activity' %>
+  ReactRailsUJS.mountComponents()
   initDatePicker();
   document.getElementById('stash_engine_resource_curation_activity_status').removeEventListener('change', statusChange)
   document.getElementById('stash_engine_resource_curation_activity_status').addEventListener('change', statusChange)
