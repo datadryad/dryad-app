@@ -2,6 +2,7 @@
   <li>The Alliance of Crop, Soil and Environmental Science Societies</li>
   <li>American Association for the Advancement of Science</li>
   <li>American Chemical Society</li>
+  <li>American Finance Association</li>
   <li>American Genetic Association</li>
   <li>American Medical Informatics Association</li>
   <li>American Ornithological Society</li>
