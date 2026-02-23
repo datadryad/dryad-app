@@ -1,18 +1,18 @@
 <%= form_with(model: StashEngine::SavedSearch, url: update_saved_search_path(saved_search.id), method: :patch, local: false, class: 'saved_search_form') do %>
   <div class="input-stack">
   <% if saved_search.is_a?(StashEngine::AdminSearch) %>
-    <%= label_tag(:default, 'Default', style: "font-size: .98rem") %>
+    <%= label_tag(:default, 'Default', for: "default#{saved_search.id}", style: "font-size: .98rem") %>
     <%= hidden_field_tag :default, false %>
-    <%= check_box_tag(:default, true, saved_search.default)%>    
+    <%= check_box_tag(:default, true, saved_search.default, id: "default#{saved_search.id}")%>    
   <% end %>
   </div>
   <div class="input-stack">
-    <%= label_tag(:title, 'Name', style: "font-size: .98rem") %>
-    <%= text_field_tag(:title, saved_search.title, class: 'c-input__text', maxlength: '50', required: true) %>
+    <%= label_tag(:title, 'Name', for: "title#{saved_search.id}", style: "font-size: .98rem") %>
+    <%= text_field_tag(:title, saved_search.title, id: "title#{saved_search.id}", class: 'c-input__text', maxlength: '50', required: true) %>
   </div>
   <div class="input-stack">
-    <%= label_tag(:description, 'Description', style: "font-size: .98rem") %>
-    <%= text_area_tag(:description, saved_search.description, class: 'c-input__textarea', style: 'width: 100%; min-height: 2rem;') %>
+    <%= label_tag(:description, 'Description', for: "description#{saved_search.id}", style: "font-size: .98rem") %>
+    <%= text_area_tag(:description, saved_search.description, id: "description#{saved_search.id}", class: 'c-input__textarea', style: 'width: 100%; min-height: 2rem;') %>
   </div>
   <button type="submit" aria-label="Save" class="c-admin-edit-icon" title="Save"><i class="fa fa-floppy-disk" aria-hidden="true"></i></button>
   <button type="button" aria-label="Cancel" title="Cancel" id="cancel_save<%= saved_search.id %>" class="c-admin-edit-icon"><i class="fa fa-times" aria-hidden="true"></i></button>
