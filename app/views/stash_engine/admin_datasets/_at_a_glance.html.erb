@@ -8,11 +8,15 @@
             <i class="fas fa-flag <%= r.flag.flag %>" aria-label="Flagged"></i>
             <%= r.flag.flag.humanize %>
           <% else %>
-            Not flagged
+            No dataset flag
           <% end %>
         </span>
         <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'flag'), method: :get, local: false) do %>
           <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Edit Flag" title="Edit Flag"><i class="fas fa-pencil" aria-hidden="true"></i></button>
+        <% end %>
+        <% flag_type = {'StashEngine::Journal': 'journal', 'StashEngine::User': 'user', 'StashEngine::Tenant': 'institution'} %>
+        <% r.flags.reject(&:blank?).map do |flag| %>
+          <i role="img" aria-label="Flagged" class="fas fa-flag dashboard-flag <%= flag_type[flag.flaggable_type.to_sym][0,4] %>" title="Flagged <%= flag_type[flag.flaggable_type.to_sym]%><%= flag.note.present? ? ": #{flag.note}" : '' %>"></i>
         <% end %>
       </span>
     <% end %>

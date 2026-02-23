@@ -50,11 +50,23 @@ FactoryBot.define do
       status { 'action_required' }
     end
 
+    trait :awaiting_payment do
+      status { 'awaiting_payment' }
+    end
+
     trait :withdrawn do
       status { 'withdrawn' }
       after(:create) do |act|
         act.resource.update(meta_view: false, file_view: false)
         act.resource.identifier.update(pub_state: 'withdrawn')
+      end
+    end
+
+    trait :retracted do
+      status { 'retracted' }
+      after(:create) do |act|
+        act.resource.update(meta_view: true)
+        act.resource.identifier.update(pub_state: 'retracted')
       end
     end
 

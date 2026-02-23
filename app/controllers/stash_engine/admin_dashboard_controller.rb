@@ -125,7 +125,7 @@ module StashEngine
       @journal_limit = journal_limit || []
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Layout/LineLength
     def setup_search
       @sort = params[:sort]
       @search = params[:search].to_i
@@ -143,8 +143,9 @@ module StashEngine
 
       @search_string = params[:q] || session[:admin_search_string] || @shared_search&.search_string || @saved_search&.search_string
       @filters = params[:filters] || session[:admin_search_filters] || @shared_search&.filters || @saved_search&.filters
-      @filters = JSON.parse(@filters.to_json, symbolize_names: true) unless @filters.blank?
       @fields = params[:fields] || session[:admin_search_fields] || @shared_search&.fields || @saved_search&.fields
+      @stop_reload = @search_string == session[:admin_search_string] && @fields == session[:admin_search_fields] && @filters == session[:admin_search_filters]
+      @filters = JSON.parse(@filters.to_json, symbolize_names: true) unless @filters.blank?
 
       session[:admin_search_filters] = params[:filters] if params[:filters].present?
       session[:admin_search_fields] = params[:fields] if params[:fields].present?
@@ -290,7 +291,7 @@ module StashEngine
         "stash_engine_identifiers.publication_date #{date_string(@filters[:first_pub_date])}"
       ) if @filters[:first_pub_date]&.values&.any?(&:present?)
     end
-    # rubocop:enable Style/MultilineIfModifier, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/AbcSize
+    # rubocop:enable Style/MultilineIfModifier, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/AbcSize, Layout/LineLength
 
     def size_filter
       from = @filters.dig(:size, :least).to_i
@@ -320,11 +321,13 @@ module StashEngine
 
       tenant_orgs = [] if @filters[:submitter_limit].present?
 
-      @datasets = @datasets.left_outer_joins(authors: :affiliations).left_outer_joins(:funders).where(
-        'stash_engine_resources.tenant_id in (?) or stash_engine_identifiers.payment_id in (?)
-        or dcs_affiliations.ror_id in (?) or dcs_contributors.name_identifier_id in (?)',
-        tenant_limit.map(&:id), tenant_limit.map(&:id), tenant_orgs, tenant_orgs
-      )
+      @datasets = @datasets.left_outer_joins(authors: :affiliations)
+        .joins('left outer join dcs_contributors contributors on stash_engine_resources.id = contributors.resource_id')
+        .where(
+          'stash_engine_resources.tenant_id in (?) or stash_engine_identifiers.payment_id in (?)
+        or dcs_affiliations.ror_id in (?) or contributors.name_identifier_id in (?)',
+          tenant_limit.map(&:id), tenant_limit.map(&:id), tenant_orgs, tenant_orgs
+        )
     end
 
     def journal_filter
@@ -408,7 +411,6 @@ module StashEngine
         release_resource(@resource)
       else
         decipher_curation_activity
-        @note = params.dig(:stash_engine_resource, :curation_activity, :note)
         @resource.publication_date = @pub_date
         if @status == 'curation'
           @resource.user_id = current_user.id
@@ -422,7 +424,10 @@ module StashEngine
 
     def decipher_curation_activity
       @pub_date = params[:stash_engine_resource][:publication_date]
+      @note = params.dig(:stash_engine_resource, :curation_activity, :note)
       case @status
+      when 'retracted'
+        check_retract_files
       when 'published'
         publish
       when 'embargoed'
@@ -437,6 +442,15 @@ module StashEngine
       return if @pub_date.present?
 
       @pub_date = Time.now.utc.to_date.to_s
+    end
+
+    def check_retract_files
+      show_files = ActiveModel::Type::Boolean.new.cast(params[:stash_engine_resource][:file_view])
+      if show_files && !@resource.file_view?
+        @identifier.fill_resource_view_flags
+      elsif !show_files
+        @identifier.resources.update(file_view: false)
+      end
     end
 
     def publishing_error

@@ -10,7 +10,7 @@ describe PubStateService do
   end
 
   describe '#update_for_ca_status' do
-    %w[withdrawn embargoed published].each do |status|
+    %w[withdrawn embargoed published retracted].each do |status|
       it "updates identifier with proper pub date for status `#{status}`" do
         subject.update_for_ca_status(status)
         expect(identifier.reload.pub_state).to eq(status)

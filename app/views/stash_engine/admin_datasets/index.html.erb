@@ -143,6 +143,11 @@
     } else {
       document.getElementById('c-input_publication_date').setAttribute('hidden', 'hidden');
     }
+    if (e.currentTarget.value === 'retracted') {
+      document.getElementById('retraction_options').removeAttribute('hidden')
+    } else {
+      document.getElementById('retraction_options').setAttribute('hidden', 'hidden')
+    }
   }
   var noClicks = Array.from(document.getElementsByClassName('prevent-click'));
   noClicks.forEach(button => {

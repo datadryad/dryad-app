@@ -8,7 +8,7 @@ module StashApi
       class UsageNotes < MetadataItem
 
         def value
-          items = @resource.descriptions.type_other.map(&:description)
+          items = @resource.descriptions.where(description_type: @resource.identifier.retracted? ? 'concern' : 'other').map(&:description)
           return items.first unless items.blank?
 
           nil
