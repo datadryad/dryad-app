@@ -27,7 +27,8 @@
     <% if current_user.public_searches.empty? %>
       <p>Save search terms and filters from <%= link_to 'Dryad\'s search', new_search_path %> to repeat your searches and discover new datasets as they are published.</p>
     <% else %>
-      <p>Click the search name to view the latest results from your saved search. Copy the web feed link to subscribe and be notified when new datasets meet your search criteria.</p>
+      <p>Click the search name to view the latest results from your saved search.<p>
+      <p style="line-height: 150%;">Subscribe to be notified when new datasets meet your search criteria. Click <i class="fas fa-bell" role="img" aria-label="Subscribe"></i> to receive weekly updates via email, or <i class="fas fa-bell-slash" role="img" aria-label="Unubscribe"></i> to unsubscribe from email updates. Click <i class="fas fa-rss-square" role="img" aria-label="Copy link to web feed"></i> to copy a link to subscribe via an RSS or feed reader.</p>
       <ol class="saved_searches_list" id="public_searches_list">
         <% current_user.public_searches.each_with_index do |s,i| %>
           <%= render partial: 'saved_search', locals: { saved_search: s, index: i } %>

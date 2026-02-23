@@ -48,7 +48,10 @@ module StashEngine
     end
 
     def update_params
-      params.permit(:default, :title, :description)
+      ps = params.permit(:default, :title, :description, :emailed_at)
+      ps[:emailed_at] = Time.now.utc if ps[:emailed_at] == 'set'
+      ps[:emailed_at] = nil if ps[:emailed_at] == 'unset'
+      ps
     end
 
   end
