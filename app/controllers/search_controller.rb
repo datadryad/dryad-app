@@ -127,7 +127,7 @@ class SearchController < ApplicationController
   end
 
   def xml_result
-    filters = URI.encode_www_form(params.except(:q, :action, :controller, :id, :page_size, :format).to_unsafe_hash.sort.to_h)
+    filters = URI.encode_www_form(params.except(:q, :action, :controller, :id, :page_size, :format, :utf8).to_unsafe_hash.sort.to_h)
     Rails.cache.fetch("xml_search/#{filters}", expires_in: 12.hours) do
       service = StashApi::SolrSearchService.new(query: params[:q], filters: params.except(:q, :action, :controller, :id).merge(sort: 'date desc'))
       service.search(page: page, per_page: 10, fields: fields, facet: true, wt: :xml)
@@ -138,14 +138,14 @@ class SearchController < ApplicationController
   end
 
   def atom_xml(result)
-    ss = StashEngine::SavedSearch.find_by(id: params[:id])
+    ps = StashEngine::PublicSearch.find_by(id: params[:id])
     url = new_search_url(request.parameters.except(:action, :controller, :page, :page_size, :format)).gsub('/search', '/search.xml')
     xml = Nokogiri::XML::Document.parse(result)
     xsl = Nokogiri::XSLT.parse(File.read(File.expand_path('../views/search/atom.xsl', File.dirname(__FILE__))))
     xsl_params = Nokogiri::XSLT.quote_params(
       { 'url' => url.to_s,
-        'title' => ss&.title || 'Dryad search results',
-        'desc' => ss&.description,
+        'title' => ps&.title || 'Dryad search results',
+        'desc' => ps&.description,
         'page' => page }
     )
     xsl.transform(xml, xsl_params).to_xml
