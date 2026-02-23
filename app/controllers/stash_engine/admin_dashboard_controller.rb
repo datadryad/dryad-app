@@ -1,5 +1,5 @@
 module StashEngine
-  # rubocop:disable Metrics/ClassLength
+  # rubocop:disable Metrics/ClassLength, Metrics/MethodLength
   class AdminDashboardController < ApplicationController
     include PublicationMixin
     helper SortableTableHelper
@@ -30,10 +30,11 @@ module StashEngine
         order_string = 'relevance desc'
         if params[:sort].present?
           order_list = %w[title author_string status total_file_size view_count curator_name editor_name
-                          created_at updated_at submit_date publication_date first_sub_date first_pub_date queue_date]
+                          created_at updated_at submit_date publication_date first_sub_date first_pub_date queue_date last_status_date]
           order_string = helpers.sortable_table_order(whitelist: order_list)
           order_string = "stash_engine_curation_activities.#{order_string}" if @sort == 'updated_at'
           order_string = "stash_engine_identifiers.#{order_string}" if @sort == 'created_at'
+          order_string = "stash_engine_process_dates.#{order_string}" if @sort == 'last_status_date'
           order_string += ', relevance desc' if @search_string.present?
         end
         @datasets = @datasets.order(order_string)
@@ -219,16 +220,17 @@ module StashEngine
         'COALESCE(id_dates.processing, id_dates.queued, id_dates.peer_review) as first_sub_date, id_dates.queued as queue_date'
       ).select('stash_engine_identifiers.publication_date as first_pub_date')
 
-      return unless @filters[:submit_date]&.values&.any?(&:present?) || @sort == 'submit_date'
+      return unless @filters[:submit_date]&.values&.any?(&:present?) || %w[submit_date last_status_date].include?(@sort)
 
-      if @filters[:submit_date]&.values&.any?(&:present?)
-        @datasets = @datasets.joins(:process_date)
-      elsif @sort == 'submit_date'
-        @datasets = @datasets.left_outer_joins(:process_date)
-      end
+      @datasets = if %w[submit_date last_status_date].include?(@sort)
+                    @datasets.left_outer_joins(:process_date)
+                  else
+                    @datasets.joins(:process_date)
+                  end
 
       @datasets = @datasets.select(
-        'COALESCE(stash_engine_process_dates.processing, stash_engine_process_dates.queued, stash_engine_process_dates.peer_review) as submit_date'
+        'stash_engine_process_dates.last_status_date,
+         COALESCE(stash_engine_process_dates.processing, stash_engine_process_dates.queued, stash_engine_process_dates.peer_review) as submit_date'
       )
     end
 
@@ -377,7 +379,7 @@ module StashEngine
 
     def add_subqueries
       @datasets = @datasets.preload(:identifier).preload(:current_resource_state)
-      @datasets = @datasets.preload(:process_date) if @fields.include?('submit_date')
+      @datasets = @datasets.preload(:process_date) if @fields.intersect?(%w[submit_date last_status_date])
       @datasets = @datasets.preload(identifier: :process_date) if @fields.intersect?(%w[first_sub_date queue_date])
       @datasets = @datasets.preload(:last_curation_activity) if @fields.include?('status') || @fields.include?('updated_at')
       @datasets = @datasets.preload(:subjects) if @fields.include?('keywords')
@@ -505,5 +507,5 @@ module StashEngine
     HTML
     render :curation_activity_error
   end
-  # rubocop:enable Metrics/ClassLength
+  # rubocop:enable Metrics/ClassLength, Metrics/MethodLength
 end
