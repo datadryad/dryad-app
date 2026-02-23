@@ -13,6 +13,7 @@ Rack::Attack.cache.store = Redis.new(url: APP_CONFIG[:cache][:rack_attack_url], 
 Rack::Attack.safelist_ip('127.0.0.1')
 Rack::Attack.safelist_ip('::1')
 Rack::Attack.safelist_ip('217.123.8.63') # Markus Englund, research on data fabrication
+Rack::Attack.safelist_ip('89.167.84.16') # Markus Englund, research on data fabrication
 Rack::Attack.safelist_ip('130.14.25.148') # NCBI LinkOut integrity checker
 Rack::Attack.safelist_ip('130.14.254.25') # NCBI LinkOut integrity checker
 Rack::Attack.safelist_ip('130.14.254.26') # NCBI LinkOut integrity checker
