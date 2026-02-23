@@ -3,7 +3,14 @@ describe PaymentLimitsService do
   let(:identifier) { create(:identifier) }
   let(:total_file_size) { 10_000_000_001 }
   let!(:tenant) { create(:tenant) }
-  let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, yearly_ldf_limit: 1_000) }
+  let!(:payment_conf) do
+    create(:payment_configuration,
+           partner: tenant,
+           payment_plan: '2025',
+           covers_dpc: true,
+           covers_ldf: true,
+           yearly_ldf_limit: 1_000)
+  end
   let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: total_file_size) }
   let(:payer) { tenant }
 
