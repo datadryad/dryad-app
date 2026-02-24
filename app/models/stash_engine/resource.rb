@@ -695,7 +695,7 @@ module StashEngine
     end
 
     def manuscript
-      manuscripts&.last
+      manuscripts.where(journal: journal).last
     end
 
     # -----------------------------------------------------------
