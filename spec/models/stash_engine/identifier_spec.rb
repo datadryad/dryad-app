@@ -532,17 +532,21 @@ module StashEngine
     end
 
     describe '#has_accepted_manuscript?' do
+      before do
+        journal = create(:journal)
+        @identifier.latest_resource.resource_publication.update(publication_issn: journal.single_issn)
+      end
       it 'is false when no matching manuscript exists' do
         expect(@identifier.has_accepted_manuscript?).to be(false)
       end
 
       it 'is true when matching manuscript is accepted' do
-        create(:manuscript, manuscript_number: @fake_manuscript_number, status: 'accepted')
+        create(:manuscript, manuscript_number: @fake_manuscript_number, status: 'accepted', journal: @identifier.latest_resource.journal)
         expect(@identifier.has_accepted_manuscript?).to be(true)
       end
 
       it 'is false when matching manuscript is submitted' do
-        create(:manuscript, manuscript_number: @fake_manuscript_number, status: 'submitted')
+        create(:manuscript, manuscript_number: @fake_manuscript_number, status: 'submitted', journal: @identifier.latest_resource.journal)
         expect(@identifier.has_accepted_manuscript?).to be(false)
       end
     end
