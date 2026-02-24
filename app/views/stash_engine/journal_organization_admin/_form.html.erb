@@ -2,6 +2,34 @@
 <%= form.label :name, "Name of publisher or society"%>
 <%= form.text_field(:name, required: true, value: @org.name, class: 'c-input__text', style: 'width:100%') %>
 </div>
+<%= fields_for :payment_configuration_attributes do |pf| %>
+  <%= pf.hidden_field :id, value: @payment_configuration.id %>
+  <%
+    plan_radios = [ ['', 'None'] ] + StashEngine::Journal::PAYMENT_PLANS.map {|p| [p, p.capitalize]}
+  %>
+  <h2>Membership</h2>
+  <fieldset class="c-fieldset">
+    <legend>Payment plan type:</legend>
+    <% plan_radios.each do |plan| %>
+      <%= pf.radio_button :payment_plan, plan.first, checked: plan.first == @payment_configuration.payment_plan %>
+      <label for="<%= "payment_configuration_attributes_payment_plan_#{plan.first.downcase}" %>"><%= plan[1] %></label>
+      <br />
+    <% end %>
+  </fieldset>
+
+  <p>
+    <%= pf.check_box :covers_ldf, {checked: @payment_configuration.covers_ldf}, 1, 0 %>
+    <%= pf.label :covers_ldf, "When checked, journal covers Large Data Fees" %>
+  </p>
+  <p>
+    <%= pf.label :ldf_limit, "Covered Large Data Fee limit (GB)" %>
+    <%= pf.select :ldf_limit, ldf_pricing_tiers_options, { selected: @payment_configuration.ldf_limit }, class: 'c-input__select', disabled: !@payment_configuration.covers_ldf %>
+  </p>
+  <p>
+    <%= pf.label :yearly_ldf_limit, "Yearly Large Data Fee limit $" %>
+    <%= pf.number_field :yearly_ldf_limit, value: @payment_configuration.yearly_ldf_limit, class: 'c-input__text', disabled: !@payment_configuration.covers_ldf %>
+  </p>
+<% end %>
 <h2>Contacts</h2>
 <div class="c-input">
 <%= form.label :contact, "Place each email address on a new line:"%>
