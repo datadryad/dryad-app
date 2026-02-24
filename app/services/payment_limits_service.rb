@@ -14,6 +14,7 @@ class PaymentLimitsService
   def size_limits_exceeded?
     return true if payer.nil?
     return false unless PayersService.new(payer).is_2025_payer?
+    return true unless payer.payment_configuration&.covers_ldf
 
     # true - if the new files size is over the LDF size limit
     ldf_limit_exceeded
@@ -22,12 +23,16 @@ class PaymentLimitsService
   def amount_limits_exceeded?
     return true if payer.nil?
     return false unless PayersService.new(payer).is_2025_payer?
-    return false if payer.payment_configuration.yearly_ldf_limit.nil?
+    return true unless payer.payment_configuration&.covers_ldf
 
     exceeds_yearly_ldf_limit?
   end
 
   def limits_exceeded?
+    return true if payer.nil?
+    return false unless PayersService.new(payer).is_2025_payer?
+    return true unless payer.payment_configuration&.covers_ldf
+
     amount_limits_exceeded? || size_limits_exceeded?
   end
 
@@ -48,10 +53,13 @@ class PaymentLimitsService
 
   def exceeds_sponsor_yearly_limit?(storage_fee)
     sponsor = payer.sponsor
-    return false if sponsor.nil? || sponsor.payment_configuration&.yearly_ldf_limit.nil?
+    return false if sponsor.nil?
+
+    payment_conf = sponsor.payment_configuration
+    return false if !payment_conf&.covers_ldf || payment_conf&.yearly_ldf_limit.nil?
 
     paid_amount = SponsoredPaymentLog.for_current_year.where(sponsor_id: sponsor.id).sum(:ldf)
-    paid_amount + storage_fee > sponsor.payment_configuration.yearly_ldf_limit.to_f
+    paid_amount + storage_fee > payment_conf.yearly_ldf_limit.to_f
   end
 
   def set_calculator_service
