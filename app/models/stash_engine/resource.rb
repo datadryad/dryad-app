@@ -116,9 +116,9 @@ module StashEngine
     has_many :processor_results, class_name: 'StashEngine::ProcessorResult', dependent: :destroy
     has_many :journal_issns, through: :resource_publications
     has_many :journals, through: :journal_issns
-    has_many :manuscripts, through: :resource_publication
     has_one :journal_issn, through: :resource_publication
     has_one :journal, through: :journal_issn
+    has_many :manuscripts, ->(resource) { where(journal_id: resource.journal&.id) }, through: :resource_publication
     has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
     has_many :flags, ->(resource) { unscope(where: :resource_id).where(flaggable: [resource.journal, resource.tenant, resource.users]) }
     has_one :payment, class_name: 'ResourcePayment'
@@ -695,7 +695,7 @@ module StashEngine
     end
 
     def manuscript
-      manuscripts.where(journal: journal).last
+      manuscripts&.last
     end
 
     # -----------------------------------------------------------
