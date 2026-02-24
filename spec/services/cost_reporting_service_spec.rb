@@ -17,7 +17,7 @@ describe CostReportingService do
   let(:tenant) { create(:tenant, campus_contacts: ['some@email.com'].to_json) }
   let(:identifier) { create(:identifier) }
   let!(:journal) { create(:journal) }
-  let!(:payment_conf) { create(:payment_configuration, partner: journal, payment_plan: '2025') }
+  let!(:payment_conf) { create(:payment_configuration, partner: journal, payment_plan: '2025', covers_ldf: true) }
   let(:prev_resource) do
     create(:resource,
            identifier: identifier,
