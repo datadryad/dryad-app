@@ -47,4 +47,8 @@ class SponsoredPaymentsService
                  end
     FeeCalculatorService.new(payer_type).ldf_amount(resource: resource, payer: payer)
   end
+
+  def sponsor_id
+    payer.sponsor_id
+  end
 end
