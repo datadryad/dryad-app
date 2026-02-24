@@ -5,6 +5,7 @@
 #  id          :bigint           not null, primary key
 #  default     :boolean
 #  description :string(191)
+#  emailed_at  :datetime
 #  properties  :json
 #  share_code  :string(191)
 #  title       :string(191)
@@ -23,5 +24,27 @@
 #
 module StashEngine
   class PublicSearch < SavedSearch
+
+    scope :subscribed, -> { where.not(emailed_at: nil) }
+
+    def email_updates
+      now = Time.now.utc
+      return if now < emailed_at
+
+      fields = 'dc_identifier_s dc_title_s dc_creator_sm dc_description_s dct_issued_dt'
+      service = StashApi::SolrSearchService.new(
+        query: properties[:q],
+        filters: properties.except(:q, :id).merge(
+          'sort' => 'date desc', 'publishedSince' => emailed_at.utc.iso8601
+        )
+      )
+      result = service.search(page: 1, per_page: 10, fields: fields, facet: true, wt: :json)
+      update(emailed_at: now)
+      results = result['response']
+      return if results['numFound'].zero?
+
+      results
+    end
+
   end
 end
