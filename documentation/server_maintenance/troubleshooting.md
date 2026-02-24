@@ -50,6 +50,9 @@ DROP TABLE IF EXISTS `mytable`;
 mysql --defaults-group-suffix=stg --user dryaddba --host some-hostname dryad < queryfile.sql > output.txt
 ```
 
+If you don't want to restore the entire table, but just want to restore some values, change the process like this:
+- Don't drop the existing table. Instead, edit the dump file to create a new table with a different name, like `temp_mytable`. Note that the name will likely need to be replaced in many places of the dump file.
+- Once the new table is created, copy the relevant values into the old table with a command like `UPDATE mytable mt INNER JOIN temp_mytable tmt ON mt.id = tmt.id SET mt.column_name = tmt.column_name where mt.some_column=0;`
 
 Dataset is not showing up in searches
 ===================================
