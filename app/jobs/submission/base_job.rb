@@ -1,7 +1,5 @@
 module Submission
-  class BaseJob
-
-    attr_reader :resource
+  class BaseJob < ::BaseJob
 
     def handle_success(result)
       result.log_to(Rails.logger)
