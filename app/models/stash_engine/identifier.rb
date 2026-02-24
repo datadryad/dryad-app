@@ -108,6 +108,11 @@ module StashEngine
         .order('stash_engine_identifiers.identifier')
     end
 
+    scope :invoice_due, -> do
+      joins(:last_curation_activity, :payments)
+        .where(last_curation_activity: { status: 'awaiting_payment' })
+    end
+
     # used to build counter stat if needed, trickery to be sure one always exists to begin with
     # https://stackoverflow.com/questions/3808782/rails-best-practice-how-to-create-dependent-has-one-relations
     def counter_stat
@@ -330,7 +335,7 @@ module StashEngine
     end
 
     def automatic_ppr?
-      return false unless latest_manuscript.present? || journal&.default_to_ppr?
+      return false unless journal&.default_to_ppr?
       return false if accepted_for_publication?
       return false if has_rejected_manuscript?
 

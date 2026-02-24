@@ -40,7 +40,7 @@ function PublicationForm({
     ).then((data) => {
       if (data.status === 200) {
         const {
-          journal, related_identifiers, resource_publication, resource_preprint,
+          journal, related_identifiers, resource_publication, resource_preprint, hold_for_peer_review,
         } = data.data;
         setResource((r) => ({
           ...r,
@@ -48,6 +48,7 @@ function PublicationForm({
           related_identifiers,
           resource_publication,
           resource_preprint: resource_preprint || undefined,
+          hold_for_peer_review,
         }));
         setJTitle(journal?.title || jTitle);
         setISSN(journal?.issn || issn);

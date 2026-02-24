@@ -94,6 +94,10 @@ module StashDatacite
       if resource.hold_for_peer_review?
         msg << 'and will be available from the temporary reviewer sharing link after processing.'
         msg << 'When your data is ready to publish, release it for curation.'
+      elsif resource.identifier.payment_needed?
+        msg << 'and is awaiting payment of your issued invoice.'
+        msg << "Once your invoice is paid, your #{resource.resource_type.resource_type} will be queued for curation."
+        msg << "Revision requests will be sent to #{resource.submitter.email}"
       else
         msg << "for curation. #{resource.resource_type.resource_type.capitalize}s are curated in the order in which they are received."
         msg << "Revision requests will be sent to #{resource.submitter.email}"

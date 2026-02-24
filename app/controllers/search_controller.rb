@@ -4,15 +4,28 @@ class SearchController < ApplicationController
   protect_from_forgery except: :metrics_chart
 
   def search
-    service = StashApi::SolrSearchService.new(query: params[:q], filters: params.except(:q, :action, :controller))
-    search = service.search(page: page, per_page: per_page, fields: fields, facet: true)
-    if (error = service.error)
-      render status: error.status, plain: error.message and return
-    end
+    respond_to do |format|
+      format.html do
+        service = StashApi::SolrSearchService.new(query: params[:q], filters: params.except(:q, :action, :controller))
+        result = service.search(page: page, per_page: per_page, fields: fields, facet: true)
+        if (error = service.error)
+          render status: error.status, plain: error.message and return
+        end
 
-    @facets = search['facet_counts']
-    @results = search['response']
-    @profiles = profiles
+        @facets = result['facet_counts']
+        @results = result['response']
+        @profiles = profiles
+      end
+      format.xml do
+        service = StashApi::SolrSearchService.new(query: params[:q], filters: params.except(:q, :action, :controller, :id).merge(sort: 'date desc'))
+        xml_result = service.search(page: page, per_page: 10, fields: fields, facet: true, wt: :xml)
+        if (error = service.error)
+          render status: error.status, plain: error.message and return
+        end
+
+        render xml: atom_xml(xml_result), content_type: 'application/atom+xml'
+      end
+    end
   end
 
   def advanced
@@ -117,6 +130,20 @@ class SearchController < ApplicationController
   def per_page
     @page_size = 10 if params[:page_size].blank? || params[:page_size].to_i == 0
     @page_size ||= params[:page_size].to_i
+  end
+
+  def atom_xml(result)
+    ps = StashEngine::PublicSearch.find_by(id: params[:id])
+    url = new_search_url(request.parameters.except(:action, :controller, :page, :page_size, :format)).gsub('/search', '/search.xml')
+    xml = Nokogiri::XML::Document.parse(result)
+    xsl = Nokogiri::XSLT.parse(File.read(File.expand_path('../views/search/atom.xsl', File.dirname(__FILE__))))
+    xsl_params = Nokogiri::XSLT.quote_params(
+      { 'url' => url.to_s,
+        'title' => ps&.title || 'Dryad search results',
+        'desc' => ps&.description,
+        'page' => page }
+    )
+    xsl.transform(xml, xsl_params).to_xml
   end
 
   def label_format(d)

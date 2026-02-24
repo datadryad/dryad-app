@@ -13,8 +13,8 @@
       <input type="submit" value="Apply" class="o-button__submit" style="margin-left: 1ch" />
     </div>
   </form>
-  <canvas style="margin: 2rem 0;" id="dailyChart" role="img" aria-label="Daily curation stats: Line chart graphing the count of each column of the curation stats table over time."></canvas>
-  <canvas id="monthlyChart" role="img" aria-label="Monthly curation stats: Line chart graphing the count of each column of the curation stats table over time."></canvas>
+  <div style="margin: 2rem 0; height: 600px;"><canvas id="dailyChart" role="img" aria-label="Daily curation stats: Line chart graphing the count of each column of the curation stats table over time."></canvas></div>
+  <div style="height: 600px;"><canvas id="monthlyChart" role="img" aria-label="Monthly curation stats: Line chart graphing the count of each column of the curation stats table over time."></canvas></div>
 </div>
 <script>
   generate_chart(
@@ -67,6 +67,7 @@
       data: { labels, datasets },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         interaction: { mode: 'index', intersect: false },
         stacked: false,
         plugins: {

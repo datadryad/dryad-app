@@ -735,7 +735,8 @@ module StashApi
             facet: false,
             q: 'system \\(fo\\)',
             fq: [],
-            fl: 'dc_identifier_s'
+            fl: 'dc_identifier_s',
+            wt: :json
           }
         )
       end
