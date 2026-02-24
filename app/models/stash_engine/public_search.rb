@@ -33,8 +33,8 @@ module StashEngine
 
       fields = 'dc_identifier_s dc_title_s dc_creator_sm dc_description_s dct_issued_dt'
       service = StashApi::SolrSearchService.new(
-        query: properties[:q],
-        filters: properties.except(:q, :id).stringify_keys.merge(
+        query: properties['q'],
+        filters: properties.except('q', 'id').merge(
           'sort' => 'date desc', 'publishedSince' => emailed_at.utc.iso8601
         )
       )
