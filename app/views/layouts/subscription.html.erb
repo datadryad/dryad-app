@@ -7,6 +7,7 @@
         src: url('data:font/woff;base64,<%= Base64.strict_encode64(open(Rails.root.join('public', 'fonts', 'KievitWeb.woff')).to_a.join)%>') format('woff');
         font-weight: 400;
       }
+      a:hover { color: #0071a8 !important }
     </style>
   </head>
   <body style="height: 100%;margin: 0;padding: 0;width: 100%;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
@@ -18,12 +19,12 @@
       </tr>
       <tr>
         <td></td>
-        <td align="center" style="width:775px; background-color:#e4f1f7;" valign="top">
+        <td align="center" style="width:850px; background-color:#e4f1f7;" valign="top">
           <table border="0" cellpadding="0" cellspacing="0" style="width:100%; background-color:#ffffff; font-family:'KievitWeb',Helvetica, Arial, sans-serif;font-size:16px;color:#000000;">
             <tbody>
               <tr>
                 <td align="left" valign="top" style="text-align:center; background-color:#ffffff;  border-bottom: 1px solid #4e5050; padding: 16px;">
-                    <img src="data:image/png;base64,<%= Base64.encode64(open(Rails.root.join('app', 'assets', 'images', 'stash_engine', 'logo_dryad.png')).to_a.join(''))%>" style="width: 260px; max-width:100%" alt="Dryad" />
+                    <a href="<%= root_url %>"><img src="data:image/png;base64,<%= Base64.encode64(open(Rails.root.join('app', 'assets', 'images', 'stash_engine', 'logo_dryad.png')).to_a.join(''))%>" style="width: 260px; max-width:100%" alt="Dryad" /></a>
                 </td>
               </tr>
               <tr>
