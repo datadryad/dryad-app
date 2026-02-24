@@ -111,6 +111,7 @@ module StashEngine
       return if current_user.present? && resource.editor.present? && current_user == resource.editor
       return if current_user.present? && resource.editor.nil? && resource.permission_to_edit?(user: current_user)
 
+      flash[:alert] = 'You do not have permission to modify this submission.'
       display_authorization_failure
     end
 
@@ -118,6 +119,7 @@ module StashEngine
       return if valid_edit_code?
       return if current_user.present? && resource.permission_to_edit?(user: current_user)
 
+      flash[:alert] = 'You do not have permission to revise this submission.'
       display_authorization_failure
     end
 
@@ -127,6 +129,7 @@ module StashEngine
                 resource&.dataset_in_progress_editor&.id == current_user.id ||
                 current_user.min_curator?
 
+      flash[:alert] = 'This submission is being edited by another user.'
       display_authorization_failure
     end
 
@@ -172,7 +175,6 @@ module StashEngine
     def display_authorization_failure
       Rails.logger.warn("Resource #{resource ? resource.id : 'nil'}: user IDs are #{resource.users&.map(&:id)&.join(', ')} but " \
                         "current user is #{current_user.id || 'nil'}")
-      flash[:alert] = 'This submission is being edited by another user.'
       redirect_back(fallback_location: choose_dashboard_path)
     end
 
