@@ -107,7 +107,10 @@ export const filesCheck = (resource, pubDates, superuser, maximums) => {
       if (!changelog.description
         || (pubDates.length && !pubDates.some((d) => changelog.description.includes(d))) || end.test(changelog.description)) {
         return (
-          <p className="error-text" id="log_error">A log describing changes to published files is required</p>
+          <p className="error-text" id="log_error">
+            A log describing changes to published files is required.
+            Text must contain the following dates, preceding logs for each: {pubDates.join('; ')}
+          </p>
         );
       }
     }
