@@ -1,0 +1,15 @@
+<h1 style="color: #07364b;margin-top: 0; font-size: 30px; font-weight: normal;">New results for your saved search: <a href="<%= new_search_url(**@search.properties) %>" style="color: #00527A, text-decoration: underline;"><%= @search.title %></a></h1>
+<h2 style="color: #07364b;font-size: 24px; font-weight: normal;"><%= pluralize(@json['numFound'], 'result') %> since last check</h2>
+<% @json['docs'].each do |result| %>
+<div style="margin: 24px auto">
+  <h3 style="font-size: 20px; font-weight: normal; margin: 0 auto"><a href="<%= show_url(id: result['dc_identifier_s']) %>" style="color: #00527A, text-decoration: underline;"><%= result['dc_title_s']&.html_safe %></a></h3>
+  <p style="margin: 0 auto;">Published <%= result['dct_issued_dt'].to_time.strftime('%b %d, %Y') %>. <%= result['dc_creator_sm'].first(5).join('; ') %><% if result['dc_creator_sm'].size > 5 %>; et al<% end%></p>
+  <p style="margin: 0 auto"><%= result['dc_description_s'].truncate_words(50)%></p>
+</div>
+<% end %>
+<% if @json['numFound'] > 10 %>
+<p style="text-align:right; margin-bottom: 0;"><a href="<%= new_search_url(**@search.properties, page: 2) %>">View more results...</a></p>
+<% end %>
+<% content_for :footer do %>
+  Visit <a href="<%= saved_searches_url %>" style="color: #00527A, text-decoration: underline;">your Dryad saved searches</a> to unsubscribe
+<% end %>
