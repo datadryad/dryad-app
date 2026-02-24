@@ -102,12 +102,12 @@ describe PaymentLimitsService do
         context 'and payer has no limit set' do
           let!(:payment_conf) do
             create(:payment_configuration,
-              partner: tenant,
-              payment_plan: '2025',
-              covers_dpc: true,
-              covers_ldf: true,
-              ldf_limit: nil,
-              yearly_ldf_limit: nil)
+                   partner: tenant,
+                   payment_plan: '2025',
+                   covers_dpc: true,
+                   covers_ldf: true,
+                   ldf_limit: nil,
+                   yearly_ldf_limit: nil)
           end
 
           context 'when limit is already exceeded' do
@@ -126,12 +126,12 @@ describe PaymentLimitsService do
         context 'and payer has cover ldf off' do
           let!(:payment_conf) do
             create(:payment_configuration,
-              partner: tenant,
-              payment_plan: '2025',
-              covers_dpc: true,
-              covers_ldf: false,
-              ldf_limit: nil,
-              yearly_ldf_limit: nil)
+                   partner: tenant,
+                   payment_plan: '2025',
+                   covers_dpc: true,
+                   covers_ldf: false,
+                   ldf_limit: nil,
+                   yearly_ldf_limit: nil)
           end
 
           context 'when limit is already exceeded' do
