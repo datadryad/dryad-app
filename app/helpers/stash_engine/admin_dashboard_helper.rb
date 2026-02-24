@@ -31,6 +31,7 @@ module StashEngine
       head << 'First published' if @fields.include?('first_pub_date')
       head << 'First created' if @fields.include?('created_at')
       head << 'First queued' if @fields.include?('queue_date')
+      head << 'Entered status' if @fields.include?('status_date')
       head.to_csv(row_sep: "\r\n")
     end
 
@@ -103,6 +104,7 @@ module StashEngine
       row << dataset.identifier.publication_date if @fields.include?('first_pub_date')
       row << dataset.identifier.created_at if @fields.include?('created_at')
       row << dataset.identifier.process_date.queued if @fields.include?('queue_date')
+      row << dataset.process_date.last_status_date if @fields.include?('status_date')
       row.to_csv(row_sep: "\r\n")
     end
 

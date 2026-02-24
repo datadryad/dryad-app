@@ -251,6 +251,7 @@
     .author-metrics {
       flex-basis: 450px;
       width: 450px;
+      height: 225px;
     }
     .search-result {
       flex-basis: 60%;
@@ -259,6 +260,7 @@
       flex-direction: column;
       .author-metrics {
         width: 100%;
+        flex-basis: 225px;
       }
       .search-result {
         flex-basis: 100%;
