@@ -53,14 +53,15 @@ module StashEngine
       in_progress
       processing
       awaiting_payment
-      queued
       peer_review
+      queued
       curation
       action_required
       withdrawn
       embargoed
       to_be_published
       published
+      retracted
     ]
     enum :status, enum_vals.index_by(&:to_sym), default: 'in_progress', validate: true
 
@@ -73,14 +74,15 @@ module StashEngine
       in_progress: %w[in_progress],
       processing: %w[in_progress processing],
       awaiting_payment: %w[queued peer_review curation withdrawn],
-      queued: %w[queued peer_review curation withdrawn],
       peer_review: %w[queued peer_review curation withdrawn],
-      curation: (enum_vals - %w[in_progress processing queued to_be_published]),
-      action_required: (enum_vals - %w[in_progress processing queued to_be_published]),
+      queued: %w[queued peer_review curation withdrawn],
+      curation: (enum_vals - %w[in_progress processing queued to_be_published retracted]),
+      action_required: (enum_vals - %w[in_progress processing queued to_be_published retracted]),
       withdrawn: %w[withdrawn curation],
-      embargoed: %w[embargoed curation withdrawn published],
+      embargoed: %w[embargoed curation withdrawn published retracted],
       to_be_published: %w[embargoed curation withdrawn to_be_published published],
-      published: (enum_vals - %w[in_progress processing queued to_be_published])
+      published: %w[curation action_required embargoed published retracted],
+      retracted: %w[retracted]
     }.with_indifferent_access.freeze
 
     # Validations
@@ -192,16 +194,15 @@ module StashEngine
     end
 
     def can_update_pub_state?(status)
-      %w[published embargoed peer_review withdrawn].include?(status)
+      %w[published embargoed peer_review withdrawn retracted].include?(status)
     end
 
     def ready_for_payment?
-      return false unless resource
-      return false unless resource.identifier
+      return false unless first_time_in_status?
+      return false unless resource&.identifier
 
       resource.identifier.reload
       return false unless resource.identifier.old_payment_system
-      return false unless first_time_in_status?
 
       APP_CONFIG&.payments&.service == 'stripe' &&
         (resource.identifier.payment_type.nil? || %w[unknown waiver stripe].include?(resource.identifier.payment_type)) &&

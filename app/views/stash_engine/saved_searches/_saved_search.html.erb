@@ -3,16 +3,25 @@
   <% if saved_search.is_a?(StashEngine::AdminSearch) %>
     <%= link_to saved_search.title, admin_dashboard_path(search: index + 1, clear: true)%>
     <span><%= saved_search.description %></span>
-    <a href="<%= admin_dashboard_path(share: saved_search.share_code, clear: true) %>" class="c-admin-edit-icon copy-share-code" title="Copy link to share search" aria-label="Copy link to share search"><i class="fa fa-share" aria-hidden="true"></i></a>
+    <a href="<%= admin_dashboard_path(share: saved_search.share_code, clear: true) %>" class="c-admin-edit-icon copy-share-code" title="Copy link to share search" aria-label="Copy link to share search: <%= saved_search.title %>"><i class="fas fa-share" aria-hidden="true"></i></a>
   <% else %>
   <%= link_to saved_search.title, new_search_path(**saved_search.properties)%>
     <span><%= saved_search.description %></span>
-    <span></span>
+    <%= form_with(url: update_saved_search_path(id: saved_search.id), method: :patch, local: false) do %>
+      <% if saved_search.emailed_at.present? %>
+        <input type="hidden" name="emailed_at" value="unset">
+        <button class="c-admin-edit-icon" title="Unsubscribe" aria-label="Unubscribe from: <%= saved_search.title %>" aria-haspopup="menu" aria-expanded="false"><i class="fas fa-bell-slash" aria-hidden="true"></i></button>
+      <% else %>
+      <input type="hidden" name="emailed_at" value="set">
+        <button class="c-admin-edit-icon" title="Subscribe to email updates" aria-label="Subscribe to email updates for: <%= saved_search.title %>" aria-haspopup="menu" aria-expanded="false"><i class="fas fa-bell" aria-hidden="true"></i></button>
+      <% end %>
+    <% end %>
+    <a href="<%= new_search_path(**saved_search.properties, id: saved_search.id,format: :xml) %>" class="c-admin-edit-icon copy-share-code" title="Copy link to web feed" aria-label="Copy link to web feed: <%= saved_search.title %>"><i class="fas fa-rss-square" aria-hidden="true"></i></a>
   <% end %>
   <%= form_with(url: saved_search_edit_path(saved_search.id), method: :get, local: false) do %>
-    <button class="c-admin-edit-icon" title="Edit search description" aria-label="Edit search description: <%= saved_search.title %>" aria-haspopup="menu" aria-expanded="false"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+    <button class="c-admin-edit-icon" title="Edit search description" aria-label="Edit search description for: <%= saved_search.title %>" aria-haspopup="menu" aria-expanded="false"><i class="fas fa-pencil" aria-hidden="true"></i></button>
   <% end %>
   <%= form_with(url: saved_search_delete_path(saved_search.id), method: :delete, local: false) do %>
-    <button class="c-admin-edit-icon" title="Delete saved search" aria-label="Delete saved search: <%= saved_search.title %>"><i class="fa fa-trash-can" aria-hidden="true"></i></button>
+    <button class="c-admin-edit-icon" title="Delete saved search" aria-label="Delete saved search: <%= saved_search.title %>"><i class="fas fa-trash-can" aria-hidden="true"></i></button>
   <% end %>
 </li>

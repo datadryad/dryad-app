@@ -108,6 +108,11 @@ module StashEngine
         .order('stash_engine_identifiers.identifier')
     end
 
+    scope :invoice_due, -> do
+      joins(:last_curation_activity, :payments)
+        .where(last_curation_activity: { status: 'awaiting_payment' })
+    end
+
     # used to build counter stat if needed, trickery to be sure one always exists to begin with
     # https://stackoverflow.com/questions/3808782/rails-best-practice-how-to-create-dependent-has-one-relations
     def counter_stat
@@ -249,7 +254,11 @@ module StashEngine
     end
 
     def published?
-      %w[published embargoed].include?(pub_state)
+      %w[published embargoed retracted].include?(pub_state)
+    end
+
+    def retracted?
+      pub_state == 'retracted'
     end
 
     def to_s
@@ -326,7 +335,7 @@ module StashEngine
     end
 
     def automatic_ppr?
-      return false unless latest_manuscript.present? || journal&.default_to_ppr?
+      return false unless journal&.default_to_ppr?
       return false if accepted_for_publication?
       return false if has_rejected_manuscript?
 
@@ -349,7 +358,8 @@ module StashEngine
     def has_api_acceptance?
       return false unless journal&.api_journal?
 
-      curation_activities.exists?(status: 'queued', note: 'status updated via API call')
+      curation_activities.exists?(status: 'queued', note: 'status updated via API call') ||
+      curation_activities.where("note like 'received API request to change status to queued%'").exists?
     end
 
     def accepted_for_publication?
@@ -406,6 +416,7 @@ module StashEngine
       states = resources.map(&:current_curation_status).compact
 
       return 'withdrawn' if states.last == 'withdrawn'
+      return 'retracted' if states.last == 'retracted'
 
       states.reverse_each do |state|
         return state if %w[published embargoed].include?(state)
@@ -424,7 +435,7 @@ module StashEngine
           res.update_columns(meta_view: false, file_view: false)
         when 'embargoed'
           res.update_columns(meta_view: true, file_view: false)
-        when 'published'
+        when 'published', 'retracted'
           res.update_columns(meta_view: true, file_view: true)
           my_pub = true
         end
@@ -439,7 +450,7 @@ module StashEngine
       # because there is nothing of interest to see in this version of no-file changes between published versions
       unchanged = true
       resources.each do |res|
-        unchanged &&= res.files_unchanged?(association: 'data_files')
+        unchanged &&= !res.has_file_changes?
         if res.file_view == true
           res.update_column(:file_view, false) if unchanged
           unchanged = true

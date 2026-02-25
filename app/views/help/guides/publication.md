@@ -15,7 +15,7 @@ Through our integration, any software uploaded during the data submission proces
 
 ### Deletion
 
-Data published at Dryad is intended to remain permanently archived and available. Removal of a published dataset is considered an exceptional action akin to article retraction and should be requested and fully justified by the original contributor (e.g., if there are concerns over privacy or data ownership). To request the withdrawal of data from Dryad, contact our helpdesk.
+Data published at Dryad is intended to remain permanently archived and available. Removal of a published dataset is considered an exceptional action akin to article retraction and should be requested and fully justified by the original contributor (e.g., if there are concerns over privacy or data ownership). To request the retraction of data from Dryad, contact our helpdesk.
 
 
 ## Citing your dataset

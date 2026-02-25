@@ -13,7 +13,6 @@
 #  hold_for_peer_review      :boolean          default(FALSE)
 #  loosen_validation         :boolean          default(FALSE)
 #  meta_view                 :boolean          default(FALSE)
-#  peer_review_end_date      :datetime
 #  preserve_curation_status  :boolean          default(FALSE)
 #  publication_date          :datetime
 #  skip_datacite_update      :boolean          default(FALSE)
@@ -117,9 +116,9 @@ module StashEngine
     has_many :processor_results, class_name: 'StashEngine::ProcessorResult', dependent: :destroy
     has_many :journal_issns, through: :resource_publications
     has_many :journals, through: :journal_issns
-    has_many :manuscripts, through: :resource_publication
     has_one :journal_issn, through: :resource_publication
     has_one :journal, through: :journal_issn
+    has_many :manuscripts, ->(resource) { where(journal_id: resource.journal&.id) }, through: :resource_publication
     has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
     has_many :flags, ->(resource) { unscope(where: :resource_id).where(flaggable: [resource.journal, resource.tenant, resource.users]) }
     has_one :payment, class_name: 'ResourcePayment'
@@ -308,12 +307,6 @@ module StashEngine
     # limits to the latest resource for each dataset if added to resources
     scope :latest_per_dataset, -> do
       joins('INNER JOIN stash_engine_identifiers ON stash_engine_resources.id = stash_engine_identifiers.latest_resource_id')
-    end
-
-    scope :invoice_due, -> do
-      joins(:last_curation_activity, :payment)
-        .where(last_curation_activity: { status: 'awaiting_payment' })
-        .where.not(payment: { invoice_id: [nil, ''] })
     end
 
     def set_identifier
@@ -577,7 +570,8 @@ module StashEngine
         SUBMITTED: identifier.process_date.queued,
         ISSUED: identifier.datacite_issued_date,
         AVAILABLE: available,
-        UPDATED: update == available ? nil : update
+        UPDATED: update == available ? nil : update,
+        WITHDRAWN: identifier.process_date.retracted
       }
     end
 
@@ -697,7 +691,7 @@ module StashEngine
     end
 
     def previous_resource_published?
-      %w[published embargoed].include?(previous_resource&.last_curation_activity&.status)
+      %w[published embargoed retracted].include?(previous_resource&.last_curation_activity&.status)
     end
 
     def manuscript

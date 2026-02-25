@@ -291,6 +291,13 @@ module StashEngine
             expect(@identifier.reload.latest_resource_with_public_metadata).to eql(@res2)
           end
 
+          it 'finds retracted published resource' do
+            CurationService.new(resource: @res1, status: 'curation', user: @user).process
+            CurationService.new(resource: @res1, status: 'published', user: @user).process
+            CurationService.new(resource: @res1, status: 'retracted', user: @user).process
+            expect(@identifier.reload.latest_resource_with_public_metadata).to eql(@res1)
+          end
+
           it 'finds no published resource' do
             CurationService.new(resource: @res1, status: 'curation', user: @user).process
             CurationService.new(resource: @res2, status: 'curation', user: @user).process
@@ -525,17 +532,21 @@ module StashEngine
     end
 
     describe '#has_accepted_manuscript?' do
+      before do
+        journal = create(:journal)
+        @identifier.latest_resource.resource_publication.update(publication_issn: journal.single_issn)
+      end
       it 'is false when no matching manuscript exists' do
         expect(@identifier.has_accepted_manuscript?).to be(false)
       end
 
       it 'is true when matching manuscript is accepted' do
-        create(:manuscript, manuscript_number: @fake_manuscript_number, status: 'accepted')
+        create(:manuscript, manuscript_number: @fake_manuscript_number, status: 'accepted', journal: @identifier.latest_resource.journal)
         expect(@identifier.has_accepted_manuscript?).to be(true)
       end
 
       it 'is false when matching manuscript is submitted' do
-        create(:manuscript, manuscript_number: @fake_manuscript_number, status: 'submitted')
+        create(:manuscript, manuscript_number: @fake_manuscript_number, status: 'submitted', journal: @identifier.latest_resource.journal)
         expect(@identifier.has_accepted_manuscript?).to be(false)
       end
     end
@@ -773,6 +784,8 @@ module StashEngine
         resources[0].data_files << DataFile.create(file_state: 'created', download_filename: 'fun.cat', upload_file_size: 666)
         resources[1].data_files << DataFile.create(file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
         resources[2].data_files.destroy_all
+        resources[2].update(has_file_changes: false)
+        # adding a copied file should not update has_file_changes
         resources[2].data_files << DataFile.create(file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
 
         @identifier.fill_resource_view_flags

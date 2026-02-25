@@ -1,4 +1,5 @@
 var urlparams = new URL(window.location.href).searchParams
+var stopReload = <%= @stop_reload.to_json %>
 urlparams.set('page', '<%= params[:page] %>')
 <% if params[:sort].present? %>urlparams.set('sort', '<%= params[:sort] %>')<% end %>
 <% if params[:direction].present? %>urlparams.set('direction', '<%= params[:direction] %>')<% end %>
@@ -26,8 +27,9 @@ for (const input of hidden) {
 }
 document.getElementById('clear_filters').removeEventListener('click', clearFilters)
 document.getElementById('clear_filters').addEventListener('click', clearFilters)
+
 document.getElementById('count_form_button').click();
-if (document.getElementById('charts_open').getAttribute('aria-expanded') === 'true') {
+if ((document.getElementById('search_charts').getAttribute('aria-busy') === 'true' || !stopReload) && document.getElementById('charts_open').getAttribute('aria-expanded') === 'true') {
   document.getElementById('charts_form_button').click();
 }
 <% if params[:pressed].present? %>document.querySelector('*[data-sort=<%=params[:pressed]%>]').focus()<% end %>

@@ -114,6 +114,12 @@
 	grid-template-columns: 1fr 1fr 1fr;
 	row-gap: 2ch;
 	column-gap: 3ch;
+	@media screen and (max-width: 490px) {
+		grid-template-columns: 1fr 1fr;
+		&.icon-tiles > *:first-child {
+			grid-column: span 2;
+		}
+	}
 }
 .text-tiles {
 	a {
@@ -135,6 +141,9 @@
 		}
 		i {
 			font-size: 2.5rem;
+		}
+		span {
+			text-align: center;
 		}
 	}
 }

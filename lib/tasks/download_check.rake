@@ -33,7 +33,7 @@ namespace :download_check do
     se_ids = StashEngine::Identifier.joins(resources: :resource_states)
       .where("stash_engine_resource_states.resource_state = 'submitted'").distinct
 
-    my_filename = "s3_check_#{Rails.env}_#{Time.new.strftime('%Y-%m-%d_%H:%M:%S')}.csv"
+    my_filename = "s3_check_#{Rails.env}_#{Time.new.strftime('%Y-%m-%d_%H-%M-%S')}.csv"
 
     CSV.open(my_filename, 'w') do |csv|
       csv << %w[identifier_id identifier_doi resource_id
