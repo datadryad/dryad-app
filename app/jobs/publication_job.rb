@@ -4,7 +4,7 @@ class PublicationJob < BaseJob
 
   def perform(activity_id)
     @activity = StashEngine::CurationActivity.find_by(id: activity_id)
-    resource = StashEngine::Resource.with_public_metadata.find_by(id: @activity.resource_id)
+    @resource = StashEngine::Resource.with_public_metadata.find_by(id: @activity.resource_id)
     return if resource.nil?
 
     puts "#{Time.current} - performing indexing of published resource #{resource.id}"
