@@ -22,7 +22,7 @@ namespace :checksums do
     files += query.order(Arel.sql('RAND()')).limit(processing)
 
     files.uniq.each do |f|
-      next if !f.resource || f.resource.current_state == 'in_progress'
+      next if !f.resource || f.resource.current_state != 'submitted'
 
       puts "   Validating file id #{f.id}"
       index += 1
@@ -68,7 +68,7 @@ namespace :checksums do
       digest: nil
     )
     query.order(id: :desc).limit(processing).each do |file|
-      next if !file.resource || file.resource.current_state == 'in_progress'
+      next if !file.resource || file.resource.current_state != 'submitted'
 
       index += 1
       sleep(2) if index % 10 == 0
@@ -84,20 +84,20 @@ namespace :checksums do
   desc 'Copy checksums to copied files'
   task copy_digests: :environment do
     today = Time.now.utc
-    index = 0
     puts ''
     puts "Copying file digests #{today}"
-    items = StashEngine::DataFile.where(file_state: 'copied', digest: nil)
-    count = items.count
-    items.find_each do |copied|
-      index += 1
-      sleep(2) if index % 100 == 0
-      puts "   Parsed #{index}/#{count}" if index % 500 == 0
+    StashEngine::Resource.submitted.files_published.find_each do |r|
+      items = r.data_files.where(file_state: 'copied')
+      items.find_each do |copied|
+        orig = copied.original_deposit_file
+        copied.reload
+        next if copied.digest == orig.digest && copied.upload_file_size == orig.upload_file_size
 
-      StashEngine::FileValidationService.new(file: copied).copy_digests
-    rescue StandardError => e
-      puts "   Exception! #{e.message}"
-      next
+        StashEngine::FileValidationService.new(file: orig).copy_digests
+      rescue StandardError => e
+        puts "   Exception! #{e.message}"
+        next
+      end
     end
   end
 
@@ -112,7 +112,7 @@ namespace :checksums do
       .where.not(identifier: { pub_state: 'withdrawn' })
       .find_each do |file|
 
-      next if !file.resource || file.resource.current_state == 'in_progress'
+      next if !file.resource || file.resource.current_state != 'submitted'
 
       index += 1
       sleep(2) if index % 100 == 0
@@ -144,7 +144,7 @@ namespace :checksums do
       .order(Arel.sql('RAND()')).limit(50)
       .each do |file|
 
-      next if !file.resource || file.resource.current_state == 'in_progress'
+      next if !file.resource || file.resource.current_state != 'submitted'
 
       puts "   Validating secondary storage checksum for file id #{file.id}"
       StashEngine::DeepStorageFileValidationService

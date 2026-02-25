@@ -81,25 +81,28 @@ module StashEngine
     end
 
     describe '#copy_digests' do
-      let!(:original_file) do
+      let!(:file) do
         create(:data_file, resource: resource, digest_type: 'md5', digest: '123456asfg', upload_file_size: 10, validated_at: 1.minute.ago,
                            file_state: 'created', upload_file_name: 'same_name.txt')
       end
-      let(:file) do
+      let(:copy_file) do
         create(:data_file, resource: resource2, digest_type: nil, digest: nil, upload_file_size: 10, validated_at: nil, file_state: 'copied',
                            upload_file_name: 'same_name.txt')
       end
 
       before do
         resource.current_state = 'submitted'
+        resource2.update(file_view: true)
+        copy_file.reload
       end
 
       it 'updated file and marks it as validated when size patch' do
         expect do
           service.copy_digests
-        end.to change(file, :digest).to('123456asfg')
-          .and change(file, :digest_type).to('md5')
-          .and change(file, :validated_at)
+          copy_file.reload
+        end.to change(copy_file, :digest).to('123456asfg')
+          .and change(copy_file, :digest_type).to('md5')
+          .and change(copy_file, :validated_at)
       end
 
       context 'when file digests match' do

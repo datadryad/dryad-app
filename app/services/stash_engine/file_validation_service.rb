@@ -45,14 +45,16 @@ module StashEngine
     end
 
     def copy_digests
-      created = file.original_deposit_file
-      return if created.digest == file.digest || created.digest.blank?
+      return if file.copies.blank?
 
-      puts "   Copying digest from file id #{created.id} to file id #{file.id}"
-      file.digest       = created.digest
-      file.digest_type  = created.digest_type
-      file.validated_at = created.validated_at
-      file.save
+      file.copies.each do |copy|
+        puts "   Copying digest from file id #{file.id} to file id #{copy.id}"
+        copy.digest       = file.digest
+        copy.digest_type  = file.digest_type
+        copy.validated_at = file.validated_at
+        copy.upload_file_size = file.upload_file_size
+        copy.save
+      end
     end
 
     # Use `force_fetch: true` in order to refresh the existing digest with the S3 value
