@@ -12,6 +12,10 @@ class FeeCalculatorService
     calculator_class.constantize.new({}, resource: resource).storage_fee_tier
   end
 
+  def ldf_sponsored_amount(resource: nil, payer: nil)
+    calculator_class.constantize.new({}, resource: resource, payer_record: payer).ldf_sponsored_amount
+  end
+
   def ldf_amount(resource: nil, payer: nil)
     calculator_class.constantize.new({}, resource: resource, payer_record: payer).ldf_amount
   end

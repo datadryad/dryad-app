@@ -26,3 +26,14 @@ ldf.addEventListener('change', () => {
     amount_limit.value = ''
   }
 })
+
+var sponsor_id = document.getElementById('sponsor_id')
+sponsor_id.addEventListener('change', () => {
+  if (sponsor_id.value === '') {
+    document.getElementById('payment_notice').setAttribute('hidden', '');
+    document.getElementById('payment_container').removeAttribute('hidden');
+  } else {
+    document.getElementById('payment_container').setAttribute('hidden', '');
+    document.getElementById('payment_notice').removeAttribute('hidden');
+  }
+});

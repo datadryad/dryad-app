@@ -36,45 +36,51 @@
 <p>This setting controls whether <%= @tenant.short_name.presence || 'the institution'%>, if <b>active</b>, is displayed on the public partner list.</p>
 <p><%= form.check_box :partner_display, {checked: @tenant.partner_display}, 1, 0 %> <%= form.label :partner_display, "Partner is displayed", class: 'c-input__label' %></p>
 
-<%= fields_for :payment_configuration_attributes do |pf| %>
-  <%= pf.hidden_field :id, value: @payment_configuration.id %>
-  <h2>Membership</h2>
-  <fieldset class="c-fieldset">
-    <legend>Payment plan type:</legend>
-    <% ([ ['', 'None'] ] + (StashEngine::Tenant::PAYMENT_PLANS.map {|p| [p, p.capitalize]})).each do |plan| %>
-      <%= pf.radio_button :payment_plan, plan.first, checked: plan.first == @payment_configuration.payment_plan.to_s %>
-      <label for="<%= "payment_configuration_attributes_payment_plan_#{plan.first.downcase}" %>"><%= plan[1] %></label>
-      <br />
-    <% end %>
-  </fieldset>
-  <h2>DPC</h2>
-  <p>This setting controls whether <%= @tenant.short_name.presence || 'the institution'%> covers the cost of Dryad for its users. Partners must be <b>active</b>, <b>displayed</b>, and <b>cover the DPC</b> for users to be invited to connect to them.</p>
-  <p>
-    <%= pf.check_box :covers_dpc, {checked: @payment_configuration.covers_dpc}, 1, 0 %>
-    <%= pf.label :covers_dpc, "Partner covers the DPC", class: 'c-input__label' %>
-  </p>
-  <p>This setting controls whether <%= @tenant.short_name.presence || 'the institution'%> covers Large Data Fees for its users.</p>
-  <p>
-    <%= pf.check_box :covers_ldf, {checked: @payment_configuration.covers_ldf}, 1, 0 %>
-    <%= pf.label :covers_ldf, "Partner covers Large Data Fees", class: 'c-input__label' %>
-  </p>
-  <p>
-    <%= pf.label :ldf_limit, "Covered Large Data Fee limit (GB)" %>
-    <%= pf.select :ldf_limit, ldf_pricing_tiers_options, { selected: @payment_configuration.ldf_limit }, class: 'c-input__select', disabled: !@payment_configuration.covers_ldf %>
-  </p>
-  <p>
-    <%= pf.label :yearly_ldf_limit, "Yearly Large Data Fee limit $" %>
-    <%= pf.number_field :yearly_ldf_limit, value: @payment_configuration.yearly_ldf_limit, class: 'c-input__text', disabled: !@payment_configuration.covers_ldf %>
-  </p>
-<% end %>
-
 <h2>Sponsor</h2>
 <p>Are the institution's fees sponsored by another institution?</p>
 <div class="c-input">
   <%
-    options = StashEngine::Tenant.enabled.all.collect { |o| [ o.short_name, o.id ] } 
+    options = StashEngine::Tenant.enabled.all.collect { |o| [ o.short_name, o.id ] }
     options.unshift(['None', ''])
   %>
   <%= label_tag 'sponsor_id', 'Choose a sponsoring institution' %>
-  <%= select_tag('sponsor_id', options_for_select(options, @tenant.sponsor_id), class: 'c-input__select') %>  
+  <%= select_tag('sponsor_id', options_for_select(options, @tenant.sponsor_id), class: 'c-input__select') %>
+</div>
+
+<div id="payment_notice"  role="status" class="callout warn" <%= !@tenant.sponsor_id ? 'hidden' : ''  %> style="padding: 10px">
+  Payment needs to be configured at the sponsor level.
+</div>
+<div id="payment_container" <%= @tenant.sponsor_id ? 'hidden' : ''  %>>
+  <%= fields_for :payment_configuration_attributes do |pf| %>
+
+      <%= pf.hidden_field :id, value: @payment_configuration.id %>
+      <h2>Membership</h2>
+      <fieldset class="c-fieldset">
+        <legend>Payment plan type:</legend>
+        <% ([ ['', 'None'] ] + (StashEngine::Tenant::PAYMENT_PLANS.map {|p| [p, p.capitalize]})).each do |plan| %>
+          <%= pf.radio_button :payment_plan, plan.first, checked: plan.first == @payment_configuration.payment_plan.to_s %>
+          <label for="<%= "payment_configuration_attributes_payment_plan_#{plan.first.downcase}" %>"><%= plan[1] %></label>
+          <br />
+        <% end %>
+      </fieldset>
+      <h2>DPC</h2>
+      <p>This setting controls whether <%= @tenant.short_name.presence || 'the institution'%> covers the cost of Dryad for its users. Partners must be <b>active</b>, <b>displayed</b>, and <b>cover the DPC</b> for users to be invited to connect to them.</p>
+      <p>
+        <%= pf.check_box :covers_dpc, {checked: @payment_configuration.covers_dpc}, 1, 0 %>
+        <%= pf.label :covers_dpc, "Partner covers the DPC", class: 'c-input__label' %>
+      </p>
+      <p>This setting controls whether <%= @tenant.short_name.presence || 'the institution'%> covers Large Data Fees for its users.</p>
+      <p>
+        <%= pf.check_box :covers_ldf, {checked: @payment_configuration.covers_ldf}, 1, 0 %>
+        <%= pf.label :covers_ldf, "Partner covers Large Data Fees", class: 'c-input__label' %>
+      </p>
+      <p>
+        <%= pf.label :ldf_limit, "Covered Large Data Fee limit (GB)" %>
+        <%= pf.select :ldf_limit, ldf_pricing_tiers_options, { selected: @payment_configuration.ldf_limit }, class: 'c-input__select', disabled: !@payment_configuration.covers_ldf %>
+      </p>
+      <p>
+        <%= pf.label :yearly_ldf_limit, "Yearly Large Data Fee limit $" %>
+        <%= pf.number_field :yearly_ldf_limit, value: @payment_configuration.yearly_ldf_limit, class: 'c-input__text', disabled: !@payment_configuration.covers_ldf %>
+      </p>
+  <% end %>
 </div>

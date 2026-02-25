@@ -21,9 +21,19 @@ ldf.addEventListener('change', () => {
   limit.disabled = !ldf.checked
   var amount_limit = document.getElementById('payment_configuration_attributes_yearly_ldf_limit')
   amount_limit.disabled = !ldf.checked
-  console.log(amount_limit)
   if (!ldf.checked) {
     limit.value = ''
     amount_limit.value = ''
   }
 })
+
+var sponsor_id = document.getElementById('sponsor_id')
+sponsor_id.addEventListener('change', () => {
+  if (sponsor_id.value === '') {
+    document.getElementById('payment_notice').setAttribute('hidden', '');
+    document.getElementById('payment_container').removeAttribute('hidden');
+  } else {
+    document.getElementById('payment_container').setAttribute('hidden', '');
+    document.getElementById('payment_notice').removeAttribute('hidden');
+  }
+});

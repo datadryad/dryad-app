@@ -114,5 +114,10 @@ module StashEngine
       end
     end
 
+    def payment_sponsor
+      sponsor_obj = self
+      sponsor_obj = sponsor_obj.sponsor while sponsor_obj.sponsor.present?
+      sponsor_obj
+    end
   end
 end
