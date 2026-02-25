@@ -5,7 +5,7 @@ module StashEngine
 
     let(:identifier) { create(:identifier) }
     let(:resource) { create(:resource, identifier: identifier, created_at: 1.minute.ago) }
-    let(:resource2) { create(:resource, identifier: identifier) }
+    let(:resource2) { create(:resource, identifier: identifier, created_at: 30.seconds.ago) }
     let(:file) do
       create(:data_file, resource: resource, digest_type: 'md5', digest: '123456asfg', upload_file_size: 10, file_state: 'created',
                          original_filename: 'same_name.txt')
@@ -86,7 +86,22 @@ module StashEngine
                            file_state: 'created', upload_file_name: 'same_name.txt')
       end
       let(:copy_file) do
-        create(:data_file, resource: resource2, digest_type: nil, digest: nil, upload_file_size: 10, validated_at: nil, file_state: 'copied',
+        create(:data_file, resource: resource2, digest_type: nil, digest: nil, upload_file_size: 12, validated_at: nil, file_state: 'copied',
+                           upload_file_name: 'same_name.txt')
+      end
+      let(:resource3) { create(:resource, identifier: identifier, created_at: 15.seconds.ago) }
+      let(:resource4) { create(:resource, identifier: identifier, created_at: 5.seconds.ago) }
+      let(:resource5) { create(:resource, identifier: identifier) }
+      let(:copy_file2) do
+        create(:data_file, resource: resource2, digest_type: nil, digest: nil, upload_file_size: 12, validated_at: nil, file_state: 'copied',
+                           upload_file_name: 'same_name.txt')
+      end
+      let(:delete_file) do
+        create(:data_file, resource: resource3, digest_type: nil, digest: nil, upload_file_size: 12, validated_at: nil, file_state: 'deleted',
+                           upload_file_name: 'same_name.txt')
+      end
+      let(:stop_file) do
+        create(:data_file, resource: resource4, digest_type: nil, digest: nil, upload_file_size: 12, validated_at: nil, file_state: 'copied',
                            upload_file_name: 'same_name.txt')
       end
 
@@ -94,15 +109,34 @@ module StashEngine
         resource.current_state = 'submitted'
         resource2.update(file_view: true)
         copy_file.reload
+        copy_file2.reload
+        delete_file.reload
+        stop_file.reload
       end
 
       it 'updated file and marks it as validated when size patch' do
         expect do
           service.copy_digests
           copy_file.reload
+          copy_file2.reload
+          delete_file.reload
+          stop_file.reload
         end.to change(copy_file, :digest).to('123456asfg')
           .and change(copy_file, :digest_type).to('md5')
+          .and change(copy_file, :upload_file_size).to(10)
           .and change(copy_file, :validated_at)
+          .and change(copy_file2, :digest).to('123456asfg')
+          .and change(copy_file2, :digest_type).to('md5')
+          .and change(copy_file2, :upload_file_size).to(10)
+          .and change(copy_file2, :validated_at)
+          .and not_change(delete_file, :digest)
+          .and not_change(delete_file, :digest_type)
+          .and not_change(delete_file, :validated_at)
+          .and not_change(delete_file, :upload_file_size)
+          .and not_change(stop_file, :digest)
+          .and not_change(stop_file, :digest_type)
+          .and not_change(stop_file, :validated_at)
+          .and not_change(stop_file, :upload_file_size)
       end
 
       context 'when file digests match' do
