@@ -16,8 +16,8 @@ module Tasks
 
       # returns information about where this file was uploaded in S3 if it doesn't match the expected location
       def check_file
-        return nil if @bkt_instance.exists?(s3_key: "v3/#{@file.s3_staged_path}")
-        return nil if @bkt_instance.exists?(s3_key: s3_path(mrt_version: @mrt_version)) # it's in the right place!
+        # it can be found
+        return nil if @file.s3_permanent_path.present? && @bkt_instance.exists?(s3_key: @file.s3_permanent_path)
 
         { before: check_before, after: check_after }
       end
