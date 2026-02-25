@@ -22,7 +22,7 @@ namespace :checksums do
     files += query.order(Arel.sql('RAND()')).limit(processing)
 
     files.uniq.each do |f|
-      next if !f.resource || f.resource.current_state == 'in_progress'
+      next if !f.resource || f.resource.current_state != 'submitted'
 
       puts "   Validating file id #{f.id}"
       index += 1
