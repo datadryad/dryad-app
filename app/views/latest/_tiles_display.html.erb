@@ -1,7 +1,7 @@
 <% @document_list.take(5).each do |document| %>
 
-  <% author_string = result['dc_creator_sm'].first(5).join('; ') %>
-  <% author_string += '; et al' if result['dc_creator_sm'].size > 5 %>
+  <% author_string = document['dc_creator_sm'].first(5).join('; ') %>
+  <% author_string += '; et al' if document['dc_creator_sm'].size > 5 %>
   <% desc_string = author_string + '. ' + document['dc_description_s'] %>
 
   <div class="c-latest__dataset">
