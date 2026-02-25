@@ -62,6 +62,6 @@ View and download counts for Dryad datasets are collected using the [Make Data C
 
 ## Saved searches
 
-Dryad offers the ability to save searches to your account. This makes specific and complex searches easy to repeat. Saved searches can also be followed via web feed, giving you updates whenever a new Dryad publication meets your search criteria.
+Dryad offers the ability to save searches to your account. This makes specific and complex searches easy to repeat. Saved searches can also be followed via email or web feed, giving you updates whenever a new Dryad publication meets your search criteria.
 
-When you have set the query and filters you want to save on the [search results page](/search), click the <b><i class="fa fa-bookmark" aria-hidden="true" style="margin-right: .35ch;"></i>Save search</b> button that appears. You will be able to enter a title and description for your search. Saved searches can be managed and followed via web feed on the [saved searches page](/account/saved_searches) of your account.
+When you have set the query and filters you want to save on the [search results page](/search), click the <b><i class="fa fa-bookmark" aria-hidden="true" style="margin-right: .35ch;"></i>Save search</b> button that appears. You will be able to enter a title and description for your search. Saved searches can be managed and followed via email and web feed on the [saved searches page](/account/saved_searches) of your account.
