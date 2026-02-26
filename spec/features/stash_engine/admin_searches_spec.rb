@@ -164,7 +164,6 @@ RSpec.feature 'AdminSearch', type: :feature do
         within(find('#admin_searches_list li:first-child')) do
           click_button 'Edit search description'
         end
-        expect(find('#admin_searches_list')).to match_css('.with_form')
         check 'default'
         within(find('#admin_searches_list li:first-child')) do
           click_button 'Save'

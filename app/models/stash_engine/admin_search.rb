@@ -5,6 +5,7 @@
 #  id          :bigint           not null, primary key
 #  default     :boolean
 #  description :string(191)
+#  emailed_at  :datetime
 #  properties  :json
 #  share_code  :string(191)
 #  title       :string(191)

@@ -78,6 +78,13 @@ module StashEngine
            subject: "#{rails_env}Dryad Submission \"#{@resource.title.strip_tags}\"")
     end
 
+    def search_subscription(search, json)
+      @search = search
+      @json = json
+      @user_name = user_name(search.user)
+      mail(to: user_email(search.user), subject: "#{rails_env}New Dryad search results") { |fmt| fmt.html { render layout: 'subscription' } }
+    end
+
     def check_email(email_token)
       return unless email_token.user&.email&.present?
 

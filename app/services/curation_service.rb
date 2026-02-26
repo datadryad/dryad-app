@@ -125,11 +125,10 @@ class CurationService
   def process_resource
     return if @resource.skip_datacite_update
 
-    submit_to_datacite
-    process_payment
-    copy_to_zenodo if @activity.published?
-    @resource.submit_to_solr
     @resource.update(hold_for_peer_review: false)
+    copy_to_zenodo if @activity.published?
+    process_payment
+    PublicationJob.perform_async(@activity.id)
   end
 
   def process_payment
@@ -150,12 +149,6 @@ class CurationService
     return unless @status.in?(%w[processing queued peer_review])
 
     SponsoredPaymentsService.new(@resource).log_payment
-  end
-
-  def submit_to_datacite
-    return unless @activity.should_update_doi?
-
-    DataciteService.new(resource).submit
   end
 
   def submit_to_stripe

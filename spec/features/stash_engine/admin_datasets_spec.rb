@@ -23,8 +23,9 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
     end
 
     it 'shows accurate publication status' do
-      manuscript = create(:manuscript, identifier: @resource.identifier, status: 'accepted')
-      create(:resource_publication, resource: @resource, manuscript_number: manuscript.manuscript_number)
+      journal = create(:journal)
+      manuscript = create(:manuscript, identifier: @resource.identifier, status: 'accepted', journal: journal)
+      create(:resource_publication, resource: @resource, manuscript_number: manuscript.manuscript_number, publication_issn: journal.single_issn)
       find('a[title="Activity log"]').click
       expect(page).to have_text('This is the dataset activity page.')
       expect(page).to have_text(manuscript.manuscript_number)

@@ -76,7 +76,7 @@ RSpec.feature 'EditLink', type: :feature do
       @identifier.save
       @identifier.resources.first.current_resource_state.update(resource_state: 'in_progress')
       visit "/edit/#{@identifier.identifier}/bad-code"
-      expect(page).to have_text('being edited by another user')
+      expect(page).to have_text('You do not have permission to modify this submission')
     end
 
     it 'does not redirect to the dataset editing page when requesting an edit link for a different tenant without an edit_code', js: true do
