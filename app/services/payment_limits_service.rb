@@ -16,7 +16,7 @@ class PaymentLimitsService
     return true if payer.nil?
     return false unless PayersService.new(payer).is_2025_payer?
     return true unless payer.payment_configuration&.covers_ldf
-    return false if payer.payment_configuration.yearly_ldf_limit.nil?
+    return false if payer.payment_configuration.ldf_limit.nil?
 
     # true - if the new files size is over the LDF size limit
     ldf_limit_exceeded
@@ -35,9 +35,8 @@ class PaymentLimitsService
     return true if payer.nil?
     return false unless PayersService.new(payer).is_2025_payer?
     return true unless payer.payment_configuration&.covers_ldf
-    return false if payer.payment_configuration.yearly_ldf_limit.nil?
 
-    amount_limits_exceeded? # || size_limits_exceeded?
+    amount_limits_exceeded? || size_limits_exceeded?
   end
 
   private

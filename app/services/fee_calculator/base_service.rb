@@ -124,8 +124,9 @@ module FeeCalculator
       new_tier_price = if @ldf_limit.nil?
                          price_by_range(storage_fee_tiers, resource.total_file_size)
                        else
+                         new_tier_price = price_by_range(storage_fee_tiers, resource.total_file_size)
                          tier = get_tier_by_value(storage_fee_tiers, @ldf_limit)
-                         price_by_range(storage_fee_tiers, [resource.total_file_size, tier[:range].max].min)
+                         [new_tier_price, tier[:price]].min
                        end
 
       diff = new_tier_price - paid_tier_price

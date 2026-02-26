@@ -9,20 +9,8 @@ class SponsoredPaymentsService
   def log_payment
     # there is no payer
     return if payer.nil?
-    # user is flagged to pay
-    return if resource.identifier.user_must_pay?
     # user is not on 2025 plan
     return unless PayersService.new(payer).is_2025_payer?
-
-    # for this resource, there is an invoice or user already paid/failed with CC
-    payment = resource.payment
-    if payment
-      # resource already has an invoice created
-      return if payment.pay_with_invoice?
-      # or a paid/failed CC payment
-      return if !payment.pay_with_invoice? && payment.paid?
-      return if !payment.pay_with_invoice? && payment.failed?
-    end
 
     amount = ldf_fees
     return if amount.zero?
