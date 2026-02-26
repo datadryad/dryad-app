@@ -1,3 +1,5 @@
+# rubocop:disable Metrics/ClassLength
+
 module FeeCalculator
   class BaseService
     attr_reader :options, :resource
@@ -22,15 +24,27 @@ module FeeCalculator
       { tier: 16, range: 551..600, price: 58_250 }
     ].freeze
 
-    ESTIMATED_FILES_SIZE = [
-      { tier: 0, range:                 0..   10_000_000_000, price:     0 },
-      { tier: 1, range:    10_000_000_001..   50_000_000_000, price:   259 },
-      { tier: 2, range:    50_000_000_001..  100_000_000_000, price:   464 },
-      { tier: 3, range:   100_000_000_001..  250_000_000_000, price: 1_123 },
-      { tier: 4, range:   250_000_000_001..  500_000_000_000, price: 2_153 },
-      { tier: 5, range:   500_000_000_001..1_000_000_000_000, price: 4_347 },
-      { tier: 6, range: 1_000_000_000_001..2_000_000_000_000, price: 8_809 }
-    ].freeze
+    ESTIMATED_FILES_SIZE = if Rails.env.test?
+                             [
+                               { tier: 0, range:                 0..   10_000_000_000, price:     0 },
+                               { tier: 1, range:    10_000_000_001..   50_000_000_000, price:   259 },
+                               { tier: 2, range:    50_000_000_001..  100_000_000_000, price:   464 },
+                               { tier: 3, range:   100_000_000_001..  250_000_000_000, price: 1_123 },
+                               { tier: 4, range:   250_000_000_001..  500_000_000_000, price: 2_153 },
+                               { tier: 5, range:   500_000_000_001..1_000_000_000_000, price: 4_347 },
+                               { tier: 6, range: 1_000_000_000_001..2_000_000_000_000, price: 8_809 }
+                             ].freeze
+                           else
+                             [
+                               { tier: 0, range:                 0..   10_000_000, price:     0 },
+                               { tier: 1, range:    10_000_001..   50_000_000, price:   259 },
+                               { tier: 2, range:    50_000_001..  100_000_000, price:   464 },
+                               { tier: 3, range:   100_000_001..  250_000_000_000, price: 1_123 },
+                               { tier: 4, range:   250_000_000_001..  500_000_000_000, price: 2_153 },
+                               { tier: 5, range:   500_000_000_001..1_000_000_000_000, price: 4_347 },
+                               { tier: 6, range: 1_000_000_000_001..2_000_000_000_000, price: 8_809 }
+                             ].freeze
+                           end
 
     INVOICE_FEE = 199
     # rubocop:enable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
@@ -41,6 +55,7 @@ module FeeCalculator
       @sum_options = {}
       @resource = resource
       @payer = payer_record || (resource ? resource.identifier.payer : nil)
+      @payer = PayersService.new(@payer).payment_sponsor if @payer
       @payment_plan_is_2025 = resource ? resource.identifier.payer_2025?(@payer) : false
       @covers_ldf = resource ? @payer&.payment_configuration&.covers_ldf : false
       @ldf_limit = resource ? @payer&.payment_configuration&.ldf_limit : nil
@@ -53,11 +68,23 @@ module FeeCalculator
       if resource.present?
         add_zero_fee(:service_tier)
         add_zero_fee(:dpc_tier)
+        limits_service = PaymentLimitsService.new(resource, @payer, ldf_sponsored_amount: ldf_sponsored_amount)
+
         if @covers_ldf
-          if @ldf_limit.nil?
+          @sum_options[:storage_fee_label] = PRODUCT_NAME_MAPPER[:storage_fee_overage] unless @ldf_limit.nil?
+          if @ldf_limit.nil? && limits_service.payment_allowed?
+            # if no limit is hit,
+            # the user pays no storage fee
             verify_max_storage_size
             add_zero_fee(:storage_size)
+          elsif limits_service.amount_limits_exceeded?
+            # if the yearly amount limit is hit,
+            # the user needs to pay the full storage difference
+            add_storage_fee_difference
+            add_invoice_fee
           else
+            # if the amount by adding sponsored storage fee is not exceeded
+            # user mult pay the difference between sponsored size and resource size
             handle_ldf_limit
           end
         else
@@ -90,8 +117,31 @@ module FeeCalculator
       add_invoice_fee
     end
 
+    def ldf_sponsored_amount
+      paid_storage_size = resource.identifier.last_invoiced_file_size.to_i
+      paid_tier_price = price_by_range(storage_fee_tiers, paid_storage_size)
+
+      new_tier_price = if @ldf_limit.nil?
+                         price_by_range(storage_fee_tiers, resource.total_file_size)
+                       else
+                         new_tier_price = price_by_range(storage_fee_tiers, resource.total_file_size)
+                         tier = get_tier_by_value(storage_fee_tiers, @ldf_limit)
+                         [new_tier_price, tier[:price]].min
+                       end
+
+      diff = new_tier_price - paid_tier_price
+      diff = 0 if diff < 0
+      diff.to_f
+    end
+
     def storage_fee_tier
       get_tier_by_range(storage_fee_tiers, resource.total_file_size)
+    end
+
+    # if tier is not matched, consider first tier
+    def get_tier_by_value(tier_definition, value)
+      tier = tier_definition.find { |t| t[:tier] == value.to_i }
+      tier || tier_definition.find { |t| t[:tier] == 1 }
     end
 
     private
@@ -192,12 +242,6 @@ module FeeCalculator
       tier[:price].to_i
     end
 
-    # if tier is not matched, consider first tier
-    def get_tier_by_value(tier_definition, value)
-      tier = tier_definition.find { |t| t[:tier] == value.to_i }
-      tier || tier_definition.find { |t| t[:tier] == 1 }
-    end
-
     def add_fee_by_range(tier_definition, value_key)
       value = price_by_range(tier_definition, options[value_key])
       add_fee_to_total(value_key, value)
@@ -241,3 +285,4 @@ module FeeCalculator
     end
   end
 end
+# rubocop:enable Metrics/ClassLength

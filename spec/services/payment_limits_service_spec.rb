@@ -1,97 +1,225 @@
 describe PaymentLimitsService do
 
-  let(:identifier) { create(:identifier) }
-  let(:total_file_size) { 10_000_000_001 }
-  let!(:tenant) { create(:tenant) }
-  let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, yearly_ldf_limit: 1_000) }
-  let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: total_file_size) }
-  let(:payer) { tenant }
-
-  let(:subject) { PaymentLimitsService.new(resource, payer) }
-
-  describe '#initialize' do
-    it 'sets proper attributes' do
-      expect(subject.resource).to eq(resource)
-      expect(subject.payer).to eq(payer)
+  describe 'payer is an institution' do
+    let(:identifier) { create(:identifier) }
+    let(:total_file_size) { 10_000_000_001 }
+    let!(:sponsor_tenant) { create(:tenant, id: 'sponsor') }
+    let!(:tenant) { create(:tenant, sponsor: sponsor_tenant, id: 'payer') }
+    let!(:other_tenant) { create(:tenant, sponsor: sponsor_tenant, id: 'other') }
+    let!(:payment_conf) do
+      create(:payment_configuration,
+             partner: sponsor_tenant,
+             payment_plan: '2025',
+             covers_dpc: true,
+             covers_ldf: true,
+             ldf_limit: 1,
+             yearly_ldf_limit: 1_000)
     end
-  end
+    let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: total_file_size) }
+    let(:payer) { sponsor_tenant }
 
-  describe '#limits_exceeded?' do
-    let(:subject) { PaymentLimitsService.new(resource, payer).limits_exceeded? }
+    let(:subject) { PaymentLimitsService.new(resource, payer) }
 
-    context 'when payer has a 2025 payment plan' do
-      context 'when limit is set' do
-        context 'but not reached' do
-          it { is_expected.to be_falsey }
-        end
+    describe '#initialize' do
+      it 'sets proper attributes' do
+        expect(subject.resource).to eq(resource)
+        expect(subject.payer).to eq(payer)
+      end
+    end
 
-        context 'when limit is already exceeded' do
-          let!(:log) { create(:sponsored_payment_log, payer: tenant, ldf: 1_001) }
+    describe '#limits_exceeded?' do
+      let(:subject) { PaymentLimitsService.new(resource, payer).limits_exceeded? }
 
-          it { is_expected.to be_truthy }
+      context 'when payer has a 2025 payment plan' do
+        context 'when payer amount limit is set' do
+          context 'but not reached' do
+            it { is_expected.to be_falsey }
+          end
+
+          context 'when limit is already exceeded' do
+            let!(:log) { create(:sponsored_payment_log, payer: tenant, ldf: 1_001, sponsor_id: sponsor_tenant.id) }
+
+            it { is_expected.to be_truthy }
+
+            context 'but resource LDF is 0' do
+              let(:total_file_size) { 10_000 }
+
+              it { is_expected.to be_falsey }
+            end
+          end
+
+          context 'when limit is not reached but with current resource it will be exceeded' do
+            let!(:log) { create(:sponsored_payment_log, payer: tenant, ldf: 999, sponsor_id: sponsor_tenant.id) }
+
+            it { is_expected.to be_truthy }
+          end
+
+          context 'when limit is not reached and with current resource it will not be exceeded' do
+            let!(:log) { create(:sponsored_payment_log, payer: tenant, ldf: 100, sponsor_id: sponsor_tenant.id) }
+
+            it { is_expected.to be_falsey }
+          end
 
           context 'but resource LDF is 0' do
             let(:total_file_size) { 10_000 }
 
             it { is_expected.to be_falsey }
           end
+
+          context 'with logs on previous year' do
+            let!(:log) { create(:sponsored_payment_log, payer: tenant, ldf: 1_001, created_at: 1.year.ago, sponsor_id: sponsor_tenant.id) }
+
+            it { is_expected.to be_falsey }
+          end
         end
 
-        context 'when limit is not reached but with current resource it will be exceeded' do
-          let!(:log) { create(:sponsored_payment_log, payer: tenant, ldf: 999) }
+        context 'when sponsor amount limit is set' do
+          context 'but not reached' do
+            it { is_expected.to be_falsey }
+          end
 
-          it { is_expected.to be_truthy }
+          context 'when limit is already exceeded' do
+            let!(:log) { create(:sponsored_payment_log, payer: other_tenant, ldf: 1_001, sponsor_id: sponsor_tenant.id) }
+
+            it { is_expected.to be_truthy }
+
+            context 'but resource LDF is 0' do
+              let(:total_file_size) { 10_000 }
+
+              it { is_expected.to be_falsey }
+            end
+          end
+
+          context 'and payer has no limit set' do
+            let!(:payment_conf) do
+              create(:payment_configuration,
+                     partner: sponsor_tenant,
+                     payment_plan: '2025',
+                     covers_dpc: true,
+                     covers_ldf: true,
+                     ldf_limit: nil,
+                     yearly_ldf_limit: nil)
+            end
+
+            context 'when amounts are already huge' do
+              let!(:log) { create(:sponsored_payment_log, payer: other_tenant, ldf: 1_000_001, sponsor_id: sponsor_tenant.id) }
+
+              it { is_expected.to be_falsey }
+
+              context 'with resource LDF is 0' do
+                let(:total_file_size) { 10_000 }
+
+                it { is_expected.to be_falsey }
+              end
+
+              context 'new files size is huge' do
+                let(:total_file_size) { 10_000_000_001 }
+
+                it { is_expected.to be_falsey }
+              end
+            end
+          end
+
+          context 'and payer has cover ldf off' do
+            let!(:payment_conf) do
+              create(:payment_configuration,
+                     partner: sponsor_tenant,
+                     payment_plan: '2025',
+                     covers_dpc: true,
+                     covers_ldf: false,
+                     ldf_limit: nil,
+                     yearly_ldf_limit: nil)
+            end
+
+            context 'when limit is already exceeded' do
+              let!(:log) { create(:sponsored_payment_log, payer: other_tenant, ldf: 1_001, sponsor_id: sponsor_tenant.id) }
+
+              it { is_expected.to be_truthy }
+
+              context 'but resource LDF is 0' do
+                let(:total_file_size) { 10_000 }
+
+                it { is_expected.to be_truthy }
+              end
+            end
+          end
+
+          context 'when limit is not reached but with current resource it will be exceeded' do
+            let!(:log) { create(:sponsored_payment_log, payer: other_tenant, ldf: 999, sponsor_id: sponsor_tenant.id) }
+
+            it { is_expected.to be_truthy }
+          end
+
+          context 'when limit is not reached and with current resource it will not be exceeded' do
+            let!(:log) { create(:sponsored_payment_log, payer: other_tenant, ldf: 100, sponsor_id: sponsor_tenant.id) }
+
+            it { is_expected.to be_falsey }
+          end
+
+          context 'but resource LDF is 0' do
+            let(:total_file_size) { 10_000 }
+
+            it { is_expected.to be_falsey }
+          end
+
+          context 'with logs on previous year' do
+            let!(:log) { create(:sponsored_payment_log, payer: tenant, ldf: 1_001, created_at: 1.year.ago, sponsor_id: sponsor_tenant.id) }
+            let!(:log2) { create(:sponsored_payment_log, payer: other_tenant, ldf: 1_001, created_at: 1.year.ago, sponsor_id: sponsor_tenant.id) }
+
+            it { is_expected.to be_falsey }
+          end
         end
 
-        context 'when limit is not reached and with current resource it will not be exceeded' do
-          let!(:log) { create(:sponsored_payment_log, payer: tenant, ldf: 100) }
+        context 'when dataset size limit is set' do
+          context 'but not reached' do
+            it { is_expected.to be_falsey }
+          end
 
-          it { is_expected.to be_falsey }
+          context 'when limit is not reached but with current version it will be exceeded' do
+            let!(:log) { create(:sponsored_payment_log, payer: tenant, ldf: 900, sponsor_id: sponsor_tenant.id) }
+            let(:total_file_size) { 50_000_000_001 }
+
+            it { is_expected.to be_truthy }
+          end
+
+          context 'when limit is not reached and with current resource it will not be exceeded' do
+            let(:total_file_size) { 50_000_000_000 }
+
+            it { is_expected.to be_falsey }
+          end
         end
 
-        context 'but resource LDF is 0' do
-          let(:total_file_size) { 10_000 }
-
-          it { is_expected.to be_falsey }
-        end
-
-        context 'with logs on previous year' do
-          let!(:log) { create(:sponsored_payment_log, payer: tenant, ldf: 1_001, created_at: 1.year.ago) }
+        context 'when no limit is set' do
+          let!(:payment_conf) do
+            create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true, yearly_ldf_limit: nil)
+          end
 
           it { is_expected.to be_falsey }
         end
       end
 
-      context 'when no limit is set' do
-        let!(:payment_conf) do
-          create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, yearly_ldf_limit: nil)
-        end
+      context 'when payer is not set' do
+        let(:payer) { nil }
+        it { is_expected.to be_truthy }
+      end
+
+      context 'when payer has different payment plan than 2025' do
+        let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: 'TIERED', covers_dpc: true) }
 
         it { is_expected.to be_falsey }
       end
     end
 
-    context 'when payer is not set' do
-      let(:payer) { nil }
-      it { is_expected.to be_truthy }
-    end
+    describe '#payment_allowed?' do
+      it 'returns true if limit is exceeded' do
+        expect(subject).to receive(:limits_exceeded?).and_return(true)
+        expect(subject.payment_allowed?).to be_falsey
+      end
 
-    context 'when payer has different payment plan than 2025' do
-      let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: 'TIERED', covers_dpc: true) }
-
-      it { is_expected.to be_falsey }
-    end
-  end
-
-  describe '#payment_allowed?' do
-    it 'returns true if limit is exceeded' do
-      expect(subject).to receive(:limits_exceeded?).and_return(true)
-      expect(subject.payment_allowed?).to be_falsey
-    end
-
-    it 'returns false if limit is not exceeded' do
-      expect(subject).to receive(:limits_exceeded?).and_return(false)
-      expect(subject.payment_allowed?).to be_truthy
+      it 'returns false if limit is not exceeded' do
+        expect(subject).to receive(:limits_exceeded?).and_return(false)
+        expect(subject.payment_allowed?).to be_truthy
+      end
     end
   end
 end

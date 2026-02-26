@@ -942,7 +942,7 @@ module StashApi
 
         it 'allows replacing of the metadata for a record' do
           keys_to_extract = %w[title authors abstract]
-          modified_metadata = @ds_info.select { |key, _| keys_to_extract.include?(key) }
+          modified_metadata = @ds_info.slice(*keys_to_extract)
           modified_metadata['title'] = 'Crows wave goodbye'
           modified_metadata['authors'].first['firstName'] = 'Helen'
           modified_metadata['abstract'] = 'The implications of ambimorphic archetypes have been far-reaching and pervasive.'
@@ -958,7 +958,7 @@ module StashApi
 
         it "doesn't allow non-auth users to update" do
           keys_to_extract = %w[title authors abstract]
-          modified_metadata = @ds_info.select { |key, _| keys_to_extract.include?(key) }
+          modified_metadata = @ds_info.slice(*keys_to_extract)
           modified_metadata['title'] = 'Froozlotter'
           response_code = put "/api/v2/datasets/#{CGI.escape(@ds_info['identifier'])}",
                               params: modified_metadata.to_json,

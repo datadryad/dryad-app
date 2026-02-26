@@ -61,6 +61,7 @@ FactoryBot.define do
 
     before(:create) do |resource, e|
       user = e.user || StashEngine::User.find_by(id: resource.user_id) || create(:user)
+      user.tenant = resource.tenant if resource.tenant
       resource.tenant_id = user.tenant_id
       resource.current_editor_id = user.id unless resource.current_editor_id
     end

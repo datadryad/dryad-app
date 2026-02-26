@@ -146,7 +146,7 @@ class CurationService
   end
 
   def processed_sponsored_resource
-    return unless @status.in?(%w[queued peer_review])
+    return unless @status.in?(%w[processing queued peer_review])
 
     SponsoredPaymentsService.new(@resource).log_payment
   end

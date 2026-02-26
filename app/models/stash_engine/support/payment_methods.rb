@@ -13,7 +13,7 @@ module StashEngine
       def user_must_pay?
         return false if latest_resource.resource_type&.resource_type == 'collection'
         return false if waiver? && old_payment_system
-        return PaymentLimitsService.new(latest_resource, payer).limits_exceeded? if sponsored?
+        return PaymentLimitsService.new(latest_resource, PayersService.new(payer).payment_sponsor).limits_exceeded? if sponsored?
 
         true
       end
@@ -121,8 +121,7 @@ module StashEngine
 
         # do not remove recorded institution sponsor due to sponsorship change
         return true if payment_id.present? && payment_id == tenant&.id
-
-        return false unless tenant&.payment_configuration&.covers_dpc
+        return false unless PayersService.new(tenant).payment_sponsor&.payment_configuration&.covers_dpc
 
         if tenant&.authentication&.strategy == 'author_match'
           # get all unique ror_id associations for all authors
