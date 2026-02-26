@@ -591,9 +591,9 @@ module StashEngine
       return read_attribute(:last_invoiced_file_size) unless read_attribute(:last_invoiced_file_size).nil?
 
       res = resources.files_published.order(total_file_size: :desc).first
-      return if res.nil?
+      return if res.nil? || res.total_file_size.nil?
 
-      update(last_invoiced_file_size: res)
+      update(last_invoiced_file_size: res.total_file_size)
       res
     end
 
