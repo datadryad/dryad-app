@@ -16,10 +16,6 @@ class FeeCalculatorService
     calculator_class.constantize.new({}, resource: resource, payer_record: payer).ldf_sponsored_amount
   end
 
-  def ldf_amount(resource: nil, payer: nil)
-    calculator_class.constantize.new({}, resource: resource, payer_record: payer).ldf_amount
-  end
-
   def sponsored_tier(payer)
     calculator_class.constantize.new({})
       .get_tier_by_value(

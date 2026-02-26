@@ -59,7 +59,7 @@ class PaymentLimitsService
   end
 
   def exceeds_sponsor_yearly_limit?(storage_fee)
-    sponsor = payer.payment_sponsor
+    sponsor = PayersService.new(payer).payment_sponsor
     return false if sponsor.nil?
 
     payment_conf = sponsor.payment_configuration

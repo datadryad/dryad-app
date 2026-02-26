@@ -46,6 +46,21 @@ describe SponsoredPaymentsService do
     context 'when payer exists with a 2025 payment plan' do
       context 'and a payment record exists' do
         include_examples('creates sponsored payment log')
+
+        it 'has correct info' do
+          subject.log_payment
+
+          expect(tenant.payment_logs.count).to eq(1)
+          expect(tenant.payment_logs.last.attributes).to include(
+            {
+              resource_id: resource.id,
+              payer_id: tenant.id,
+              payer_type: tenant.class.name,
+              ldf: 259,
+              sponsor_id: tenant.id
+            }.stringify_keys
+          )
+        end
       end
 
       context 'and a invoice payment record exists' do
@@ -71,6 +86,31 @@ describe SponsoredPaymentsService do
           let!(:payment) { create(:resource_payment, resource: resource, pay_with_invoice: false, status: :created) }
 
           include_examples('creates sponsored payment log')
+        end
+      end
+
+      context 'when tenant has a sponsor' do
+        let!(:sponsor_tenant) { create(:tenant, id: 'sponsor') }
+        let!(:tenant) { create(:tenant, id: 'payer', sponsor_id: sponsor_tenant.id) }
+        let!(:payment_conf) do
+          create(:payment_configuration, partner: sponsor_tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true, yearly_ldf_limit: 1_000)
+        end
+
+        include_examples('creates sponsored payment log')
+
+        it 'has correct info' do
+          subject.log_payment
+
+          expect(tenant.payment_logs.count).to eq(1)
+          expect(tenant.payment_logs.last.attributes).to include(
+            {
+              resource_id: resource.id,
+              payer_id: tenant.id,
+              payer_type: tenant.class.name,
+              ldf: 259,
+              sponsor_id: sponsor_tenant.id
+            }.stringify_keys
+          )
         end
       end
     end

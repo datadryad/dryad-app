@@ -55,11 +55,7 @@ module FeeCalculator
       @sum_options = {}
       @resource = resource
       @payer = payer_record || (resource ? resource.identifier.payer : nil)
-      @payer = begin
-        @payer&.payment_sponsor
-      rescue StandardError
-        @payer
-      end
+      @payer = PayersService.new(@payer).payment_sponsor if @payer
       @payment_plan_is_2025 = resource ? resource.identifier.payer_2025?(@payer) : false
       @covers_ldf = resource ? @payer&.payment_configuration&.covers_ldf : false
       @ldf_limit = resource ? @payer&.payment_configuration&.ldf_limit : nil

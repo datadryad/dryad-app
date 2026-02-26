@@ -31,7 +31,7 @@ class SponsoredPaymentsService
       resource: resource,
       payer: payer,
       ldf: ldf_fees,
-      sponsor_id: payer.sponsor_id
+      sponsor_id: PayersService.new(payer).payment_sponsor&.id
     )
     resource.identifier.update(last_invoiced_file_size: resource.total_file_size)
   end
@@ -45,6 +45,6 @@ class SponsoredPaymentsService
                  when 'StashEngine::Tenant'
                    'institution'
                  end
-    FeeCalculatorService.new(payer_type).ldf_amount(resource: resource, payer: payer)
+    FeeCalculatorService.new(payer_type).ldf_sponsored_amount(resource: resource, payer: payer)
   end
 end
