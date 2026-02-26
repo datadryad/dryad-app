@@ -128,4 +128,9 @@
     form.elements['org_search'].forEach(r => r.disabled = true);
     form.requestSubmit()
   }))
+  window.addEventListener('pageshow', function (event) {
+    if (event.persisted || performance.getEntriesByType("navigation")[0].type === 'back_forward') {
+      [...form.querySelectorAll('*[disabled]')].forEach(el => el.removeAttribute('disabled'));
+    }
+  });
 </script>
