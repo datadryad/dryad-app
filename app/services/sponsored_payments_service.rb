@@ -30,7 +30,7 @@ class SponsoredPaymentsService
       payer: payer,
       ldf: resource_fees[:storage_fee]
     )
-    resource.identifier.update(last_invoiced_file_size: resource.total_file_size)
+    resource.identifier.update(last_invoiced_file_size: [resource.identifier.last_invoiced_file_size.to_i, resource.total_file_size].max)
   end
 
   private
