@@ -24,6 +24,10 @@ class FeeCalculatorService
       )
   end
 
+  def calculator_service
+    calculator_class.constantize
+  end
+
   private
 
   def calculator_class

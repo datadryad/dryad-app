@@ -117,8 +117,8 @@ module FeeCalculator
       add_invoice_fee
     end
 
-    def ldf_sponsored_amount
-      paid_storage_size = resource.identifier.last_invoiced_file_size.to_i
+    def ldf_sponsored_amount(paid_storage_size: nil)
+      paid_storage_size ||= resource.identifier.last_invoiced_file_size.to_i
       paid_tier_price = price_by_range(storage_fee_tiers, paid_storage_size)
 
       new_tier_price = if @ldf_limit.nil?
