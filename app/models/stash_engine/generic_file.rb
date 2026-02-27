@@ -150,6 +150,19 @@ module StashEngine
                        file_state: 'created').order(id: :desc).first
     end
 
+    def copies
+      return nil if file_state != 'created'
+
+      resources = resource.identifier.resources.where('stash_engine_resources.id > ?', resource.id)
+
+      # stop at the first deletion after the file creation
+      deleted = self.class.where(resource_id: resources.pluck(:id), upload_file_name: upload_file_name, file_state: 'deleted').order(id: :asc).first
+
+      files = self.class.where(resource_id: resources.pluck(:id), upload_file_name: upload_file_name, file_state: 'copied')
+      files = files.where('stash_engine_generic_files.id < ?', deleted.id) if deleted.present?
+      files
+    end
+
     # returns the latest version number in which this filename was created
     def version_file_created_in
       return resource.stash_version if file_state == 'created' || file_state.blank?
