@@ -1188,10 +1188,10 @@ module StashEngine
 
       # If we get here, the previous version was controlled by a curator
       # so assign it to the previous curator, with a fallback process
-      auto_assign_curator(target_status: target_status)
+      auto_assign_curator
 
       # If the last user to edit it was the curator return it to curation status
-      return unless last_curation_activity.user_id == user_id
+      return unless last_curation_activity.user_id == user_id && current_curation_status == target_status
 
       CurationService.new(resource_id: id, user_id: 0, status: 'curation',
                           note: 'System set back to curation').process
@@ -1213,7 +1213,7 @@ module StashEngine
       false
     end
 
-    def auto_assign_curator(target_status:)
+    def auto_assign_curator
       target_curator = curator&.curator? ? curator : identifier.most_recent_curator
       if target_curator.nil?
         # if the previous curator does not exist, or is no longer a curator,
@@ -1227,7 +1227,7 @@ module StashEngine
       update(user_id: target_curator.id)
 
       CurationService.new(
-        user_id: target_curator.id, status: target_status, resource_id: id,
+        user_id: target_curator.id, status: current_curation_status, resource_id: id,
         note: "System auto-assigned curator #{target_curator&.name}"
       ).process
     end
