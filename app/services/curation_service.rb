@@ -142,7 +142,10 @@ class CurationService
     # after first publication, the dataset will be switched to new payment system
     return unless @resource.identifier.old_payment_system
 
-    @resource.identifier.update(old_payment_system: false, last_invoiced_file_size: @resource.total_file_size)
+    @resource.identifier.update(
+      old_payment_system: false,
+      last_invoiced_file_size: [@resource.identifier.last_invoiced_file_size.to_i, @resource.total_file_size].max
+    )
   end
 
   def processed_sponsored_resource
