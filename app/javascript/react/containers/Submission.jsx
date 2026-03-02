@@ -179,7 +179,10 @@ function Submission({
 
   useEffect(() => {
     if (!userMustPay && !refreshFees) return;
-
+    if (resource.identifier.old_payment_system) {
+      updateStore({refreshFees: false});
+      return;
+    }
     axios.get(`/resource_fee_calculator/${resource.id}`, {params: {generate_invoice: invoice}})
       .then(({data}) => {
         if (resource.hold_for_peer_review && data.fees.ppr_discount) {

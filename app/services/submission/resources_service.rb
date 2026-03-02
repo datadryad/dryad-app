@@ -88,7 +88,8 @@ module Submission
       return unless invoice
 
       payment.update(pay_with_invoice: true, invoice_id: invoice.id)
-      resource.identifier.update(payment_type: 'stripe', payment_id: invoice.id)
+      payment_type = resource.identifier.payment_type == 'waiver' ? 'waiver' : 'stripe'
+      resource.identifier.update(payment_type: payment_type, payment_id: invoice.id)
     end
 
     def create_missing_invoice

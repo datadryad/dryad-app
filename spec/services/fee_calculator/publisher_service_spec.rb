@@ -388,6 +388,15 @@ module FeeCalculator
           end
         end
 
+        context 'when identifier is flagged as old_payment_system' do
+          let(:identifier) { create(:identifier, last_invoiced_file_size: prev_files_size, old_payment_system: true) }
+          let!(:payment_conf) { create(:payment_configuration, partner: funder, payment_plan: '2025', covers_dpc: true) }
+
+          it 'raises an error' do
+            expect { subject }.to raise_error(ActionController::BadRequest, OLD_PAYMENT_SYSTEM_MESSAGE)
+          end
+        end
+
         context 'on 2025 fee model but is not enabled' do
           let!(:funder) { create(:funder, name: contributor.contributor_name, enabled: false) }
           let!(:payment_conf) { create(:payment_configuration, partner: funder, payment_plan: '2025', covers_dpc: true) }
