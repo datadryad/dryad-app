@@ -466,6 +466,16 @@ module FeeCalculator
           expect { subject }.to raise_error(ActionController::BadRequest, MISSING_PAYER_MESSAGE)
         end
       end
+
+      context 'when identifier is flagged as old_payment_system' do
+        let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: covers_ldf) }
+        let(:identifier) { create(:identifier, last_invoiced_file_size: prev_files_size, old_payment_system: true) }
+        let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: new_files_size) }
+
+        it 'raises an error' do
+          expect { subject }.to raise_error(ActionController::BadRequest, OLD_PAYMENT_SYSTEM_MESSAGE)
+        end
+      end
     end
   end
 end
