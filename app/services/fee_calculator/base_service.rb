@@ -24,27 +24,15 @@ module FeeCalculator
       { tier: 16, range: 551..600, price: 58_250 }
     ].freeze
 
-    ESTIMATED_FILES_SIZE = if Rails.env.test?
-                             [
-                               { tier: 0, range:                 0..   10_000_000_000, price:     0 },
-                               { tier: 1, range:    10_000_000_001..   50_000_000_000, price:   259 },
-                               { tier: 2, range:    50_000_000_001..  100_000_000_000, price:   464 },
-                               { tier: 3, range:   100_000_000_001..  250_000_000_000, price: 1_123 },
-                               { tier: 4, range:   250_000_000_001..  500_000_000_000, price: 2_153 },
-                               { tier: 5, range:   500_000_000_001..1_000_000_000_000, price: 4_347 },
-                               { tier: 6, range: 1_000_000_000_001..2_000_000_000_000, price: 8_809 }
-                             ].freeze
-                           else
-                             [
-                               { tier: 0, range:                 0..   10_000_000, price:     0 },
-                               { tier: 1, range:    10_000_001..   50_000_000, price:   259 },
-                               { tier: 2, range:    50_000_001..  100_000_000, price:   464 },
-                               { tier: 3, range:   100_000_001..  250_000_000_000, price: 1_123 },
-                               { tier: 4, range:   250_000_000_001..  500_000_000_000, price: 2_153 },
-                               { tier: 5, range:   500_000_000_001..1_000_000_000_000, price: 4_347 },
-                               { tier: 6, range: 1_000_000_000_001..2_000_000_000_000, price: 8_809 }
-                             ].freeze
-                           end
+    ESTIMATED_FILES_SIZE = [
+      { tier: 0, range:                 0..   10_000_000_000, price:     0 },
+      { tier: 1, range:    10_000_000_001..   50_000_000_000, price:   259 },
+      { tier: 2, range:    50_000_000_001..  100_000_000_000, price:   464 },
+      { tier: 3, range:   100_000_000_001..  250_000_000_000, price: 1_123 },
+      { tier: 4, range:   250_000_000_001..  500_000_000_000, price: 2_153 },
+      { tier: 5, range:   500_000_000_001..1_000_000_000_000, price: 4_347 },
+      { tier: 6, range: 1_000_000_000_001..2_000_000_000_000, price: 8_809 }
+    ].freeze
 
     INVOICE_FEE = 199
     # rubocop:enable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
@@ -117,8 +105,8 @@ module FeeCalculator
       add_invoice_fee
     end
 
-    def ldf_sponsored_amount
-      paid_storage_size = resource.identifier.last_invoiced_file_size.to_i
+    def ldf_sponsored_amount(paid_storage_size: nil)
+      paid_storage_size ||= resource.identifier.last_invoiced_file_size.to_i
       paid_tier_price = price_by_range(storage_fee_tiers, paid_storage_size)
 
       new_tier_price = if @ldf_limit.nil?

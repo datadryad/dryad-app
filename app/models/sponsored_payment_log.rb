@@ -3,6 +3,7 @@
 # Table name: sponsored_payment_logs
 #
 #  id          :bigint           not null, primary key
+#  deleted_at  :datetime
 #  dpc         :integer
 #  ldf         :integer
 #  payer_type  :string(191)
@@ -14,10 +15,12 @@
 #
 # Indexes
 #
+#  index_sponsored_payment_logs_on_deleted_at               (deleted_at)
 #  index_sponsored_payment_logs_on_payer_id_and_payer_type  (payer_id,payer_type)
 #  index_sponsored_payment_logs_on_sponsor_id               (sponsor_id)
 #
 class SponsoredPaymentLog < ApplicationRecord
+  acts_as_paranoid
 
   belongs_to :payer, polymorphic: true
   belongs_to :resource, class_name: StashEngine::Resource.to_s
