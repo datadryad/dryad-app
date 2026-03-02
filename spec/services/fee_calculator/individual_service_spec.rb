@@ -17,6 +17,16 @@ module FeeCalculator
     end
 
     describe '#fee_calculator' do
+
+      context 'when identifier is flagged as old_payment_system' do
+        let(:identifier) { create(:identifier, old_payment_system: true) }
+        let(:resource) { create(:resource, identifier: identifier) }
+
+        it 'raises an error' do
+          expect { subject }.to raise_error(ActionController::BadRequest, OLD_PAYMENT_SYSTEM_MESSAGE)
+        end
+      end
+
       context 'without invoice fee' do
         it 'has proper storage fee label' do
           expect(described_class.new(options, resource: resource).call[:storage_fee_label]).to eq('Data Publishing Charge')
