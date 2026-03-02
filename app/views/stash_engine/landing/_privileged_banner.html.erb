@@ -1,4 +1,4 @@
-<div class="callout<% if @resource&.identifier&.pub_state == 'published' %> alt<%end%>" id="privilege_banner">
+<div class="callout<% if @resource&.identifier&.publication_article_doi&.present? %> alt<%end%>" id="privilege_banner">
   <% role = @resource&.roles&.find {|ro| ro.user_id == current_user.id} %>
   <p>This is the <%= role ? role.role : 'administrator' %> view of this <%= resource&.resource_type&.resource_type %>, including any unpublished, submitted changes.
     <span>      
