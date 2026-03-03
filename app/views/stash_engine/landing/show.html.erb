@@ -35,7 +35,7 @@
 <% end %>
 <% if @user_type == 'privileged' %>
   <%= render(partial: 'privileged_banner') %>
-  <% if @resource&.identifier&.pub_state != 'published'%>
+  <% unless %w[withdrawn retracted].include?(@resource.identifier.pub_state) || @resource.identifier.accepted_for_publication? %>
     <div id="privilege_share" class="callout alt">
       <%= render partial: "stash_datacite/shares/show", locals: { share: review.share } %>
     </div>
