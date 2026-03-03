@@ -80,9 +80,9 @@ module StashEngine
       @resource = resource_from_share
       raise ActionController::RoutingError, 'Not Found' if @resource.blank?
 
-      redirect_to(app_404_path) if @resource.identifier.pub_state == 'withdrawn'
-      redirect_to_public and return if (@resource.identifier.pub_state == 'published' && @resource.identifier.accepted_for_publication?) ||
-        @resource.identifier.pub_state == 'retracted'
+      redirect_to(app_404_path) and return if @resource.identifier.pub_state == 'withdrawn'
+      redirect_to_public and return if @resource.identifier.pub_state == 'retracted'
+      redirect_to_public and return if @resource.identifier.published? && @resource.identifier.accepted_for_publication?
     end
 
     # uses presigned
