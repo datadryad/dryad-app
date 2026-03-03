@@ -34,7 +34,7 @@ module Contributors
       end
 
       # reindex if needed
-      contributor.resource.submit_to_solr if contributor.resource.identifier.pub_state == 'published'
+      contributor.resource.submit_to_solr if contributor.resource.identifier.published?
     end
 
     private

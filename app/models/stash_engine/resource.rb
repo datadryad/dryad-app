@@ -842,12 +842,12 @@ module StashEngine
     # some previous resource with published files
     def files_published?
       file_true = self.class.where(identifier_id: identifier_id).where('created_at <= ?', created_at).where(file_view: true)
-      identifier&.pub_state == 'published' && file_true.count.positive?
+      %w[published retracted].include?(identifier&.pub_state) && file_true.count.positive?
     end
 
     # Metadata is published when the curator sets the status to published or embargoed
     def metadata_published?
-      %w[published embargoed].include?(identifier&.pub_state) && meta_view == true
+      %w[published embargoed retracted].include?(identifier&.pub_state) && meta_view == true
     end
 
     # this is a query for the publication updating on a cron, but putting here so we can test the query more easily
@@ -864,9 +864,7 @@ module StashEngine
 
     def previously_published?
       # ignoring the current resource, is there an embargoed or published status previous this point for this identifier?
-      identifier.curation_activities
-        .where('stash_engine_curation_activities.resource_id < ? and status in (?)', id, %w[published embargoed])
-        .exists?
+      identifier.last_published_status.present?
     end
 
     # -----------------------------------------------------------
