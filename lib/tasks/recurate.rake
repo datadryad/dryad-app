@@ -7,7 +7,7 @@ namespace :recurate do
     query = StashDatacite::Contributor.updatable.nih
       .where(award_verified: false).on_latest_resource
       .joins(resource: :last_curation_activity)
-      .where.not(stash_engine_curation_activities: { status: %w[in_progress withdrawn] })
+      .where.not(stash_engine_curation_activities: { status: %w[in_progress withdrawn retracted] })
 
     total_count = query.count
     query.each_with_index do |contrib, idx|
@@ -22,7 +22,7 @@ namespace :recurate do
     query = StashDatacite::Contributor.updatable.nsf
       .where(award_verified: false).on_latest_resource
       .joins(resource: :last_curation_activity)
-      .where.not(stash_engine_curation_activities: { status: %w[in_progress withdrawn] })
+      .where.not(stash_engine_curation_activities: { status: %w[in_progress withdrawn retracted] })
 
     total_count = query.count
     query.each_with_index do |contrib, idx|
@@ -37,7 +37,7 @@ namespace :recurate do
     query = StashDatacite::Contributor.needs_award_details.updatable
       .where(award_verified: false).on_latest_resource
       .joins(resource: :last_curation_activity)
-      .where.not(stash_engine_curation_activities: { status: %w[in_progress withdrawn] })
+      .where.not(stash_engine_curation_activities: { status: %w[in_progress withdrawn retracted] })
 
     total_count = query.count
     query.each_with_index do |contrib, idx|

@@ -359,7 +359,7 @@ module StashEngine
       return false unless journal&.api_journal?
 
       curation_activities.exists?(status: 'queued', note: 'status updated via API call') ||
-      curation_activities.where("note like 'received API request to change status to queued%'").exists?
+      curation_activities.where("note REGEXP '^received API request to change status to (queued|submitted)'").exists?
     end
 
     def accepted_for_publication?
