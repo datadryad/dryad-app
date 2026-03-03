@@ -21,6 +21,7 @@ RSpec.feature 'ChangeLog', type: :feature, js: true do
       mock_datacite!
       mock_file_content!
       neuter_curation_callbacks!
+      create(:user, id: 0, first_name: 'Dryad', last_name: 'System') unless StashEngine::User.find_by(id: 0)
       sign_in(user)
       start_new_dataset
       res_id = page.current_path.match(%r{submission/(\d+)})[1].to_i
