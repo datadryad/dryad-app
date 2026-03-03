@@ -8,7 +8,7 @@ namespace :publication_updater do
       .joins('left outer join dcs_related_identifiers pa on pa.resource_id = stash_engine_resources.id and pa.work_type = 6')
       .joins('join dcs_related_identifiers pr on pr.resource_id = stash_engine_resources.id and pr.work_type = 3')
       .where("pa.id is null and pr.related_identifier_type = 'doi' and pr.related_identifier is not null")
-      .where.not(last_curation_activity: { status: %w[withdrawn in_progress] })
+      .where.not(last_curation_activity: { status: %w[withdrawn in_progress retracted] })
       .distinct
     p "Scanning Crossref API for #{results.length} resources"
 
@@ -37,7 +37,7 @@ namespace :publication_updater do
     results = StashEngine::Resource.latest_per_dataset.joins(:last_curation_activity)
       .joins('left outer join dcs_related_identifiers pa on pa.resource_id = stash_engine_resources.id and pa.work_type = 6')
       .where("pa.id is null and stash_engine_identifiers.pub_state != 'withdrawn'")
-      .where.not(last_curation_activity: { status: %w[withdrawn in_progress] })
+      .where.not(last_curation_activity: { status: %w[withdrawn in_progress retracted] })
     p "Scanning Crossref API for #{results.length} resources"
 
     results.find_each do |resource|
