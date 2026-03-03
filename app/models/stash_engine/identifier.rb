@@ -595,7 +595,7 @@ module StashEngine
       return if res.nil? || res.total_file_size.nil?
 
       update(last_invoiced_file_size: res.total_file_size)
-      res
+      res.total_file_size
     end
 
     # ------------------------------------------------------------
