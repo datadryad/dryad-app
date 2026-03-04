@@ -90,7 +90,7 @@ namespace :publication_updater do
         next
       end
 
-      pc = Stash::Import::CrossRef.new(resource: resource, json: cr).to_proposed_change if cr.present?
+      pc = Stash::Import::Crossref.new(resource: resource, json: cr).to_proposed_change if cr.present?
       p "  found changes for: #{resource.id} (#{resource.title}" if pc.present?
       pc.save if pc.present?
     end
