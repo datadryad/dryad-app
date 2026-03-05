@@ -156,7 +156,7 @@ module StashEngine
 
       set_return_to_path_from_referrer # needed for dropping into edit (and back) from various places in the ui
 
-      if @identifier.current_curation_status == 'curation'
+      if @identifier.current_curation_status == 'curation' && !current_user.min_curator?
         redirect_to stash_url_helpers.choose_dashboard_path,
                     alert: 'This submission is being curated. Please wait to create a new revision until after a curation decision.'
         false
