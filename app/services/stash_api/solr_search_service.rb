@@ -94,18 +94,18 @@ module StashApi
     end
 
     def range_filters
-      if filters['modifiedBefore'] || filters['modifiedSince']
-        add_range_filter('updated_at_dt', filters['modifiedSince'] || '*',
-                         filters['modifiedBefore'] || 'NOW')
-      end
+      add_date_filter('updated_at_dt', filters['modifiedSince'], filters['modifiedBefore']) if filters['modifiedBefore'] || filters['modifiedSince']
       if filters['publishedSince'] || filters['publishedBefore']
-        add_range_filter('dct_issued_dt', filters['publishedSince'] || '*',
-                         filters['publishedBefore'] || 'NOW')
+        add_date_filter('dct_issued_dt', filters['publishedSince'], filters['publishedBefore'])
       end
       return unless filters['sizeGreater'] || filters['sizeLesser']
 
       add_range_filter('dataset_size_l', filters['sizeGreater'] || '*',
                        filters['sizeLesser'] || '*')
+    end
+
+    def add_date_filter(field, since, before)
+      add_range_filter(field, since&.to_time&.utc&.iso8601 || '*', before&.to_time&.utc&.iso8601 || 'NOW')
     end
 
     def add_exact_filter(solr_field, value)
