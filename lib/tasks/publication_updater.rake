@@ -13,7 +13,7 @@ namespace :publication_updater do
     p "Scanning Crossref API for #{results.length} resources"
 
     results.find_each do |resource|
-      preprint = result.related_identifiers.where(related_identifier_type: 'preprint', related_identifier_type: 'doi').first&.related_identifier
+      preprint = result.related_identifiers.where(work_type: 'preprint', related_identifier_type: 'doi').first&.related_identifier
       next unless preprint.present?
 
       begin
