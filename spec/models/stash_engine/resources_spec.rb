@@ -1731,13 +1731,13 @@ module StashEngine
 
         it 'successfully updates the curator' do
           expect(resource.reload.curator).to eq(non_curator)
-          resource.send(:auto_assign_curator, target_status: 'in_progress')
+          resource.send(:auto_assign_curator)
           expect(resource.reload.curator).to eq(curator)
         end
 
         it 'created a curation activity' do
           expect do
-            resource.send(:auto_assign_curator, target_status: 'in_progress')
+            resource.send(:auto_assign_curator)
           end.to change { StashEngine::CurationActivity.count }.by(1)
           expect(resource.reload.last_curation_activity.note).to eq('System auto-assigned curator Curator User')
         end
