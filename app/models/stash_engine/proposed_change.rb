@@ -73,7 +73,7 @@ module StashEngine
       prim_art = latest_resource.related_identifiers.primary_article.first
 
       if article_type == 'primary_article' && prim_art.present?
-        prim_art.update(related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(publication_doi))
+        prim_art.update(related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(publication_doi), related_identifier_type: 'doi')
       else
         latest_resource.related_identifiers << StashDatacite::RelatedIdentifier.create(
           related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(publication_doi),
