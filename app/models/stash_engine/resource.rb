@@ -843,12 +843,12 @@ module StashEngine
     # some previous resource with published files
     def files_published?
       file_true = self.class.where(identifier_id: identifier_id).where('created_at <= ?', created_at).where(file_view: true)
-      identifier&.pub_state == 'published' && file_true.count.positive?
+      %w[published retracted].include?(identifier&.pub_state) && file_true.count.positive?
     end
 
     # Metadata is published when the curator sets the status to published or embargoed
     def metadata_published?
-      %w[published embargoed].include?(identifier&.pub_state) && meta_view == true
+      %w[published embargoed retracted].include?(identifier&.pub_state) && meta_view == true
     end
 
     # this is a query for the publication updating on a cron, but putting here so we can test the query more easily
@@ -865,9 +865,7 @@ module StashEngine
 
     def previously_published?
       # ignoring the current resource, is there an embargoed or published status previous this point for this identifier?
-      identifier.curation_activities
-        .where('stash_engine_curation_activities.resource_id < ? and status in (?)', id, %w[published embargoed])
-        .exists?
+      identifier.last_published_status.present?
     end
 
     # -----------------------------------------------------------
@@ -1189,10 +1187,10 @@ module StashEngine
 
       # If we get here, the previous version was controlled by a curator
       # so assign it to the previous curator, with a fallback process
-      auto_assign_curator(target_status: target_status)
+      auto_assign_curator
 
       # If the last user to edit it was the curator return it to curation status
-      return unless last_curation_activity.user_id == user_id
+      return unless last_curation_activity.user_id == user_id && current_curation_status == target_status
 
       CurationService.new(resource_id: id, user_id: 0, status: 'curation',
                           note: 'System set back to curation').process
@@ -1214,7 +1212,7 @@ module StashEngine
       false
     end
 
-    def auto_assign_curator(target_status:)
+    def auto_assign_curator
       target_curator = curator&.curator? ? curator : identifier.most_recent_curator
       if target_curator.nil?
         # if the previous curator does not exist, or is no longer a curator,
@@ -1228,7 +1226,7 @@ module StashEngine
       update(user_id: target_curator.id)
 
       CurationService.new(
-        user_id: target_curator.id, status: target_status, resource_id: id,
+        user_id: target_curator.id, status: current_curation_status, resource_id: id,
         note: "System auto-assigned curator #{target_curator&.name}"
       ).process
     end

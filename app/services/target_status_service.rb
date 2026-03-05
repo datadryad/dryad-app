@@ -31,8 +31,6 @@ class TargetStatusService
 
   def set_target_status
     target = status
-    # set user from prev activity, otherwise resource editor_id and then user_id
-    user_id = @resource.identifier.last_curation_activity.user_id.presence || @resource.current_editor_id || @resource.user_id
 
     @resource.update(hold_for_peer_review: false) unless target == 'peer_review'
     CurationService.new(resource_id: @resource.id, user_id: user_id, status: target, note: curation_note).process
@@ -42,6 +40,15 @@ class TargetStatusService
   end
 
   private
+
+  def user_id
+    # system user if automated status override
+    return 0 if status == 'peer_review' && @resource.identifier.automatic_ppr?
+    return 0 if status == 'awaiting_payment'
+
+    # set user from prev activity, otherwise resource editor_id and then user_id
+    @resource.identifier.last_curation_activity.user_id || @resource.current_editor_id || @resource.user_id
+  end
 
   def curation_note
     if status == 'peer_review'

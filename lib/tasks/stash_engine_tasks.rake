@@ -1368,7 +1368,7 @@ namespace :curation_stats do
     ids_seen = 0
     total_curation_count = 0
     StashEngine::Identifier.where(created_at: start_day..Time.now.utc.to_date).find_each do |i|
-      next unless %w[published embargoed].include?(i.pub_state) # only count datasets that reached a final state
+      next unless %w[published embargoed retracted].include?(i.pub_state) # only count datasets that reached a final state
 
       curation_count = 0
       in_curation = false
