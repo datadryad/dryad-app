@@ -284,7 +284,7 @@ dev: &DEV
     application_id: 5
     client_id: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_client_id] %>
     client_secret: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_client_secret] %>
-  shib_sp_host: v3-dev.datadryad.org
+  shib_sp_host: dev.datadryad.org
   page_error_email: ~
   feedback_email_from: no-reply-dryad-dev@datadryad.org
   send_journal_published_notices: false
