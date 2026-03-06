@@ -49,6 +49,14 @@ describe('MarkdownEditor', () => {
     expect(table.querySelectorAll('td').length).toBe(2);
   });
 
+  it('renders a line break', async () => {
+    info.initialValue = 'Test\n\n<br />\n\nText after a break';
+    render(<MarkdownEditor {...info} />);
+    await waitFor(() => {
+      expect(screen.getByText('Text after a break')).toBeInTheDocument();
+    });
+  });
+
   it('renders superscript and subscript', async () => {
     info.initialValue = 'Markdown test\n\nThis is a sentence with ^superscript^ and ~subscript~';
     render(<MarkdownEditor {...info} />);
