@@ -177,8 +177,7 @@ namespace :recurate do
       );
     SQL
 
-
-    StashDatacite::Subject.where("subject REGEXP ?", '\\[ \\d* \\]').each do |obj|
+    StashDatacite::Subject.where('subject REGEXP ?', '\\[ \\d* \\]').each do |obj|
       obj.update(subject: obj.subject.to_s.gsub(/\[\s*\d*\s*\]\s*/, '').strip)
     end
   end
