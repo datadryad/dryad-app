@@ -141,5 +141,46 @@ namespace :recurate do
       end
     end
   end
+
+  # example usage: RAILS_ENV=development bundle exec rake recurate:keywords_cleanup
+  desc 'Re-curate - subject keyword cleanup'
+  task keywords_cleanup: :environment do
+    ActiveRecord::Base.connection.execute <<~SQL
+      UPDATE dcs_subjects
+      SET subject = CONVERT(
+                       REPLACE(
+                         REPLACE(
+                           REPLACE(
+                             CONVERT(subject USING BINARY),
+                             UNHEX('E2'), ''),   -- orphaned E2
+                           UNHEX('C2'), ''),     -- orphaned C2
+                         UNHEX('B5'), '')        -- orphaned B5
+                       USING utf8mb4
+                     );
+    SQL
+
+    ActiveRecord::Base.connection.execute <<~SQL
+      UPDATE dcs_subjects
+      SET subject = CONVERT(
+        REPLACE(
+          REPLACE(
+            REPLACE(
+              REPLACE(
+                REPLACE(
+                  CONVERT(subject USING BINARY),
+                  UNHEX('E28098'), "'"),   -- left single quote ‘
+                UNHEX('E28099'), "'"),     -- right single quote ’
+              UNHEX('E2809C'), '"'),       -- left double quote “
+            UNHEX('E2809D'), '"'),         -- right double quote ”
+          UNHEX('E28093'), '-')            -- en dash –
+        USING utf8mb4
+      );
+    SQL
+
+
+    StashDatacite::Subject.where("subject REGEXP ?", '\\[ \\d* \\]').each do |obj|
+      obj.update(subject: obj.subject.to_s.gsub(/\[\s*\d*\s*\]\s*/, '').strip)
+    end
+  end
 end
 # :nocov:
