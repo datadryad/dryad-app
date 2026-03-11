@@ -17,7 +17,7 @@ class DeleteResourceFilesJob < BaseJob
       m = /ark.*/.match(resource.download_uri)
       base_path = CGI.unescape(m.to_s)
       merritt_version = resource.stash_version&.merritt_version
-      if(merritt_version)
+      if merritt_version
         perm_bucket.delete_dir(s3_key: "#{base_path}|#{merritt_version}|producer")
         perm_bucket.delete_dir(s3_key: "#{base_path}|#{merritt_version}|system")
         perm_bucket.delete_file(s3_key: "#{base_path}|manifest")
