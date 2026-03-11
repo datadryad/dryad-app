@@ -10,7 +10,7 @@ test:
   collation: utf8mb4_unicode_ci
 <% else %>
 <% pp Rails.env.to_sym %>
-<% pp Rails.application.credentials %>
+<% pp Rails.application.credentials[:dev] %>
 
 default: &default
   pool: 40
