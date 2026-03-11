@@ -22,7 +22,7 @@ set :log_level, :debug
 set :optional_shared_files, %w{
   config/master.key
 }
-set :sidekiq_systemctl_user, :system
+# set :sidekiq_systemctl_user, :system
 
 # Default value for linked_dirs is []
 append :linked_dirs,
@@ -42,9 +42,9 @@ namespace :deploy do
   after :deploy, 'git:version'
   after :deploy, 'cleanup:remove_example_configs'
   after 'deploy:symlink:linked_dirs', 'deploy:files:optional_copied_files'
-  on roles(:app), wait: 1 do
-    after 'deploy:published', 'sidekiq:restart'
-  end
+  # on roles(:app), wait: 1 do
+  #   after 'deploy:published', 'sidekiq:restart'
+  # end
 end
 
 set :puma_service_unit_name, 'puma'
@@ -79,15 +79,15 @@ namespace :deploy do
   end
 end
 
-namespace :sidekiq do
-  task :restart do
-    on roles(:app), in: :sequence, wait: 5 do
-      if test("systemctl list-unit-files | grep sidekiq.service")
-        execute :sudo, :systemctl, :restart, "sidekiq"
-      end
-    end
-  end
-end
+# namespace :sidekiq do
+#   task :restart do
+#     on roles(:app), in: :sequence, wait: 5 do
+#       if test("systemctl list-unit-files | grep sidekiq.service")
+#         execute :sudo, :systemctl, :restart, "sidekiq"
+#       end
+#     end
+#   end
+# end
 
 namespace :cleanup do
   desc "Remove all of the example config files"
