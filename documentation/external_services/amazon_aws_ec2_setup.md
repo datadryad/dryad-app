@@ -27,6 +27,16 @@ sudo dnf install mysql80-community-release-el9-5.noarch.rpm -y
 sudo dnf install mysql-community-server -y
 sudo yum install mysql-devel
 ```
+
+- if `mysql-community-server` or `mysql-devel` can not be found, try this:
+```
+sudo rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
+wget http://dev.mysql.com/get/mysql57-community-release-el7-8.noarch.rpm
+sudo yum localinstall -y mysql57-community-release-el7-8.noarch.rpm
+sudo yum install -y mysql-community-server
+sudo yum install -y mysql-devel
+```
+
 - check out the Dryad code
 ```
 git clone https://github.com/datadryad/dryad-app.git
@@ -120,7 +130,7 @@ mysql_stg.sh < myfile.sql
 
 AWS RDS database engine update
 =====================================
-This can be done in 2 ways:
+This can be done in two ways:
 
 ## Direct update from AWS console
 - Will update the database engine version to a new version on current database instance
