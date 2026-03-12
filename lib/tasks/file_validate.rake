@@ -127,21 +127,23 @@ namespace :checksums do
 
   desc 'Spot checks of secondary file replicas'
   task spot_check_secondary_storage_files: :environment do
+    files_to_check = 10 # per day
+    max_size = 10_000_000_000
     today = Time.now.utc
     puts ''
     puts "Validating secondary storage checksums for 5 random files #{today}"
-    # 5 random files which
-    #  have a digest
-    #  are not withdrawn
-    #  are under 1GB
-    #  resource is not in progress
+    # 10 random files which
+    # have a digest
+    # are not withdrawn
+    # are under 10GB
+    # resource is not in progress
     StashEngine::DataFile
       .where(file_state: 'created', file_deleted_at: nil)
       .where.not(digest: nil)
-      .where(upload_file_size: ..1_000_000_000)
+      .where(upload_file_size: ..max_size)
       .joins(resource: :identifier)
       .where.not(identifier: { pub_state: 'withdrawn' })
-      .order(Arel.sql('RAND()')).limit(50)
+      .order(Arel.sql('RAND()')).limit(files_to_check)
       .each do |file|
 
       next if !file.resource || file.resource.current_state != 'submitted'
