@@ -18,11 +18,13 @@ set :migration_role, fetch(:role)
 
 set :log_level, :debug
 
-# disable asset compilation
-Rake::Task["deploy:assets:precompile"].clear
+if fetch(:role).to_s == 'worker'
+  # disable asset compilation
+  Rake::Task["deploy:assets:precompile"].clear
 
-# disable migrations
-Rake::Task["deploy:migrate"].clear
+  # disable migrations
+  Rake::Task["deploy:migrate"].clear
+end
 
 # this copies these files over from shared, but only the files that exist on that machine
 set :optional_shared_files, %w{
@@ -55,11 +57,9 @@ end
 
 set :puma_service_unit_name, 'puma'
 set :puma_systemctl_user, :system
-after "deploy:publishing", "puma:restart_if_exists"
+after :deploy, "puma:restart_if_exists"
+after :deploy, "sidekiq:restart_if_exists"
 
-# namespace :puma do
-#   after :restart, :index_help_center
-# end
 
 namespace :git do
   desc "Add the version file so that we can display the git version in the footer"
@@ -102,15 +102,21 @@ namespace :puma do
   end
 end
 
-# namespace :sidekiq do
-#   task :restart do
-#     on roles(:app), in: :sequence, wait: 5 do
-#       if test("systemctl list-unit-files | grep sidekiq.service")
-#         execute :sudo, :systemctl, :restart, "sidekiq"
-#       end
-#     end
-#   end
-# end
+
+namespace :sidekiq do
+  task :restart_if_exists do
+    on roles(:app) do
+      service = fetch(:sidekiq_service_unit_name, "sidekiq")
+
+      if test("[ -f /etc/systemd/system/#{service}.service ]") ||
+        test("systemctl list-unit-files | grep -q #{service}.service")
+        execute :sudo, :systemctl, :restart, "#{service}.service"
+      else
+        info "Puma service #{service} not found, skipping restart"
+      end
+    end
+  end
+end
 
 namespace :cleanup do
   desc "Remove all of the example config files"
