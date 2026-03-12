@@ -55,11 +55,9 @@ namespace :deploy do
   after 'deploy:symlink:linked_dirs', 'deploy:files:optional_copied_files'
 end
 
-on roles(:app), wait: 1 do
-  after :deploy, 'puma:restart_if_exists'
-  after 'deploy:published', 'sidekiq:restart_if_exists'
-  after 'puma:restart_if_exists', "puma:index_help_center"
-end
+after :deploy, 'puma:restart_if_exists'
+after 'deploy:published', 'sidekiq:restart_if_exists'
+after 'puma:restart_if_exists', "puma:index_help_center"
 
 namespace :git do
   desc "Add the version file so that we can display the git version in the footer"
