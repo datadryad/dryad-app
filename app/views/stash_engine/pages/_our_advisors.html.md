@@ -62,3 +62,7 @@ Dryad committees, advisory groups and task forces are appointed by the Board to 
 * **Matt Wascavage**, Alliance of Crop, Soil, and Environmental Science Societies (ACSESS)
 * **Jennifer Gibson**, Dryad
 * **Maria Guerreiro**, Dryad
+
+<div class="callout">
+<p>Read the Dryad Board of Directors' <a href="https://github.com/datadryad/governance/blob/main/Committees/Policy_on_committees_Feb_2025.pdf">Policy on committees</a></p>
+</div>
