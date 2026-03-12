@@ -53,11 +53,12 @@ namespace :deploy do
   after :deploy, 'git:version'
   after :deploy, 'cleanup:remove_example_configs'
   after 'deploy:symlink:linked_dirs', 'deploy:files:optional_copied_files'
-  on roles(:app), wait: 1 do
-    after :deploy, 'puma:restart_if_exists'
-    after 'deploy:published', 'sidekiq:restart_if_exists'
-    after 'puma:restart_if_exists', "puma:index_help_center"
-  end
+end
+
+on roles(:app), wait: 1 do
+  after :deploy, 'puma:restart_if_exists'
+  after 'deploy:published', 'sidekiq:restart_if_exists'
+  after 'puma:restart_if_exists', "puma:index_help_center"
 end
 
 namespace :git do
