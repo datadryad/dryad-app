@@ -60,21 +60,11 @@ namespace :publication_updater do
     p 'Finished scanning Crossref API'
   end
 
-  # THERE was a lot of junk data on our dev machine and orphaned proposed changes for identifiers that didn't exist.
-  # cleanup the table like this:
-
-  # DELETE pc FROM `stash_engine_proposed_changes` pc
-  # LEFT JOIN stash_engine_identifiers i
-  # ON pc.identifier_id = i.id
-  # WHERE i.id IS NULL;
-
-  # NOTE: This will fill in the subjects and also get a type from crossref
   desc 'Rescan non-processed proposed changes for metadata updates at crossref'
   task rescan: :environment do
-    StashEngine::ProposedChange.where(approved: false, rejected: false).each do |existing_pc|
+    StashEngine::ProposedChange.unprocessed.each do |existing_pc|
       identifier = existing_pc.identifier
       resource = identifier&.latest_resource
-      primary_article = resource&.related_identifiers&.primary_article&.first
       # remove this from the changes table and try re-adding it
       next if resource.nil? || existing_pc.identifier.pub_state == 'withdrawn'
 
@@ -84,8 +74,7 @@ namespace :publication_updater do
 
       begin
         # Hit Crossref for info
-        cr = Integrations::Crossref.query_by_doi(doi: primary_article.related_identifier) if primary_article&.related_identifier.present?
-        cr = Integrations::Crossref.query_by_author_title(resource: resource) unless cr.present?
+        cr = Integrations::Crossref.query_by_author_title(resource: resource)
       rescue URI::InvalidURIError => e
         # If the URI is invalid, just skip to the next record
         p "ERROR querying Crossref for publication DOI: '#{result.doi}' for identifier: '#{resource&.identifier}' : #{e.message}"
@@ -93,7 +82,7 @@ namespace :publication_updater do
       end
 
       pc = Stash::Import::Crossref.new(resource: resource, json: cr).to_proposed_change if cr.present?
-      p "  found changes for: #{resource.id} (#{resource.title}" if pc.present?
+      p "  found changes for: #{resource.identifier.identifier} (#{resource.last_curation_activity.status}) - #{resource.title}" if pc.present?
       pc.save if pc.present?
     end
 
