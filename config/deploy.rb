@@ -18,6 +18,12 @@ set :migration_role, fetch(:role)
 
 set :log_level, :debug
 
+# disable asset compilation
+Rake::Task["deploy:assets:precompile"].clear
+
+# disable migrations
+Rake::Task["deploy:migrate"].clear
+
 # this copies these files over from shared, but only the files that exist on that machine
 set :optional_shared_files, %w{
   config/master.key
