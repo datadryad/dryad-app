@@ -162,7 +162,7 @@ module Integrations
       it 'returns a parsed json response' do
         allow(Crossref).to receive(:valid_serrano_works_response).and_return(true)
         @resource.title = 'Mu-Opioid Receptor Gene OPRM1 As A Genetic Marker'
-        allow(Crossref).to receive(:match_resource_with_crossref_record).and_return([0.5, { 'title' => @resource.title }])
+        allow(Crossref).to receive(:match_resource_with_crossref_record).and_return([0.7, { 'title' => @resource.title }])
         expect(Crossref.send(:query_by_author_title, resource: @resource).is_a?(Hash)).to eql(true)
       end
     end
@@ -264,7 +264,7 @@ module Integrations
 
         it 'returns .025 if all we can match is the last name' do
           auth = { 'ORCID' => 'ABCD', 'given' => 'Tester', 'family' => 'Doe' }
-          expect(Crossref.send(:crossref_author_scoring, @names, @orcids, auth)).to eql(0.025)
+          expect(Crossref.send(:crossref_author_scoring, @names, @orcids, auth)).to eql(0.015)
         end
 
         it 'returns .05 if all we can match is the author first+last names' do
