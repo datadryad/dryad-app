@@ -56,8 +56,8 @@ namespace :deploy do
 end
 
 after :deploy, 'puma:restart_if_exists'
-after 'deploy:published', 'sidekiq:restart_if_exists'
-after 'puma:restart_if_exists', "puma:index_help_center"
+after :deploy, 'sidekiq:restart_if_exists'
+after :deploy, "puma:index_help_center"
 
 namespace :git do
   desc "Add the version file so that we can display the git version in the footer"
