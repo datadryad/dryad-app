@@ -10,7 +10,7 @@ function errexit {
 }
 
 # Arg for git reference (branch or tag) required
-if [ $# -ne 1 ]; then errexit "Usage: $(basename $0) <git-ref>"; fi
+if [ $# -ne 2 ]; then errexit "Usage: $(basename $0) <git-ref> <role>"; fi
 
 
 WORKING_TREE=/home/ec2-user/dryad-app
