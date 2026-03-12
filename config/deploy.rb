@@ -57,9 +57,9 @@ set :puma_service_unit_name, 'puma'
 set :puma_systemctl_user, :system
 after "deploy:publishing", "puma:restart_if_exists"
 
-namespace :puma do
-  after :restart, :index_help_center
-end
+# namespace :puma do
+#   after :restart, :index_help_center
+# end
 
 namespace :git do
   desc "Add the version file so that we can display the git version in the footer"
@@ -94,6 +94,7 @@ namespace :puma do
       if test("[ -f /etc/systemd/system/#{service}.service ]") ||
         test("systemctl list-unit-files | grep -q #{service}.service")
         execute :sudo, :systemctl, :restart, "#{service}.service"
+        after :restart, :index_help_center
       else
         info "Puma service #{service} not found, skipping restart"
       end
