@@ -131,7 +131,7 @@ namespace :checksums do
     max_size = 10_000_000_000
     today = Time.now.utc
     puts ''
-    puts "Validating secondary storage checksums for 5 random files #{today}"
+    puts "Validating secondary storage checksums for #{files_to_check} random files #{today}"
     # 10 random files which
     # have a digest
     # are not withdrawn
