@@ -43,7 +43,7 @@ module Integrations
         return nil unless valid_serrano_works_response(resp)
 
         match = match_resource_with_crossref_record(resource: resource, response: resp['message'])
-        return nil if match.blank? || match.first < 0.5
+        return nil if match.blank? || match.first < 0.65
 
         sm = match.last
         sm['ISSN'] = get_journal_issn(sm) unless sm['ISSN'].present?
@@ -129,7 +129,7 @@ module Integrations
         both_name_match = names.any? { |h| h[:last] == author['family']&.downcase && h[:first] == author['given']&.downcase }
 
         amatch += 0.05 if both_name_match
-        amatch += 0.025 if last_name_match && !both_name_match
+        amatch += 0.015 if last_name_match && !both_name_match
         amatch.round(3)
       end
 
