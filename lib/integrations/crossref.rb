@@ -74,6 +74,13 @@ module Integrations
 
       private
 
+      def exclude_dois(resource)
+        (
+          resource.identifier.proposed_changes.processed.pluck(:publication_doi) +
+          resource.related_identifiers.select("REGEXP_SUBSTR(`related_identifier`, '(10..+)') as doi").map(&:doi).reject(&:blank?)
+        ).uniq
+      end
+
       def match_resource_with_crossref_record(resource:, response:)
         return nil unless resource.present? && response.present? && resource.title.present?
 
@@ -85,6 +92,7 @@ module Integrations
 
         response['items'].each do |item|
           next unless item['title'].present?
+          next if exclude_dois(resource).include?(item['DOI'])
 
           scores << crossref_item_scoring(resource, item, names, orcids)
         end
