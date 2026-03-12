@@ -55,6 +55,7 @@ end
 
 set :puma_service_unit_name, 'puma'
 set :puma_systemctl_user, :system
+after "deploy:publishing", "puma:restart_if_exists"
 
 namespace :puma do
   after :restart, :index_help_center
@@ -80,6 +81,21 @@ namespace :deploy do
             execute "cp #{shared_path}/#{file} #{release_path}/#{file}"
           end
         end
+      end
+    end
+  end
+end
+
+namespace :puma do
+  task :restart_if_exists do
+    on roles(:app) do
+      service = fetch(:puma_service_unit_name, "puma")
+
+      if test("[ -f /etc/systemd/system/#{service}.service ]") ||
+        test("systemctl list-unit-files | grep -q #{service}.service")
+        execute :sudo, :systemctl, :restart, "#{service}.service"
+      else
+        info "Puma service #{service} not found, skipping restart"
       end
     end
   end
