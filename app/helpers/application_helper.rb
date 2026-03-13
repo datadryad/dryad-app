@@ -70,7 +70,7 @@ module ApplicationHelper
   end
 
   def ldf_pricing_tiers_options
-    [['No limit', '']] + FeeCalculator::BaseService::ESTIMATED_FILES_SIZE.map do |tier|
+    [['No limit', '']] + ESTIMATED_FILES_SIZE.map do |tier|
       ["#{filesize(tier[:range].max)} ($#{tier[:price]})", tier[:tier]]
     end
   end

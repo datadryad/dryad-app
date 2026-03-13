@@ -39,7 +39,7 @@
   </p>
   <p>
     <%= pf.label :yearly_ldf_limit, "Yearly Large Data Fee limit $" %>
-    <%= pf.number_field :yearly_ldf_limit, value: @payment_configuration.yearly_ldf_limit, class: 'c-input__text' %>
+    <%= pf.number_field :yearly_ldf_limit, value: @payment_configuration.yearly_ldf_limit, class: 'c-input__text', disabled: !@payment_configuration.covers_ldf %>
   </p>
 <% end %>
 
