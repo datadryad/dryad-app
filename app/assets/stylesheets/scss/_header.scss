@@ -76,6 +76,14 @@
   }
 }
 
+.section-nav {
+  display: flex;
+  align-items: baseline;
+  gap: 1ch;
+  flex-wrap: wrap;
+  font-size: 1rem;
+}
+
 .c-header__nav-group {
   list-style: "";
   margin: 0;

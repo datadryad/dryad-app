@@ -1,6 +1,6 @@
-<nav aria-label="Account management navigation" style="display: flex; align-items: baseline; column-gap: 30px; flex-wrap: wrap">
+<nav aria-label="Account management navigation" class="section-nav" style="column-gap: 3ch; row-gap: 1ch">
   <h1 style="margin-bottom: 0;">Manage accounts</h1>
-  <ul class="c-header__nav-group" style="height: 22.2667px; font-size: 1rem;">
+  <ul class="c-header__nav-group">
     <li class="c-second__nav-item"><a<% if current == 'users' %> aria-current="page"<%end%> href="<%= user_admin_path %>">Users</a>
     <li class="c-second__nav-item"><a<% if current == 'tenants' %> aria-current="page"<%end%> href="<%= tenant_admin_path %>">Institutions</a>
     <li class="c-second__nav-item"><a<% if current == 'journals' %> aria-current="page"<%end%> href="<%= journal_admin_path %>">Journals</a>
