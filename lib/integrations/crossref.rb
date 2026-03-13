@@ -104,7 +104,7 @@ module Integrations
         return 0.0 unless resource.present? && resource.title.present? && item.present? && item['title'].present?
 
         # Compare the titles using the Amatch NLP library
-        amatch = resource.title.pair_distance_similar(item['title'].first)
+        amatch = item['title'].first.pair_distance_similar(resource.title)
         # If authors are available compare them as well
         amatch += crossref_author_scoring(names, orcids, item['author']) if item['author'].present? && (names.present? || orcids.present?)
         item['provenance_score'] = item['score']
