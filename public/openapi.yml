@@ -873,19 +873,13 @@ paths:
           schema:
             type: string
           description:
-            A timestamp for limiting results. Datasets will
-            only be returned that have been published since the given
-            time. The time must be specified in ISO 8601 format, and the time
-            zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`.
+            A date or timestamp for limiting results. Datasets will only be returned that have been published since the given date/time. The date must be specified in ISO 8601 format (`2020-10-08`). If including a time, the time must be specified in ISO 8601 format, and the time zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`.
         - in: query
           name: publishedBefore
           schema:
             type: string
           description:
-            A timestamp for limiting results. Datasets will
-            only be returned that have been published before the given
-            time. The time must be specified in ISO 8601 format, and the time
-            zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`.
+            A date or timestamp for limiting results. Datasets will only be returned that have been published before the given date/time. The date must be specified in ISO 8601 format (`2020-10-08`). If including a time, the time must be specified in ISO 8601 format, and the time zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`.
         - in: query
           name: relatedWorkIdentifier
           schema:
@@ -903,19 +897,13 @@ paths:
           schema:
             type: string
           description:
-            A timestamp for limiting results. Datasets will
-            only be returned that have been modified since the given
-            time. The time must be specified in ISO 8601 format, and the time
-            zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`.
+            A date or timestamp for limiting results. Datasets will only be returned that have been modified since the given date/time. The date must be specified in ISO 8601 format (`2020-10-08`). If including a time, the time must be specified in ISO 8601 format, and the time zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`.
         - in: query
           name: modifiedBefore
           schema:
             type: string
           description:
-            A timestamp for limiting results. Datasets will
-            only be returned that have been modified before the given
-            time. The time must be specified in ISO 8601 format, and the time
-            zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`.
+            A date or timestamp for limiting results. Datasets will only be returned that have been modified before the given date/time. The date must be specified in ISO 8601 format (`2020-10-08`). If including a time, the time must be specified in ISO 8601 format, and the time zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`.
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/per_page'
         

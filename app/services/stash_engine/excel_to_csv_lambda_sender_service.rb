@@ -29,7 +29,7 @@ module StashEngine
 
     def callback_url
       Rails.application.routes.url_helpers.processor_result_url(@pr.id)
-        .gsub('http://localhost:3000', 'https://v3-dev.datadryad.org')
+        .gsub('http://localhost:3000', 'https://dev.datadryad.org')
         .gsub(/^http:/, 'https:')
     end
   end

@@ -2,14 +2,14 @@
 <%= javascript_pack_tag 'application' %>
 <div id="page-columns">
   <div id="page-content">
-    <nav aria-label="Account navigation" style="display: flex; align-items: baseline; column-gap: 1ch; flex-wrap: wrap; font-size: 1rem; margin-bottom: 2rem;">
+    <nav aria-label="Account navigation" class="section-nav">
       <span>Account:</span>
       <ul class="c-header__nav-group">
         <li class="c-second__nav-item"><a href="/account" aria-current="page">My account</a></li>
         <li class="c-second__nav-item"><a href="/account/saved_searches">Saved searches</a></li>
       </ul>
     </nav>
-    <div style="display: flex; align-items: center; justify-content: space-between; row-gap: 2ch">
+    <div style="display: flex; align-items: center; justify-content: space-between; row-gap: 2ch; margin-top: 2rem">
       <h1>My account</h1>
       <% if current_user.orcid %>
         <p><%= link_to '<i class="fas fa-address-card" aria-hidden="true" style="margin-right: .25ch"></i>My Dryad author profile'.html_safe, author_profile_path(orcid: current_user.orcid) %></p>
