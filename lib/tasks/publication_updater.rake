@@ -66,11 +66,10 @@ namespace :publication_updater do
       identifier = existing_pc.identifier
       resource = identifier&.latest_resource
       # remove this from the changes table and try re-adding it
+      existing_pc.destroy # and re-import below
       next if resource.nil? || existing_pc.identifier.pub_state == 'withdrawn'
 
       puts "rescanning existing proposed change id: #{existing_pc.id}, #{existing_pc.title}"
-
-      existing_pc.destroy # and re-import below
 
       begin
         # Hit Crossref for info

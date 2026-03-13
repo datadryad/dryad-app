@@ -248,33 +248,36 @@ module Integrations
 
       describe '#crossref_author_scoring' do
         it 'returns zero if the resource has no authors' do
-          auth = { 'ORCID' => 'ABCD' }
+          auth = [{ 'ORCID' => 'ABCD' }]
           expect(Crossref.send(:crossref_author_scoring, [], [], auth)).to eql(0.0)
         end
 
         it 'returns zero if there are no author matches' do
-          auth = { 'ORCID' => 'ABCD', 'given' => 'Tester', 'family' => 'Mc-testing' }
+          auth = [{ 'ORCID' => 'ABCD', 'given' => 'Tester', 'family' => 'Mc-testing' }]
           expect(Crossref.send(:crossref_author_scoring, @names, @orcids, auth)).to eql(0.0)
         end
 
-        it 'returns .1 if we have one ORCID match' do
-          auth = { 'ORCID' => '12345' }
-          expect(Crossref.send(:crossref_author_scoring, @names, @orcids, auth)).to eql(0.1)
+        it 'returns 1 if we have all the authors ORCID matched' do
+          auth = [{ 'ORCID' => '12345' }]
+          expect(Crossref.send(:crossref_author_scoring, @names, @orcids, auth)).to eql(1.0)
         end
 
-        it 'returns .025 if all we can match is the last name' do
-          auth = { 'ORCID' => 'ABCD', 'given' => 'Tester', 'family' => 'Doe' }
-          expect(Crossref.send(:crossref_author_scoring, @names, @orcids, auth)).to eql(0.015)
+        it 'returns a match percentage if all we can match is the last name' do
+          auth = [{ 'ORCID' => 'ABCD', 'given' => 'Tester', 'family' => 'Doe' }]
+          expect(Crossref.send(:crossref_author_scoring, @names, @orcids, auth)).to eql(0.333)
         end
 
-        it 'returns .05 if all we can match is the author first+last names' do
-          auth = { 'ORCID' => 'ABCD', 'given' => 'John', 'family' => 'Doe' }
-          expect(Crossref.send(:crossref_author_scoring, @names, @orcids, auth)).to eql(0.05)
+        it 'returns 1 if we can exactly match all the author first+last names' do
+          auth = [{ 'ORCID' => 'ABCD', 'given' => 'John', 'family' => 'Doe' }]
+          expect(Crossref.send(:crossref_author_scoring, @names, @orcids, auth)).to eql(1.0)
         end
 
-        it 'returns .15 if we can match the first+last names and the ORCID' do
-          auth = { 'ORCID' => '12345', 'given' => 'John', 'family' => 'Doe' }
-          expect(Crossref.send(:crossref_author_scoring, @names, @orcids, auth)).to eql(0.15)
+        it 'returns the successful author match score as a percentage of the total number of authors' do
+          auth = [
+            { 'ORCID' => 'ABCD', 'given' => 'Tester', 'family' => 'Mc-testing' },
+            { 'ORCID' => '12345', 'given' => 'John', 'family' => 'Doe' }
+          ]
+          expect(Crossref.send(:crossref_author_scoring, @names, @orcids, auth)).to eql(0.5)
         end
       end
 

@@ -106,30 +106,33 @@ module Integrations
         # Compare the titles using the Amatch NLP library
         amatch = resource.title.pair_distance_similar(item['title'].first)
         # If authors are available compare them as well
-        if item['author'].present? && (names.present? || orcids.present?)
-          item['author'].each do |author|
-            next unless author['family'].present?
-
-            amatch += crossref_author_scoring(names, orcids, author)
-          end
-        end
+        amatch += crossref_author_scoring(names, orcids, item['author']) if item['author'].present? && (names.present? || orcids.present?)
         item['provenance_score'] = item['score']
         item['score'] = amatch
         [amatch, item]
       end
 
-      def crossref_author_scoring(names, orcids, author)
+      def crossref_author_scoring(names, orcids, authors)
         amatch = 0.0
-        # An ORCID match is stronger than a name match
-        amatch += 0.1 if author['ORCID'].present? && orcids.include?(author['ORCID']&.downcase)
-        return amatch unless names.present? && names.any?
+        each = 1.to_f / authors.length
 
-        # Last name matches are useful but both first+last matches are better
-        last_name_match = names.map { |h| h[:last] }.include?(author['family']&.downcase)
-        both_name_match = names.any? { |h| h[:last] == author['family']&.downcase && h[:first] == author['given']&.downcase }
+        authors.each do |author|
+          # An ORCID match is stronger than a name match
+          if author['ORCID'].present? && orcids.include?(author['ORCID']&.downcase)
+            amatch += each
+            next
+          end
+          next unless author['family'].present?
 
-        amatch += 0.05 if both_name_match
-        amatch += 0.015 if last_name_match && !both_name_match
+          names_to_compare = names.select { |h| h[:last].include?(author['family']&.downcase) }
+          next if names_to_compare.empty?
+
+          scores = names_to_compare.map do |name|
+            "#{name[:first]} #{name[:last]}".downcase.pair_distance_similar("#{author['given']} #{author['family']}".downcase)
+          end
+          name_score = scores.max
+          amatch += each * name_score
+        end
         amatch.round(3)
       end
 
