@@ -155,7 +155,7 @@ RSpec.feature 'UserAdmin', type: :feature do
           end
           it 'adds and shows API account information' do
             find_button("Create a Dryad API account for #{@user.name}").click
-            expect(page).to have_text('Account ID')
+            expect(page).to have_text('Client ID')
             expect(page).to have_text('Secret')
           end
         end

@@ -47,8 +47,8 @@
   <% if @user.api_application %>
     <div class="callout">
       <p class="api_info">
-        <span><b>Account ID:</b><button title="Copy account ID" aria-label="Copy account ID" class="copy-icon" data-item="Account ID"><i class="fa fa-paste" role="status"></i><span>Copy</span></button><code><%= @user.api_application.uid %></code></span>
-        <span><b>Secret:</b><button title="Copy account secret" aria-label="Copy account secret" class="copy-icon" data-item="Secret"><i class="fa fa-paste" role="status"></i><span>Copy</span></button><code><%= @user.api_application.secret %></code></span>
+        <span><b>Client ID:</b><button title="Copy client ID" aria-label="Copy client ID" class="copy-icon" data-item="Client ID"><i class="fa fa-paste" role="status"></i><span>Copy</span></button><code><%= @user.api_application.uid %></code></span>
+        <span><b>Secret:</b><button title="Copy client secret" aria-label="Copy client secret" class="copy-icon" data-item="Secret"><i class="fa fa-paste" role="status"></i><span>Copy</span></button><code><%= @user.api_application.secret %></code></span>
       </p>
     </div>
     <p>New API users should see the instructions for <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/api_accounts.md">using the Dryad API</a>, including getting tokens programmatically.</p>
