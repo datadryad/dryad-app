@@ -90,7 +90,7 @@ RSpec.feature 'UserAccount', type: :feature, js: true do
 
       it 'creates the API account' do
         click_button 'Create a Dryad API account'
-        expect(page).to have_text('Account ID:')
+        expect(page).to have_text('Client ID:')
         expect(page).to have_text('Secret:')
         expect(page).to have_text('Token:')
         expect(page).to have_text('Expires in:')
