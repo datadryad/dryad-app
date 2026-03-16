@@ -2,6 +2,7 @@ class SearchController < ApplicationController
   include StashEngine::SharedController
   include StashEngine::SharedSecurityController
   protect_from_forgery except: :metrics_chart
+  before_action :sort_string
 
   def search
     respond_to do |format|
@@ -88,6 +89,10 @@ class SearchController < ApplicationController
   end
 
   private
+
+  def sort_string
+    params[:sort] = params[:sort].gsub('+', ' ')
+  end
 
   def fields
     f = 'dc_identifier_s dc_title_s dc_creator_sm dc_description_s dc_subject_sm dct_issued_dt'
