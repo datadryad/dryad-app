@@ -20,12 +20,12 @@
       <% if params[:sort] != 'date asc' %>
         <span>Newest</span>
       <% else %>
-        <%= link_to('Newest', author_profile_path(request.parameters.except(:action, :controller).merge(sort: 'date desc'))) %>
+        <%= link_to('Newest', author_profile_path(request.parameters.except(:action, :controller, :orcid).merge(sort: 'date desc'))) %>
       <% end %>
       <% if params[:sort] == 'date asc' %>
         <span>Oldest</span>
       <% else %>
-        <%= link_to('Oldest', author_profile_path(request.parameters.except(:action, :controller).merge(sort: 'date asc')), disabled: true) %>
+        <%= link_to('Oldest', author_profile_path(request.parameters.except(:action, :controller, :orcid).merge(sort: 'date asc')), disabled: true) %>
       <% end %>
     </span>
   </div>
