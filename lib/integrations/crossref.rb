@@ -106,7 +106,7 @@ module Integrations
         # Compare the titles using the Amatch NLP library
         amatch = item['title'].first.pair_distance_similar(resource.title)
         # quarter weight for matching journal title
-        if resource.journal.present? && item['container-title'].present?
+        if resource.journal.present? && item['container-title']&.first&.present?
           amatch += 0.25 * resource.journal.title.pair_distance_similar(item['container-title'].first)
         end
         # If authors are available compare them as well, for half weight
