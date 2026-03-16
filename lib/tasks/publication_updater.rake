@@ -18,7 +18,7 @@ namespace :publication_updater do
 
       begin
         # Hit Crossref for info
-        cr = Integrations::Crossref.query_by_preprint_doi(doi: preprint)
+        cr = Integrations::Crossref.query_by_preprint_doi(resource: resource, doi: preprint)
       rescue URI::InvalidURIError, MultiJson::ParseError => e
         # If the URI is invalid, just skip to the next record
         # MultiJson::ParseError is for current Serrano redirect bug

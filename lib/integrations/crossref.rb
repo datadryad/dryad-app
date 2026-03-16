@@ -16,7 +16,7 @@ module Integrations
         nil
       end
 
-      def query_by_preprint_doi(doi:)
+      def query_by_preprint_doi(resource:, doi:)
         return nil unless doi.present?
 
         bare = bare_doi(doi_string: doi)
@@ -27,7 +27,15 @@ module Integrations
         return nil unless id.present? && id['id-type'] == 'doi'
 
         b = bare_doi(doi_string: id['id'])
-        query_by_doi(doi: b)
+        item = query_by_doi(doi: b)
+        names = resource.authors.map do |author|
+          { first: author.author_first_name&.downcase, last: author.author_last_name&.downcase }
+        end
+        orcids = resource.authors.map { |author| author.author_orcid&.downcase }
+        match = crossref_item_scoring(resource, item, names, orcids)
+        sm = match.last
+        sm['ISSN'] = get_journal_issn(sm) unless sm['ISSN'].present?
+        sm
       rescue Serrano::NotFound, Serrano::BadGateway, Serrano::Error, Serrano::GatewayTimeout, Serrano::InternalServerError,
              Serrano::ServiceUnavailable
         nil
