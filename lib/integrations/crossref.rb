@@ -43,7 +43,7 @@ module Integrations
         return nil unless valid_serrano_works_response(resp)
 
         match = match_resource_with_crossref_record(resource: resource, response: resp['message'])
-        return nil if match.blank? || match.first < 0.65
+        return nil if match.blank? || match.first < 0.7
 
         sm = match.last
         sm['ISSN'] = get_journal_issn(sm) unless sm['ISSN'].present?
@@ -75,9 +75,11 @@ module Integrations
       private
 
       def exclude_dois(resource)
+        # processed pcs and all ris except articles (often added incorrectly)
         (
           resource.identifier.proposed_changes.processed.pluck(:publication_doi) +
-          resource.related_identifiers.select("REGEXP_SUBSTR(`related_identifier`, '(10..+)') as doi").map(&:doi).reject(&:blank?)
+          resource.related_identifiers.where('work_type != 1').select("REGEXP_SUBSTR(`related_identifier`, '(10..+)') as doi")
+            .map(&:doi).reject(&:blank?)
         ).uniq
       end
 
@@ -105,8 +107,12 @@ module Integrations
 
         # Compare the titles using the Amatch NLP library
         amatch = item['title'].first.pair_distance_similar(resource.title)
-        # If authors are available compare them as well
-        amatch += crossref_author_scoring(names, orcids, item['author']) if item['author'].present? && (names.present? || orcids.present?)
+        # quarter weight for matching journal title
+        if resource.journal.present? && item['container-title']&.first&.present?
+          amatch += 0.25 * resource.journal.title.pair_distance_similar(item['container-title'].first)
+        end
+        # If authors are available compare them as well, for half weight
+        amatch += 0.5 * crossref_author_scoring(names, orcids, item['author']) if item['author'].present? && (names.present? || orcids.present?)
         item['provenance_score'] = item['score']
         item['score'] = amatch
         [amatch, item]

@@ -75,12 +75,11 @@ module StashEngine
       if article_type == 'primary_article' && prim_art.present?
         prim_art.update(related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(publication_doi), related_identifier_type: 'doi')
       else
-        latest_resource.related_identifiers << StashDatacite::RelatedIdentifier.create(
-          related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(publication_doi),
-          related_identifier_type: 'doi',
-          work_type: article_type,
-          relation_type: 'iscitedby'
+        w = StashDatacite::RelatedIdentifier.find_or_create_by(
+          resource_id: latest_resource.id,
+          related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(publication_doi)
         )
+        w.update(work_type: article_type, related_identifier_type: 'doi', relation_type: 'iscitedby')
       end
 
       unless article_type == 'article'
