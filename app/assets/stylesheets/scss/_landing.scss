@@ -63,7 +63,7 @@
   }
 }
 
-#landing_concern *:first-child:before {
+#landing_concern > *:first-child:before {
   font-family: 'Font Awesome 6 Free';
   content: '\f071';
   font-weight: 900;
