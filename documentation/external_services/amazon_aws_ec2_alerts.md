@@ -25,3 +25,8 @@ These are set for each machine
 - **Email Total Sends / Day** - triggered when sent number is grater than 30000 for 1 data point within 1 day
 - **Email Bounce Rate** - triggered when reputation bounce rate grater than 1 for 1 data point within 15 minutes
 - **Email Complaint Rate** - triggered when reputation complaint rate grater than 1 for 1 data point within 5 minutes
+
+### Budget ans costs
+
+- **S3 monthly** - triggered when S3 daily budget goes over is greater than 90% of allocated budget amount
+- **Cost anomaly** - triggered whenever a cost anomaly is detected
