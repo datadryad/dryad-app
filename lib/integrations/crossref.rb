@@ -130,7 +130,7 @@ module Integrations
           end
           next unless author['family'].present?
 
-          names_to_compare = names.select { |h| h[:last].include?(author['family']&.downcase) }
+          names_to_compare = names.select { |h| h[:last]&.include?(author['family']&.downcase) }
           next if names_to_compare.empty?
 
           scores = names_to_compare.map do |name|
