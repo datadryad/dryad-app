@@ -91,7 +91,7 @@ class SearchController < ApplicationController
   private
 
   def sort_string
-    params[:sort] = params[:sort].gsub('+', ' ')
+    params[:sort] = params[:sort].gsub('+', ' ') if params[:sort].present?
   end
 
   def fields
