@@ -75,9 +75,11 @@ module Integrations
       private
 
       def exclude_dois(resource)
+        # processed pcs and all ris except articles (often added incorrectly)
         (
           resource.identifier.proposed_changes.processed.pluck(:publication_doi) +
-          resource.related_identifiers.select("REGEXP_SUBSTR(`related_identifier`, '(10..+)') as doi").map(&:doi).reject(&:blank?)
+          resource.related_identifiers.where('work_type != 1').select("REGEXP_SUBSTR(`related_identifier`, '(10..+)') as doi")
+            .map(&:doi).reject(&:blank?)
         ).uniq
       end
 
