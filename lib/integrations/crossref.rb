@@ -43,7 +43,7 @@ module Integrations
         return nil unless valid_serrano_works_response(resp)
 
         match = match_resource_with_crossref_record(resource: resource, response: resp['message'])
-        return nil if match.blank? || match.first < 0.5
+        return nil if match.blank? || match.first < 0.7
 
         sm = match.last
         sm['ISSN'] = get_journal_issn(sm) unless sm['ISSN'].present?
@@ -74,6 +74,15 @@ module Integrations
 
       private
 
+      def exclude_dois(resource)
+        # processed pcs and all ris except articles (often added incorrectly)
+        (
+          resource.identifier.proposed_changes.processed.pluck(:publication_doi) +
+          resource.related_identifiers.where('work_type != 1').select("REGEXP_SUBSTR(`related_identifier`, '(10..+)') as doi")
+            .map(&:doi).reject(&:blank?)
+        ).uniq
+      end
+
       def match_resource_with_crossref_record(resource:, response:)
         return nil unless resource.present? && response.present? && resource.title.present?
 
@@ -85,6 +94,7 @@ module Integrations
 
         response['items'].each do |item|
           next unless item['title'].present?
+          next if exclude_dois(resource).include?(item['DOI'])
 
           scores << crossref_item_scoring(resource, item, names, orcids)
         end
@@ -96,32 +106,39 @@ module Integrations
         return 0.0 unless resource.present? && resource.title.present? && item.present? && item['title'].present?
 
         # Compare the titles using the Amatch NLP library
-        amatch = resource.title.pair_distance_similar(item['title'].first)
-        # If authors are available compare them as well
-        if item['author'].present? && (names.present? || orcids.present?)
-          item['author'].each do |author|
-            next unless author['family'].present?
-
-            amatch += crossref_author_scoring(names, orcids, author)
-          end
+        amatch = item['title'].first.pair_distance_similar(resource.title)
+        # quarter weight for matching journal title
+        if resource.journal.present? && item['container-title']&.first&.present?
+          amatch += 0.25 * resource.journal.title.pair_distance_similar(item['container-title'].first)
         end
+        # If authors are available compare them as well, for half weight
+        amatch += 0.5 * crossref_author_scoring(names, orcids, item['author']) if item['author'].present? && (names.present? || orcids.present?)
         item['provenance_score'] = item['score']
         item['score'] = amatch
         [amatch, item]
       end
 
-      def crossref_author_scoring(names, orcids, author)
+      def crossref_author_scoring(names, orcids, authors)
         amatch = 0.0
-        # An ORCID match is stronger than a name match
-        amatch += 0.1 if author['ORCID'].present? && orcids.include?(author['ORCID']&.downcase)
-        return amatch unless names.present? && names.any?
+        each = 1.to_f / authors.length
 
-        # Last name matches are useful but both first+last matches are better
-        last_name_match = names.map { |h| h[:last] }.include?(author['family']&.downcase)
-        both_name_match = names.any? { |h| h[:last] == author['family']&.downcase && h[:first] == author['given']&.downcase }
+        authors.each do |author|
+          # An ORCID match is stronger than a name match
+          if author['ORCID'].present? && orcids.include?(author['ORCID']&.downcase)
+            amatch += each
+            next
+          end
+          next unless author['family'].present?
 
-        amatch += 0.05 if both_name_match
-        amatch += 0.025 if last_name_match && !both_name_match
+          names_to_compare = names.select { |h| h[:last]&.include?(author['family']&.downcase) }
+          next if names_to_compare.empty?
+
+          scores = names_to_compare.map do |name|
+            "#{name[:first]} #{name[:last]}".downcase.pair_distance_similar("#{author['given']} #{author['family']}".downcase)
+          end
+          name_score = scores.max
+          amatch += each * name_score
+        end
         amatch.round(3)
       end
 

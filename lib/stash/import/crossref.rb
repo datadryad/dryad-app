@@ -59,12 +59,9 @@ module Stash
         return nil unless @sm.present? && @resource.present?
         # Skip if the identifier already has the change
         return nil if StashEngine::ProposedChange.where(identifier_id: @resource.identifier_id, publication_doi: @sm['DOI']).present?
-        # Skip if the resource already has the relation
-        return nil if @resource.related_identifiers.where("REGEXP_SUBSTR(`related_identifier`, '(10..+)') = ?", @sm['DOI']).present?
 
         # Skip if the change does not meet basic checks
         pub_date = date_parts_to_date(publication_date)
-        return nil unless @sm['score'].present? && @sm['score'].to_f >= 0.6
         return nil if pub_date&.year&.present? && @resource.identifier.created_at.year - pub_date&.year > 3
         return nil if @resource.authors.count > @sm['author'].count
 

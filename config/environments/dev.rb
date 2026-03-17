@@ -96,7 +96,7 @@ Rails.application.configure do
       :email => {
           # :deliver_with => :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
           :email_prefix => "[Drystg Exception]",
-          :sender_address => %{"Dryad Notifier" <no-reply-dryad@v3-dev.datadryad.org>},
+          :sender_address => %{"Dryad Notifier" <no-reply-dryad@dev.datadryad.org>},
           :exception_recipients => ac['page_error_email']
       },
       :error_grouping => true,
@@ -114,5 +114,5 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.cache_store = :redis_cache_store, { url: ac['cache']['app_url'], ssl: true }
 
-  Rails.application.default_url_options = { host: 'v3-dev.datadryad.org' }
+  Rails.application.default_url_options = { host: 'dev.datadryad.org' }
 end

@@ -2,14 +2,14 @@
 <%= javascript_pack_tag 'application' %>
 <div id="page-columns">
   <div id="page-content">
-    <nav aria-label="Account navigation" style="display: flex; align-items: baseline; column-gap: 1ch; flex-wrap: wrap; font-size: 1rem; margin-bottom: 2rem;">
+    <nav aria-label="Account navigation" class="section-nav">
       <span>Account:</span>
       <ul class="c-header__nav-group">
         <li class="c-second__nav-item"><a href="/account" aria-current="page">My account</a></li>
         <li class="c-second__nav-item"><a href="/account/saved_searches">Saved searches</a></li>
       </ul>
     </nav>
-    <div style="display: flex; align-items: center; justify-content: space-between; row-gap: 2ch">
+    <div style="display: flex; align-items: center; justify-content: space-between; row-gap: 2ch; margin-top: 2rem">
       <h1>My account</h1>
       <% if current_user.orcid %>
         <p><%= link_to '<i class="fas fa-address-card" aria-hidden="true" style="margin-right: .25ch"></i>My Dryad author profile'.html_safe, author_profile_path(orcid: current_user.orcid) %></p>
@@ -27,11 +27,11 @@
         <h2>API account</h2>
         <p>Use a <a href="/api">Dryad API</a> account to access API results at higher request rates.</p>
         <% if current_user.api_application %>
-          <p>Your account ID and secret enable you to generate tokens that allow modification of your datasets through the Dryad API. Do not share them.</p>
+          <p>Your client ID and secret enable you to generate tokens that allow modification of your datasets through the Dryad API. Do not share them.</p>
           <div class="callout">
             <p class="api_info">
-              <span><b>Account ID:</b><button title="Copy account ID" aria-label="Copy account ID" class="copy-icon" data-item="Account ID"><i class="fa fa-paste" role="status"></i><span>Copy</span></button><code><%= current_user.api_application.uid %></code></span>
-              <span><b>Secret:</b><button title="Copy account secret" aria-label="Copy account secret" class="copy-icon" data-item="Secret"><i class="fa fa-paste" role="status"></i><span>Copy</span></button><code><%= current_user.api_application.secret %></code></span>
+              <span><b>Client ID:</b><button title="Copy client ID" aria-label="Copy client ID" class="copy-icon" data-item="Client ID"><i class="fa fa-paste" role="status"></i><span>Copy</span></button><code><%= current_user.api_application.uid %></code></span>
+              <span><b>Secret:</b><button title="Copy client secret" aria-label="Copy client secret" class="copy-icon" data-item="Secret"><i class="fa fa-paste" role="status"></i><span>Copy</span></button><code><%= current_user.api_application.secret %></code></span>
             </p>
           </div>
           <p>Tokens expire in 10 hours. See more instructions for <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/api_accounts.md">using the Dryad API</a>, including getting new tokens programmatically.</p>          
