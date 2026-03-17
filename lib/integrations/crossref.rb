@@ -84,6 +84,10 @@ module Integrations
         ).uniq
       end
 
+      def check_title(resource)
+        resource.manuscript&.metadata&.[]('ms title') || resource.title
+      end
+
       def match_resource_with_crossref_record(resource:, response:)
         return nil unless resource.present? && response.present? && resource.title.present?
 
@@ -102,7 +106,7 @@ module Integrations
         return [0.0, item] unless resource&.title&.present? && item&.[]('title')&.present?
 
         # Compare the titles using the Amatch NLP library
-        amatch = item['title'].first.pair_distance_similar(resource.title)
+        amatch = item['title'].first.pair_distance_similar(check_title(resource))
         # quarter weight for matching journal title
         if resource.journal.present? && item['container-title']&.first&.present?
           amatch += 0.25 * resource.journal.title.pair_distance_similar(item['container-title'].first)
@@ -150,13 +154,12 @@ module Integrations
         return [nil, nil, nil] unless resource.present?
 
         issn = resource.identifier&.publication_issn
-        issn = CGI.escape(issn) if issn.present?
-        title_query = resource.title&.gsub(/\s+/, ' ')&.strip
-        title_query = CGI.escape(title_query)&.gsub(/\s/, '+') if title_query.present?
+        title_query = check_title(resource)
+        title_query = CGI.escape(title_query.squish)&.gsub(/\s/, '+') if title_query.present?
         author_query = resource.authors.map do |a|
           a.author_last_name&.strip&.presence || a.author_first_name&.strip&.presence || a.author_org_name&.strip
-        end.reject(&:blank?)
-        author_query = author_query.map { |a| CGI.escape(a) }.join('+') if author_query.present?
+        end
+        author_query = author_query.reject(&:blank?).map { |a| CGI.escape(a)&.gsub(/\s/, '+') }.join('+') if author_query.present?
 
         [issn, title_query, author_query]
       end
