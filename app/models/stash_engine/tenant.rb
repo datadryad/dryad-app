@@ -49,7 +49,32 @@ module StashEngine
     # return all enabled tenants sorted by name
     scope :enabled, -> { where(enabled: true).order(:short_name) }
     scope :partner_list, -> { enabled.where(partner_display: true) }
-    scope :connect_list, -> { partner_list.joins(:payment_configuration).where(payment_configurations: { covers_dpc: true }) }
+    scope :connect_list, -> {
+      # Get all root tenant IDs that have covers_dpc: true
+      root_ids = joins(:payment_configuration)
+        .where(sponsor_id: nil, payment_configurations: { covers_dpc: true })
+        .pluck(:id)
+
+      return none if root_ids.empty?
+
+      # Use a recursive CTE to get all descendants of those roots
+      partner_list.where(<<~SQL, root_ids: root_ids)
+        stash_engine_tenants.id IN (
+          WITH RECURSIVE tenant_tree AS (
+            SELECT id, sponsor_id
+            FROM stash_engine_tenants
+            WHERE id IN (:root_ids)
+
+            UNION ALL
+
+            SELECT t.id, t.sponsor_id
+            FROM stash_engine_tenants t
+            INNER JOIN tenant_tree tt ON t.sponsor_id = tt.id
+          )
+          SELECT id FROM tenant_tree
+        )
+      SQL
+    }
     scope :tiered, -> { enabled.joins(:payment_configuration).where(payment_configurations: { payment_plan: 'TIERED' }) }
     scope :fees_2025, -> { enabled.joins(:payment_configuration).where(payment_configurations: { payment_plan: '2025' }) }
     scope :sponsored, -> { enabled.distinct.joins(:sponsored) }
