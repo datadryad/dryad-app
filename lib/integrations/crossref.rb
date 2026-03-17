@@ -32,10 +32,7 @@ module Integrations
           { first: author.author_first_name&.downcase, last: author.author_last_name&.downcase }
         end
         orcids = resource.authors.map { |author| author.author_orcid&.downcase }
-        match = crossref_item_scoring(resource, item, names, orcids)
-        sm = match.last
-        sm['ISSN'] = get_journal_issn(sm) unless sm['ISSN'].present?
-        sm
+        crossref_item_scoring(resource, item, names, orcids)&.last
       rescue Serrano::NotFound, Serrano::BadGateway, Serrano::Error, Serrano::GatewayTimeout, Serrano::InternalServerError,
              Serrano::ServiceUnavailable
         nil
@@ -111,7 +108,7 @@ module Integrations
       end
 
       def crossref_item_scoring(resource, item, names, orcids)
-        return 0.0 unless resource.present? && resource.title.present? && item.present? && item['title'].present?
+        return [0.0, item] unless resource.present? && resource.title.present? && item.present? && item['title'].present?
 
         # Compare the titles using the Amatch NLP library
         amatch = item['title'].first.pair_distance_similar(resource.title)
