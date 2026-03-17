@@ -148,20 +148,6 @@ namespace :recurate do
     ActiveRecord::Base.connection.execute <<~SQL
       UPDATE dcs_subjects
       SET subject = CONVERT(
-                       REPLACE(
-                         REPLACE(
-                           REPLACE(
-                             CONVERT(subject USING BINARY),
-                             UNHEX('E2'), ''),   -- orphaned E2
-                           UNHEX('C2'), ''),     -- orphaned C2
-                         UNHEX('B5'), '')        -- orphaned B5
-                       USING utf8mb4
-                     );
-    SQL
-
-    ActiveRecord::Base.connection.execute <<~SQL
-      UPDATE dcs_subjects
-      SET subject = CONVERT(
         REPLACE(
           REPLACE(
             REPLACE(
