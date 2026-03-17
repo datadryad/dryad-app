@@ -137,11 +137,11 @@ module Integrations
 
     describe '#query_by_preprint_doi' do
       it 'returns nil if the DOI is nil' do
-        expect(Crossref.send(:query_by_preprint_doi, doi: nil)).to eql(nil)
+        expect(Crossref.send(:query_by_preprint_doi, resource: @resource, doi: nil)).to eql(nil)
       end
 
       it 'returns a parsed json response' do
-        expect(Crossref.send(:query_by_preprint_doi, doi: '10.123/12345').is_a?(Hash)).to eql(true)
+        expect(Crossref.send(:query_by_preprint_doi, resource: @resource, doi: '10.123/12345').is_a?(Hash)).to eql(true)
       end
     end
 
@@ -212,34 +212,34 @@ module Integrations
 
       describe '#crossref_item_scoring' do
         it 'returns zero id the resource is nil' do
-          expect(Crossref.send(:crossref_item_scoring, nil, { 'title' => 'ABC' }, nil, nil)).to eql(0.0)
+          expect(Crossref.send(:crossref_item_scoring, nil, { 'title' => 'ABC' }).first).to eql(0.0)
         end
 
         it 'returns zero id the resource has no title' do
           @resource.title = nil
-          expect(Crossref.send(:crossref_item_scoring, @resource, {}, nil, nil)).to eql(0.0)
+          expect(Crossref.send(:crossref_item_scoring, @resource, {}).first).to eql(0.0)
         end
 
         it 'returns zero id the Crossref response does not have a title' do
-          expect(Crossref.send(:crossref_item_scoring, @resource, {}, nil, nil)).to eql(0.0)
+          expect(Crossref.send(:crossref_item_scoring, @resource, {}).first).to eql(0.0)
         end
 
         it 'returns a high score when the titles are close' do
           item = { 'title' => ['Testing Item Scoring'] }
           @resource.title = 'Data from: Testing Scoring'
-          expect(Crossref.send(:crossref_item_scoring, @resource, item, nil, nil).first >= 0.5).to eql(true)
+          expect(Crossref.send(:crossref_item_scoring, @resource, item).first >= 0.5).to eql(true)
         end
 
         it 'returns a low score when the titles are dissimilar' do
           item = { 'title' => ['Testing Item Scoring'] }
           @resource.title = 'A completely different scoring title'
-          expect(Crossref.send(:crossref_item_scoring, @resource, item, nil, nil).first < 0.5).to eql(true)
+          expect(Crossref.send(:crossref_item_scoring, @resource, item).first < 0.5).to eql(true)
         end
 
         it 'sets the item[`score`] and item[`provenance_score`]' do
           item = { 'title' => ['Testing Item Scoring'], 'score' => 12.3 }
           @resource.title = 'A completely different scoring title'
-          item = Crossref.send(:crossref_item_scoring, @resource, item, nil, nil).last
+          item = Crossref.send(:crossref_item_scoring, @resource, item).last
           expect(item['score'].present?).to eql(true)
           expect(item['provenance_score'].present?).to eql(true)
           expect(item['provenance_score']).to eql(12.3)
