@@ -99,7 +99,7 @@ module Integrations
       end
 
       def crossref_item_scoring(resource, item)
-        return [0.0, item] unless resource&.title&.present? && item['title']&.first&.present?
+        return [0.0, item] unless resource&.title&.present? && item&.[]('title')&.present?
 
         # Compare the titles using the Amatch NLP library
         amatch = item['title'].first.pair_distance_similar(resource.title)
@@ -108,7 +108,7 @@ module Integrations
           amatch += 0.25 * resource.journal.title.pair_distance_similar(item['container-title'].first)
         end
         names = resource.authors.map { |a| { first: a.author_first_name, last: a.author_last_name } }
-        orcids = resource.authors.map(&:author_orcid).map(&:downcase)
+        orcids = resource.authors.map(&:author_orcid).reject(&:blank?).map(&:downcase)
         # If authors are available compare them as well, for half weight
         amatch += 0.5 * crossref_author_scoring(names, orcids, item['author']) if item['author'].present? && (names.present? || orcids.present?)
         item['provenance_score'] = item['score']
