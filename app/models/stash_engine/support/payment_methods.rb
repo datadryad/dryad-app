@@ -111,7 +111,7 @@ module StashEngine
       end
 
       def display_payer
-        return recorded_payer if recorded_payer.present?
+        return recorded_payer if published? && recorded_payer.present?
 
         payer.presence || {}
       end
