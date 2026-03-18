@@ -1,5 +1,5 @@
 <div class="c-lined-table__with-actions">
-  <div class="c-lined-table__data"><%= curator_name %></div>
+  <div class="c-lined-table__data"><%= curator_name.presence || '<em>Unassigned</em>'.html_safe %></div>
   <% if policy(dataset).curate? %>
     <div class="c-lined-table__actions" id="curator_<%= dataset.identifier.id %>">
       <%= form_with(url: admin_dash_edit_path(id: dataset.identifier_id, field: 'curator'), method: :get, local: false) do %>
