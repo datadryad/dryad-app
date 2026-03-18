@@ -148,6 +148,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       it 'allows editing all at a glance sections' do
         expect(page).to have_button('Edit Flag')
         expect(page).to have_button('Update status')
+        expect(page).to have_button('Update curator')
         expect(page).to have_button('Logout current editor')
         expect(page).to have_button('Edit pub dates')
         expect(page).to have_button('Edit related works')
@@ -301,6 +302,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       it 'allows proper at a glance editing' do
         expect(page).to have_button('Edit Flag')
         expect(page).not_to have_button('Update status')
+        expect(page).not_to have_button('Update curator')
         expect(page).not_to have_button('Logout current editor')
         expect(page).not_to have_button('Edit pub dates')
         expect(page).not_to have_button('Edit related works')
@@ -336,6 +338,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       it 'does not allow at a glance editing' do
         expect(page).not_to have_button('Edit Flag')
         expect(page).not_to have_button('Update status')
+        expect(page).not_to have_button('Update curator')
         expect(page).not_to have_button('Logout current editor')
         expect(page).not_to have_button('Edit pub dates')
         expect(page).not_to have_button('Edit related works')
@@ -363,6 +366,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
 
       it 'allows proper at a glance editing' do
         expect(page).to have_button('Update status')
+        expect(page).to have_button('Update curator')
         expect(page).to have_button('Logout current editor')
         expect(page).to have_button('Edit pub dates')
         expect(page).to have_button('Edit related works')

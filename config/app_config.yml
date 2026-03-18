@@ -240,7 +240,7 @@ defaults: &DEFAULTS
     # all other rates are number of requests allowed per minute
     all_requests: 240
     api_requests_anon: 30
-    api_requests_auth: 120
+    api_requests_auth: 240
     api_requests_v1: 30
   salesforce:
     server: https://dryad--cloudparti.sandbox.lightning.force.com
