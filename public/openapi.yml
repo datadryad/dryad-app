@@ -25,7 +25,7 @@ info:
 
     To access more powerful features, an API account is required. API accounts allow users to:
 
-    - Access the API at higher rates (authenticated users may make up to 120 requests per minute)
+    - Access the API at higher rates (authenticated users may make up to 240 requests per minute)
     - Download data files
     - Access datasets that are not yet public, but are associated with the account's community (institution, journal, etc.)
     - Update datasets associated with the account's community
