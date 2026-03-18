@@ -20,7 +20,7 @@ On the [My account](/account) page, click <span role="emphasis" class="o-button_
 
 ## API accounts
 
-The [Dryad API](/api) can be used to search, access, and download Dryad datasets. With a Dryad API account, users can make increased requests to the Dryad API at 4 times the rate of anonymous API users. The API is also an alternative way to create and modify Dryad dataset submissions.
+The [Dryad API](/api) can be used to search, access, and download Dryad datasets. With a Dryad API account, users can make increased requests to the Dryad API at 8 times the rate of anonymous API users. The API is also an alternative way to create and modify Dryad dataset submissions.
 
 To create an API account, visit your Dryad [My account](/account) page, and click <span role="emphasis" class="o-button__plain-textlink" disabled="" style="color: #00527A"><i class="fas fa-user-gear" aria-hidden="true" style="margin-right: .25ch"></i>Create a Dryad API account</span>. 
 
