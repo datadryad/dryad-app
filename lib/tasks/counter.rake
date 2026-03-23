@@ -96,12 +96,12 @@ namespace :counter do
 
       # identifier.citations automatically checks and caches new ones as needed
       citations = identifier.citations
-
       counter_stat.citation_count = citations.length
       counter_stat.citation_updated = Time.new
       counter_stat.save!
-      puts "Completed populating citations at #{Time.new.utc.iso8601}"
+      sleep 1 # to avoid overloading DataCite hub
     end
+    puts "Completed populating citations at #{Time.new.utc.iso8601}"
   end
 
   # example: RAILS_ENV=development bundle exec rake counter:test_env -- --log_directory /user/me/dir --scp_hosts host1,host2
