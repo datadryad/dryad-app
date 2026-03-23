@@ -34,7 +34,7 @@ module StashEngine
     def self.citation_metadata(doi:, stash_identifier:)
       # check for cached citation
       cites = where(doi: doi)
-      return cites.first unless cites.blank? || cites.first&.metadata.blank?
+      return cites.first unless cites.empty? || cites.first.metadata.blank?
 
       raw_metadata = Integrations::Doi.new.citeproc_json(doi)
       return nil if raw_metadata.in?([nil, false]) # do not save to database and return nil early
