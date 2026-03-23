@@ -70,10 +70,9 @@ module StashEngine
       row << StashEngine::CurationActivity.readable_status(dataset.last_curation_activity.status) if @fields.include?('status')
       row << dataset.total_file_size if @fields.include?('size')
       if @fields.include?('metrics')
-        c = dataset.identifier.counter_stat.unique_investigation_count
-        r = dataset.identifier.counter_stat.unique_request_count
-        views = c.blank? || c < r ? (r || 0) : c
-        row << views << (r || 0) << (dataset.identifier.counter_stat.citation_count || 0)
+        row << dataset.identifier.counter_stat.unique_investigation_count.to_i
+        row << dataset.identifier.counter_stat.unique_request_count.to_i
+        row << dataset.identifier.counter_stat.citation_count.to_i
       end
       if @fields.include?('funders') || @fields.include?('awards')
         row << dataset.funders.map do |f|
