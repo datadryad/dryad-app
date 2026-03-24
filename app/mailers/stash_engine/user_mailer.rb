@@ -149,6 +149,12 @@ module StashEngine
            subject: "#{rails_env}General error \"#{@resource.title.strip_tags}\" (doi:#{@resource.identifier_value})")
     end
 
+    def integration_paused(journals)
+      @journals = journals
+      mail(to: @submission_error_emails,
+           subject: "#{rails_env}Journal integration issue")
+    end
+
     def file_validation_error(file)
       logger.warn('Unable to validate file checksum; nil file') unless file.present?
       @zenodo_error_emails = APP_CONFIG['zenodo_error_email']
