@@ -42,7 +42,14 @@ const ModalValidationReport = React.forwardRef(({file, clickedClose}, ref) => {
         You can choose to proceed to the final page of the submission form without editing your file.
         A curator may contact you with options to improve the organization, readability, and/or accessibility of your dataset.
       </p>
-      <p style={{textAlign: 'right'}}>
+      <p style={{
+        display: 'flex', gap: '2ch', alignItems: 'center', justifyContent: 'space-between',
+      }}
+      >
+        <span style={{fontSize: '.98rem'}}>
+          Validation report provided through{' '}
+          <a href="/help/submission_steps/files#tabular-data-check" target="_blank">an integration with Frictionless data<ExitIcon /></a>
+        </span>
         <button type="button" className="o-button__plain-text2" onClick={clickedClose}>Close</button>
       </p>
     </dialog>
