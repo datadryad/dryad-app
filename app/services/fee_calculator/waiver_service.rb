@@ -1,9 +1,6 @@
 module FeeCalculator
   class WaiverService < IndividualService
 
-    DISCOUNT_STORAGE_COUPON_ID = 'FEE_WAIVER_2025'.freeze
-    FREE_STORAGE_SIZE = 10_000_000_000 # 10 GB
-
     private
 
     def storage_fee_label

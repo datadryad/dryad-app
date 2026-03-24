@@ -153,6 +153,14 @@ module StashEngine
     end
 
     def dpc_status
+      pp @resource.identifier&.submitter_affiliation&.ror_id
+      pp user_payer_aff = StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id)
+      aff_tenant = if @resource.tenant_id.in?(user_payer_aff.ids)
+                     user_payer_aff.find_by(id: @resource.tenant_id)
+                   else
+                     user_payer_aff.first
+                   end
+
       @resource.check_add_readme_file
       @resource.check_add_cedar_json
       dpc_checks = {
@@ -161,7 +169,7 @@ module StashEngine
         institution_will_pay: @resource.identifier.institution_will_pay?,
         funder_will_pay: @resource.identifier.funder_will_pay?,
         user_must_pay: @resource.identifier.user_must_pay?,
-        aff_tenant: StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id)&.connect_list&.first,
+        aff_tenant: aff_tenant,
         allow_review: @resource.identifier.allow_review?,
         automatic_ppr: @resource.identifier.automatic_ppr?,
         man_decision_made: @resource.identifier.has_accepted_manuscript? || @resource.identifier.has_rejected_manuscript?

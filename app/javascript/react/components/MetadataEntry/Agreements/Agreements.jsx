@@ -6,6 +6,38 @@ import Calculations from './Calculations';
 import CalculateFees from '../../CalculateFees';
 import {useStore} from '../../../shared/store';
 
+function TermsOfSubmission({preview, resource}) {
+  if (!preview) return null;
+  if (resource.accepted_agreement) {
+    return (
+      <p>
+        <i className="fas fa-circle-check" aria-hidden="true" />{' '}
+        The submitter has agreed to Dryad&apos;s{' '}
+        <a href="/terms" target="_blank">terms of submission<ExitIcon /></a>
+      </p>
+    );
+  }
+
+  return (
+    <p style={{fontStyle: 'italic'}}><i className="fas fa-square" aria-hidden="true" />{' '} Terms not yet accepted</p>
+  );
+}
+
+function NoSubmitterWarning({preview, isSubmitter}) {
+  if (preview || isSubmitter) return null;
+
+  return (
+    <div className="callout warn">
+      <p>
+        Only the submitter can agree to the terms and conditions.
+        When you are done editing, please click &nbsp;
+        <b><i className="fas fa-floppy-disk" /> Save &amp; exit</b> &nbsp;
+        and ask the submitter to complete the submission.
+      </p>
+    </div>
+  );
+}
+
 export default function Agreements({
   resource, setResource, user, form, previous, config, current, setAuthorStep, preview = false,
 }) {
@@ -104,6 +136,7 @@ export default function Agreements({
       <p><i className="fas fa-spinner fa-spin" role="img" aria-label="Loading..." /></p>
     );
   }
+
   return (
     <>
       {preview && (
@@ -207,16 +240,7 @@ export default function Agreements({
             )}
         </>
       )}
-      {!preview && !isSubmitter && (
-        <div className="callout warn">
-          <p>
-            Only the submitter can agree to the terms and conditions.
-            When you are done editing, please click &nbsp;
-            <b><i className="fas fa-floppy-disk" /> Save &amp; exit</b> &nbsp;
-            and ask the submitter to complete the submission.
-          </p>
-        </div>
-      )}
+      <NoSubmitterWarning {...{preview, isSubmitter}} />
       {isSubmitter && (
         <>
           {(subType !== 'collection'
@@ -229,7 +253,7 @@ export default function Agreements({
                   <div style={{maxWidth: '700px'}} ref={formRef} />
                 </>
               )}
-              {userMustPay && (
+              {userMustPay && (!dpc.aff_tenant || dpc.aff_tenant.id !== resource.tenant_id) && (
                 <div className="callout warn" style={{margin: '1em 0', paddingBottom: '5px'}}>
                   <p style={{marginBottom: '.75em'}}>
                     <i className="fas fa-circle-question" aria-hidden="true" style={{marginRight: '.5ch'}} />
@@ -280,19 +304,7 @@ export default function Agreements({
           )}
         </>
       )}
-      {preview && (
-        <div>
-          {resource.accepted_agreement ? (
-            <p>
-              <i className="fas fa-circle-check" aria-hidden="true" />{' '}
-              The submitter has agreed to Dryad&apos;s{' '}
-              <a href="/terms" target="_blank">terms of submission<ExitIcon /></a>
-            </p>
-          ) : (
-            <p style={{fontStyle: 'italic'}}><i className="fas fa-square" aria-hidden="true" />{' '} Terms not yet accepted</p>
-          )}
-        </div>
-      )}
+      <TermsOfSubmission {...{preview, resource}} />
     </>
   );
 }

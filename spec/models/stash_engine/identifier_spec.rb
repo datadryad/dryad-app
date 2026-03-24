@@ -443,33 +443,86 @@ module StashEngine
     end
 
     describe '#user_must_pay?' do
-      before(:each) do
-        allow(@identifier).to receive(:institution_will_pay?).and_return(false)
-        allow(@identifier).to receive(:funder_will_pay?).and_return(false)
+      let(:tenant) { create(:tenant, id: 'payer') }
+      let(:identifier) { create(:identifier) }
+      let(:new_size_limit) { 16_000_000_000 }
+      let!(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: new_size_limit) }
+
+      subject { identifier.reload.user_must_pay? }
+
+      context 'when individual payment' do
+        it { is_expected.to be_truthy }
       end
 
-      it 'returns true if no one else will pay' do
-        expect(@identifier.user_must_pay?).to eq(true)
+      context 'when individual payment has a waiver' do
+        let(:identifier) { create(:identifier, payment_type: 'waiver') }
+
+        it { is_expected.to be_truthy }
       end
 
-      it 'returns false if waiver is applied on an old_payment_system dataset' do
-        @identifier.update(payment_type: 'waiver')
-        expect(@identifier.user_must_pay?).to eq(true)
+      context 'when individual payment has a waiver on an old_payment_system dataset' do
+        let(:identifier) { create(:identifier, payment_type: 'waiver', old_payment_system: true) }
 
-        @identifier.update(old_payment_system: true, payment_type: 'waiver')
-        expect(@identifier.user_must_pay?).to eq(false)
+        it { is_expected.to be_falsey }
       end
 
-      it 'returns false if journal will pay' do
-        journal = create(:journal, issn: @fake_issn)
-        create(:payment_configuration, partner: journal, payment_plan: 'SUBSCRIPTION')
-        journal.reload
-        expect(@identifier.user_must_pay?).to eq(false)
+      context 'when journal will pay' do
+        let(:journal) { create(:journal, issn: @fake_issn) }
+        let!(:payment_configuration) { create(:payment_configuration, partner: journal, payment_plan: '2025', covers_dpc: true, covers_ldf: true) }
+        let!(:resource_publication) { create(:resource_publication, publication_issn: @fake_issn, resource: resource) }
+
+        it { is_expected.to be_falsey }
       end
 
-      it 'returns false if institution will pay' do
-        allow(@identifier).to receive(:institution_will_pay?).and_return(true)
-        expect(@identifier.user_must_pay?).to eq(false)
+      context 'when institution will pay' do
+        let(:size_limit) { nil }
+        let(:amount_limit) { nil }
+        let!(:payment_configuration) do
+          create(
+            :payment_configuration,
+            partner: tenant,
+            payment_plan: '2025',
+            covers_dpc: true,
+            covers_ldf: true,
+            ldf_limit: size_limit,
+            yearly_ldf_limit: amount_limit
+          )
+        end
+
+        it { is_expected.to be_falsey }
+
+        context 'when ldf size limit is not covered' do
+          let!(:payment_configuration) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: false) }
+
+          it { is_expected.to be_truthy }
+        end
+
+        context 'when ldf size limit is not reached' do
+          let(:size_limit) { 2 }
+
+          it { is_expected.to be_falsey }
+        end
+
+        context 'when ldf size limit is reached' do
+          let(:size_limit) { 2 }
+          let!(:new_size_limit) { 100_000_000_001 }
+
+          it { is_expected.to be_truthy }
+        end
+
+        context 'when ldf amount limit is not reached' do
+          let(:size_limit) { 2 }
+          let(:amount_limit) { 300 }
+
+          it { is_expected.to be_falsey }
+        end
+
+        context 'when ldf amount limit is reached' do
+          let(:size_limit) { 1 }
+          let(:amount_limit) { 200 }
+
+          it { is_expected.to be_truthy }
+        end
       end
     end
 
