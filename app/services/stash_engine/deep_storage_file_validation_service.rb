@@ -16,8 +16,14 @@ module StashEngine
       storage = head.storage_class
 
       # Request restore if Glacier/Deep Archive
+      if storage == 'GLACIER_IR'
+        # Validate checksums and size
+        process_file
+        return
+      end
+
       begin
-        if %w[GLACIER DEEP_ARCHIVE GLACIER_IR].include?(storage)
+        if %w[GLACIER DEEP_ARCHIVE].include?(storage)
           puts "Requesting restore for #{@key} (Deep Archive)"
           @s3.restore_object(
             bucket: @bucket,
@@ -32,7 +38,7 @@ module StashEngine
 
       # Wait until restoration is complete
       wait_for_restore
-      # Generate checksums
+      # Validate checksums and size
       process_file
     end
 
