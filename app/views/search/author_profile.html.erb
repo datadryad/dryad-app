@@ -52,8 +52,8 @@
     <%= paginate pagination, params: { page_size: @page_size } %>
   </div>
   <% else %>
-  <div class="callout err">
-    <p>No Dryad author found for ORCID <%= params[:orcid] %></p>
+  <div class="callout warn">
+    <p>Author with ORCID <%= params[:orcid] %> has not published any datasets in Dryad</p>
   </div>
   <% end %>
 </div>
