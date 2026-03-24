@@ -144,7 +144,7 @@ of configuration values. For most installations, the value will be `local`.
 Encrypted credentials: Many of Dryad's configuration files read
 credentials from the Rails credentials file. Before Rails will run, you must do
 one of two steps:
-- (for Dryad development team) Obtain the credentials encryption key from a Dryad developer and place it in `config/master.key`
+- (for Dryad development team) Obtain the credentials encryption key from a Dryad developer and place it in `~/deploy/shared/config/master.key`
 - (for non-Dryad users of the code) In all files `config/*.yml`, replace the `Rails.application.credentials`
   statements with your own credentials.
 

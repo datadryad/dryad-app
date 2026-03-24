@@ -5,7 +5,7 @@
   <% if payment&.status == 'paid' && !payment&.ppr_fee_paid? %>
     <p class="c-alert--notification">The DPC for this dataset has been paid</p>
     <p>The DPC for this dataset has already been paid. Payment will need to be refunded in order to apply a discount.</p>
-  <% elsif @identifier.payment_type == 'stripe' && @identifier.payment_id.starts_with?("in_") %>
+  <% elsif @identifier.payment_type == 'stripe' && @identifier.payment_id&.starts_with?("in_") %>
     <p class="c-alert--notification">An invoice has been sent</p>
     <p>The submitter has already received an invoice. Please ensure invoice <b><%= @identifier.payment_id %></b> is voided.</p>
   <% else %>
@@ -21,6 +21,7 @@
           <option value="sponsoring_entity_updated">Sponsoring entity updated</option>
           <option value="political_economic_situation">Political/Economic situation</option>
           <option value="fee_increase">Fee increase</option>
+          <option value="temporary">Temporary waiver (to be replaced)</option>
           <option value="other">Other</option>
         </select>
       </div>  
