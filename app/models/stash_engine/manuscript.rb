@@ -80,6 +80,7 @@ module StashEngine
 
         if manu.present? && manu.id.present?
           update_existing_dataset_status(manu)
+          parser.journal&.update(integrated_at: manu.created_at)
           result.delete_field('error')
           result[:success?] = true
           result[:payload] = manu
