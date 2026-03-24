@@ -10,6 +10,7 @@ The files deploy with the code (in `/home/ec2-user/deploy/current`), but the log
 Cron jobs run on one of the following schedules:
 - every_5.sh <-- Every 5 minutes
 - daily.sh <-- Every day at 12:00
+- eu_daily.sh <-- Every day at 12:00 - only for EU servers
 - weekly.sh <-- Every Sunday at 21:00
 - monthly.sh <- On the 20th at 19:00
 

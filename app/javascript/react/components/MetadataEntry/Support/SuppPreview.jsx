@@ -57,6 +57,14 @@ export default function SuppPreview({resource, previous, curator}) {
                       </span>
                     </>
                   )}
+                  {curator && ['NIH', 'NSF'].includes(funder.api_integration_key) && !funder.award_number && (
+                    <i
+                      className="fas fa-circle-exclamation unmatched-icon"
+                      role="note"
+                      aria-label="Missing award number"
+                      title={`Award number missing for ${funder.api_integration_key} funder`}
+                    />
+                  )}
                   {!funder.award_number && previous && prev?.award_number && <del>prev.award_number</del>}
                   {funder.award_description && (
                     <>:{' '}

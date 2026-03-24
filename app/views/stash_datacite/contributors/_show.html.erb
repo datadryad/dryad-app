@@ -11,7 +11,7 @@
             %><span><%= contributor.contributor_name_friendly%><%if current_user&.min_app_admin? && contributor.name_identifier_id.blank? %><i class="fas fa-triangle-exclamation unmatched-icon" role="note" aria-label="Unmatched funder" title="Unmatched funder"></i><%end%></span><% 
           end 
           %><% if contributor.award_number.present? || contributor.award_title.present? %>: <span><%if contributor.award_number.present? && ror_funder
-            %><a href="<%= new_search_path(funder: contributor.name_identifier_id, award: contributor.award_number) %>"><%= contributor.award_number%></a><% else %><%= contributor.award_number.presence || contributor.award_title %><% end %></span><% end %><% if contributor.award_description.present? %>, <span><%= contributor.award_description %></span><% end %>
+            %><a href="<%= new_search_path(funder: contributor.name_identifier_id, award: contributor.award_number) %>"><%= contributor.award_number%></a><% else %><%= contributor.award_number.presence || contributor.award_title %><% end %></span><% end %><% if current_user&.min_app_admin? && contributor.api_integration_key.present? && contributor.award_number.blank? %><i class="fas fa-circle-exclamation unmatched-icon" role="note" aria-label="Missing award number" title="Award number missing for <%= contributor.api_integration_key %> funder"></i><% end %><% if contributor.award_description.present? %>, <span><%= contributor.award_description %></span><% end %>
         </li>
       <% end %>
     </ul>

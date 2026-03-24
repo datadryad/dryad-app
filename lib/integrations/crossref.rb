@@ -16,7 +16,7 @@ module Integrations
         nil
       end
 
-      def query_by_preprint_doi(doi:)
+      def query_by_preprint_doi(resource:, doi:)
         return nil unless doi.present?
 
         bare = bare_doi(doi_string: doi)
@@ -27,7 +27,8 @@ module Integrations
         return nil unless id.present? && id['id-type'] == 'doi'
 
         b = bare_doi(doi_string: id['id'])
-        query_by_doi(doi: b)
+        item = query_by_doi(doi: b)
+        crossref_item_scoring(resource, item)&.last
       rescue Serrano::NotFound, Serrano::BadGateway, Serrano::Error, Serrano::GatewayTimeout, Serrano::InternalServerError,
              Serrano::ServiceUnavailable
         nil
@@ -87,23 +88,18 @@ module Integrations
         return nil unless resource.present? && response.present? && resource.title.present?
 
         scores = []
-        names = resource.authors.map do |author|
-          { first: author.author_first_name&.downcase, last: author.author_last_name&.downcase }
-        end
-        orcids = resource.authors.map { |author| author.author_orcid&.downcase }
-
         response['items'].each do |item|
           next unless item['title'].present?
           next if exclude_dois(resource).include?(item['DOI'])
 
-          scores << crossref_item_scoring(resource, item, names, orcids)
+          scores << crossref_item_scoring(resource, item)
         end
         # Sort by the score and return the one with the highest score
         scores.max_by { |a| a[0] }
       end
 
-      def crossref_item_scoring(resource, item, names, orcids)
-        return 0.0 unless resource.present? && resource.title.present? && item.present? && item['title'].present?
+      def crossref_item_scoring(resource, item)
+        return [0.0, item] unless resource&.title&.present? && item&.[]('title')&.present?
 
         # Compare the titles using the Amatch NLP library
         amatch = item['title'].first.pair_distance_similar(resource.title)
@@ -111,6 +107,8 @@ module Integrations
         if resource.journal.present? && item['container-title']&.first&.present?
           amatch += 0.25 * resource.journal.title.pair_distance_similar(item['container-title'].first)
         end
+        names = resource.authors.map { |a| { first: a.author_first_name, last: a.author_last_name } }
+        orcids = resource.authors.map(&:author_orcid).reject(&:blank?).map(&:downcase)
         # If authors are available compare them as well, for half weight
         amatch += 0.5 * crossref_author_scoring(names, orcids, item['author']) if item['author'].present? && (names.present? || orcids.present?)
         item['provenance_score'] = item['score']
@@ -122,23 +120,22 @@ module Integrations
         amatch = 0.0
         each = 1.to_f / authors.length
 
-        authors.each do |author|
+        scores = authors.map do |author|
           # An ORCID match is stronger than a name match
-          if author['ORCID'].present? && orcids.include?(author['ORCID']&.downcase)
-            amatch += each
-            next
-          end
-          next unless author['family'].present?
+          next 1.0 if author['ORCID'].present? && orcids.include?(author['ORCID']&.downcase)
+          next 0.0 unless author['family'].present?
 
-          names_to_compare = names.select { |h| h[:last]&.include?(author['family']&.downcase) }
-          next if names_to_compare.empty?
+          names_to_compare = names.select { |h| h[:last]&.downcase&.include?(author['family']&.downcase) }
+          next 0.0 if names_to_compare.empty?
 
-          scores = names_to_compare.map do |name|
+          name_scores = names_to_compare.map do |name|
             "#{name[:first]} #{name[:last]}".downcase.pair_distance_similar("#{author['given']} #{author['family']}".downcase)
           end
-          name_score = scores.max
-          amatch += each * name_score
+          name_scores.max
         end
+        return 0.0 unless scores.any? { |v| v > 0.9 }
+
+        scores.each { |v| amatch += each * v }
         amatch.round(3)
       end
 

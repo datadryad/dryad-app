@@ -10,8 +10,7 @@ function errexit {
 }
 
 # Arg for git reference (branch or tag) required
-if [ $# -ne 1 ]; then errexit "Usage: $(basename $0) <git-ref>"; fi
-
+if [ $# -lt 1 ] || [ $# -gt 2 ]; then errexit "Usage: $(basename $0) <git-ref> <role>"; fi
 
 WORKING_TREE=/home/ec2-user/dryad-app
 CAP_STAGE="stage"
@@ -20,6 +19,7 @@ RAILS_ENV="stage"
 REPO_URL="https://github.com/datadryad/dryad-app.git"
 BUNDLE="/home/ec2-user/.rbenv/shims/bundle"
 BRANCH=$1
+ROLE="${2:-app}"
 
 cd $WORKING_TREE
 git pull origin $BRANCH
@@ -27,5 +27,5 @@ $BUNDLE config set --local path '.'
 $BUNDLE config set --local without 'pgsql'
 $BUNDLE config set --local clean 'true'
 $BUNDLE install
-echo $BUNDLE exec cap --trace $CAP_STAGE deploy BRANCH=$BRANCH REPO_URL=$REPO_URL RAILS_ENV=$RAILS_ENV DEPLOY_TO=$DEPLOY_TO SERVER_HOSTS='localhost'
-$BUNDLE exec cap --trace $CAP_STAGE deploy BRANCH=$BRANCH REPO_URL=$REPO_URL RAILS_ENV=$RAILS_ENV DEPLOY_TO=$DEPLOY_TO SERVER_HOSTS='localhost'
+echo $BUNDLE exec cap --trace $CAP_STAGE deploy BRANCH=$BRANCH REPO_URL=$REPO_URL RAILS_ENV=$RAILS_ENV DEPLOY_TO=$DEPLOY_TO SERVER_HOSTS='localhost' ROLE=$ROLE
+$BUNDLE exec cap --trace $CAP_STAGE deploy BRANCH=$BRANCH REPO_URL=$REPO_URL RAILS_ENV=$RAILS_ENV DEPLOY_TO=$DEPLOY_TO SERVER_HOSTS='localhost' ROLE=$ROLE

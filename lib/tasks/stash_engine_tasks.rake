@@ -1057,7 +1057,7 @@ namespace :identifiers do
   end
 
   # example: RAILS_ENV=production bundle exec rake identifiers:dataset_info_report_detailed -- --year_month 2024-05
-  desc 'Generate a summary report of all items in Dryad'
+  desc 'Generate a summary report of all items in Dryad, except for those created during Dryad v1'
   task dataset_info_report_detailed: :environment do
     launch_day = Date.new(2019, 9, 17)
 
