@@ -120,23 +120,22 @@ module Integrations
         amatch = 0.0
         each = 1.to_f / authors.length
 
-        authors.each do |author|
+        scores = authors.map do |author|
           # An ORCID match is stronger than a name match
-          if author['ORCID'].present? && orcids.include?(author['ORCID']&.downcase)
-            amatch += each
-            next
-          end
-          next unless author['family'].present?
+          next 1.0 if author['ORCID'].present? && orcids.include?(author['ORCID']&.downcase)
+          next 0.0 unless author['family'].present?
 
           names_to_compare = names.select { |h| h[:last]&.downcase&.include?(author['family']&.downcase) }
-          next if names_to_compare.empty?
+          next 0.0 if names_to_compare.empty?
 
-          scores = names_to_compare.map do |name|
+          name_scores = names_to_compare.map do |name|
             "#{name[:first]} #{name[:last]}".downcase.pair_distance_similar("#{author['given']} #{author['family']}".downcase)
           end
-          name_score = scores.max
-          amatch += each * name_score
+          name_scores.max
         end
+        return 0.0 unless scores.any? { |v| v > 0.9 }
+
+        scores.each { |v| amatch += each * v }
         amatch.round(3)
       end
 
