@@ -517,6 +517,15 @@ module StashEngine
         expect(@identifier.payment_id).to include('award:')
         expect(@identifier.payment_id).to include('ZI0027')
       end
+
+      it 'removes old_payment_system flag when payment type is changed' do
+        journal = create(:journal, issn: @fake_issn)
+        create(:payment_configuration, partner: journal, payment_plan: 'SUBSCRIPTION')
+        @identifier.update(old_payment_system: true)
+
+        @identifier.record_payment
+        expect(@identifier.old_payment_system).to be_falsey
+      end
     end
 
     describe '#publication_issn' do
