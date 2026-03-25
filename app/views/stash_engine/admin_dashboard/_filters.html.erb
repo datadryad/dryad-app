@@ -28,7 +28,7 @@ end
   <% end %>
   <% if @tenant_limit.length == 1 %>
     <div class="o-admin-form-pair half-width">
-      <%= check_box_tag 'submitter_limit', name: 'filters[submitter_limit]', 'aria-describedby': 'submitter_limit-desc' %>
+      <%= check_box_tag 'submitter_limit', checked: @filters[:submitter_limit].present?, name: 'filters[submitter_limit]', 'aria-describedby': 'submitter_limit-desc' %>
       <label for="submitter_limit">Limit results to those with a matching submitter sponsor</span>
     </div>
     <p class="help" id="submitter_limit-desc">Search for only submitter sponsors matching <%= @tenant_limit.first.short_name %>, rather than including datasets with affiliations, funders, and research stations with an institution ROR ID included under the partner record.</p>
@@ -82,7 +82,7 @@ end
     <div class="o-admin-form-pair half-width">
       <%= selecter('member', [['', '']] + @tenant_limit.map { |t| [t.short_name, t.id] }).html_safe %>
       <span class="limiter">
-        <%= check_box_tag 'submitter_limit', name: 'filters[submitter_limit]' %>
+        <%= check_box_tag 'submitter_limit', checked: @filters[:submitter_limit].present?, name: 'filters[submitter_limit]' %>
         <label for="submitter_limit">Limit to submitter</span>
       </span>
     </div>
@@ -132,7 +132,7 @@ end
       describedby: 'filter-funder-desc'
     } %>
     <span class="limiter">
-      <%= check_box_tag 'funder_limit', name: 'filters[funder_limit]' %>
+      <%= check_box_tag 'funder_limit', checked: @filters[:funder_limit].present?, name: 'filters[funder_limit]' %>
       <label for="funder_limit">Exclude children</span>
     </span>
   </div>
