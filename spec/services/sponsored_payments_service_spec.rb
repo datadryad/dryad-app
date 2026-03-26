@@ -18,7 +18,6 @@ describe SponsoredPaymentsService do
     create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true, yearly_ldf_limit: 1_000)
   end
   let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: total_file_size) }
-  # before { identifier.reload }
 
   let(:subject) { SponsoredPaymentsService.new(resource) }
 
@@ -218,6 +217,37 @@ describe SponsoredPaymentsService do
 
             new_resource = create(:resource, identifier: identifier, tenant: tenant, total_file_size: 11_000_000_000)
             expect { SponsoredPaymentsService.new(new_resource).log_payment }.not_to(change { SponsoredPaymentLog.count })
+          end
+        end
+      end
+
+      context 'when amount limit is not reached' do
+        let(:subject) { SponsoredPaymentsService.new(new_resource) }
+        let!(:payment_conf) do
+          create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true, ldf_limit: 2, yearly_ldf_limit: 1_000)
+        end
+        let(:new_identifier) { create(:identifier) }
+        let(:new_resource) { create(:resource, identifier: new_identifier, tenant: tenant, total_file_size: 500_000_000_001, created_at: 1.minute.ago) }
+        let!(:log) { create(:sponsored_payment_log, resource: resource, ldf: 100, payer: tenant, sponsor_id: tenant.id) }
+
+        context 'when creating a new dataset' do
+          context 'when ldf is in free tier' do
+            let(:new_resource) { create(:resource, identifier: new_identifier, tenant: tenant, total_file_size: 9_000_000_001, created_at: 1.minute.ago) }
+
+            include_examples('does not create sponsored payment log')
+          end
+
+          context 'when ldf exists and needs to be paid partially by the user and partially sponsored' do
+            it 'creates a sponsor log for sponsored value only' do
+              expect { SponsoredPaymentsService.new(new_resource).log_payment }.to change { SponsoredPaymentLog.count }.by(1)
+              expect(new_resource.reload.sponsored_payment_log.ldf).to eq(464)
+            end
+          end
+
+          context 'when ldf exists and needs to be paid entirely by the user' do
+            let!(:log) { create(:sponsored_payment_log, resource: resource, ldf: 999, payer: tenant, sponsor_id: tenant.id) }
+
+            include_examples('does not create sponsored payment log')
           end
         end
       end

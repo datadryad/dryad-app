@@ -15,9 +15,13 @@ class SponsoredPaymentsService
 
     @calculator_service = calculator_service
     SponsoredPaymentLog.transaction do
+      should_skip_log = false
       paid_before = delete_larger_file_size_logs
       amount = ldf_fees(paid_before)
-      update_identifier_files_size and return if amount.zero?
+
+      should_skip_log = true if amount.zero?
+      should_skip_log = true if PaymentLimitsService.new(resource, PayersService.new(payer).payment_sponsor).amount_limits_exceeded?
+      update_identifier_files_size and return if should_skip_log
 
       SponsoredPaymentLog.create(
         resource: resource,
@@ -25,7 +29,6 @@ class SponsoredPaymentsService
         ldf: amount,
         sponsor_id: PayersService.new(payer).payment_sponsor&.id
       )
-      update_identifier_files_size
     end
   end
 
@@ -63,7 +66,7 @@ class SponsoredPaymentsService
 
         res_tier = calculator_service_class.new({}, resource: res).storage_fee_tier
         if new_tier[:price] < res_tier[:price]
-          res.sponsored_payment_log.destroy
+          res.sponsored_payment_log&.destroy
         else
           paid_before = res.total_file_size
           break
