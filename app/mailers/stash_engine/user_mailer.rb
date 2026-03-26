@@ -151,7 +151,10 @@ module StashEngine
 
     def integration_paused(journals)
       @journals = journals
-      mail(to: @submission_error_emails,
+      email = APP_CONFIG['submission_error_email']
+      return unless @journals.present? && email.present?
+
+      mail(to: email,
            subject: "#{rails_env}Journal integration issue")
     end
 
