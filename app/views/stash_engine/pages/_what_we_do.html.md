@@ -63,7 +63,7 @@ Ways you can ensure your data publication has the broadest reach:
 
 ## Preservation
 
-Data published in Dryad are permanently archived and available.
+Dryad aims to preserve originally submitted Datasets indefinitely. Our [Procedures for Preservation](/publication_policy#:~:text=Procedures%20for%20Preservation) detail our commitments to: file preservation, fixity and authenticity, and succession planning.
 
 Preservation policy details include:
 
