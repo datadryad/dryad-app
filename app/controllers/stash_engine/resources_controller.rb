@@ -52,7 +52,7 @@ module StashEngine
       resource = authorize Resource.new(current_editor_id: current_user.id, tenant_id: current_user.tenant_id)
       my_id = Datacite::DoiGen.mint_id(resource: resource)
       id_type, id_text = my_id.split(':', 2)
-      db_id_obj = Identifier.create(identifier: id_text, identifier_type: id_type.upcase)
+      db_id_obj = Identifier.create(identifier: id_text, identifier_type: id_type.upcase, last_invoiced_file_size: 0)
       resource.update(identifier_id: db_id_obj.id)
       resource.creator = current_user.id
       resource.submitter = current_user.id
@@ -153,6 +153,13 @@ module StashEngine
     end
 
     def dpc_status
+      user_payer_aff = StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id)
+      aff_tenant = if @resource.tenant_id.in?(user_payer_aff.ids)
+                     user_payer_aff.find_by(id: @resource.tenant_id)
+                   else
+                     user_payer_aff.first
+                   end
+
       @resource.check_add_readme_file
       @resource.check_add_cedar_json
       dpc_checks = {
@@ -161,7 +168,7 @@ module StashEngine
         institution_will_pay: @resource.identifier.institution_will_pay?,
         funder_will_pay: @resource.identifier.funder_will_pay?,
         user_must_pay: @resource.identifier.user_must_pay?,
-        aff_tenant: StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id)&.connect_list&.first,
+        aff_tenant: aff_tenant,
         allow_review: @resource.identifier.allow_review?,
         automatic_ppr: @resource.identifier.automatic_ppr?,
         man_decision_made: @resource.identifier.has_accepted_manuscript? || @resource.identifier.has_rejected_manuscript?
