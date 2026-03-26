@@ -83,12 +83,15 @@ module StashEngine
           contrib = funder_payment_info
           self.payment_type = 'funder'
           self.payment_id = "funder:#{contrib.contributor_name}|award:#{contrib.award_number}"
+          self.old_payment_system = false
         elsif institution_will_pay?
           self.payment_id = latest_resource&.tenant&.id
           self.payment_type = "institution#{'-TIERED' if latest_resource&.tenant&.payment_configuration&.payment_plan == 'TIERED'}"
+          self.old_payment_system = false
         elsif journal_will_pay?
           self.payment_type = "journal-#{journal.payment_configuration.payment_plan}"
           self.payment_id = publication_issn
+          self.old_payment_system = false
         elsif payments.count > 0
           self.payment_type = 'stripe'
           self.payment_id = payments.paid.last&.payment_id
