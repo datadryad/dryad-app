@@ -21,7 +21,9 @@ class SponsoredPaymentsService
 
       should_skip_log = true if amount.zero?
       should_skip_log = true if PaymentLimitsService.new(resource, PayersService.new(payer).payment_sponsor).amount_limits_exceeded?
-      update_identifier_files_size and return if should_skip_log
+
+      update_identifier_files_size
+      return if should_skip_log
 
       SponsoredPaymentLog.create(
         resource: resource,

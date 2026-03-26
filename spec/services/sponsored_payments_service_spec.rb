@@ -199,7 +199,7 @@ describe SponsoredPaymentsService do
         end
 
         context 'when ldf is already paid on previous resource' do
-          let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: total_file_size, created_at: 1.minute.ago) }
+          let!(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: total_file_size, created_at: 1.minute.ago) }
 
           it 'has correct info' do
             subject.log_payment
@@ -215,6 +215,7 @@ describe SponsoredPaymentsService do
               }.stringify_keys
             )
 
+            identifier.reload
             new_resource = create(:resource, identifier: identifier, tenant: tenant, total_file_size: 11_000_000_000)
             expect { SponsoredPaymentsService.new(new_resource).log_payment }.not_to(change { SponsoredPaymentLog.count })
           end
@@ -224,15 +225,20 @@ describe SponsoredPaymentsService do
       context 'when amount limit is not reached' do
         let(:subject) { SponsoredPaymentsService.new(new_resource) }
         let!(:payment_conf) do
-          create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true, ldf_limit: 2, yearly_ldf_limit: 1_000)
+          create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true, ldf_limit: 2,
+                                         yearly_ldf_limit: 1_000)
         end
         let(:new_identifier) { create(:identifier) }
-        let(:new_resource) { create(:resource, identifier: new_identifier, tenant: tenant, total_file_size: 500_000_000_001, created_at: 1.minute.ago) }
+        let(:new_resource) do
+          create(:resource, identifier: new_identifier, tenant: tenant, total_file_size: 500_000_000_001, created_at: 1.minute.ago)
+        end
         let!(:log) { create(:sponsored_payment_log, resource: resource, ldf: 100, payer: tenant, sponsor_id: tenant.id) }
 
         context 'when creating a new dataset' do
           context 'when ldf is in free tier' do
-            let(:new_resource) { create(:resource, identifier: new_identifier, tenant: tenant, total_file_size: 9_000_000_001, created_at: 1.minute.ago) }
+            let(:new_resource) do
+              create(:resource, identifier: new_identifier, tenant: tenant, total_file_size: 9_000_000_001, created_at: 1.minute.ago)
+            end
 
             include_examples('does not create sponsored payment log')
           end
