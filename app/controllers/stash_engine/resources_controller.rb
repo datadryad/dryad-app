@@ -52,7 +52,7 @@ module StashEngine
       resource = authorize Resource.new(current_editor_id: current_user.id, tenant_id: current_user.tenant_id)
       my_id = Datacite::DoiGen.mint_id(resource: resource)
       id_type, id_text = my_id.split(':', 2)
-      db_id_obj = Identifier.create(identifier: id_text, identifier_type: id_type.upcase, last_invoiced_file_size: 0)
+      db_id_obj = Identifier.create(identifier: id_text, identifier_type: id_type.upcase)
       resource.update(identifier_id: db_id_obj.id)
       resource.creator = current_user.id
       resource.submitter = current_user.id
