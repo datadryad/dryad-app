@@ -15,6 +15,8 @@ module StashEngine
         'Complete'
       when 5
         'Withdrawn'
+      when 6
+        'Retracted'
       end
     end
 
@@ -32,6 +34,8 @@ module StashEngine
         'user_complete'
       when 5
         'user_withdrawn'
+      when 6
+        'user_retracted'
       end
     end
 
@@ -43,7 +47,7 @@ module StashEngine
         'info-status'
       when 4
         'success-status'
-      when 5
+      when 5, 6
         'disabled-status'
       else
         'warning-status'

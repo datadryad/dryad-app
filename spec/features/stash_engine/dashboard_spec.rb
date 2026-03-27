@@ -21,7 +21,8 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
         create(:resource, user: user),
         create(:resource, :submitted, user: user, hold_for_peer_review: true),
         create(:resource, :paid, :submitted, user: user),
-        create(:resource_published, user: user)
+        create(:resource_published, user: user),
+        create(:resource_retracted, user: user)
       ]
     end
 
@@ -30,8 +31,8 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
     context 'listing the datasets' do
       before(:each) { sign_in(user) }
 
-      it 'shows 4 datasets' do
-        expect(page).to have_css('#user_datasets li', count: 4)
+      it 'shows 5 datasets' do
+        expect(page).to have_css('#user_datasets li', count: 5)
       end
 
       it 'organizes datasets correctly' do
@@ -54,6 +55,11 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
         expect(page).to have_css('#user_complete li', count: 1)
         expect(find('#user_complete li')).to have_link(resources[3].title)
         expect(find('#user_complete li')).to have_text('Published')
+
+        expect(page).to have_text('Retracted')
+        expect(page).to have_css('#user_retracted li', count: 1)
+        expect(find('#user_retracted li')).to have_link(resources[4].title)
+        expect(find('#user_retracted li')).to have_text('Retracted')
       end
     end
 
@@ -66,7 +72,7 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
 
       it 'correctly places datasets in curation' do
         sign_in(user)
-        expect(page).to have_css('#user_datasets li', count: 4)
+        expect(page).to have_css('#user_datasets li', count: 5)
         expect(page).to have_text('Submitted to Dryad')
         expect(page).to have_text('Curation')
         expect(page).to have_css('#user_processing li', count: 1)
@@ -77,7 +83,7 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
         Timecop.travel(Time.now.utc + 1.minute)
         create(:resource, identifier: resources[2].identifier, user: user, current_editor_id: curator.id)
         sign_in(user)
-        expect(page).to have_css('#user_datasets li', count: 4)
+        expect(page).to have_css('#user_datasets li', count: 5)
         expect(page).to have_text('Submitted to Dryad')
         expect(page).to have_css('#user_processing li', count: 1)
         expect(find('#user_processing li')).to have_text('In progress')
@@ -91,7 +97,7 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
         sign_in(user)
         start_new_dataset
         click_link 'My datasets'
-        expect(page).to have_css('#user_datasets li', count: 5)
+        expect(page).to have_css('#user_datasets li', count: 6)
         expect(page).to have_css('#user_in-progress li', count: 2)
         expect(find('#user_in-progress')).to have_text('[No title supplied]')
       end
@@ -106,7 +112,7 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
         expect(page).to have_text('Are you sure you want to remove this dataset?')
         click_button 'Yes'
         expect(page).to have_text('The in-progress version was successfully deleted.')
-        expect(page).to have_css('#user_datasets li', count: 4)
+        expect(page).to have_css('#user_datasets li', count: 5)
         expect(page).to have_css('#user_in-progress li', count: 1)
       end
     end
