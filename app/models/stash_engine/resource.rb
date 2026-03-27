@@ -122,6 +122,7 @@ module StashEngine
     has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
     has_many :flags, ->(resource) { unscope(where: :resource_id).where(flaggable: [resource.journal, resource.tenant, resource.users]) }
     has_one :payment, class_name: 'ResourcePayment'
+    has_one :sponsored_payment_log, dependent: :destroy
 
     after_create :create_process_date, unless: :process_date
     after_update_commit :update_salesforce_metadata, if: [:saved_change_to_user_id?, proc { |res| res.curator&.min_curator? }]

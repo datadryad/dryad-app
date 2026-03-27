@@ -160,6 +160,10 @@ module StashEngine
         redirect_to stash_url_helpers.choose_dashboard_path,
                     alert: 'This submission is being curated. Please wait to create a new revision until after a curation decision.'
         false
+      elsif @identifier.current_curation_status == 'retracted'
+        redirect_to stash_url_helpers.choose_dashboard_path,
+                    alert: 'This submission has been retracted and cannot be revised.'
+        false
       elsif @identifier.in_progress_only?
         @identifier.in_progress_resource.update(current_editor_id: current_user&.id)
         redirect_to(stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @identifier.in_progress_resource.id))

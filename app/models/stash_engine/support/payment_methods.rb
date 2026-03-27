@@ -13,7 +13,7 @@ module StashEngine
       def user_must_pay?
         return false if latest_resource.resource_type&.resource_type == 'collection'
         return false if waiver? && old_payment_system
-        return PaymentLimitsService.new(latest_resource, payer).limits_exceeded? if sponsored?
+        return PaymentLimitsService.new(latest_resource, PayersService.new(payer).payment_sponsor).limits_exceeded? if sponsored?
 
         true
       end
@@ -83,12 +83,15 @@ module StashEngine
           contrib = funder_payment_info
           self.payment_type = 'funder'
           self.payment_id = "funder:#{contrib.contributor_name}|award:#{contrib.award_number}"
+          self.old_payment_system = false
         elsif institution_will_pay?
           self.payment_id = latest_resource&.tenant&.id
           self.payment_type = "institution#{'-TIERED' if latest_resource&.tenant&.payment_configuration&.payment_plan == 'TIERED'}"
+          self.old_payment_system = false
         elsif journal_will_pay?
           self.payment_type = "journal-#{journal.payment_configuration.payment_plan}"
           self.payment_id = publication_issn
+          self.old_payment_system = false
         elsif payments.count > 0
           self.payment_type = 'stripe'
           self.payment_id = payments.paid.last&.payment_id
@@ -121,8 +124,7 @@ module StashEngine
 
         # do not remove recorded institution sponsor due to sponsorship change
         return true if payment_id.present? && payment_id == tenant&.id
-
-        return false unless tenant&.payment_configuration&.covers_dpc
+        return false unless PayersService.new(tenant).payment_sponsor&.payment_configuration&.covers_dpc
 
         if tenant&.authentication&.strategy == 'author_match'
           # get all unique ror_id associations for all authors
@@ -183,6 +185,8 @@ module StashEngine
         self.payment_id = nil
         self.last_invoiced_file_size = 0
         save
+
+        sponsored_payment_logs.destroy_all
         reload
       end
     end

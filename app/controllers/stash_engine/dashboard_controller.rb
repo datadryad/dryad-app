@@ -30,6 +30,7 @@ module StashEngine
               WHEN status='peer_review' THEN 2
               WHEN status in ('queued', 'curation', 'processing') THEN 3
               WHEN status='withdrawn' THEN 5
+              WHEN status='retracted' THEN 6
               ELSE 4
             END as sort_order")
             .order('sort_order asc, stash_engine_resources.updated_at desc').page(@page).per(@page_size)

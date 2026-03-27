@@ -43,6 +43,7 @@ module StashDatacite
     validates_length_of :award_title, maximum: 191, allow_blank: true, message: 'Award title is too long. Value was not saved'
     validates_length_of :award_description, maximum: 191, allow_blank: true, message: 'Program/division is too long. Value was not saved'
 
+    # scopes for contributor
     scope :completed, -> {
       where("TRIM(IFNULL(contributor_name, '')) > '' AND TRIM('N/A' FROM IFNULL(contributor_name, '')) > ''")
     } # only non-null & blank, no N/A funders
@@ -56,6 +57,7 @@ module StashDatacite
     scope :needs_award_details, -> { where.not(award_number: [nil, '']).where(award_title: [nil, '']) }
     scope :updatable, -> { where(auto_update: true) }
     scope :on_latest_resource, -> { joins(:resource).merge(StashEngine::Resource.latest_per_dataset) }
+    scope :with_award_numbers, -> { where("award_number <> ''") }
 
     ContributorTypes = Datacite::Mapping::ContributorType.map(&:value)
 
@@ -77,9 +79,6 @@ module StashDatacite
     amoeba do
       enable
     end
-
-    # scopes for contributor
-    scope :with_award_numbers, -> { where("award_number <> ''") }
 
     def contributor_type_friendly=(type)
       self.contributor_type = type.to_s.downcase unless type.blank?

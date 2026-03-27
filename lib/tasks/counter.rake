@@ -69,9 +69,11 @@ namespace :counter do
     # we only need stats for published and embargoed items, though there may be a few views from preview links before
     count = StashEngine::Identifier.where(pub_state: %i[published embargoed]).count
     StashEngine::Identifier.where(pub_state: %i[published embargoed]).find_each.with_index do |identifier, idx|
-      puts "Updated #{idx + 1}/#{count}" if (idx + 1) % 10 == 0
       cs = identifier.counter_stat
       cs.update_if_necessary # does update if not updated in this calendar week
+      next unless (idx + 1) % 10 == 0
+
+      puts "Updated #{idx + 1}/#{count}"
       sleep 1 # to avoid overloading DataCite hub
     end
   end
@@ -96,12 +98,12 @@ namespace :counter do
 
       # identifier.citations automatically checks and caches new ones as needed
       citations = identifier.citations
-
       counter_stat.citation_count = citations.length
       counter_stat.citation_updated = Time.new
       counter_stat.save!
-      puts "Completed populating citations at #{Time.new.utc.iso8601}"
+      sleep 1 if (idx + 1) % 10 == 0 # to avoid overloading DataCite hub
     end
+    puts "Completed populating citations at #{Time.new.utc.iso8601}"
   end
 
   # example: RAILS_ENV=development bundle exec rake counter:test_env -- --log_directory /user/me/dir --scp_hosts host1,host2

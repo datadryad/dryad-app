@@ -61,6 +61,7 @@ FactoryBot.define do
 
     before(:create) do |resource, e|
       user = e.user || StashEngine::User.find_by(id: resource.user_id) || create(:user)
+      user.tenant = resource.tenant if resource.tenant
       resource.tenant_id = user.tenant_id
       resource.current_editor_id = user.id unless resource.current_editor_id
     end
@@ -144,6 +145,17 @@ FactoryBot.define do
                          user: create(:user, role: 'admin', role_object: resource.submitter.tenant, tenant_id: resource.submitter.tenant_id)).id
       resource.update(meta_view: true, file_view: true)
       resource.identifier.update(pub_state: 'published')
+    end
+
+  end
+
+  factory :resource_retracted, parent: :resource_published, class: StashEngine::Resource do
+
+    after(:create) do |resource|
+      create(:description, resource: resource, description_type: 'concern')
+      create(:curation_activity, :retracted, user: resource.submitter, resource: resource)
+      resource.update(file_view: false)
+      resource.identifier.update(pub_state: 'retracted')
     end
 
   end

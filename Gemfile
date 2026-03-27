@@ -43,7 +43,7 @@ gem 'aws-sdk-s3', '~> 1.208'
 gem 'aws-sdk-sns'
 gem 'bootsnap', require: false
 gem 'charlock_holmes', '~> 0.7.9'
-gem 'commonmarker', '~> 2.4'
+gem 'commonmarker', '~> 2.6.3'
 gem 'concurrent-ruby', '~> 1.3.4'
 gem 'daemons', '~> 1.4.1'
 gem 'database_cleaner', '~> 2.0.1'

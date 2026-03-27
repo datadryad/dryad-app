@@ -1,0 +1,10 @@
+[Unit]
+Description=Cron timer - daily
+Requires=cron_daily.service
+
+[Timer]
+OnCalendar=*-*-* 12:00:00
+Unit=cron_daily.service
+
+[Install]
+WantedBy=timers.target
