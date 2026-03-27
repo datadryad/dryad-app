@@ -24,7 +24,7 @@ module FeeCalculator
 
     def add_individual_storage_fee
       if resource.present?
-        if resource.identifier.last_invoiced_file_size.nil?
+        if resource.identifier.last_invoiced_file_size.to_i.zero?
           add_dataset_storage_fee
         else
           add_storage_fee_difference
