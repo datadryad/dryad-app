@@ -185,8 +185,8 @@ module FeeCalculator
         let(:prev_files_size) { 100 }
         let(:resource) { create(:resource, identifier: identifier, total_file_size: new_files_size) }
 
-        context 'when paid for 0B' do
-          let(:prev_files_size) { 0 }
+        context 'when paid for 10B' do
+          let(:prev_files_size) { 10 }
 
           context 'when files_size do not change' do
             it { is_expected.to eq(no_charges_response) }
