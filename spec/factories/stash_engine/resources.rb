@@ -149,4 +149,15 @@ FactoryBot.define do
 
   end
 
+  factory :resource_retracted, parent: :resource_published, class: StashEngine::Resource do
+
+    after(:create) do |resource|
+      create(:description, resource: resource, description_type: 'concern')
+      create(:curation_activity, :retracted, user: resource.submitter, resource: resource)
+      resource.update(file_view: false)
+      resource.identifier.update(pub_state: 'retracted')
+    end
+
+  end
+
 end
