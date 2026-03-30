@@ -5,10 +5,10 @@ ruby '3.3.7'
 # Rails
 gem 'irb', '~> 1.14.3'
 gem 'mail', '~> 2.8'
-gem 'mysql2', '~> 0.5.6'
-gem 'rails', '~> 8.0.1'
+gem 'mysql2', '~> 0.5.7'
+gem 'rails', '~> 8.0.5'
 gem 'react-rails', '~> 2.6.2'
-gem 'shakapacker', '9.5.0'
+gem 'shakapacker', '9.7.0'
 gem 'sprockets', '~> 4.0'
 
 # ############################################################
@@ -35,7 +35,7 @@ gem 'terser' # for JS and CSS minify
 # ############################################################
 # Misc
 gem 'actionpack-page_caching'
-gem 'acts_as_paranoid', '~> 0.10.3'
+gem 'acts_as_paranoid', '~> 0.11.0'
 gem 'amatch', '~> 0.4.0'
 gem 'amoeba', '~> 3.3.0'
 gem 'aws-sdk-lambda'
@@ -75,8 +75,7 @@ gem 'omniauth-google-oauth2', '~> 1.1.1'
 gem 'omniauth-orcid', '~> 2.1', '>= 2.1.1'
 gem 'omniauth-rails_csrf_protection', '~> 1.0.1'
 gem 'omniauth-shibboleth', '~> 1.3.0'
-gem 'paper_trail', '~> 16.0'
-gem 'posix-spawn', '~> 0.3.15'
+gem 'paper_trail', '~> 17.0'
 gem 'pundit', '~> 2.3'
 gem 'rack-attack'
 gem 'rb-readline', require: false
