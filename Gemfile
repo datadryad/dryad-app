@@ -9,13 +9,13 @@ gem 'mysql2', '~> 0.5.7'
 gem 'rails', '~> 8.0.5'
 gem 'react-rails', '~> 2.6.2'
 gem 'shakapacker', '9.7.0'
-gem 'sprockets', '~> 4.0'
+gem 'sprockets', '~> 4.2.2'
 
 # ############################################################
 # Deployment
 gem 'bcrypt_pbkdf', '~> 1.0'
-gem 'capistrano', '~> 3.17'
-gem 'capistrano3-puma', github: 'seuros/capistrano-puma'
+gem 'capistrano', '~> 3.20.0'
+gem 'capistrano3-puma', '~> 7.1.0'
 gem 'capistrano-rails', '~> 1.7.0'
 gem 'capistrano-sidekiq', '~> 3.2.0'
 gem 'capistrano-yarn'
@@ -27,7 +27,7 @@ gem 'puma', '6.6.0', group: :puma, require: false
 
 # ############################################################
 # UI
-gem 'coffee-rails', '~> 5.0'
+# gem 'coffee-rails', '~> 5.0'
 gem 'jquery-rails', '~> 4.6'
 gem 'sassc-rails', '~> 2.1.2' # the default for newer rails
 gem 'terser' # for JS and CSS minify
@@ -36,30 +36,30 @@ gem 'terser' # for JS and CSS minify
 # Misc
 gem 'actionpack-page_caching'
 gem 'acts_as_paranoid', '~> 0.11.0'
-gem 'amatch', '~> 0.4.0'
+gem 'amatch', '~> 0.6.0'
 gem 'amoeba', '~> 3.3.0'
 gem 'aws-sdk-lambda'
 gem 'aws-sdk-s3', '~> 1.208'
 gem 'aws-sdk-sns'
 gem 'bootsnap', require: false
 gem 'charlock_holmes', '~> 0.7.9'
-gem 'commonmarker', '~> 2.6.3'
-gem 'concurrent-ruby', '~> 1.3.4'
+gem 'commonmarker', '~> 2.7.0'
+gem 'concurrent-ruby', '~> 1.3.6'
 gem 'daemons', '~> 1.4.1'
-gem 'database_cleaner', '~> 2.0.1'
+gem 'database_cleaner', '~> 2.1.0'
 gem 'datacite-mapping', git: 'https://github.com/CDLUC3/datacite-mapping.git'
 gem 'data_migrate'
-gem 'doorkeeper', '~> 5.5'
-gem 'down' # I'm not sure where this is used, but maybe in the frictionless data that Cassiano worked on to dl files
+gem 'doorkeeper', '~> 5.9.0'
+gem 'down'
 gem 'exception_notification', git: 'https://github.com/smartinez87/exception_notification.git'
 gem 'ezid-client', '~> 1.9.2'
 gem 'filesize', '~> 0.2.0'
 gem 'font-awesome-sass', '~> 6.7.2'
 gem 'google-apis-gmail_v1', '~> 0.14.0'
 gem 'grover'
-gem 'http', '~> 5.0.4'
-gem 'httparty', '~> 0.24.0'
-gem 'httpclient', '~> 2.8.3'
+gem 'http', '~> 6.0.2'
+gem 'httparty', '~> 0.24.2'
+gem 'httpclient', '~> 2.9.0'
 gem 'jbuilder' # is this used?
 gem 'jquery-turbolinks', '~> 2.1.0'
 gem 'jquery-ui-rails', '~> 7.0', git: 'https://github.com/jquery-ui-rails/jquery-ui-rails.git', tag: 'v7.0.0'
