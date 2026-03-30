@@ -57,7 +57,7 @@ gem 'filesize', '~> 0.2.0'
 gem 'font-awesome-sass', '~> 6.7.2'
 gem 'google-apis-gmail_v1', '~> 0.14.0'
 gem 'grover'
-gem 'http', '~> 6.0.2'
+gem 'http', '~> 5.3.1'
 gem 'httparty', '~> 0.24.2'
 gem 'httpclient', '~> 2.9.0'
 gem 'jbuilder' # is this used?

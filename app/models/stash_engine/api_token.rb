@@ -26,7 +26,7 @@ module StashEngine
 
     def self.token
       tok = all.first
-      return tok.token if tok.present? && tok.expires_at > (Time.new + 30.minutes)
+      return tok.token if tok.present? && tok.expires_at > 30.minutes.from_now
 
       tok&.new_token
       tok&.reload
