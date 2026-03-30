@@ -66,7 +66,7 @@ module StashDatacite
       return unless @description.description_type == 'concern'
       return if @resource.id == @resource.identifier.latest_resource.id
 
-      @identifier.resources.where('id > ?', @resource.id).each do |r|
+      @resource.identifier.resources.where('id > ?', @resource.id).each do |r|
         copy = Description.find_or_create_by(resource_id: r.id, description_type: 'concern')
         copy.update(description: description)
       end
