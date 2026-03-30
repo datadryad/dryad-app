@@ -284,6 +284,23 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
         click_link 'Landing page'
         expect(page).to have_text(concern)
       end
+
+      it 'adds 2 expressions of concern depending on versioning' do
+        r1 = create(:resource_published, identifier: @identifier)
+        r2 = create(:resource, identifier: @identifier)
+        refresh
+        concern = Faker::Lorem.paragraph
+        expect(page).to have_text('Dangerous actions')
+        expect(page).to have_button('Dataset usage warning')
+        click_button 'Dataset usage warning'
+        expect(page).to have_text('Notice/Expression of concern')
+        find('[name="concern"]').send_keys(concern)
+        expect(page).to have_text('Saved')
+        click_button 'Close'
+        d1 = r1.descriptions.find_by(description_type: 'concern')
+        d2 = r2.descriptions.find_by(description_type: 'concern')
+        expect(d1.description).to eq(d2.description)
+      end
     end
 
     context :admin do
