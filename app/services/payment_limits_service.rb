@@ -13,9 +13,8 @@ class PaymentLimitsService
   end
 
   def size_limits_exceeded?
-    return true if payer.nil?
-    return false unless PayersService.new(payer).is_2025_payer?
-    return true unless payer.payment_configuration&.covers_ldf
+    early_return = verify_basics
+    return early_return unless early_return.nil?
     return false if payer.payment_configuration.ldf_limit.nil?
 
     # true - if the new files size is over the LDF size limit
@@ -23,18 +22,16 @@ class PaymentLimitsService
   end
 
   def amount_limits_exceeded?
-    return true if payer.nil?
-    return false unless PayersService.new(payer).is_2025_payer?
-    return true unless payer.payment_configuration&.covers_ldf
+    early_return = verify_basics
+    return early_return unless early_return.nil?
     return false if payer.payment_configuration.yearly_ldf_limit.nil?
 
     exceeds_yearly_ldf_limit?
   end
 
   def limits_exceeded?
-    return true if payer.nil?
-    return false unless PayersService.new(payer).is_2025_payer?
-    return true unless payer.payment_configuration&.covers_ldf
+    early_return = verify_basics
+    return early_return unless early_return.nil?
 
     amount_limits_exceeded? || size_limits_exceeded?
   end
@@ -52,11 +49,19 @@ class PaymentLimitsService
 
   private
 
-  def exceeds_yearly_ldf_limit?
-    storage_fee = ldf_sponsored_amount || @calculator_service.ldf_sponsored_amount(resource: resource, payer: payer)
-    return false if storage_fee.zero?
+  def verify_basics
+    return true if payer.nil?
+    return false unless PayersService.new(payer).is_2025_payer?
 
-    exceeds_payer_yearly_limit?(storage_fee) || exceeds_sponsor_yearly_limit?(storage_fee)
+    @storage_fee = ldf_sponsored_amount || @calculator_service.ldf_sponsored_amount(resource: resource, payer: payer)
+    return false if @storage_fee.zero?
+    return true unless payer.payment_configuration&.covers_ldf
+
+    nil
+  end
+
+  def exceeds_yearly_ldf_limit?
+    exceeds_payer_yearly_limit?(@storage_fee) || exceeds_sponsor_yearly_limit?(@storage_fee)
   end
 
   def exceeds_payer_yearly_limit?(storage_fee)
