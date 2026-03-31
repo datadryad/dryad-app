@@ -89,7 +89,7 @@ gem 'restforce', '~> 8.0.0'
 gem 'rinku', '~> 2.0.6' # we used this one, creates links from text but not sure if we still use it
 gem 'rsolr', '~> 2.6.0'
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
-gem 'serrano', '~> 1.6'
+gem 'serrano', '~> 1.7'
 gem 'sidekiq', '~> 8.0.7'
 gem 'sidekiq-limit_fetch'
 gem 'sidekiq-unique-jobs', '~> 8.0.11'
