@@ -286,7 +286,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       end
 
       it 'adds 2 expressions of concern depending on versioning' do
-        r1 = create(:resource_published, identifier: @identifier)
+        r1 = create(:resource_published, identifier: @identifier, created_at: 30.seconds.ago)
         r2 = create(:resource, identifier: @identifier)
         refresh
         concern = Faker::Lorem.paragraph
