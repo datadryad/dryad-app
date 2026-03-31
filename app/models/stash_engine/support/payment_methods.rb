@@ -184,9 +184,8 @@ module StashEngine
         self.payment_type = nil
         self.payment_id = nil
         self.last_invoiced_file_size = 0
-        save
 
-        sponsored_payment_logs.destroy_all
+        sponsored_payment_logs.each{|a| a.destroy}
         reload
       end
     end
