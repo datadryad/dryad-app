@@ -12,7 +12,7 @@ module StashDatacite
         html_title = ActionController::Base.helpers.sanitize(
           Nokogiri::HTML5.fragment(
             helpers.markdown_render(content: CGI.escapeHTML(params[:title].squish))
-          ).css('*:only-child').inner_html,
+          ).children.first&.inner_html,
           tags: %w[em sub sup i]
         )
 
