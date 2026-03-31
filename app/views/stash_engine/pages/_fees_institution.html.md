@@ -35,7 +35,7 @@ Estimate your organization’s total fees using our fee calculator, or read on f
 The DPC is based on the variable costs of curating, publishing, and preserving one dataset — that is, one package of metadata and data files related to one course of investigation. Pricing is designed to scale with use, with discounts based on volume.
 
 <div style="text-align: center;">
-<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
+<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto" aria-labelledby="data-publishing-charge">
   <table style="width: 100%;">
     <caption>
       All fees are listed in USD
@@ -58,7 +58,7 @@ The DPC is based on the variable costs of curating, publishing, and preserving o
 Datasets larger than 10GB are billed individually as follows. Institutional partners may opt to cover large data fees or assign them to the author.
 
 <div style="text-align: center;">
-<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
+<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto" aria-label="Large Data Fees">
   <table style="width: 100%;">
     <caption>
       All fees are listed in USD
@@ -84,7 +84,7 @@ Partners pay a flat Annual Service Fee to help cover Dryad’s fixed costs for s
 The annual fee for institutions is based on annual research expenditure as defined by relevant higher education research and development surveys and statistics worldwide (e.g. in the US, the [National Center for Science and Engineering Statistics](https://ncses.nsf.gov/surveys/higher-education-research-development/2023#data); in Australia, the [Australian Bureau of Statistics](https://www.abs.gov.au/statistics/industry/technology-and-innovation/research-and-experimental-development-higher-education-organisations-australia/latest-release#:~:text=Expenditure%20on%20R%26D%20performed%20by,5%25%20in%20chain%20volume%20terms.), etc.). That usually encompasses all current and capital funds allocated to activities specifically organized to produce research outcomes, including funding from external sponsors (government agencies, industry, foundations) as well as institutional resources dedicated to research activities.
 
 <div style="text-align: center;">
-<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
+<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto" aria-labelledby="annual-service-fee">
   <table style="width: 100%;">
     <caption>
       All fees are listed in USD
@@ -111,7 +111,7 @@ Institutes or departments within a larger host institution can partner with Drya
 To promote transparency and equity among our partners Dryad does not offer individual discounts. However, to support growth and development, especially of new data-sharing programs, we offer tiered pricing for three-year agreements, as follows. Three-year agreements are exempt from annual inflationary increases.
 
 <div style="text-align: center;">
-<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
+<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto" aria-label="3 year agreement">
   <table style="width: 100%;">
     <caption>
       All fees are listed in USD
@@ -143,7 +143,7 @@ To promote transparency and equity among our partners Dryad does not offer indiv
 Annual Service Fees for institutions based in lower- and middle-income countries are as follows.
 
 <div style="text-align: center;">
-<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
+<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto" aria-labelledby="lower-and-middle-income-countries">
   <table style="width: 100%;">
     <caption>
       All fees are listed in USD
@@ -170,7 +170,7 @@ Our consortial fee structures reflect the reduction in administrative burden and
 
 <div style="text-align: center;">
 <div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
-  <table style="width: 100%;">
+  <table style="width: 100%;" aria-labelledby="consortium-offers">
     <caption>
       All fees are listed in USD
     </caption>
@@ -218,7 +218,7 @@ Colleagues interested in a consortium-level partnership are invited to please <a
 The DPC and Annual Service Fee are combined to calculate the total annual fee, which can range from $5,000 to $108,250 USD depending on the institution’s data publications and annual research expenditure.
 
 <div style="text-align: center;">
-<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
+<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto" aria-labelledby="total-fees">
   <table style="width: 100%;">
     <caption>
       All fees are listed in USD

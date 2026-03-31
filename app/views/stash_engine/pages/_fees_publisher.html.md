@@ -35,7 +35,7 @@ Estimate your organization’s total fees using our fee calculator, or read on f
 The DPC is based on the variable costs of curating, publishing, and preserving one dataset — that is, one package of metadata and data files related to one course of investigation. Pricing is designed to scale with use, with discounts based on volume. 
 
 <div style="text-align: center;">
-<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
+<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto" aria-labelledby="data-publishing-charge">
   <table style="width: 100%;">
     <caption>
       All fees are listed in USD
@@ -58,7 +58,7 @@ The DPC is based on the variable costs of curating, publishing, and preserving o
 Datasets larger than 10GB are billed individually as follows. Publisher and society partners may opt to cover large data fees or assign them to the author.
 
 <div style="text-align: center;">
-<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
+<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto" aria-label="Lareg Data Fees">
   <table style="width: 100%;">
     <caption>
       All fees are listed in USD
@@ -84,7 +84,7 @@ Partners pay a flat Annual Service Fee to help cover Dryad’s fixed costs for s
 Annual Service Fees for Dryad publisher and society partners are tiered according to total publishing revenue or expenses. This approach is modeled after Crossref, and uses the same tiers (as of November 2024).
 
 <div style="text-align: center;">
-<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
+<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto" aria-labelledby="annual-service-fee">
   <table style="width: 100%;">
     <caption>
       All fees are listed in USD
@@ -109,7 +109,7 @@ To promote transparency and equity among our partners Dryad does not offer indiv
 To support growth and development, especially of new data-sharing programs, we offer tiered pricing for **three-year agreements**. Three-year agreements are exempt from annual inflationary increases.
 
 <div style="text-align: center;">
-<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
+<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto" aria-label="3 year agreement">
   <table style="width: 100%;">
     <caption>
       All fees are listed in USD
@@ -150,7 +150,7 @@ For **campus-based publishers** where both the library and the press are Dryad p
 The DPC and Annual Service Fee are combined to calculate the total annual fee, which can range from $1,000 to $98,250 USD depending on the volume of data publications and organization reported publishing expenditure or revenue.
 
 <div style="text-align: center;">
-<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
+<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto" aria-labelledby="total-fees">
   <table style="width: 100%;">
     <caption>
       All fees are listed in USD
