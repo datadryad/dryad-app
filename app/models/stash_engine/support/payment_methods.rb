@@ -186,7 +186,7 @@ module StashEngine
         self.last_invoiced_file_size = 0
         save
 
-        sponsored_payment_logs.destroy_all
+        sponsored_payment_logs.each(&:destroy)
         reload
       end
     end
