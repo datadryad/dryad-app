@@ -55,17 +55,17 @@ module Stash
       end
 
       def to_retraction_note
-        doi = resource.related_identifiers.find_by(related_identifier_type: 'doi', work_type: 'primary_article')&.related_identifier
+        doi = @resource.related_identifiers.find_by(related_identifier_type: 'doi', work_type: 'primary_article')&.related_identifier
         return unless doi.present?
-        return if resource.descriptions.find_by(description_type: 'concern')&.description&.present?
+        return if @resource.descriptions.find_by(description_type: 'concern')&.description&.present?
 
         date = @sm.dig('updated', 'date-time')[0..9]
-        desc = StashDatacite::Description.find_or_create_by(resource_id: resource_id, description_type: 'concern')
-        desc.update(description: "<p>The <a href=\"#{doi}\">primary article associated with this dataset</a> has been retracted</p>")
+        desc = StashDatacite::Description.find_or_create_by(resource_id: @resource.id, description_type: 'concern')
+        desc.update(description: "<p>The <a href=\"#{doi}\">primary article associated with this dataset</a> has been retracted.</p>")
         CurationService.new(
-          resource: resource,
+          resource: @resource,
           user_id: 0, # system user
-          status: resource.current_curation_status,
+          status: @resource.current_curation_status,
           note: "Crossref found retraction of primary article. Retraction date #{date}"
         ).process
       end
