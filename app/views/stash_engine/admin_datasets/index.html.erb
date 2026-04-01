@@ -38,6 +38,14 @@
   <%= render partial: 'at_a_glance' %>
 </div>
 
+<% if policy(r).data_review? %>
+<div class="activity-log-header">
+  <h2>Data review</h2>
+</div>
+<div id="data-review-log">
+</div>
+<% end %>
+
 <div class="activity-log-header">
   <h2>Activity log</h2>
   <div class="input-line" style="align-items: baseline;">

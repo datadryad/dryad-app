@@ -27,6 +27,10 @@ module StashEngine
       @user.min_curator?
     end
 
+    def data_review?
+      @record.journal&.users&.include?(@user)
+    end
+
     def curator_edit?
       (curate? &&
       (@record.current_resource_state&.resource_state == 'submitted')) ||

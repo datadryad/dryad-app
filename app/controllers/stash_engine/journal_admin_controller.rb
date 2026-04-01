@@ -93,6 +93,7 @@ module StashEngine
       %i[api_contacts notify_contacts review_contacts].each do |contacts|
         update[contacts] = edit_params[contacts].to_s.split("\n").map(&:strip).to_json
       end
+      update[:data_workflow] = edit_params[:data_workflow].to_s.split("\n").map(&:strip)
       update[:issns_attributes] = update_issns
       update[:alternate_titles_attributes] = update_alts
       update
@@ -116,7 +117,7 @@ module StashEngine
 
     def edit_params
       params.permit(:id, :title, :issn, :alt_title, :notify_contacts, :review_contacts, :api_contacts,
-                    :preprint_server, :journal_code, :manuscript_number_regex, :peer_review_custom_text, :sponsor_id,
+                    :preprint_server, :journal_code, :manuscript_number_regex, :peer_review_custom_text, :sponsor_id, :data_workflow,
                     :default_to_ppr, :allow_review_workflow, :flag, :note,
                     flag_attributes: %i[id note _destroy],
                     payment_configuration_attributes: %i[id payment_plan covers_ldf ldf_limit yearly_ldf_limit])

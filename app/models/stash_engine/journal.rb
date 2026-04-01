@@ -5,6 +5,7 @@
 #  id                      :integer          not null, primary key
 #  allow_review_workflow   :boolean          default(TRUE)
 #  api_contacts            :text(65535)
+#  data_workflow           :json
 #  default_to_ppr          :boolean          default(FALSE)
 #  description             :text(65535)
 #  journal_code            :string(191)
