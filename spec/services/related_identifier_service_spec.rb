@@ -95,4 +95,7 @@ describe RelatedIdentifierService do
       end
     end
   end
+
+  after { Sidekiq::Testing.fake! }
+
 end
