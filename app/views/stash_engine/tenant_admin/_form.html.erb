@@ -47,8 +47,8 @@
   <%= select_tag('sponsor_id', options_for_select(options, @tenant.sponsor_id), class: 'c-input__select') %>
 </div>
 
-<div id="payment_notice"  role="status" class="callout warn" <%= !@tenant.sponsor_id ? 'hidden' : ''  %> style="padding: 10px">
-  Payment needs to be configured at the sponsor level.
+<div id="payment_notice"  role="status" class="callout warn" <%= !@tenant.sponsor_id ? 'hidden' : ''  %>>
+  <p>Payment needs to be configured at the sponsor level.</p>
 </div>
 <div id="payment_container" <%= @tenant.sponsor_id ? 'hidden' : ''  %>>
   <%= fields_for :payment_configuration_attributes do |pf| %>
