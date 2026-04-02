@@ -58,7 +58,7 @@ The DPC is based on the variable costs of curating, publishing, and preserving o
 Datasets larger than 10GB are billed individually as follows. Publisher and society partners may opt to cover large data fees or assign them to the author.
 
 <div style="text-align: center;">
-<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto" aria-label="Lareg Data Fees">
+<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto" aria-label="Large Data Fees">
   <table style="width: 100%;">
     <caption>
       All fees are listed in USD
