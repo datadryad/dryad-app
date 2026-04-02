@@ -76,19 +76,19 @@ gem 'omniauth-orcid', '~> 2.1', '>= 2.1.1'
 gem 'omniauth-rails_csrf_protection', '~> 1.0.1'
 gem 'omniauth-shibboleth', '~> 1.3.0'
 gem 'paper_trail', '~> 17.0'
-gem 'pundit', '~> 2.3'
+gem 'pundit', '~> 2.5.2'
 gem 'rack-attack'
 gem 'rb-readline', require: false
-gem 'recaptcha', '~> 5.19'
-gem 'redcarpet', '~> 3.6'
-gem 'redis', '~> 5.4'
-gem 'responders', '~> 3.0.1' # do we use this?
-gem 'rest-client', '~> 2.1.0' # yet another http gem, not sure it's used
-gem 'restforce', '~> 8.0.0'
+gem 'recaptcha', '~> 5.21.1'
+gem 'redcarpet', '~> 3.6.1'
+gem 'redis', '~> 5.4.1'
+gem 'responders', '~> 3.1.1'
+gem 'rest-client', '~> 2.1.0'
+gem 'restforce', '~> 8.0.1'
 gem 'rinku', '~> 2.0.6' # we used this one, creates links from text but not sure if we still use it
 gem 'rsolr', '~> 2.6.0'
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
-gem 'serrano', '~> 1.6'
+gem 'serrano', '~> 1.7'
 gem 'sidekiq', '~> 8.0.7'
 gem 'sidekiq-limit_fetch'
 gem 'sidekiq-unique-jobs', '~> 8.0.11'
@@ -103,7 +103,7 @@ gem 'zaru', '~> 1.0.0' # for sanitizing file names
 # gem 'base64'
 # gem 'bigdecimal'
 # gem 'mutex_m'
-gem 'faraday', '~> 2.14'
+gem 'faraday', '~> 2.14.1'
 gem 'faraday-retry'
 
 # ############################################################
