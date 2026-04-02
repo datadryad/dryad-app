@@ -21,20 +21,28 @@ export default function Editor({
       {!editor && permission && (
         <>
           <div className="author-one-line" style={{marginLeft: 'auto'}}>
-            {author.edit_code?.edit_code ? (
-              <span><i className="fa-solid fa-envelope-circle-check" style={{marginRight: '.5ch'}} />Invited {author.edit_code.role}</span>
-            ) : (
-              <button
-                type="button"
-                className="o-button__plain-textlink"
-                disabled={!author.author_email}
-                aria-controls={`invite-dialog${author.id}`}
-                onClick={() => document.getElementById(`invite-dialog${author.id}`).showModal()}
-                title={!author.author_email ? 'Author email is required' : null}
-              >
-                <i className="fas fa-envelope-open-text" aria-hidden="true" style={{marginRight: '.5ch'}} />Invite to edit
-              </button>
+            {author.edit_code?.edit_code && (
+              <>
+                <span><i className="fa-solid fa-envelope-circle-check" style={{marginRight: '.5ch'}} />Invited {author.edit_code.role}</span><br />
+              </>
             )}
+            <button
+              type="button"
+              className="o-button__plain-textlink"
+              style={{padding: 0}}
+              disabled={!author.author_email}
+              aria-controls={`invite-dialog${author.id}`}
+              onClick={() => document.getElementById(`invite-dialog${author.id}`).showModal()}
+              title={!author.author_email ? 'Author email is required' : null}
+            >
+              {author.edit_code?.edit_code ? (
+                <span style={{fontSize: '.98rem'}}>Resend invitation</span>
+              ) : (
+                <>
+                  <i className="fas fa-envelope-open-text" aria-hidden="true" style={{marginRight: '.5ch'}} />Invite to edit
+                </>
+              )}
+            </button>
           </div>
           {createPortal(
             <dialog
