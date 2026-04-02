@@ -399,7 +399,7 @@ export default function UploadFiles({
         signerUrl: `/generic_file/presign_upload/${resource.id}`,
         awsSignatureVersion: '4',
         computeContentMd5: true,
-        cryptoMd5Method: data => cryptoMd5Method(data),
+        cryptoMd5Method: (data) => cryptoMd5Method(data),
         cryptoHexEncodedHash256: (data) => Crypto.SHA256(data).toString(Crypto.enc.Hex),
         partSize,
         maxConcurrentParts: 50,
