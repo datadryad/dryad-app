@@ -46,7 +46,7 @@ module Datacite
 
     def update(attributes)
       json = { data: { type: 'dois', attributes: attributes } }
-      Integrations.Datacite.new.update("/dois/#{doi}", json)
+      Integrations::Datacite.new.update("/dois/#{doi}", json)
     end
   end
 end
