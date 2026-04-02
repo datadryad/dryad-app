@@ -43,5 +43,10 @@ module Datacite
       Rails.logger.error("#{Time.new.utc} #{e}")
       {}
     end
+
+    def update(attributes)
+      json = { data: { type: 'dois', attributes: attributes } }
+      Integrations.Datacite.new.update("/dois/#{doi}", json)
+    end
   end
 end

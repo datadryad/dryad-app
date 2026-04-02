@@ -17,6 +17,10 @@ module Integrations
       get_json("#{api_url}#{url}", payload)
     end
 
+    def update(url, payload)
+      put_json(url, payload)
+    end
+
     private
 
     def api_url

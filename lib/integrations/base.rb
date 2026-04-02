@@ -18,6 +18,17 @@ module Integrations
       parse_response(http.request(request))
     end
 
+    def put_json(url, payload)
+      uri          = URI.parse(url)
+      http         = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = (uri.scheme == 'https')
+
+      request      = Net::HTTP::Put.new(uri.request_uri, { 'Content-Type' => 'application/vnd.api+json' })
+      request.body = payload.to_json
+
+      parse_response(http.request(request))
+    end
+
     def get_json(url, payload = nil, headers = nil)
       uri       = URI(url)
       uri.query = URI.encode_www_form(payload) if payload.present?

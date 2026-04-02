@@ -43,5 +43,36 @@ namespace :cleanup do
 
     puts 'Done'
   end
+
+  task update_file_licenses: :environment do
+    params = { 'client-id': 'dryad.dryad', 'resource-type': 'DataFile', 'page[size]': 500 }
+    query_result = Integrations::Datacite.new.query('/dois', params)
+    records.concat(query_result['data'])
+    while query_result.dig('links', 'next').present?
+      params['page[number]'] = query_result.dig('meta', 'page').to_i + 1
+      query_result = Integrations::Datacite.new.query('/dois', params)
+      records.concat(query_result['data'])
+    end
+
+    rights_list = {
+      rightsList: [
+        {
+          rights: 'Creative Commons Zero v1.0 Universal',
+          rightsUri: 'https://creativecommons.org/publicdomain/zero/1.0/legalcode',
+          schemeUri: 'https://spdx.org/licenses/',
+          rightsIdentifier: 'cc0-1.0',
+          rightsIdentifierScheme: 'SPDX'
+        }
+      ]
+    }
+
+    records.each do |record|
+      next if record.dig('rightsList', 0, 'rightsIdentifierScheme') == 'SPDX'
+      next unless record.dig('rightsList', 0, 'rightsUri')&.include?('publicdomain')
+
+      doi = record['id']
+      Datacite::Metadata.new(doi: doi).update(rights_list)
+    end
+  end
 end
 # :nocov:
