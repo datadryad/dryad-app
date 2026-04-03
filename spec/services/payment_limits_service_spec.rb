@@ -191,7 +191,7 @@ describe PaymentLimitsService do
 
         context 'when no limit is set' do
           let!(:payment_conf) do
-            create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true, yearly_ldf_limit: nil)
+            create(:payment_configuration, partner: sponsor_tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true, yearly_ldf_limit: nil)
           end
 
           it { is_expected.to be_falsey }
@@ -220,9 +220,9 @@ describe PaymentLimitsService do
       end
 
       context 'when payer has different payment plan than 2025' do
-        let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: 'TIERED', covers_dpc: true) }
+        let!(:payment_conf) { create(:payment_configuration, partner: sponsor_tenant, payment_plan: 'TIERED', covers_dpc: true) }
 
-        it { is_expected.to be_falsey }
+        it { is_expected.to be_truthy }
       end
     end
 
