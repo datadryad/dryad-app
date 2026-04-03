@@ -27,8 +27,6 @@ module StashEngine
                    latest_resource&.tenant
                  elsif journal_will_pay?
                    @payer = journal
-                 else
-                   nil
                  end
         @payer
       end
@@ -90,7 +88,7 @@ module StashEngine
       # rubocop:disable Metrics/AbcSize
       def record_payment
         # once we have assigned payment to an entity, keep that entity
-        # unless a journal was removed or an institution added
+        # unless a journal was removed or added an institution
         clear_payment_for_changed_sponsor
         return if payment_type.present? && payment_type != 'unknown'
 

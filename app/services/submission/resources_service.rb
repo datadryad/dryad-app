@@ -61,6 +61,7 @@ module Submission
 
     private
 
+    # rubocop:disable Metrics/AbcSize
     def handle_invoice_creation
       # this method is for 2025 payment system
       # old payment system id generating an invoice on publish
@@ -93,6 +94,7 @@ module Submission
 
       resource.identifier.update(payment_type: payment_type, payment_id: invoice.id)
     end
+    # rubocop:enable Metrics/AbcSize
 
     def create_missing_invoice
       payment_service = PaymentsService.new(nil, resource, {})
