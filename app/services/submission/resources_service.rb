@@ -89,6 +89,8 @@ module Submission
 
       payment.update(pay_with_invoice: true, invoice_id: invoice.id)
       payment_type = resource.identifier.payment_type == 'waiver' ? 'waiver' : 'stripe'
+      return if !resource.identifier.old_system_valid_payer? && payment_type == 'stripe'
+
       resource.identifier.update(payment_type: payment_type, payment_id: invoice.id)
     end
 
