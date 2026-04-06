@@ -175,7 +175,7 @@
   </div>
 
   <div>
-  <dt>Sponsored uthor.</dt>
+  <dt>Sponsored Author.</dt>
   <dd>An author whose Data Publishing Charges (DPCs) are covered by a Dryad Partner. </dd>
   </div>
 
@@ -195,7 +195,7 @@
   </div>
 
   <div>
-  <dt>Unsponsored Suthor.</dt>
+  <dt>Unsponsored Author.</dt>
   <dd>An author whose Data Publishing Charges (DPCs) are not covered by a Partner. </dd>
   </div>
 
