@@ -204,7 +204,7 @@ function Submission({
             new_upload_size_limit: data.new_upload_size_limit,
           },
         }));
-        updateStore({userMustPay: data.user_must_pay, refreshFees: userMustPay !== data.user_must_pay});
+        updateStore({userMustPay: data.user_must_pay, refreshFees: true});
       });
   };
 
