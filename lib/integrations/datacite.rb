@@ -18,7 +18,7 @@ module Integrations
     end
 
     def update(url, payload)
-      post_json("#{api_url}#{url}", payload, 'put')
+      put_json("#{api_url}#{url}", payload)
     end
 
     private
