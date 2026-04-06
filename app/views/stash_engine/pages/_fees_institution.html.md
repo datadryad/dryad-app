@@ -111,7 +111,7 @@ Institutes or departments within a larger host institution can partner with Drya
 To promote transparency and equity among our partners Dryad does not offer individual discounts. However, to support growth and development, especially of new data-sharing programs, we offer tiered pricing for three-year agreements, as follows. Three-year agreements are exempt from annual inflationary increases.
 
 <div style="text-align: center;">
-<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto" aria-label="3 year agreement">
+<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto" aria-label="3 year agreement" id="discount-table">
   <table style="width: 100%;">
     <caption>
       All fees are listed in USD

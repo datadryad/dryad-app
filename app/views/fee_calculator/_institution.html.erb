@@ -13,7 +13,7 @@
     <%= form.select :service_tier, options_for_select(FeeCalculator::InstitutionService.new.service_fee_tiers.map {|t| [t[:range].to_s.split('..').map {|n| n.to_i.to_s == n ? (n.to_i > 999999 ? number_to_currency(number_to_human(n), precision: 0) : number_to_currency(n, precision: 0)) : nil}.join('-').gsub(/\-$/, '+').downcase + ' USD', t[:tier]]}), {}, {class: 'c-input__select'} %>
   </p>
   <p class="input-line center" id="service_tier1" hidden>
-    <%= form.label :service_tier, 'Your annual research expenditure:' %>
+    <%= form.label :service_tier, 'Annual research expenditure:' %>
     <%= form.select :service_tier, options_for_select(FeeCalculator::InstitutionService.new({low_middle_income_country: true}).service_fee_tiers.map {|t| [t[:range].to_s.split('..').map {|n| n.to_i.to_s == n ? (n.to_i > 999999 ? number_to_currency(number_to_human(n), precision: 0) : number_to_currency(n, precision: 0)) : nil}.join('-').gsub(/\-$/, '+').downcase, t[:tier]]}), {}, {class: 'c-input__select', disabled: true} %>
   </p>
   <p class="input-line center">
@@ -24,7 +24,7 @@
     <h3 style="font-weight: bold" id="total_label">Partner fee estimate for one year:</h3>
     <output id="total_estimate" for="service_tier dpc_tier" aria-labelledby="total_label"></output>
   </div>
-  <h4 style="text-align: center; margin: 1rem auto; padding-bottom: 1.5rem">50% ASF <a href="#:~:text=Institutional fees for multi-year commitments">discount available with three-year agreement</a></h4>  
+  <h4 style="text-align: center; margin: 1rem auto; padding-bottom: 1.5rem">50% ASF <a href="#discount-table">discount available with three-year agreement</a></h4>  
 <% end %>
 
 <script type="text/javascript">
