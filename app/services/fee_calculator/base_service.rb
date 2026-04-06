@@ -78,7 +78,7 @@ module FeeCalculator
 
       diff = [new_tier_price - paid_tier_price, 0].max
       return diff if diff.zero?
-      return diff if !@payment_plan_is_2025 || !@covers_ldf
+      return diff if !@payment_plan_is_2025 || !@covers_ldf || @ldf_limit.nil?
 
       sponsored_price = 0
       if @ldf_limit.present?
