@@ -1,9 +1,10 @@
 class PaymentLimitsService
-  attr_reader :resource, :payer, :ldf_sponsored_amount
+  attr_reader :resource, :payer, :sponsor, :ldf_sponsored_amount
 
   def initialize(resource, payer, ldf_sponsored_amount: nil)
     @resource = resource
     @payer = payer
+    @sponsor = PayersService.new(payer).payment_sponsor
     @ldf_sponsored_amount = ldf_sponsored_amount
     set_calculator_service
   end
@@ -37,11 +38,10 @@ class PaymentLimitsService
   end
 
   def exceeds_sponsor_yearly_limit?(storage_fee)
-    sponsor = PayersService.new(payer).payment_sponsor
     return false if sponsor.nil?
 
     payment_conf = sponsor.payment_configuration
-    return false if !payment_conf&.covers_ldf || payment_conf&.yearly_ldf_limit.nil?
+    return false if payment_conf&.yearly_ldf_limit.nil?
 
     paid_amount = SponsoredPaymentLog.for_current_year.where(sponsor_id: sponsor.id).sum(:ldf)
     paid_amount + storage_fee > payment_conf.yearly_ldf_limit.to_f
@@ -50,8 +50,7 @@ class PaymentLimitsService
   private
 
   def verify_basics
-    return true if payer.nil?
-    return false unless PayersService.new(payer).is_2025_payer?
+    return true if sponsor.nil?
 
     @storage_fee = ldf_sponsored_amount || @calculator_service.ldf_sponsored_amount(resource: resource, payer: payer)
     return false if @storage_fee.zero?

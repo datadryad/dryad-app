@@ -20,6 +20,7 @@ class ResourceFeeCalculatorService
   def type
     ident = resource.identifier
     return 'waiver' if ident.waiver?
+    return 'individual' if !ident.old_system_valid_payer?(current_payer: @payer) && !ident.payer_2025? && ident.payment_type.blank?
 
     # rubocop:disable Lint/DuplicateBranch
     if ident.funder_will_pay?

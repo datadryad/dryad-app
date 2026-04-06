@@ -361,9 +361,7 @@ module FeeCalculator
         let!(:payment_conf) { create(:payment_configuration, partner: journal, payment_plan: 'DEFERRED', covers_ldf: covers_ldf) }
         let(:resource) { create(:resource, identifier: identifier, journal_issns: [journal.issns.first], total_file_size: new_files_size) }
 
-        it 'raises an error' do
-          expect { subject }.to raise_error(ActionController::BadRequest, OLD_PAYMENT_SYSTEM_MESSAGE)
-        end
+        it { is_expected.to include({ dpc_fee: 0, storage_fee: 0, service_fee: 0, total: 0, storage_fee_label: 'Large data fee' }) }
       end
 
       context 'when payer is a funder' do
@@ -383,9 +381,7 @@ module FeeCalculator
         context 'not on 2025 fee model' do
           let!(:payment_conf) { create(:payment_configuration, partner: funder, payment_plan: 'TIERED', covers_dpc: true) }
 
-          it 'raises an error' do
-            expect { subject }.to raise_error(ActionController::BadRequest, OLD_PAYMENT_SYSTEM_MESSAGE)
-          end
+          it { is_expected.to include({ dpc_fee: 0, storage_fee: 0, service_fee: 0, total: 0, storage_fee_label: 'Large data fee' }) }
         end
 
         context 'when identifier is flagged as old_payment_system' do
