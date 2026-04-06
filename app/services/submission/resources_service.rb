@@ -61,6 +61,7 @@ module Submission
 
     private
 
+    # rubocop:disable Metrics/AbcSize
     def handle_invoice_creation
       # this method is for 2025 payment system
       # old payment system id generating an invoice on publish
@@ -89,8 +90,11 @@ module Submission
 
       payment.update(pay_with_invoice: true, invoice_id: invoice.id)
       payment_type = resource.identifier.payment_type == 'waiver' ? 'waiver' : 'stripe'
+      return if !resource.identifier.old_system_valid_payer? && payment_type == 'stripe'
+
       resource.identifier.update(payment_type: payment_type, payment_id: invoice.id)
     end
+    # rubocop:enable Metrics/AbcSize
 
     def create_missing_invoice
       payment_service = PaymentsService.new(nil, resource, {})
