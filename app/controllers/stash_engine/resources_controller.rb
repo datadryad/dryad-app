@@ -153,7 +153,7 @@ module StashEngine
     end
 
     def dpc_status
-      user_payer_aff = StashEngine::Tenant.enabled.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id)
+      user_payer_aff = StashEngine::Tenant.connect_list.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id)
       aff_tenant = if @resource.tenant_id.in?(user_payer_aff.ids)
                      user_payer_aff.find_by(id: @resource.tenant_id)
                    else
