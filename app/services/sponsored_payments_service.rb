@@ -74,8 +74,8 @@ class SponsoredPaymentsService
           break
         end
       end
+      return 0 if identifier.sponsored_payment_logs.none?
     end
-    return 0 if identifier.sponsored_payment_logs.none?
 
     paid_before
   end
