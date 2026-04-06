@@ -50,6 +50,7 @@ describe PaymentLimitsService do
 
           context 'when limit is not reached but with current resource it will be exceeded' do
             let!(:log) { create(:sponsored_payment_log, payer: tenant, ldf: 999, sponsor_id: sponsor_tenant.id) }
+            let(:total_file_size) { 50_000_000_001 }
 
             it { is_expected.to be_truthy }
           end
@@ -139,7 +140,7 @@ describe PaymentLimitsService do
               context 'but resource LDF is 0' do
                 let(:total_file_size) { 10_000 }
 
-                it { is_expected.to be_truthy }
+                it { is_expected.to be_falsey }
               end
             end
           end
@@ -191,10 +192,26 @@ describe PaymentLimitsService do
 
         context 'when no limit is set' do
           let!(:payment_conf) do
-            create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true, yearly_ldf_limit: nil)
+            create(:payment_configuration, partner: sponsor_tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true, yearly_ldf_limit: nil)
           end
 
           it { is_expected.to be_falsey }
+        end
+
+        context 'when ldf is not covered' do
+          let!(:payment_conf) do
+            create(:payment_configuration, partner: sponsor_tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: false, yearly_ldf_limit: nil)
+          end
+
+          context 'when ldf amount is 0' do
+            let(:total_file_size) { 10_000_000_000 }
+            it { is_expected.to be_falsey }
+          end
+
+          context 'when ldf amount is not 0' do
+            let(:total_file_size) { 50_000_000_001 }
+            it { is_expected.to be_truthy }
+          end
         end
       end
 
@@ -204,9 +221,15 @@ describe PaymentLimitsService do
       end
 
       context 'when payer has different payment plan than 2025' do
-        let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: 'TIERED', covers_dpc: true) }
+        let!(:payment_conf) { create(:payment_configuration, partner: sponsor_tenant, payment_plan: 'TIERED', covers_dpc: true) }
 
-        it { is_expected.to be_falsey }
+        it { is_expected.to be_truthy }
+      end
+
+      context 'when payer has different payment plan is not set' do
+        let!(:payment_conf) { create(:payment_configuration, partner: sponsor_tenant, payment_plan: nil, covers_dpc: true) }
+
+        it { is_expected.to be_truthy }
       end
     end
 

@@ -19,11 +19,16 @@ module StashEngine
       end
 
       def payer
-        return funder_payment_info&.payer_funder if funder_will_pay?
-        return latest_resource&.tenant if institution_will_pay?
-        return journal if journal_will_pay?
+        return @payer if defined?(@payer)
 
-        nil
+        @payer = if funder_will_pay?
+                   funder_payment_info&.payer_funder
+                 elsif institution_will_pay?
+                   latest_resource&.tenant
+                 elsif journal_will_pay?
+                   @payer = journal
+                 end
+        @payer
       end
 
       def payer_2025?(current_payer = nil)
@@ -69,10 +74,21 @@ module StashEngine
         payer.present?
       end
 
+      def old_system_valid_payer?(current_payer: payer)
+        current_payer = PayersService.new(current_payer).payment_sponsor
+        return false if current_payer.blank?
+
+        return true if old_payment_system?
+
+        rs = StashEngine::JournalOrganization.find_by(name: 'The Royal Society')
+        acs = StashEngine::JournalOrganization.find_by(name: 'American Chemical Society')
+        current_payer.in?([rs, acs] + rs&.journals_sponsored_deep.to_a + acs&.journals_sponsored_deep.to_a)
+      end
+
       # rubocop:disable Metrics/AbcSize
       def record_payment
         # once we have assigned payment to an entity, keep that entity
-        # unless a journal was removed or an institution added
+        # unless a journal was removed or added an institution
         clear_payment_for_changed_sponsor
         return if payment_type.present? && payment_type != 'unknown'
 
@@ -92,7 +108,7 @@ module StashEngine
           self.payment_type = "journal-#{journal.payment_configuration.payment_plan}"
           self.payment_id = publication_issn
           self.old_payment_system = false
-        elsif payments.count > 0
+        elsif payments.count > 0 && !old_system_valid_payer?
           self.payment_type = 'stripe'
           self.payment_id = payments.paid.last&.payment_id
         else
@@ -186,7 +202,7 @@ module StashEngine
         self.last_invoiced_file_size = 0
         save
 
-        sponsored_payment_logs.destroy_all
+        sponsored_payment_logs.each(&:destroy)
         reload
       end
     end

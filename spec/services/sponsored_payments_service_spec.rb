@@ -45,48 +45,21 @@ describe SponsoredPaymentsService do
 
     context 'when payer exists with a 2025 payment plan' do
       context 'when LDF amount limit is reached' do
-        context 'and a payment record exists' do
-          include_examples('creates sponsored payment log')
+        let!(:log) { create(:sponsored_payment_log, resource: resource, ldf: 1_001, payer: tenant, sponsor_id: tenant.id) }
 
-          it 'has correct info' do
-            subject.log_payment
-
-            expect(tenant.payment_logs.count).to eq(1)
-            expect(tenant.payment_logs.last.attributes).to include(
-              {
-                resource_id: resource.id,
-                payer_id: tenant.id,
-                payer_type: tenant.class.name,
-                ldf: 259,
-                sponsor_id: tenant.id
-              }.stringify_keys
-            )
-          end
+        context 'when size tier does not change' do
+          include_examples('does not create sponsored payment log')
         end
 
         context 'when tenant has a sponsor' do
+          let(:identifier) { create(:identifier, last_invoiced_file_size: total_file_size) }
           let!(:sponsor_tenant) { create(:tenant, id: 'sponsor') }
           let!(:tenant) { create(:tenant, id: 'payer', sponsor_id: sponsor_tenant.id) }
           let!(:payment_conf) do
             create(:payment_configuration, partner: sponsor_tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true, yearly_ldf_limit: 1_000)
           end
 
-          include_examples('creates sponsored payment log')
-
-          it 'has correct info' do
-            subject.log_payment
-
-            expect(tenant.payment_logs.count).to eq(1)
-            expect(tenant.payment_logs.last.attributes).to include(
-              {
-                resource_id: resource.id,
-                payer_id: tenant.id,
-                payer_type: tenant.class.name,
-                ldf: 259,
-                sponsor_id: sponsor_tenant.id
-              }.stringify_keys
-            )
-          end
+          include_examples('does not create sponsored payment log')
         end
       end
 
@@ -199,26 +172,10 @@ describe SponsoredPaymentsService do
         end
 
         context 'when ldf is already paid on previous resource' do
+          let(:identifier) { create(:identifier, last_invoiced_file_size: total_file_size) }
           let!(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: total_file_size, created_at: 1.minute.ago) }
 
-          it 'has correct info' do
-            subject.log_payment
-
-            expect(tenant.payment_logs.count).to eq(1)
-            expect(tenant.payment_logs.last.attributes).to include(
-              {
-                resource_id: resource.id,
-                payer_id: tenant.id,
-                payer_type: tenant.class.name,
-                ldf: 259,
-                sponsor_id: tenant.id
-              }.stringify_keys
-            )
-
-            identifier.reload
-            new_resource = create(:resource, identifier: identifier, tenant: tenant, total_file_size: 11_000_000_000)
-            expect { SponsoredPaymentsService.new(new_resource).log_payment }.not_to(change { SponsoredPaymentLog.count })
-          end
+          include_examples('does not create sponsored payment log')
         end
       end
 

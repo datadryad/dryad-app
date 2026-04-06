@@ -74,17 +74,19 @@ module FeeCalculator
       paid_storage_size ||= resource.identifier.last_invoiced_file_size.to_i
       paid_tier_price = price_by_range(storage_fee_tiers, paid_storage_size)
 
-      new_tier_price = if @ldf_limit.nil?
-                         price_by_range(storage_fee_tiers, resource.total_file_size)
-                       else
-                         new_tier_price = price_by_range(storage_fee_tiers, resource.total_file_size)
-                         tier = get_tier_by_value(storage_fee_tiers, @ldf_limit)
-                         [new_tier_price, tier[:price]].min
-                       end
+      new_tier_price = price_by_range(storage_fee_tiers, resource.total_file_size)
 
-      diff = new_tier_price - paid_tier_price
-      diff = 0 if diff < 0
-      diff.to_f
+      diff = [new_tier_price - paid_tier_price, 0].max
+      return diff if diff.zero?
+      return diff if !@payment_plan_is_2025 || !@covers_ldf || @ldf_limit.nil?
+
+      sponsored_price = 0
+      if @ldf_limit.present?
+        sponsored_tier = get_tier_by_value(storage_fee_tiers, @ldf_limit)
+        sponsored_price = sponsored_tier[:price]
+      end
+
+      [diff, sponsored_price].min
     end
 
     def storage_fee_tier
@@ -101,6 +103,7 @@ module FeeCalculator
 
     def verify_new_payment_system
       return if resource.blank? || (@payment_plan_is_2025 && !resource.identifier.old_payment_system?)
+      return if @payer && !resource.identifier.old_system_valid_payer?
 
       raise ActionController::BadRequest, OLD_PAYMENT_SYSTEM_MESSAGE
     end

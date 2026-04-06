@@ -12,7 +12,7 @@ module StashDatacite
         html_title = ActionController::Base.helpers.sanitize(
           Nokogiri::HTML5.fragment(
             helpers.markdown_render(content: CGI.escapeHTML(params[:title].squish))
-          ).css('*:only-child').inner_html,
+          ).children.first&.inner_html,
           tags: %w[em sub sup i]
         )
 
@@ -42,7 +42,7 @@ module StashDatacite
       readme = @resource.descriptions.where(description_type: :technicalinfo).first
       return unless readme.try(:description).present?
 
-      previous = resource.versions.map { |v| v.object_changes.slice('title').values.flatten }.reject(&:blank?).map do |a|
+      previous = resource.versions.map { |v| v.object_changes.slice('title').values.flatten }.reject { |a| a[1].blank? } .map do |a|
         a[1].gsub(%r{</?(em|i)>}, '*').gsub(%r{</?sup>}, '^').gsub(%r{</?sub>}, '~')
       end
       newest = previous.pop
