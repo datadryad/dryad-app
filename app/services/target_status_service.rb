@@ -18,6 +18,7 @@ class TargetStatusService
     return false if @resource.identifier.accepted_for_publication? || @resource.identifier.published?
     return true if curator_override?
     return false if @resource.identifier.last_curated_status.present?
+    return false if @resource.previous_resource.current_curation_status == 'curation'
 
     true
   end
