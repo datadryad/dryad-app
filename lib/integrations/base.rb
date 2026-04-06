@@ -7,23 +7,13 @@ module Integrations
 
     private
 
-    def post_json(url, payload)
+    def post_json(url, payload, method = 'post')
       uri          = URI.parse(url)
       http         = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = (uri.scheme == 'https')
+      headers = { 'Content-Type' => 'application/vnd.api+json' }
 
-      request      = Net::HTTP::Post.new(uri.request_uri, { 'Content-Type' => 'application/vnd.api+json' })
-      request.body = payload.to_json
-
-      parse_response(http.request(request))
-    end
-
-    def put_json(url, payload)
-      uri          = URI.parse(url)
-      http         = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = (uri.scheme == 'https')
-
-      request      = Net::HTTP::Put.new(uri.request_uri, { 'Content-Type' => 'application/vnd.api+json' })
+      request      = method == 'put' ? Net::HTTP::Put.new(uri.request_uri, headers) : Net::HTTP::Post.new(uri.request_uri, headers)
       request.body = payload.to_json
 
       parse_response(http.request(request))
@@ -55,5 +45,6 @@ module Integrations
 
       JSON.parse(response.body)
     end
+
   end
 end

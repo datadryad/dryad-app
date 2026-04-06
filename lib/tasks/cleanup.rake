@@ -45,7 +45,7 @@ namespace :cleanup do
   end
 
   task update_file_licenses: :environment do
-    params = { 'client-id': 'dryad.dryad', 'resource-type': 'DataFile', 'page[size]': 500 }
+    params = { 'client-id': APP_CONFIG.counter.account, 'resource-type': 'DataFile', 'page[size]': 500 }
     query_result = Integrations::Datacite.new.query('/dois', params)
     records.concat(query_result['data'])
     while query_result.dig('links', 'next').present?
