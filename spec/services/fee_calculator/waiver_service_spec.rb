@@ -8,8 +8,8 @@ module FeeCalculator
     subject { described_class.new(options, resource: resource).call }
 
     before do
-      stub_const 'FeeCalculator::WaiverService::DISCOUNT_STORAGE_COUPON_ID', coupon_id
-      stub_const 'FeeCalculator::WaiverService::FREE_STORAGE_SIZE', 10_000_000_000 # 10GB
+      stub_const 'DISCOUNT_STORAGE_COUPON_ID', coupon_id
+      stub_const 'FREE_STORAGE_SIZE', 10_000_000_000 # 10GB
     end
 
     def no_charge_response(amount)
@@ -58,13 +58,13 @@ module FeeCalculator
           end
 
           context 'with storage_size at max free limit' do
-            let(:new_files_size) { FeeCalculator::WaiverService::FREE_STORAGE_SIZE }
+            let(:new_files_size) { FREE_STORAGE_SIZE }
 
             it { is_expected.to eq(no_charge_response(180)) }
           end
 
           context 'with storage_size over the max free limit' do
-            let(:new_files_size) { FeeCalculator::WaiverService::FREE_STORAGE_SIZE + 1 }
+            let(:new_files_size) { FREE_STORAGE_SIZE + 1 }
 
             it { is_expected.to eq(charge_response(520, 180)) }
           end
@@ -82,8 +82,8 @@ module FeeCalculator
             it { is_expected.to eq(no_charges_response) }
           end
 
-          context 'when paid for 0B' do
-            let(:prev_files_size) { 0 }
+          context 'when paid for 10B' do
+            let(:prev_files_size) { 10 }
 
             context 'when files_size do not change' do
               it { is_expected.to eq(no_charges_response) }
@@ -110,13 +110,13 @@ module FeeCalculator
             end
 
             context 'with storage_size at max free limit' do
-              let(:new_files_size) { FeeCalculator::WaiverService::FREE_STORAGE_SIZE }
+              let(:new_files_size) { FREE_STORAGE_SIZE }
 
               it { is_expected.to eq(no_discount_response(0)) }
             end
 
             context 'with storage_size over the max free limit' do
-              let(:new_files_size) { FeeCalculator::WaiverService::FREE_STORAGE_SIZE + 1 }
+              let(:new_files_size) { FREE_STORAGE_SIZE + 1 }
 
               it { is_expected.to eq(no_discount_response(520 - 180)) }
             end
@@ -164,13 +164,13 @@ module FeeCalculator
           end
 
           context 'with storage_size at max free limit' do
-            let(:new_files_size) { FeeCalculator::WaiverService::FREE_STORAGE_SIZE }
+            let(:new_files_size) { FREE_STORAGE_SIZE }
 
             it { is_expected.to eq(no_charge_response(180)) }
           end
 
           context 'with storage_size over the max free limit' do
-            let(:new_files_size) { FeeCalculator::WaiverService::FREE_STORAGE_SIZE + 1 }
+            let(:new_files_size) { FREE_STORAGE_SIZE + 1 }
 
             it { is_expected.to eq(charge_response(520, 180, invoice_fee: true)) }
           end
@@ -208,13 +208,13 @@ module FeeCalculator
             end
 
             context 'with storage_size at max free limit' do
-              let(:new_files_size) { FeeCalculator::WaiverService::FREE_STORAGE_SIZE }
+              let(:new_files_size) { FREE_STORAGE_SIZE }
 
               it { is_expected.to eq(no_charges_response) }
             end
 
             context 'with storage_size over the max free limit' do
-              let(:new_files_size) { FeeCalculator::WaiverService::FREE_STORAGE_SIZE + 1 }
+              let(:new_files_size) { FREE_STORAGE_SIZE + 1 }
 
               it { is_expected.to eq(no_discount_response(520 - 180, invoice_fee: true)) }
             end

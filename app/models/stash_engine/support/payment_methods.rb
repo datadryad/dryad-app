@@ -13,17 +13,22 @@ module StashEngine
       def user_must_pay?
         return false if latest_resource.resource_type&.resource_type == 'collection'
         return false if waiver? && old_payment_system
-        return PaymentLimitsService.new(latest_resource, payer).limits_exceeded? if sponsored?
+        return PaymentLimitsService.new(latest_resource, PayersService.new(payer).payment_sponsor).limits_exceeded? if sponsored?
 
         true
       end
 
       def payer
-        return funder_payment_info&.payer_funder if funder_will_pay?
-        return latest_resource&.tenant if institution_will_pay?
-        return journal if journal_will_pay?
+        return @payer if defined?(@payer)
 
-        nil
+        @payer = if funder_will_pay?
+                   funder_payment_info&.payer_funder
+                 elsif institution_will_pay?
+                   latest_resource&.tenant
+                 elsif journal_will_pay?
+                   @payer = journal
+                 end
+        @payer
       end
 
       def payer_2025?(current_payer = nil)
@@ -69,10 +74,21 @@ module StashEngine
         payer.present?
       end
 
+      def old_system_valid_payer?(current_payer: payer)
+        current_payer = PayersService.new(current_payer).payment_sponsor
+        return false if current_payer.blank?
+
+        return true if old_payment_system?
+
+        rs = StashEngine::JournalOrganization.find_by(name: 'The Royal Society')
+        acs = StashEngine::JournalOrganization.find_by(name: 'American Chemical Society')
+        current_payer.in?([rs, acs] + rs&.journals_sponsored_deep.to_a + acs&.journals_sponsored_deep.to_a)
+      end
+
       # rubocop:disable Metrics/AbcSize
       def record_payment
         # once we have assigned payment to an entity, keep that entity
-        # unless a journal was removed or an institution added
+        # unless a journal was removed or added an institution
         clear_payment_for_changed_sponsor
         return if payment_type.present? && payment_type != 'unknown'
 
@@ -83,13 +99,16 @@ module StashEngine
           contrib = funder_payment_info
           self.payment_type = 'funder'
           self.payment_id = "funder:#{contrib.contributor_name}|award:#{contrib.award_number}"
+          self.old_payment_system = false
         elsif institution_will_pay?
           self.payment_id = latest_resource&.tenant&.id
           self.payment_type = "institution#{'-TIERED' if latest_resource&.tenant&.payment_configuration&.payment_plan == 'TIERED'}"
+          self.old_payment_system = false
         elsif journal_will_pay?
           self.payment_type = "journal-#{journal.payment_configuration.payment_plan}"
           self.payment_id = publication_issn
-        elsif payments.count > 0
+          self.old_payment_system = false
+        elsif payments.count > 0 && !old_system_valid_payer?
           self.payment_type = 'stripe'
           self.payment_id = payments.paid.last&.payment_id
         else
@@ -121,8 +140,7 @@ module StashEngine
 
         # do not remove recorded institution sponsor due to sponsorship change
         return true if payment_id.present? && payment_id == tenant&.id
-
-        return false unless tenant&.payment_configuration&.covers_dpc
+        return false unless PayersService.new(tenant).payment_sponsor&.payment_configuration&.covers_dpc
 
         if tenant&.authentication&.strategy == 'author_match'
           # get all unique ror_id associations for all authors
@@ -183,6 +201,8 @@ module StashEngine
         self.payment_id = nil
         self.last_invoiced_file_size = 0
         save
+
+        sponsored_payment_logs.each(&:destroy)
         reload
       end
     end

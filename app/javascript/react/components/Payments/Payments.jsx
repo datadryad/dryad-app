@@ -11,11 +11,12 @@ import {useStore} from '../../shared/store';
 function Payments({
   resource, setResource, invoice, setInvoice, setPayment, config,
 }) {
-  const {storeState: {fees}} = useStore();
+  const {storeState: {fees, dpc}} = useStore();
   const [ppr, setPPR] = useState(null);
   const [clientSecret, setClientSecret] = useState(null);
 
   const stripePromise = loadStripe(config.pk_key);
+  const can_pay_ppr_fee = resource.hold_for_peer_review && !dpc.funder_will_pay && !dpc.journal_will_pay && !dpc.institution_will_pay;
 
   const fetchClientSecret = () => {
     axios.post(`/payments/${resource.id}`, {generate_invoice: invoice, pay_ppr_fee: ppr})
@@ -71,7 +72,7 @@ function Payments({
 
   return (
     <div id="submission-payment">
-      {resource.hold_for_peer_review ? (
+      {can_pay_ppr_fee ? (
         <>
           <CalculateFees resource={resource} ppr />
           <p>You must complete payment to submit your dataset for Peer Review.</p>
@@ -106,7 +107,7 @@ function Payments({
           <p>You must complete payment to submit your dataset for curation and publication.</p>
         </>
       )}
-      <div id="payment-sec" hidden={(resource.hold_for_peer_review && ppr === null) || null}>
+      <div id="payment-sec" hidden={(can_pay_ppr_fee && ppr === null) || null}>
         {clientSecret ? (
           <EmbeddedCheckoutProvider
             stripe={stripePromise}

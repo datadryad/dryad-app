@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
 import Evaporate from 'evaporate';
 import {v4 as uuid} from 'uuid';
-import AWS from 'aws-sdk';
+import Crypto from 'crypto-js';
 import sanitize from '../../../lib/sanitize_filename';
 import {formatSizeUnits} from '../../../lib/utils';
 import {pollingDelay} from './pollingDelay';
@@ -15,6 +15,11 @@ import UploadData from './UploadSelect/UploadData';
 import UploadSelect from './UploadSelect/UploadSelect';
 import TrackChanges from './TrackChanges';
 import ChangeLog from './ChangeLog';
+
+function cryptoMd5Method(data) {
+  const wordArray = Crypto.lib.WordArray.create(data);
+  return Crypto.MD5(wordArray).toString(Crypto.enc.Base64);
+}
 
 const RailsActiveRecordToUploadType = {
   'StashEngine::DataFile': 'data',
@@ -394,8 +399,8 @@ export default function UploadFiles({
         signerUrl: `/generic_file/presign_upload/${resource.id}`,
         awsSignatureVersion: '4',
         computeContentMd5: true,
-        cryptoMd5Method: (data) => AWS.util.crypto.md5(data, 'base64'),
-        cryptoHexEncodedHash256: (data) => AWS.util.crypto.sha256(data, 'hex'),
+        cryptoMd5Method: (data) => cryptoMd5Method(data),
+        cryptoHexEncodedHash256: (data) => Crypto.SHA256(data).toString(Crypto.enc.Hex),
         partSize,
         maxConcurrentParts: 50,
       };

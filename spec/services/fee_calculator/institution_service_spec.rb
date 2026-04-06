@@ -453,9 +453,7 @@ module FeeCalculator
         let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: 'TIERED', covers_dpc: true, covers_ldf: covers_ldf) }
         let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: new_files_size) }
 
-        it 'raises an error' do
-          expect { subject }.to raise_error(ActionController::BadRequest, OLD_PAYMENT_SYSTEM_MESSAGE)
-        end
+        it { is_expected.to include({ dpc_fee: 0, storage_fee: 0, service_fee: 0, total: 0, storage_fee_label: 'Large data fee' }) }
       end
 
       context 'when tenant is not a payer' do

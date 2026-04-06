@@ -91,7 +91,7 @@ module StashApi
           end
 
           after do
-            ::File.delete(file_path) if ::File.exist?(file_path)
+            ::FileUtils.rm_f(file_path)
           end
 
           it 'returns error if file does not exist' do
