@@ -14,6 +14,7 @@ module FeeCalculator
       @ldf_limit = resource ? @payer&.payment_configuration&.ldf_limit : nil
     end
 
+    # rubocop:disable Metrics/MethodLength
     def call
       verify_payer
       verify_new_payment_system
@@ -60,6 +61,7 @@ module FeeCalculator
       add_storage_fee_label
       @sum_options.merge(total: @sum)
     end
+    # rubocop:enable Metrics/MethodLength
 
     def storage_fee_tiers
       ESTIMATED_FILES_SIZE
@@ -110,7 +112,7 @@ module FeeCalculator
     private
 
     def verify_new_payment_system
-      return if resource.blank? || @payment_plan_is_2025 && !resource.identifier.old_payment_system?
+      return if resource.blank? || (@payment_plan_is_2025 && !resource.identifier.old_payment_system?)
       return if resource.identifier.old_system_valid_payer?
 
       raise ActionController::BadRequest, OLD_PAYMENT_SYSTEM_MESSAGE
