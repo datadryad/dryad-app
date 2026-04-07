@@ -53,21 +53,21 @@ export const filesCheck = (resource, pubDates, superuser, maximums) => {
         </p>
       );
     }
-    if (!new_upload_size_limit) {
-      if (!superuser && data.reduce((sum, f) => sum + f.upload_file_size, 0) > oldSize) {
-        return (
-          <p className="error-text" id="data_error">
-          Total data file uploads are limited to {formatSizeUnits(oldSize)} per submission. Compress or remove files to proceed
-          </p>
-        );
-      }
-    } else if (data.reduce((sum, f) => sum + f.upload_file_size, 0) > maxSize) {
-      return (
-        <p className="error-text" id="data_error">
-        Total data file uploads are limited to {formatSizeUnits(maxSize)} per submission. Compress or remove files to proceed
-        </p>
-      );
-    }
+    // if (!new_upload_size_limit) {
+    //   if (!superuser && data.reduce((sum, f) => sum + f.upload_file_size, 0) > oldSize) {
+    //     return (
+    //       <p className="error-text" id="data_error">
+    //       Total data file uploads are limited to {formatSizeUnits(oldSize)} per submission. Compress or remove files to proceed
+    //       </p>
+    //     );
+    //   }
+    // } else if (data.reduce((sum, f) => sum + f.upload_file_size, 0) > maxSize) {
+    //   return (
+    //     <p className="error-text" id="data_error">
+    //     Total data file uploads are limited to {formatSizeUnits(maxSize)} per submission. Compress or remove files to proceed
+    //     </p>
+    //   );
+    // }
     if (software.reduce((sum, f) => sum + f.upload_file_size, 0) > maxZenodo) {
       return (
         <p className="error-text" id="software_error">
@@ -93,14 +93,14 @@ export const filesCheck = (resource, pubDates, superuser, maximums) => {
       );
     }
     const uploadErrors = data.filter((f) => !f.uploaded && (f.status === 'Uploaded' || f.file_state === 'created'));
-    if (uploadErrors.length > 0) {
-      return (
-        <p className="error-text" id="data_error">
-          There was an error with the following upload{uploadErrors.length > 1 && 's'}. Please remove them and try again:<br />
-          {uploadErrors.map((f) => f.download_filename).join(', ')}
-        </p>
-      );
-    }
+    // if (uploadErrors.length > 0) {
+    //   return (
+    //     <p className="error-text" id="data_error">
+    //       There was an error with the following upload{uploadErrors.length > 1 && 's'}. Please remove them and try again:<br />
+    //       {uploadErrors.map((f) => f.download_filename).join(', ')}
+    //     </p>
+    //   );
+    // }
     const changelog = resource.descriptions.find((d) => d.description_type === 'changelog');
     if (changelog) {
       const end = new RegExp(`${pubDates.slice(-1)[0]}:\\*\\*\\s*$`);

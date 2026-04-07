@@ -11,6 +11,7 @@ module StashEngine
       #  - institution should pay DPC
       #  - user pays LDF calculated as per institution
       def user_must_pay?
+        return false if old_system_valid_payer?
         return false if latest_resource.resource_type&.resource_type == 'collection'
         return false if waiver? && old_payment_system
         return PaymentLimitsService.new(latest_resource, PayersService.new(payer).payment_sponsor).limits_exceeded? if sponsored?
@@ -77,8 +78,8 @@ module StashEngine
       def old_system_valid_payer?(current_payer: payer)
         current_payer = PayersService.new(current_payer).payment_sponsor
         return false if current_payer.blank?
-
-        return true if old_payment_system?
+        return false if payer_2025?(current_payer) || old_payment_system
+        return true if current_payer.payment_configuration&.covers_dpc
 
         rs = StashEngine::JournalOrganization.find_by(name: 'The Royal Society')
         acs = StashEngine::JournalOrganization.find_by(name: 'American Chemical Society')

@@ -151,8 +151,8 @@ module StashDatacite
         if !@resource.identifier.new_upload_size_limit
           return 'Over file size limit' if @resource.data_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.merritt_size &&
           !@user&.superuser?
-        elsif @resource.data_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.upload_size
-          return 'Over dataset file size limit'
+        # elsif @resource.data_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.upload_size
+        #   return 'Over dataset file size limit'
         end
 
         return 'Over zenodo file size limit' if @resource.software_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.zenodo_size ||
