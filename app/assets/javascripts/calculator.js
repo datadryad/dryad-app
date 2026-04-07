@@ -29,7 +29,8 @@ $(window).on('load', function(){
 })
 $(document).on('ajax:complete', function(status, response){
   if (response.status === 200) {
-    const {fees: {total}} = response.responseJSON;
-    document.getElementById('total_estimate').innerHTML = `${total.toLocaleString('en-US', {style: 'currency', currency: 'USD', maximumFractionDigits: 0})} USD`;
+    const {fees: {service_fee, dpc_fee, total}, options} = response.responseJSON;
+    const y1 = options.low_middle_income_country ? total : (service_fee * .5) + dpc_fee
+    document.getElementById('total_estimate').innerHTML = `${y1.toLocaleString('en-US', {style: 'currency', currency: 'USD', maximumFractionDigits: 0})} USD`;
   }
 })
