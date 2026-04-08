@@ -101,7 +101,7 @@ GEM
     acts_as_paranoid (0.11.0)
       activerecord (>= 6.1, < 8.2)
       activesupport (>= 6.1, < 8.2)
-    addressable (2.8.9)
+    addressable (2.9.0)
       public_suffix (>= 2.0.2, < 8.0)
     airbrussh (1.5.3)
       sshkit (>= 1.6.1, != 1.7.0)
