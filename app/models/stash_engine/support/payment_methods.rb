@@ -75,11 +75,14 @@ module StashEngine
         payer.present?
       end
 
+      # Payers that are:
+      #  - not on 2025 plan
+      #  - not in exceptions list
       def old_system_valid_payer?(current_payer: payer)
         current_payer = PayersService.new(current_payer).payment_sponsor
         return false if current_payer.blank?
         return false if payer_2025?(current_payer) || old_payment_system
-        return true if current_payer.payment_configuration&.covers_dpc
+        return true if current_payer.payment_configuration&.covers_dpc && current_payer.payment_configuration&.payment_plan.present?
 
         rs = StashEngine::JournalOrganization.find_by(name: 'The Royal Society')
         acs = StashEngine::JournalOrganization.find_by(name: 'American Chemical Society')
@@ -158,6 +161,10 @@ module StashEngine
         return false unless journal
         # do not remove recorded journal due to journal sponsorship change
         return true if payment_id == publication_issn
+
+        rs = StashEngine::JournalOrganization.find_by(name: 'The Royal Society')
+        acs = StashEngine::JournalOrganization.find_by(name: 'American Chemical Society')
+        return true if journal.in?([rs, acs] + rs&.journals_sponsored_deep.to_a + acs&.journals_sponsored_deep.to_a)
 
         journal.will_pay?
       end

@@ -112,7 +112,7 @@ module FeeCalculator
     private
 
     def verify_new_payment_system
-      return if resource.blank? || (@payment_plan_is_2025 && !resource.identifier.old_payment_system?)
+      return if resource.blank? || !resource.identifier.old_payment_system?
       return if resource.identifier.old_system_valid_payer?
 
       raise ActionController::BadRequest, OLD_PAYMENT_SYSTEM_MESSAGE
