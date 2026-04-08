@@ -8,9 +8,11 @@ module StashEngine
       authorize %i[stash_engine tenant], :admin?
       setup_consortia
 
-      @tenants = StashEngine::Tenant
+      @tenants = StashEngine::Tenant.left_outer_joins(:payment_configuration).select('stash_engine_tenants.*, payment_configurations.payment_plan')
 
-      if params[:q]
+      if params[:id]
+        @tenants = @tenants.where(id: params[:id])
+      elsif params[:q]
         q = params[:q]
         # search the query in any searchable field
         @tenants = @tenants
@@ -18,8 +20,8 @@ module StashEngine
                  "%#{q}%", "%#{q}%", "%#{q}%")
       end
 
-      ord = helpers.sortable_table_order(whitelist: %w[id short_name long_name authentication covers_dpc partner_display enabled])
-      @tenants = @tenants.left_outer_joins(:payment_configuration).order(ord)
+      ord = helpers.sortable_table_order(whitelist: %w[id short_name long_name authentication payment_plan partner_display enabled])
+      @tenants = @tenants.order(ord)
 
       if params[:consortium].present?
         rors = StashEngine::Tenant.find(params[:consortium]).ror_ids

@@ -20,17 +20,14 @@
       <th class="c-admin-table">
         ROR IDs
       </th>
-      <th class="c-admin-table">
-        Notify
-      </th>
       <th class="c-lined-table__sort" <%= sort_display('enabled') %>>
         <%= sortable_column_head sort_field: 'enabled', title: 'Active' %>
       </th>      
       <th class="c-lined-table__sort" <%= sort_display('partner_display') %>>
         <%= sortable_column_head sort_field: 'partner_display', title: 'Display' %>
       </th>
-      <th class="c-lined-table__sort" <%= sort_display('covers_dpc') %>>
-        <%= sortable_column_head sort_field: 'covers_dpc', title: 'DPC' %>
+      <th class="c-lined-table__sort" <%= sort_display('payment_plan') %>>
+        <%= sortable_column_head sort_field: 'payment_plan', title: 'Sponsorship' %>
       </th>
     </tr>
   </thead>

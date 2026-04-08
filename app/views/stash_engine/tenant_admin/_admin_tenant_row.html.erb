@@ -27,7 +27,6 @@
     "<a href='#{r}' target='_blank'>#{org ? org.name : r}<i class='fas fa-arrow-up-right-from-square exit-icon' aria-label=' (opens in new window)' role='img'></i></a>"}.join(', ').html_safe
   %>
 </td>
-<td><%= t.campus_contacts.join(', ') %></td>
 <td>
   <span style="color: <%= t.enabled ? '#3c763d' : 'rgb(209, 44, 29)'%>">
     <%= t.enabled ? "Enabled" : "Disabled" %>
@@ -39,7 +38,20 @@
   </span>
 </td>
 <td>
-  <span style="color: <%= t.payment_configuration&.covers_dpc ? '#3c763d' : 'rgb(209, 44, 29)'%>">
-    <%= t.payment_configuration&.covers_dpc ? "True" : "False" %>
-  </span>
+  <% if t.sponsor_id.present? %>
+    <a href="?id=<%= t.sponsor_id %>">Inherited</a>
+  <% elsif t.payment_configuration&.payment_plan.present? %>
+    <b>Plan:</b> <%= t.payment_configuration&.payment_plan&.humanize %><br/>
+    <b>Covers LDF:</b> <%= t.payment_configuration&.covers_ldf ? "Yes" : "No" %>
+    <% if t.payment_configuration&.covers_ldf %>
+      <% if t.payment_configuration&.ldf_limit&.present? %>
+        (Up to <%= filesize(ESTIMATED_FILES_SIZE.find{|tier| tier[:tier] == t.payment_configuration&.ldf_limit }[:range].max) %>)
+      <% end %>
+      <% if t.payment_configuration&.yearly_ldf_limit&.present? %>
+        <br/><b>Remaining LDF budget:</b> <%= t.payment_configuration&.yearly_ldf_limit - t.payment_logs.sum(:ldf) %>
+      <% end %>
+    <% end %>
+  <% else %>
+    <span style="color: rgb(209, 44, 29)">Disabled</span>
+  <% end %>
 </td>

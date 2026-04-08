@@ -97,7 +97,7 @@ module StashEngine
 
     def link_to_account(type, id)
       href = if type&.start_with?('institution')
-               tenant_admin_path(q: id)
+               tenant_admin_path(id: id)
              elsif type&.start_with?('journal')
                journal_admin_path(q: id)
              end

@@ -96,7 +96,7 @@ RSpec.feature 'TenantAdmin', type: :feature do
         find('#campus_contacts').set('test@email.com')
         find('input[name=commit]').click
       end
-      expect(page.find("##{@match.id}_row")).to have_text('test@email.com')
+      expect(page).not_to have_text("Update #{@match.id}")
       changed = StashEngine::Tenant.find(@match.id)
       expect(changed.campus_contacts).to include('test@email.com')
     end
