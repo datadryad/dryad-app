@@ -18,7 +18,10 @@ module Integrations
     end
 
     def update(url, payload)
-      put_json("#{api_url}#{url}", payload)
+      auth = { 'Authorization' => "Basic #{
+        Base64.strict_encode64("#{APP_CONFIG[:identifier_service][:account]}:#{APP_CONFIG[:identifier_service][:password]}")
+      }" }
+      put_json("#{api_url}#{url}", payload, auth)
     end
 
     private

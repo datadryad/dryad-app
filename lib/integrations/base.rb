@@ -7,12 +7,12 @@ module Integrations
 
     private
 
-    def post_json(url, payload)
-      json_update(url, payload, Net::HTTP::Post)
+    def post_json(url, payload, headers = {})
+      json_update(url, payload, headers, Net::HTTP::Post)
     end
 
-    def put_json(url, payload)
-      json_update(url, payload, Net::HTTP::Put)
+    def put_json(url, payload, headers = {})
+      json_update(url, payload, headers, Net::HTTP::Put)
     end
 
     def get_json(url, payload = nil, headers = nil)
@@ -31,12 +31,13 @@ module Integrations
       parse_response(response, format: :xml)
     end
 
-    def json_update(url, payload, http_class)
+    def json_update(url, payload, headers, http_class)
       uri          = URI.parse(url)
       http         = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = (uri.scheme == 'https')
+      headers = headers.merge({ 'Content-Type' => 'application/vnd.api+json' })
 
-      request      = http_class.new(uri.request_uri, { 'Content-Type' => 'application/vnd.api+json' })
+      request      = http_class.new(uri.request_uri, headers)
       request.body = payload.to_json
 
       parse_response(http.request(request))
