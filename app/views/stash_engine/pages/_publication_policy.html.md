@@ -14,7 +14,7 @@ Dryad is a not-for-profit organization that makes it easy and affordable to cura
 * tracks the usage of <span role="emphasis" aria-describedby="term-desc">Datasets</span>, and promotes data citation and reuse as a metric of scholarly credit;
 * makes data both accessible today and preserved for use in the future;
 * respects and protects the privacy of its users; and
-* generally, meets the needs of its stakeholders for a trustworthy data <span role="emphasis" aria-describedby="term-desc">curation</span> and publication service.
+* generally, meets the needs of its stakeholders for a trustworthy data <span role="emphasis" aria-describedby="term-desc">Curation</span> and <span role="emphasis" aria-describedby="term-desc">Publication</span> service.
 
 All of the above functions and offerings, including associated systems, hardware, software, and know-how, are referred to in these Terms of Partnership (these "Terms")  as the Dryad "<span role="emphasis" aria-describedby="term-desc">Infrastructure and Services<span role="emphasis" aria-describedby="term-desc">."
 
@@ -30,7 +30,7 @@ All of the above functions and offerings, including associated systems, hardware
 
     Dryad follows the recommendations of the [FORCE11 & COPE Research Data Publishing Ethics Working Group](https://zenodo.org/records/5391293) (6 Sep 2021). These include guidelines for contacting third parties, including not only the publishers of an associated <span role="emphasis" aria-describedby="term-desc">Scholarly Publication</span>, but also the institution(s) of relevant authors, if required.
 
-    Those who wish to see a <span role="emphasis" aria-describedby="term-desc">Dataset</span> on the Dryad Website taken down, either for copyright infringement, because of privacy concerns, or for other legitimate cause, should contact <a class="emailr" href="mailto:dev@null?subject=Takedown request" aria-label="Email Dryad help desk">gro.dayrdatad@pleh</a> providing the following:
+    Those who wish to see a <span role="emphasis" aria-describedby="term-desc">Dataset</span> on the Dryad <span role="emphasis" aria-describedby="term-desc">Website</span> taken down, either for copyright infringement, because of privacy concerns, or for other legitimate cause, should contact <a class="emailr" href="mailto:dev@null?subject=Takedown request" aria-label="Email Dryad help desk">gro.dayrdatad@pleh</a> providing the following:
 
     5. A physical or electronic signature of a person authorized to act on behalf of the owner of an exclusive right that is allegedly infringed;
     6. Identification of the work claimed to have been infringed, or, if multiple works at a single online site are covered by a single notification, a representative list of such works at the site;
