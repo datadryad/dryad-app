@@ -24,13 +24,18 @@
   </div>
 
   <div>
+  <dt>Community.</dt>
+  <dd>All Partners, supporters, researchers, and engaged authors.</dd>
+  </div>
+
+  <div>
   <dt>Create/Creation.</dt>
   <dd>The initial action taken by a submitting author to create a new dataset record (not yet submitted to the Queue/Queued).</dd>
   </div>
 
   <div>
   <dt>Curate/Curation.</dt>
-  <dd>Human evaluation to ensure data, metadata, and documentation areis accessible, usable, and appropriate, and licensed for open sharing.</dd>
+  <dd>Human evaluation to ensure data, metadata, and documentation are accessible, usable, and appropriate, and licensed for open sharing.</dd>
   </div>
 
   <div>
@@ -41,27 +46,12 @@
 
   <div>
   <dt>Data Publication Volume.</dt>
-  <dd>The volume of Datasets available to a partner based on their applicable Data Publishing Charge tier.</dd>
+  <dd>The volume of Datasets available to a Partner based on their applicable Data Publishing Charge tier.</dd>
   </div>
 
   <div>
   <dt>Data Publishing Charge (DPC).</dt>
   <dd>The fee to publish data, which may be billed to the unsponsored author (for individual datasets) or to the Sponsor (datasets published each year) as set forth in the Fee Schedule based on tiers.</dd>
-  </div>
-
-  <div>
-  <dt>Community.</dt>
-  <dd>All Partners, supporters, researchers, and engaged authors.</dd>
-  </div>
-
-  <div>
-  <dt>Governing Documents.</dt>
-  <dd>Dryad’s Articles of Incorporation and Bylaws.</dd>
-  </div>
-
-  <div>
-  <dt>Infrastructure and Services.</dt>
-  <dd>All the functions and offerings, including associated systems, hardware, software, interface and know-how required for Dryad to enhance research by making data openly available and reusable; enable Datasets to be widely indexed and discoverable; assign and register Identifiers that point to or give context to Datasets on the Dryad Website; track the usage of Datasets, and promote data citation and Reuse as a metric of scholarly credit; make data accessible today and Preserved for future use; respect and protect the privacy of its Users; and generally, meet the needs of its stakeholders for a trustworthy data Curation and Publication service.</dd>
   </div>
 
   <div>
@@ -78,10 +68,20 @@
   <dt>Fees.</dt>
   <dd>Collectively, the applicable Annual Service Fees, Data Publishing Charges, Large Data Fees, and Processing and Administrative Fees, all as detailed in the Fee Schedule.</dd>
   </div>
+
+  <div>
+  <dt>Governing Documents.</dt>
+  <dd>Dryad’s Articles of Incorporation and Bylaws.</dd>
+  </div>
   
   <div>
   <dt>Identifiers.</dt>
   <dd>Persistent identifiers such as Digital Object Identifiers (DOIs).</dd>
+  </div>
+
+  <div>
+  <dt>Infrastructure and Services.</dt>
+  <dd>All the functions and offerings, including associated systems, hardware, software, interface and know-how required for Dryad to enhance research by making data openly available and reusable; enable Datasets to be widely indexed and discoverable; assign and register Identifiers that point to or give context to Datasets on the Dryad Website; track the usage of Datasets, and promote data citation and Reuse as a metric of scholarly credit; make data accessible today and Preserved for future use; respect and protect the privacy of its Users; and generally, meet the needs of its stakeholders for a trustworthy data Curation and Publication service.</dd>
   </div>
   
   <div>
@@ -150,13 +150,13 @@
   </div>
 
   <div>
-  <dt>Research Data.</dt>
-  <dd>The digital information collected, observed or created to validate, reproduce or better understand research findings.</dd>
+  <dt>Renewal Period</dt>
+  <dd>The period following the scheduled end of a Partnership Agreement, which may be for one or multiple years.</dd>
   </div>
 
   <div>
-  <dt>Renewal Period</dt>
-  <dd>The period following the scheduled end of a Partnership Agreement, which may be for one or multiple years.</dd>
+  <dt>Research Data.</dt>
+  <dd>The digital information collected, observed, or created to validate, reproduce, or better understand research findings.</dd>
   </div>
 
   <div>
@@ -216,7 +216,7 @@
 
   <div>
   <dt>Website.</dt>
-  <dd>Dryad’s website, datadryad.org.</dd>
+  <dd>Dryad’s Website, datadryad.org.</dd>
   </div>
 
   <div>
