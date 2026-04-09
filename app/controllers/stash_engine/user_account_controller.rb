@@ -34,7 +34,7 @@ module StashEngine
     end
 
     def api_application
-      render :edit and return if current_user.api_application
+      current_user.api_application.destroy if current_user.api_application
 
       Doorkeeper::Application.create(name: current_user.name, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob', owner_type: 'StashEngine::User',
                                      owner_id: current_user.id)

@@ -1,6 +1,6 @@
 # Definitions
 
-*Updated: October 7, 2025*
+*Updated: March 30, 2026*
 
 <dl>
   <div>
@@ -10,12 +10,12 @@
 
   <div>
   <dt>Administration Fee.</dt>
-  <dd>The fee charged to unsponsored authors who request an invoice for the payment of their Data Publication Charge.</dd>
+  <dd>The fee charged to unsponsored authors who request an invoice for the payment of their Data Publication Charge and/or have their Dataset Rejected.</dd>
   </div>
 
   <div>
   <dt>Annual Service Fee.</dt>
-  <dd>The annual fee for service paid by Dryad partners as set forth in the Fee Schedule based on tiers.</dd>
+  <dd>The annual fee for service paid by Dryad partners as set forth in the Fee Schedule.</dd>
   </div>
 
   <div>
@@ -24,18 +24,29 @@
   </div>
 
   <div>
-  <dt>Curation.</dt>
-  <dd>Human evaluation to ensure data is accessible, usable, and appropriate and licensed for open sharing.</dd>
+  <dt>Community.</dt>
+  <dd>All Partners, supporters, researchers, and engaged authors.</dd>
+  </div>
+
+  <div>
+  <dt>Create/Creation.</dt>
+  <dd>The initial action taken by a submitting author to create a new dataset record (not yet submitted to the Queue/Queued).</dd>
+  </div>
+
+  <div>
+  <dt>Curate/Curation.</dt>
+  <dd>Human evaluation to ensure data, metadata, and documentation are accessible, usable, and appropriate, and licensed for open sharing.</dd>
   </div>
 
   <div>
   <dt>Dataset.</dt>
-  <dd>A package of metadata and files related to one course of investigation. Datasets may or may not be submitted alongside a manuscript or published article but are usually defined by the research narrative. They can include various file types and sizes. Dryad assigns a unique DOI to each dataset.</dd>
+  <dd>A package of metadata and files (including but not limited to Research Data) related to a research investigation. Dryad assigns a unique Digital Object Identifier (DOI) to each dataset.
+</dd>
   </div>
 
   <div>
   <dt>Data Publication Volume.</dt>
-  <dd>The volume of Datasets available to a partner based on their applicable Data Publishing Charge tier.</dd>
+  <dd>The volume of Datasets available to a Partner based on their applicable Data Publishing Charge tier.</dd>
   </div>
 
   <div>
@@ -44,22 +55,7 @@
   </div>
 
   <div>
-  <dt>Dryad Community.</dt>
-  <dd>All partners, supporters, researchers, and engaged authors.</dd>
-  </div>
-
-  <div>
-  <dt>Dryad Governing Documents.</dt>
-  <dd>Dryad’s Articles of Incorporation and Bylaws.</dd>
-  </div>
-
-  <div>
-  <dt>Dryad Infrastructure and Services.</dt>
-  <dd>All Dryad’s functions and offerings, including associated systems, hardware, software, interface and know-how.</dd>
-  </div>
-
-  <div>
-  <dt>End User.</dt>
+  <dt>End Users.</dt>
   <dd>Submitters and Users collectively.</dd>
   </div>
 
@@ -70,27 +66,37 @@
 
   <div>
   <dt>Fees.</dt>
-  <dd>Collectively, the applicable Annual Service Fees, Data Publishing Charges, and any Large Data Fees, all as detailed in the Fee Schedule.</dd>
+  <dd>Collectively, the applicable Annual Service Fees, Data Publishing Charges, Large Data Fees, and Processing and Administrative Fees, all as detailed in the Fee Schedule.</dd>
+  </div>
+
+  <div>
+  <dt>Governing Documents.</dt>
+  <dd>Dryad’s Articles of Incorporation and Bylaws.</dd>
   </div>
   
   <div>
   <dt>Identifiers.</dt>
   <dd>Persistent identifiers such as Digital Object Identifiers (DOIs).</dd>
   </div>
+
+  <div>
+  <dt>Infrastructure and Services.</dt>
+  <dd>All the functions and offerings, including associated systems, hardware, software, interface and know-how required for Dryad to enhance research by making data openly available and reusable; enable Datasets to be widely indexed and discoverable; assign and register Identifiers that point to or give context to Datasets on the Dryad Website; track the usage of Datasets, and promote data citation and Reuse as a metric of scholarly credit; make data accessible today and Preserved for future use; respect and protect the privacy of its Users; and generally, meet the needs of its stakeholders for a trustworthy data Curation and Publication service.</dd>
+  </div>
   
   <div>
   <dt>Large Data Fee.</dt>
-  <dd>The fee charged for larger Datasets, as set out in the Fee Schedule based on tiers by size. Large Data Fees may be incurred at the point of initial Dataset Submission or following a Versioning of the Dataset.</dd>
+  <dd>The fee charged for larger Datasets, as set out in the Fee Schedule . Large Data Fees may be incurred when the Dataset enters the curation queue for the first time or when it is Versioned.</dd>
   </div>
 
   <div>
   <dt>Metadata.</dt>
-  <dd>Information describing a Dataset.</dd>
+  <dd>Information describing and accompanying a Dataset.</dd>
   </div>
 
   <div>
   <dt>Partner.</dt>
-  <dd>An entity that has executed a Dryad Partnership Agreement/the fact of being a Dryad partner.</dd>
+  <dd>An entity that has executed a Dryad Partnership Agreement/the fact of being a Dryad Partner.</dd>
   </div>
 
   <div>
@@ -99,48 +105,78 @@
   </div>
 
   <div>
-  <dt>Publish/Publication.</dt>
-  <dd>The public distribution of a Dataset on the Dryad Website under a CC0 instrument.</dd>
+  <dt>Prepay/Prepayment.</dt>
+  <dd>Payment, typically by a Dryad Partner, toward Fees beyond the first calendar year of Partnership.</dd>
+  </div>
+
+  <div>
+  <dt>Preserve/Preservation.</dt>
+  <dd>The service through which Dryad safeguards, monitors and makes Published data available for the long term.</dd>
   </div>
 
   <div>
   <dt>Private for Peer Review.</dt>
-  <dd>A service through which Dryad makes the Dataset private to peer reviewers while they consider a related manuscript.</dd>
+  <dd>A service through which Dryad makes the Dataset available to reviewers, but unavailable to others, while they peer review a related manuscript under consideration by a scholarly journal.</dd>
   </div>
 
   <div>
   <dt>Private for Peer Review Fee.</dt>
-  <dd>A one-time fee for Datasets to be held in Private for Peer Review status.</dd>
+  <dd>A one-time fee for Datasets to be held in Private for Peer Review.</dd>
   </div>
 
   <div>
   <dt>Processing/In Process.</dt>
-  <dd>The curation and assessment process performed by Dryad before Dataset Publication.</dd>
+  <dd>The treatment of Datasets by Dryad, from point of entry into our system through to Dataset Publication.</dd>
   </div>
 
   <div>
   <dt>Processing Fee.</dt>
-  <dd>The applicable fee for post-termination Dataset Processing as further described in the Partner Agreement.</dd>
+  <dd>The applicable fee for post-termination Processing Datasets after the termination of a Partnership Agreement, as further described in the Partner Terms.</dd>
+  </div>
+
+  <div>
+  <dt>Publish/Publication.</dt>
+  <dd>The public distribution of a Dataset on the Dryad Website.</dd>
+  </div>
+
+  <div>
+  <dt>Queue/Queued.</dt>
+  <dd>The line of Datasets made available to Curation for Processing. </dd>
+  </div>
+
+  <div>
+  <dt>Reject/Rejection.</dt>
+  <dd>A conclusion by Dryad Curation personnel that a Dataset be Rejected for Publication.</dd>
+  </div>
+
+  <div>
+  <dt>Renewal Period</dt>
+  <dd>The period following the scheduled end of a Partnership Agreement, which may be for one or multiple years.</dd>
   </div>
 
   <div>
   <dt>Research Data.</dt>
-  <dd>The information or materials collected, observed or created to validate, reproduce or better understand research findings.</dd>
+  <dd>The digital information collected, observed, or created to validate, reproduce, or better understand research findings.</dd>
+  </div>
+
+  <div>
+  <dt>Reuse/Use.</dt>
+  <dd>The use of existing research data to complete secondary analysis or investigate new research questions.</dd>
   </div>
 
   <div>
   <dt>Scholarly Publication.</dt>
-  <dd>Publications related to scholarly research such as, but not limited to, a research article in a scholarly journal, preprint, a book, chapter, conference proceedings, monograph or dissertation.</dd>
+  <dd>Publications related to scholarly research such as, but not limited to, a research article in a scholarly journal, preprint, a book, chapter, conference proceedings, monograph, or dissertation.</dd>
   </div>
 
   <div>
   <dt>Sponsor.</dt>
-  <dd>The act of covering the Data Publishing Charge for the Submitter, usually through a Partnership Agreement. </dd>
+  <dd>The act of covering the Data Publishing Charge (DPC) for the Submitter, usually through a Partnership Agreement. </dd>
   </div>
 
   <div>
-  <dt>Sponsored author.</dt>
-  <dd>An author whose Data Publishing Charges are covered by a Dryad Partner. </dd>
+  <dt>Sponsored Author.</dt>
+  <dd>An author whose Data Publishing Charges (DPCs) are covered by a Dryad Partner. </dd>
   </div>
 
   <div>
@@ -150,41 +186,41 @@
 
   <div>
   <dt>Submit/Submission.</dt>
-  <dd>The depositing of a Dataset on the Dryad Website/a Dataset so deposited.</dd>
+  <dd>The depositing of a Dataset on the Website/a Dataset so deposited.</dd>
   </div>
 
   <div>
   <dt>Submitter.</dt>
-  <dd>The individual who Submits a Dataset to the Dryad Website.</dd>
+  <dd>The individual who Submits a Dataset to the Website.</dd>
   </div>
 
   <div>
-  <dt>Terms of Service.</dt>
-  <dd>The terms and conditions applicable to Partner entities.</dd>
-  </div>
-
-  <div>
-  <dt>Unsponsored author.</dt>
-  <dd>An author whose Data Publishing Charges are not covered by a Dryad Partner. </dd>
+  <dt>Unsponsored Author.</dt>
+  <dd>An author whose Data Publishing Charges (DPCs) are not covered by a Partner. </dd>
   </div>
 
   <div>
   <dt>User.</dt>
-  <dd>An individual who views, downloads or otherwise reuses Datasets from the Dryad Website.</dd>
+  <dd>An individual who views, downloads or otherwise reuses Datasets from the Website.</dd>
   </div>
 
   <div>
   <dt>Version/Versioning.</dt>
-  <dd>Updates to Datasets after Publication to correct errors in the Published files or to provide additional data supporting the findings.</dd>
+  <dd>Updates to Datasets after Publication.</dd>
   </div>
 
   <div>
   <dt>Waiver.</dt>
-  <dd>A waiver of fees to Publish a Dataset to the Dryad Website that may be granted to a Submitter.</dd>
+  <dd>A waiver of the Data Publishing Charge (DPC) that may be granted to an Unsponsored Author.</dd>
   </div>
 
   <div>
   <dt>Website.</dt>
-  <dd>Dryad’s website, datadryad.org.</dd>
+  <dd>Dryad’s Website, datadryad.org.</dd>
+  </div>
+
+  <div>
+  <dt>Withdraw/Withdrawn.</dt>
+  <dd>The removal of a Dataset fromon the website/a Dataset so removed.</dd>
   </div>
 </dl>

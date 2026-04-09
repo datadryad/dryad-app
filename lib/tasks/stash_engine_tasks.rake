@@ -1581,6 +1581,12 @@ namespace :journal_email do
   task clean_old_manuscripts: :environment do
     StashEngine::Manuscript.where('created_at < ?', 2.years.ago).delete_all
   end
+
+  desc 'Check dates of journal integrations'
+  task check_integrations: :environment do
+    journals = StashEngine::Journal.where('integrated_at BETWEEN ? AND ?', 6.months.ago, 1.month.ago)
+    StashEngine::UserMailer.integration_paused(journals).deliver_now unless journals.empty?
+  end
 end
 
 def log(message)
