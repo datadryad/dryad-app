@@ -1,0 +1,7 @@
+<p>The following journals have not sent manuscript information or updated datasets through the API in the past month:</p>
+
+<ul>
+  <% @journals.map do |journal| %>
+    <li><%= journal.title %>, <%= journal.single_issn %></li>
+  <% end %>
+</ul>

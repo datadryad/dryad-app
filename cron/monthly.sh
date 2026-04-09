@@ -13,6 +13,8 @@ export REPORT_DIR="/home/ec2-user/deploy/shared/cron/counter-json"
 # this script is no longer used since we don't routinely update and force reports based on logs/json files
 # bundle exec rails counter:datacite_pusher >> /home/ec2-user/deploy/shared/log/counter-uploader.log 2>&1
 
+# Check for integration issues
+bundle exec rails journal_email:check_integrations >> /home/ec2-user/deploy/shared/log/integration_check.log 2>&1
 
 # Update Genbank IDs and PubMedIDs related to Dryad datasets,
 # then send them to LinkOut (NCBI) and LabsLink (Europe PMC)
