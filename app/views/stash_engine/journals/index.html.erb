@@ -1,7 +1,7 @@
 <% @page_title = "Journals" %>
 <% if policy(@journals).detail? %>
 <div class="callout">
-<p style="text-align: center;">You are viewing this page as a privileged user. Non-system users see only Title, ISSNs, DPC sponsored and Integrated Data.</p>
+<p style="text-align: center;">You are viewing this page as a privileged user. Non-system users see only Title, ISSNs, and checkboxes for DPC sponsored and Integrated data.</p>
 </div>
 <% end %>
 <div id="page-columns">
@@ -35,36 +35,43 @@ Dryad partner, you will be responsible for paying the DPC as well as any overage
           <%= sortable_column_head sort_field: 'parent_org_id', title: 'Top level org' %>
         </th>
       <% end %>
-      <th>Integrated data</th>
       <% if policy(@journals).detail? %>
+        <th class="c-lined-table__sort" <%= sort_display('manuscript_number') %>>
+          <%= sortable_column_head sort_field: 'manuscript_number', title: 'Integration type' %>
+        </th>
         <th>Data last received</th>
         <th class="c-lined-table__sort" <%= sort_display('default_to_ppr') %>>
           <%= sortable_column_head sort_field: 'default_to_ppr', title: 'Auto PPR' %>
         </th>
+      <% else %>
+        <th>Integrated data</th>
       <% end %>
       </tr>
   </thead>
 <tbody class="journals-list">
-  <% @journals.each do |journal| %>
+  <% @journals.uniq.each do |journal| %>
   <tr class="c-lined-table__row" id="js-dataset-row-id-<%= journal.id %>">
     <td><%= journal.title %></td>
     <td class="c-lined-table__digits" style="white-space: nowrap;"><%= journal.issn_array.join(', ') %></span></td>
-    <td><% if journal.payment_configuration&.payment_plan.present? %><i class="fa fa-check-circle" aria-hidden="true" title="Sponsored"></i><span class="screen-reader-only">Sponsored</span><% end %></td>
+    <td><% if journal.payment_configuration&.payment_plan.present? %><i class="fa fa-check-circle" aria-hidden="true" title="Sponsored" role="img" aria-label="Sponsored"></i><% end %></td>
     <% if policy(@journals).detail? %>
       <td class="c-lined-table__digits"><%= journal.payment_configuration&.payment_plan %></td>
       <td><%= journal.sponsor&.name %></td>
       <td><%= journal.top_level_org&.name == journal.sponsor&.name ? '' : journal.top_level_org&.name %></td>
     <% end %>
-    <td><% if @api_journals.include?(journal.id) || @metadata_journals.include?(journal.id) %><i class="fa fa-check-circle" aria-hidden="true" title="Data integrated"></i><span class="screen-reader-only">Data integrated</span><% end %></td>
     <% if policy(@journals).detail? %>
-      <td class="c-lined-table__digits">
-        <%if @metadata_journals.include?(journal.id) %>
-          <%= journal.manuscripts.limit(1)&.first&.created_at %>
-        <% elsif @api_journals.include?(journal.id) %>
-          API journal
+      <td>
+        <% if journal.integrated_at.present? %>
+          <i class="fa fa-check-circle" aria-hidden="true" title="Data integrated" role="img" aria-label="Data integrated"></i>
+          <%= journal.manuscripts.present? ? 'Email' : 'API' %>
         <% end %>
       </td>
-      <td><% if journal.default_to_ppr? %><i class="fa fa-check-circle" aria-hidden="true" title="Default"></i><span class="screen-reader-only">Default</span><% end %></td>
+      <td class="c-lined-table__digits">
+        <%= formatted_date(journal.integrated_at) if journal.integrated_at.present? %>
+      </td>
+      <td><% if journal.default_to_ppr? %><i class="fa fa-check-circle" aria-hidden="true" title="Default" role="img" aria-label="Default"></i><% end %></td>
+    <% else %>
+      <td><% if journal.integrated_at.present? %><i class="fa fa-check-circle" aria-hidden="true" title="Data integrated" role="img" aria-label="Data integrated"></i><% end %></td>
     <% end %>
   </tr>
 <% end -%>

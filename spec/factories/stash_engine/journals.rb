@@ -7,6 +7,7 @@
 #  api_contacts            :text(65535)
 #  default_to_ppr          :boolean          default(FALSE)
 #  description             :text(65535)
+#  integrated_at           :datetime
 #  journal_code            :string(191)
 #  manuscript_number_regex :string(191)
 #  notify_contacts         :text(65535)

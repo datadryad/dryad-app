@@ -27,7 +27,6 @@ import errorFiles from './errorFiles.json';
 import UploadFiles from '../../../../../app/javascript/react/components/UploadFiles';
 
 jest.mock('axios');
-jest.mock('aws-sdk');
 jest.mock('evaporate', () => ({
   create: jest.fn(() => Promise.resolve({
     add: jest.fn((addConfig) => {

@@ -11,7 +11,8 @@
 #
 # Indexes
 #
-#  index_dcs_descriptions_on_resource_id  (resource_id)
+#  index_dcs_descriptions_on_description_type  (description_type)
+#  index_dcs_descriptions_on_resource_id       (resource_id)
 #
 require 'rails_helper'
 
