@@ -18,6 +18,7 @@ module StashApi
     before_action :optional_api_user, except: %i[create update em_submission_metadata]
     before_action :require_permission, only: :update
     before_action :lock_down_admin_only_params, only: %i[create update]
+    after_action :record_journal_integration, only: %i[create update em_submission_metadata]
 
     # get /datasets/<id>
     def show
@@ -548,6 +549,13 @@ module StashApi
 
     def duplicate_resource
       @resource = DuplicateResourceService.new(@resource, @user).call
+    end
+
+    def record_journal_integration
+      return unless @resource&.journal&.present? && @user.present?
+      return unless @user.journals_as_admin.include?(@resource.journal)
+
+      @resource.journal.update(integrated_at: Time.now.utc)
     end
 
     def paged_datasets(datasets:)
