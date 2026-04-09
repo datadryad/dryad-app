@@ -1,6 +1,9 @@
 name: RSpec Internal Tests
 
 on: pull_request
+concurrency:
+  group: ${ { github.workflow } } -${ { github.event.pull_request.number || github.ref } }
+  cancel-in-progress: true
 
 jobs:
   rspec-internal:
