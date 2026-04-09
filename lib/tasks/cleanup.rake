@@ -47,14 +47,24 @@ namespace :cleanup do
   task update_file_licenses: :environment do
     params = { 'client-id': APP_CONFIG.identifier_service.account, 'resource-type': 'DataFile', 'page[size]': 500 }
     query_result = Integrations::Datacite.new.query('/dois', params)
-    records.concat(query_result['data'])
+    records = [].concat(query_result['data'])
     while query_result.dig('links', 'next').present?
       params['page[number]'] = query_result.dig('meta', 'page').to_i + 1
       query_result = Integrations::Datacite.new.query('/dois', params)
       records.concat(query_result['data'])
     end
 
-    rights_list = {
+    # update schema version, change resourceTypeGeneral, and add license
+    attributes = {
+      schemaVersion: 'http://datacite.org/schema/kernel-4',
+      types: {
+        ris: 'DATA',
+        bibtex: 'misc',
+        citeproc: 'dataset',
+        schemaOrg: 'DataDownload',
+        resourceType: 'DataFile',
+        resourceTypeGeneral: 'Other'
+      },
       rightsList: [
         {
           rights: 'Creative Commons Zero v1.0 Universal',
@@ -67,11 +77,11 @@ namespace :cleanup do
     }
 
     records.each do |record|
-      next if record.dig('rightsList', 0, 'rightsIdentifierScheme') == 'SPDX'
-      next unless record.dig('rightsList', 0, 'rightsUri')&.include?('publicdomain')
+      next if record.dig('attributes', 'rightsList', 0, 'rightsIdentifierScheme') == 'SPDX'
+      next unless record.dig('attributes', 'rightsList', 0, 'rightsUri')&.include?('publicdomain')
 
-      doi = record['id']
-      Datacite::Metadata.new(doi: doi).update(rights_list)
+      p "Updating #{record['id']}"
+      Datacite::Metadata.new(doi: record['id']).update(attributes)
     end
   end
 end
