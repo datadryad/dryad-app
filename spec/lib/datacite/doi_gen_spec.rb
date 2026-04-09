@@ -109,7 +109,7 @@ module Datacite
           password: '3cc9d3fbd9788148c6a32a1415fa673a',
           sandbox: true
         }
-        allow(tenant).to receive(:identifier_service).and_return(Struct.new(id_params))
+        allow(tenant).to receive(:identifier_service).and_return(OpenStruct.new(id_params))
         allow(tenant).to receive(:tenant_id).and_return('dataone')
         allow(tenant).to receive(:full_url).with(path_to_landing).and_return(landing_page_url)
         allow(resource).to receive(:tenant).and_return(tenant)

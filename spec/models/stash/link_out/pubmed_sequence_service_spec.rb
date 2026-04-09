@@ -47,7 +47,7 @@ module Stash
         # Rails stack
         link_out = OpenStruct.new(APP_CONFIG.link_out)
         allow(APP_CONFIG).to receive(:link_out).and_return(link_out)
-        allow(link_out).to receive(:pubmed).and_return(Struct.new(link_out.pubmed))
+        allow(link_out).to receive(:pubmed).and_return(OpenStruct.new(link_out.pubmed))
         allow(Rails).to receive(:application).and_return(
           OpenStruct.new(routes: OpenStruct.new(url_helpers: OpenStruct.new(root_url: 'example.org')))
         )

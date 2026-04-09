@@ -18,7 +18,7 @@ module Mocks
       allow_any_instance_of(::Aws::S3::ObjectSummary::Collection).to receive(:batch_delete!).and_return(nil)
 
       # Add a default database configuration, which is needed by Resource.s3_dir_name
-      allow(Rails).to receive(:configuration).and_return(Struct.new(database_configuration: { 'test' => { 'host' => 'localhost' } }))
+      allow(Rails).to receive(:configuration).and_return(OpenStruct.new(database_configuration: { 'test' => { 'host' => 'localhost' } }))
     end
 
   end

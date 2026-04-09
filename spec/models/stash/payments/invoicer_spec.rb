@@ -129,7 +129,7 @@ module Stash
                   description: "Dryad deposit #{res_1.identifier}, #{res_1.title}",
                   metadata: { 'curator' => curator&.name }
                 }
-              ).and_return(Struct.new(id: 1))
+              ).and_return(OpenStruct.new(id: 1))
 
               expect(Stripe::InvoiceItem).to receive(:create).with(
                 {
@@ -158,7 +158,7 @@ module Stash
                   description: "Dryad deposit #{res_1.identifier}, #{res_1.title}",
                   metadata: { 'curator' => curator&.name }
                 }
-              ).and_return(Struct.new(id: 1))
+              ).and_return(OpenStruct.new(id: 1))
 
               expect(Stripe::InvoiceItem).to receive(:create).with(
                 {
@@ -236,7 +236,7 @@ module Stash
                   description: "Dryad deposit #{res_2.identifier}, #{res_2.title}",
                   metadata: { 'curator' => curator&.name }
                 }
-              ).and_return(Struct.new(id: 2))
+              ).and_return(OpenStruct.new(id: 2))
 
               expect(Stripe::InvoiceItem).to receive(:create).with(
                 {
