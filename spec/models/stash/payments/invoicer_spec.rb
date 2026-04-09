@@ -139,7 +139,7 @@ module Stash
                   currency: 'usd',
                   description: "Data processing charge for #{identifier} (49.81 GB)"
                 }
-              ).and_return([Struct.new(id: 1)])
+              ).and_return([OpenStruct.new(id: 1)])
 
               expect { subject.charge_user_via_invoice }.not_to(change do
                 identifier.reload.last_invoiced_file_size
@@ -168,7 +168,7 @@ module Stash
                   currency: 'usd',
                   description: "Data processing charge for #{identifier} (103.81 GB)"
                 }
-              ).and_return([Struct.new(id: 1)])
+              ).and_return([OpenStruct.new(id: 1)])
               expect(Stripe::InvoiceItem).to receive(:create).with(
                 {
                   customer: 'stripe_customer_id',
@@ -181,7 +181,7 @@ module Stash
                     per 10 GB or part thereof over 50 GB (see https://datadryad.org/publishing_charges for details)
                   TEXT
                 }
-              ).and_return([Struct.new(id: 2)])
+              ).and_return([OpenStruct.new(id: 2)])
 
               expect { subject.charge_user_via_invoice }.to change {
                 identifier.reload.last_invoiced_file_size
@@ -250,7 +250,7 @@ module Stash
                     per 10 GB or part thereof over 50 GB (see https://datadryad.org/publishing_charges for details)
                   TEXT
                 }
-              ).and_return([Struct.new(id: 2)])
+              ).and_return([OpenStruct.new(id: 2)])
 
               expect { subject.check_new_overages(103_807_000_000) }.to change {
                 identifier.reload.last_invoiced_file_size

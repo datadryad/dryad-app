@@ -91,7 +91,7 @@ module StashEngine
     end
 
     def setup_filter
-      @statuses = [Struct.new(value: '', label: '*Select status*')]
+      @statuses = [OpenStruct.new(value: '', label: '*Select status*')]
       @excluded = StashEngine::CurationActivity.statuses.except(:in_progress, :processing, :embargoed, :withdrawn, :retracted)
       @statuses << @excluded.keys.map do |s|
         OpenStruct.new(value: s, label: StashEngine::CurationActivity.readable_status(s))

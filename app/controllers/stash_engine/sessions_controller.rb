@@ -82,7 +82,7 @@ module StashEngine
     def test_login
       return render(body: 'unauthorized', status: 401) if Rails.env.include?('prod') || ENV['TEST_LOGIN'].blank?
 
-      @tenants = [Struct.new(id: 'dryad', name: 'Dryad')]
+      @tenants = [OpenStruct.new(id: 'dryad', name: 'Dryad')]
       @tenants << StashEngine::Tenant.partner_list.map do |t|
         OpenStruct.new(id: t.id, name: t.short_name)
       end

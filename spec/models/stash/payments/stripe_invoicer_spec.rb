@@ -129,7 +129,7 @@ module Stash
                   currency: 'usd',
                   description: "Some line item name for #{identifier} (100 B)"
                 }
-              ).and_return([Struct.new(id: 1)])
+              ).and_return([OpenStruct.new(id: 1)])
               expect(invoice).to receive(:send_invoice).and_return(OpenStruct.new(id: 1))
 
               expect(invoicer.create_invoice).to eq(OpenStruct.new(id: 1))
@@ -163,7 +163,7 @@ module Stash
                 currency: 'usd',
                 description: "Some line item name for #{identifier} (100 B)"
               }
-            ).and_return([Struct.new(id: 1)])
+            ).and_return([OpenStruct.new(id: 1)])
             expect(Stripe::InvoiceItem).to receive(:create).with(
               {
                 customer: 'stripe_customer_id',
@@ -172,7 +172,7 @@ module Stash
                 currency: 'usd',
                 description: 'Invoice fee'
               }
-            ).and_return([Struct.new(id: 2)])
+            ).and_return([OpenStruct.new(id: 2)])
             expect(invoice).to receive(:send_invoice).and_return(OpenStruct.new(id: 1))
 
             expect(invoicer.create_invoice).to eq(OpenStruct.new(id: 1))

@@ -79,7 +79,7 @@ module StashEngine
     end
 
     def setup_consortia
-      @consortia = [Struct.new(id: '', name: '')]
+      @consortia = [OpenStruct.new(id: '', name: '')]
       rors = StashEngine::TenantRorOrg.select(:ror_id).group(:ror_id).having('count(ror_id) > 1')
       tenants = StashEngine::Tenant.includes([:tenant_ror_orgs]).joins(:tenant_ror_orgs).where(tenant_ror_orgs: { ror_id: rors })
         .distinct.order(:short_name)
