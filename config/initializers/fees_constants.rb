@@ -24,7 +24,7 @@ INDIVIDUAL_ESTIMATED_FILES_SIZE = if Rails.env.development? || Rails.env.dev?
     { tier: 5, range:   100_000_001..  250_000_000, price:  1_750 },
     { tier: 6, range:   250_000_001..  500_000_000, price:  3_086 },
     { tier: 7, range:   500_000_001..1_000_000_000, price:  6_077 },
-    { tier: 8, range: 1_000_000_001..2_000_000_000, price: 12_162 }
+    { tier: 8, range: 1_000_000_001..2_000_000_000_000, price: 12_162 }
   ].freeze
 else
   # Values in GB
@@ -49,7 +49,7 @@ ESTIMATED_FILES_SIZE = if Rails.env.development? || Rails.env.dev?
     { tier: 3, range:   100_000_001..  250_000_000, price: 1_123 },
     { tier: 4, range:   250_000_001..  500_000_000, price: 2_153 },
     { tier: 5, range:   500_000_001..1_000_000_000, price: 4_347 },
-    { tier: 6, range: 1_000_000_001..2_000_000_000, price: 8_809 }
+    { tier: 6, range: 1_000_000_001..2_000_000_000_000, price: 8_809 }
   ].freeze
 else
   # Values in GB
