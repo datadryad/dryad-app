@@ -1,6 +1,7 @@
 class AffiliationsService
 
   attr_reader :affiliation
+
   def initialize(affiliation)
     @affiliation = affiliation
   end

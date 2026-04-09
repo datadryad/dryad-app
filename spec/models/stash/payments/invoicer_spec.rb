@@ -5,6 +5,7 @@ module Stash
   module Payments
     describe Invoicer do
       include Mocks::Salesforce
+
       before do
         mock_salesforce!
       end
@@ -37,10 +38,10 @@ module Stash
           allow(@resource).to receive(:owner_author).and_return(@author)
 
           @cust_id = '9999'
-          fake_invoice_item = OpenStruct.new(customer: @cust_id, amount: '99.99', currency: 'usd', description: 'Data Processing Charge')
-          fake_invoice = OpenStruct.new(customer: @cust_id, description: 'Dryad deposit',
-                                        metadata: { curator: 'The Curator' }, send_invoice: 'STRIPE1234')
-          fake_customer = OpenStruct.new(id: @cust_id, email: @author.author_email, description: @author.author_standard_name)
+          fake_invoice_item = Struct.new(customer: @cust_id, amount: '99.99', currency: 'usd', description: 'Data Processing Charge')
+          fake_invoice = Struct.new(customer: @cust_id, description: 'Dryad deposit',
+                                    metadata: { curator: 'The Curator' }, send_invoice: 'STRIPE1234')
+          fake_customer = Struct.new(id: @cust_id, email: @author.author_email, description: @author.author_standard_name)
 
           @invoicer = Invoicer.new(resource: @resource, curator: @curator)
           allow(@invoicer).to receive(:create_invoice_items_for_dpc).and_return([fake_invoice_item])
@@ -128,7 +129,7 @@ module Stash
                   description: "Dryad deposit #{res_1.identifier}, #{res_1.title}",
                   metadata: { 'curator' => curator&.name }
                 }
-              ).and_return(OpenStruct.new(id: 1))
+              ).and_return(Struct.new(id: 1))
 
               expect(Stripe::InvoiceItem).to receive(:create).with(
                 {
@@ -138,7 +139,7 @@ module Stash
                   currency: 'usd',
                   description: "Data processing charge for #{identifier} (49.81 GB)"
                 }
-              ).and_return([OpenStruct.new(id: 1)])
+              ).and_return([Struct.new(id: 1)])
 
               expect { subject.charge_user_via_invoice }.not_to(change do
                 identifier.reload.last_invoiced_file_size
@@ -157,7 +158,7 @@ module Stash
                   description: "Dryad deposit #{res_1.identifier}, #{res_1.title}",
                   metadata: { 'curator' => curator&.name }
                 }
-              ).and_return(OpenStruct.new(id: 1))
+              ).and_return(Struct.new(id: 1))
 
               expect(Stripe::InvoiceItem).to receive(:create).with(
                 {
@@ -167,7 +168,7 @@ module Stash
                   currency: 'usd',
                   description: "Data processing charge for #{identifier} (103.81 GB)"
                 }
-              ).and_return([OpenStruct.new(id: 1)])
+              ).and_return([Struct.new(id: 1)])
               expect(Stripe::InvoiceItem).to receive(:create).with(
                 {
                   customer: 'stripe_customer_id',
@@ -180,7 +181,7 @@ module Stash
                     per 10 GB or part thereof over 50 GB (see https://datadryad.org/publishing_charges for details)
                   TEXT
                 }
-              ).and_return([OpenStruct.new(id: 2)])
+              ).and_return([Struct.new(id: 2)])
 
               expect { subject.charge_user_via_invoice }.to change {
                 identifier.reload.last_invoiced_file_size
@@ -235,7 +236,7 @@ module Stash
                   description: "Dryad deposit #{res_2.identifier}, #{res_2.title}",
                   metadata: { 'curator' => curator&.name }
                 }
-              ).and_return(OpenStruct.new(id: 2))
+              ).and_return(Struct.new(id: 2))
 
               expect(Stripe::InvoiceItem).to receive(:create).with(
                 {
@@ -249,7 +250,7 @@ module Stash
                     per 10 GB or part thereof over 50 GB (see https://datadryad.org/publishing_charges for details)
                   TEXT
                 }
-              ).and_return([OpenStruct.new(id: 2)])
+              ).and_return([Struct.new(id: 2)])
 
               expect { subject.check_new_overages(103_807_000_000) }.to change {
                 identifier.reload.last_invoiced_file_size

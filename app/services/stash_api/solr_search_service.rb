@@ -16,7 +16,7 @@ module StashApi
       params[:sort] = sort_query if filters.key?('sort')
       @solr.paginate(page, per_page, 'select', params: params)
     rescue RSolr::Error::Http
-      @error = OpenStruct.new(status: 400, message: 'Unable to parse query request.')
+      @error = Struct.new(status: 400, message: 'Unable to parse query request.')
       []
     end
 

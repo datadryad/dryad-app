@@ -123,7 +123,7 @@ RSpec.describe UtilityMethods do
     before(:each) do
       @month_year = '2010-11'
       @report_dir =  File.expand_path(File.join(__dir__, '../fixtures'))
-      @report_info = OpenStruct.new(year_month: '2020-11', id: '3875xxe', pages: 1)
+      @report_info = Struct.new(year_month: '2020-11', id: '3875xxe', pages: 1)
       @force_list = []
     end
 

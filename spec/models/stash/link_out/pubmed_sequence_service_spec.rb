@@ -45,11 +45,11 @@ module Stash
 
         # Mock the app_config.yml and Rails.application.routes since we're not loading the full
         # Rails stack
-        link_out = OpenStruct.new(APP_CONFIG.link_out)
+        link_out = Struct.new(APP_CONFIG.link_out)
         allow(APP_CONFIG).to receive(:link_out).and_return(link_out)
-        allow(link_out).to receive(:pubmed).and_return(OpenStruct.new(link_out.pubmed))
+        allow(link_out).to receive(:pubmed).and_return(Struct.new(link_out.pubmed))
         allow(Rails).to receive(:application).and_return(
-          OpenStruct.new(routes: OpenStruct.new(url_helpers: OpenStruct.new(root_url: 'example.org')))
+          Struct.new(routes: Struct.new(url_helpers: Struct.new(root_url: 'example.org')))
         )
 
         stub_request(:get, %r{www.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?})

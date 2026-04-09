@@ -61,7 +61,7 @@ module StashEngine
         return false unless user_must_pay?
         return false if old_payment_system
 
-        if payments.count > 0
+        if payments.any?
           invoicer = Stash::Payments::StripeInvoicer.new(payments.last.resource)
           return !invoicer.invoice_paid? if invoicer.invoice_created?
         end
@@ -112,7 +112,7 @@ module StashEngine
           self.payment_type = "journal-#{journal.payment_configuration.payment_plan}"
           self.payment_id = publication_issn
           self.old_payment_system = false
-        elsif payments.count > 0 && !old_system_valid_payer?
+        elsif payments.any? && !old_system_valid_payer?
           self.payment_type = 'stripe'
           self.payment_id = payments.paid.last&.payment_id
         else
@@ -203,7 +203,7 @@ module StashEngine
           return unless payment_type.include?('journal') || journal_will_pay?
           return if payment_id == journal&.single_issn
         end
-        return if payments.paid.count > 0
+        return if payments.paid.any?
 
         self.payment_type = nil
         self.payment_id = nil

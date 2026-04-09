@@ -70,7 +70,7 @@ module StashEngine
       end
       str += '<span id="doi-label" class="accepted">published</span>' if resource.identifier.publication_article_doi.present?
       unless resource.related_identifiers.empty?
-        str += "<br/>#{resource.related_identifiers.size} related work#{resource.related_identifiers.size > 1 ? 's' : ''}"
+        str += "<br/>#{resource.related_identifiers.size} related work#{'s' if resource.related_identifiers.size > 1}"
       end
       str.html_safe
     end

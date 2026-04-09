@@ -3,6 +3,7 @@ module Stash
     describe Inventory do
       describe '#initialize' do
         attr_reader :params
+
         before(:each) do
           @params = {
             files: [

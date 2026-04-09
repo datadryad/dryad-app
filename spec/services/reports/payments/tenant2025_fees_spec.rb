@@ -1,6 +1,6 @@
 describe Reports::Payments::Tenant2025Fees do
 
-  let(:args) { OpenStruct.new(sc_report: File.join('spec', 'fixtures', 'reports', 'shopping_cart_report_2025.csv')) }
+  let(:args) { Struct.new(sc_report: File.join('spec', 'fixtures', 'reports', 'shopping_cart_report_2025.csv')) }
   let!(:tenant_consortium) { create(:tenant, id: '2056-3744', short_name: 'consortium') }
   let!(:tenant1) { create(:tenant, id: 'member1', sponsor_id: '2056-3744', short_name: 'member1') }
   let!(:tenant2) { create(:tenant, id: 'member2', sponsor_id: '2056-3744', short_name: 'member2') }

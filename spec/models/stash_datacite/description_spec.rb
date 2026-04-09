@@ -19,6 +19,7 @@ require 'rails_helper'
 module StashDatacite
   describe Description do
     attr_reader :resource
+
     before(:each) do
       user = create(:user, email: 'lmuckenhaupt@example.edu', tenant_id: 'dataone')
       @resource = create(:resource, user: user)

@@ -56,7 +56,7 @@ module StashEngine
 
     def delete_confirm(dataset)
       str = 'Are you sure you want to remove this dataset'
-      if dataset.stash_version&.version&. > 1
+      if dataset.stash_version&.version&.> 1
         str += ' version?'
         str += ' The published version will still be available.' if dataset.identifier.pub_state == 'published'
       else

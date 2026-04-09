@@ -28,7 +28,7 @@ module Stash
         mock_salesforce!
         mock_stripe!
         allow(invoicer).to receive(:lookup_prior_stripe_customer_id).and_return('stripe_customer_id')
-        allow(Stripe::Invoice).to receive(:retrieve).and_return(OpenStruct.new({ id: invoice_id, status: 'open' }))
+        allow(Stripe::Invoice).to receive(:retrieve).and_return(Struct.new({ id: invoice_id, status: 'open' }))
       end
 
       describe 'initializer' do
@@ -60,7 +60,7 @@ module Stash
         end
 
         context 'with paid invoice' do
-          before { allow(Stripe::Invoice).to receive(:retrieve).and_return(OpenStruct.new({ id: invoice_id, status: 'paid' })) }
+          before { allow(Stripe::Invoice).to receive(:retrieve).and_return(Struct.new({ id: invoice_id, status: 'paid' })) }
           it 'returns true' do
             expect(Stripe::Invoice).to receive(:retrieve)
             expect(invoicer.invoice_paid?).to be_truthy
@@ -71,13 +71,13 @@ module Stash
           before do
             allow(Stripe::Invoice).to receive(:retrieve)
               .with(invoice_id)
-              .and_return(OpenStruct.new({ id: invoice_id, status: 'void', latest_revision: 'in_voice-id-new' })).once
+              .and_return(Struct.new({ id: invoice_id, status: 'void', latest_revision: 'in_voice-id-new' })).once
           end
 
           it 'updates resource invoice and returns true' do
             allow(Stripe::Invoice).to receive(:retrieve)
               .with('in_voice-id-new')
-              .and_return(OpenStruct.new({ id: 'in_voice-id-new', status: 'paid' })).once
+              .and_return(Struct.new({ id: 'in_voice-id-new', status: 'paid' })).once
             expect(Stripe::Invoice).to receive(:retrieve).twice
             expect(invoicer.invoice_paid?).to be_truthy
             expect(resource.payment.invoice_id).to eq('in_voice-id-new')
@@ -86,7 +86,7 @@ module Stash
           it 'updates resource invoice and returns false' do
             allow(Stripe::Invoice).to receive(:retrieve)
               .with('in_voice-id-new')
-              .and_return(OpenStruct.new({ id: 'in_voice-id-new', status: 'open' })).once
+              .and_return(Struct.new({ id: 'in_voice-id-new', status: 'open' })).once
             expect(Stripe::Invoice).to receive(:retrieve).twice
             expect(invoicer.invoice_paid?).to be_falsey
             expect(resource.payment.invoice_id).to eq('in_voice-id-new')
@@ -111,7 +111,7 @@ module Stash
             let(:identifier) { create(:identifier, old_payment_system: false, payment_type: 'waiver') }
 
             it 'generates an invoice' do
-              invoice = OpenStruct.new(id: 1, send_invoice: OpenStruct.new(id: 1))
+              invoice = Struct.new(id: 1, send_invoice: Struct.new(id: 1))
               expect(Stripe::Invoice).to receive(:create).with(
                 {
                   auto_advance: true,
@@ -129,10 +129,10 @@ module Stash
                   currency: 'usd',
                   description: "Some line item name for #{identifier} (100 B)"
                 }
-              ).and_return([OpenStruct.new(id: 1)])
-              expect(invoice).to receive(:send_invoice).and_return(OpenStruct.new(id: 1))
+              ).and_return([Struct.new(id: 1)])
+              expect(invoice).to receive(:send_invoice).and_return(Struct.new(id: 1))
 
-              expect(invoicer.create_invoice).to eq(OpenStruct.new(id: 1))
+              expect(invoicer.create_invoice).to eq(Struct.new(id: 1))
             end
           end
         end
@@ -145,7 +145,7 @@ module Stash
           end
 
           it 'returns true' do
-            invoice = OpenStruct.new(id: 1, send_invoice: OpenStruct.new(id: 1))
+            invoice = Struct.new(id: 1, send_invoice: Struct.new(id: 1))
             expect(Stripe::Invoice).to receive(:create).with(
               {
                 auto_advance: true,
@@ -163,7 +163,7 @@ module Stash
                 currency: 'usd',
                 description: "Some line item name for #{identifier} (100 B)"
               }
-            ).and_return([OpenStruct.new(id: 1)])
+            ).and_return([Struct.new(id: 1)])
             expect(Stripe::InvoiceItem).to receive(:create).with(
               {
                 customer: 'stripe_customer_id',
@@ -172,10 +172,10 @@ module Stash
                 currency: 'usd',
                 description: 'Invoice fee'
               }
-            ).and_return([OpenStruct.new(id: 2)])
-            expect(invoice).to receive(:send_invoice).and_return(OpenStruct.new(id: 1))
+            ).and_return([Struct.new(id: 2)])
+            expect(invoice).to receive(:send_invoice).and_return(Struct.new(id: 1))
 
-            expect(invoicer.create_invoice).to eq(OpenStruct.new(id: 1))
+            expect(invoicer.create_invoice).to eq(Struct.new(id: 1))
           end
 
           it 'saves customer id on author' do

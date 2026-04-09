@@ -14,7 +14,7 @@ module Tasks
       def populate
         @keywords.each_with_index do |k, idx|
           subjs = StashDatacite::Subject.where(subject: k)
-          if subjs.count.zero?
+          if subjs.none?
             # add one that doesn't exist
             StashDatacite::Subject.create(subject: k, subject_scheme: SCHEME, scheme_URI: SCHEME_URI)
           else

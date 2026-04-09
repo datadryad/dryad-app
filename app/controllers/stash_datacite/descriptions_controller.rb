@@ -1,6 +1,7 @@
 module StashDatacite
   class DescriptionsController < ApplicationController
     include ::ApplicationHelper
+
     before_action :set_description, only: %i[update destroy]
     before_action :ajax_require_permission, only: %i[update destroy]
     before_action :ajax_require_unsubmitted, only: %i[update destroy], unless: -> { description_params[:description_type] == 'concern' }
@@ -34,7 +35,7 @@ module StashDatacite
     def update
       items = description_params
       if %w[technicalinfo hsi_statement changelog].include?(@description&.description_type)
-        items[:description] = items[:description]&.gsub(/([\.\?\!,;:'"]) {2,}/, '\1 ')
+        items[:description] = items[:description]&.gsub(/([.?!,;:'"]) {2,}/, '\1 ')
       elsif items[:description].present?
         desc = helpers.markdown_render(content: items[:description], header_offset: 2)
         items[:description] =

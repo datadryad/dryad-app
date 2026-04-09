@@ -1,6 +1,7 @@
 module Submission
   class SubmissionJob < Submission::BaseJob
     include Sidekiq::Worker
+
     sidekiq_options queue: :submission, retry: 0, lock: :until_and_while_executing
 
     attr_reader :resource_id, :service
@@ -24,7 +25,7 @@ module Submission
 
     def submit_resource
       Rails.logger.info("#{Time.now.xmlschema} #{description}")
-      previously_submitted = StashEngine::RepoQueueState.where(resource_id: resource_id, state: 'processing').count.positive?
+      previously_submitted = StashEngine::RepoQueueState.where(resource_id: resource_id, state: 'processing').any?
       if previously_submitted
         # Do not send to the repo again if it has already been sent. If we need to re-send we'll have to delete the statuses
         # and re-submit manually.  This should be an exceptional case that we send the same resource more than once.

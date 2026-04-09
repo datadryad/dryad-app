@@ -119,6 +119,7 @@ module StashDatacite
 
     describe 'affiliations' do
       attr_reader :affiliations
+
       before(:each) do
         @affiliations = ['Graceland', 'RCA', 'RCA Camden', 'Pickwick', 'BMG'].map do |affil|
           Affiliation.create(long_name: affil)

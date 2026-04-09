@@ -18,7 +18,7 @@ namespace :dev_ops do
       next
     end
     in_process = StashEngine::Resource.joins(:current_resource_state).where("stash_engine_resource_states.resource_state = 'processing'")
-    puts "resource_id\tuser_id\tcurrent_status\tupdated at\ttitle" if in_process.count > 0
+    puts "resource_id\tuser_id\tcurrent_status\tupdated at\ttitle" if in_process.any?
     in_process.find_each do |i|
       puts "#{i.id}\t#{i.user_id}\t#{i.current_resource_state_id}\t#{i.updated_at}\t#{i.title}"
     end

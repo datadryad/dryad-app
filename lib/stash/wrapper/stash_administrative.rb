@@ -5,6 +5,7 @@ module Stash
     # Mapping for `<st:stash_administrative>`
     class StashAdministrative
       include ::XML::Mapping
+
       object_node :version, 'version', class: Version
       object_node :license, 'license', class: License
       object_node :embargo, 'embargo', class: Embargo

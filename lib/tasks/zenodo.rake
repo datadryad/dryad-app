@@ -58,12 +58,12 @@ namespace :zenodo do
     time_remaining = size_remaining / bytes_per_second
 
     puts "#{count_migrated} of #{count_migrated + count_remaining} old datasets have been replicated"
-    puts "#{format('%.2f', (count_migrated.to_f / (count_migrated + count_remaining) * 100))}% by number of old datasets have been replicated"
+    puts "#{format('%.2f', count_migrated.to_f / (count_migrated + count_remaining) * 100)}% by number of old datasets have been replicated"
 
     puts "#{StashEngine::ApplicationController.helpers.filesize(size_migrated)} of " \
          "#{StashEngine::ApplicationController.helpers.filesize(size_remaining + size_migrated)} of the old datasets have been replicated"
 
-    puts "#{format('%.2f', (size_migrated.to_f / (size_remaining + size_migrated) * 100))}% complete by size"
+    puts "#{format('%.2f', size_migrated.to_f / (size_remaining + size_migrated) * 100)}% complete by size"
 
     puts "Optimistic completion date: #{(Time.new + time_remaining).strftime('%Y-%m-%d')}"
   end

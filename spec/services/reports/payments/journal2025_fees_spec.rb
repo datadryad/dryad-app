@@ -1,6 +1,6 @@
 describe Reports::Payments::Journal2025Fees do
 
-  let(:args) { OpenStruct.new(sc_report: File.join('spec', 'fixtures', 'reports', 'shopping_cart_report_2025.csv')) }
+  let(:args) { Struct.new(sc_report: File.join('spec', 'fixtures', 'reports', 'shopping_cart_report_2025.csv')) }
   let(:journal_org) { create(:journal_organization) }
   let!(:journal1) { create(:journal, sponsor: journal_org) }
   let!(:journal_issn1) { create(:journal_issn, journal: journal1, id: '1111-2222') }
