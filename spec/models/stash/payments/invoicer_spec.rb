@@ -38,10 +38,10 @@ module Stash
           allow(@resource).to receive(:owner_author).and_return(@author)
 
           @cust_id = '9999'
-          fake_invoice_item = Struct.new(customer: @cust_id, amount: '99.99', currency: 'usd', description: 'Data Processing Charge')
-          fake_invoice = Struct.new(customer: @cust_id, description: 'Dryad deposit',
-                                    metadata: { curator: 'The Curator' }, send_invoice: 'STRIPE1234')
-          fake_customer = Struct.new(id: @cust_id, email: @author.author_email, description: @author.author_standard_name)
+          fake_invoice_item = OpenStruct.new(customer: @cust_id, amount: '99.99', currency: 'usd', description: 'Data Processing Charge')
+          fake_invoice = OpenStruct.new(customer: @cust_id, description: 'Dryad deposit',
+                                        metadata: { curator: 'The Curator' }, send_invoice: 'STRIPE1234')
+          fake_customer = OpenStruct.new(id: @cust_id, email: @author.author_email, description: @author.author_standard_name)
 
           @invoicer = Invoicer.new(resource: @resource, curator: @curator)
           allow(@invoicer).to receive(:create_invoice_items_for_dpc).and_return([fake_invoice_item])

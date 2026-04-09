@@ -3,7 +3,7 @@ module Tasks
   module ArgsParser
 
     def self.parse(*attributes)
-      options = Struct.new
+      options = OpenStruct.new
       return options if attributes.blank?
 
       args = ARGV.drop_while { |a| a != '--' }[1..] || []

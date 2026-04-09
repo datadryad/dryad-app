@@ -111,7 +111,7 @@ module Stash
             let(:identifier) { create(:identifier, old_payment_system: false, payment_type: 'waiver') }
 
             it 'generates an invoice' do
-              invoice = Struct.new(id: 1, send_invoice: Struct.new(id: 1))
+              invoice = OpenStruct.new(id: 1, send_invoice: OpenStruct.new(id: 1))
               expect(Stripe::Invoice).to receive(:create).with(
                 {
                   auto_advance: true,
@@ -145,7 +145,7 @@ module Stash
           end
 
           it 'returns true' do
-            invoice = Struct.new(id: 1, send_invoice: Struct.new(id: 1))
+            invoice = OpenStruct.new(id: 1, send_invoice: OpenStruct.new(id: 1))
             expect(Stripe::Invoice).to receive(:create).with(
               {
                 auto_advance: true,

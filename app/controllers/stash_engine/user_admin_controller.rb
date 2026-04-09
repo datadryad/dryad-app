@@ -124,7 +124,7 @@ module StashEngine
     def setup_tenants
       @tenants = [Struct.new(id: '', name: '')]
       @tenants << StashEngine::Tenant.all.sort_by(&:short_name).map do |t|
-        Struct.new(id: t.id, name: t.short_name)
+        OpenStruct.new(id: t.id, name: t.short_name)
       end
       @tenants.flatten!
     end

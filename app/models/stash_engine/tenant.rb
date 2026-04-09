@@ -80,7 +80,7 @@ module StashEngine
     scope :sponsored, -> { enabled.distinct.joins(:sponsored) }
 
     def authentication
-      JSON.parse(super, object_class: Struct) if super.present?
+      JSON.parse(super, object_class: OpenStruct) if super.present?
     end
 
     def campus_contacts

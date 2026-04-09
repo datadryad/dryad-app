@@ -84,7 +84,7 @@ module StashEngine
 
       @tenants = [Struct.new(id: 'dryad', name: 'Dryad')]
       @tenants << StashEngine::Tenant.partner_list.map do |t|
-        Struct.new(id: t.id, name: t.short_name)
+        OpenStruct.new(id: t.id, name: t.short_name)
       end
       @tenants.flatten!
 
