@@ -358,7 +358,7 @@ module FeeCalculator
       end
 
       context 'when journal is a payer but not on 2025 fee model' do
-        let!(:payment_conf) { create(:payment_configuration, partner: journal, payment_plan: 'DEFERRED', covers_ldf: covers_ldf) }
+        let!(:payment_conf) { create(:payment_configuration, partner: journal, payment_plan: 'DEFERRED', covers_dpc: true, covers_ldf: covers_ldf) }
         let(:resource) { create(:resource, identifier: identifier, journal_issns: [journal.issns.first], total_file_size: new_files_size) }
 
         it { is_expected.to include({ dpc_fee: 0, storage_fee: 0, service_fee: 0, total: 0, storage_fee_label: 'Large data fee' }) }

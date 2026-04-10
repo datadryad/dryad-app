@@ -25,7 +25,7 @@
     <div id="retraction_options" hidden>
       <%= react_component('components/MetadataEntry/Description/Description', { 
         setResource: escape_javascript(() => {}), 
-        dcsDescription: StashDatacite::Description.find_or_create_by(resource_id: @resource.id, description_type: 'concern'), 
+        dcsDescription: StashDatacite::Description.find_or_create_by(resource_id: @resource.identifier.latest_resource_with_public_metadata&.id || @resource.id, description_type: 'concern'), 
         mceLabel: {
           label: 'Retraction notice',
           required: true,

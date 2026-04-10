@@ -6,7 +6,7 @@
 #
 #  id                    :integer          not null, primary key
 #  resource_type         :text(65535)
-#  resource_type_general :string
+#  resource_type_general :string(191)      default("dataset")
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  resource_id           :integer
