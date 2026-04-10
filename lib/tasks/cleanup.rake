@@ -45,11 +45,11 @@ namespace :cleanup do
   end
 
   task update_file_licenses: :environment do
-    params = { 'client-id': APP_CONFIG.identifier_service.account, 'resource-type': 'DataFile', 'page[size]': 500 }
+    params = { 'client-id': APP_CONFIG.identifier_service.account, 'resource-type': 'DataFile', 'page[size]': 500, 'page[cursor]': 1 }
     query_result = Integrations::Datacite.new.query('/dois', params)
     records = [].concat(query_result['data'])
     while query_result.dig('links', 'next').present?
-      params['page[number]'] = query_result.dig('meta', 'page').to_i + 1
+      params['page[cursor]'] = Rack::Utils.parse_nested_query(URI.parse(query_result.dig('links', 'next')).query)['page']['cursor']
       query_result = Integrations::Datacite.new.query('/dois', params)
       records.concat(query_result['data'])
     end
