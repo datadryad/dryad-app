@@ -31,7 +31,7 @@ module StashEngine
 
     it 'creates basic_dataset that is valid with required metadata with factory bot' do
       expect(@resource.identifier).to eq(@identifier)
-      expect(@resource.authors.count.positive?).to eq(true)
+      expect(@resource.authors.any?).to eq(true)
       expect(@resource.descriptions).to have(3).items
       expect(@resource.authors.first.affiliations).to have(1).items
       expect(@resource.current_resource_state.resource_state).to eq('submitted')

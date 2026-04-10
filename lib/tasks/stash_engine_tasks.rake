@@ -295,7 +295,7 @@ namespace :identifiers do
       if StashEngine::Resource.exists?(id: res_id)
         r = StashEngine::Resource.find(res_id)
         if r.submitted? &&
-           (r.zenodo_copies.where("copy_type LIKE 'software%' OR copy_type like 'supp%'").where.not(state: 'finished').count == 0)
+           r.zenodo_copies.where("copy_type LIKE 'software%' OR copy_type like 'supp%'").where.not(state: 'finished').none?
           # if the resource is state == submitted and all zenodo transfers have completed, delete the temporary data
           log "   resource is submitted -- DELETE s3 dir #{id_prefix}"
           Stash::Aws::S3.new.delete_dir(s3_key: id_prefix) unless dry_run
@@ -1202,7 +1202,7 @@ namespace :identifiers do
         c += 1
         puts ". Identifier #{c}" if c % 1000 == 0
         ps = i.preprint_server
-        next unless ps == 'bioRxiv' || ps == 'medRxiv' || i.journal == biorxiv || i.journal == medrxiv
+        next unless %w[bioRxiv medRxiv].include?(ps) || i.journal == biorxiv || i.journal == medrxiv
 
         ii.add(i)
       end
@@ -1295,7 +1295,7 @@ namespace :curation_stats do
   desc 'Calculate any curation stats that are missing from v2 launch day until yesterday'
   task recalculate_all: :environment do
     launch_day = Date.new(2019, 9, 17)
-    (launch_day..Time.now.utc.to_date - 1.day).each do |date|
+    (launch_day..(Time.now.utc.to_date - 1.day)).each do |date|
       print '.'
       stats = StashEngine::CurationStats.find_or_create_by(date: date)
       stats.recalculate unless stats.created_at > 2.seconds.ago
@@ -1304,7 +1304,7 @@ namespace :curation_stats do
 
   desc 'Recalculate any curation stats from the past three days, not counting today'
   task update_recent: :environment do
-    (Time.now.utc.to_date - 4.days..Time.now.utc.to_date - 1.day).each do |date|
+    ((Time.now.utc.to_date - 4.days)..(Time.now.utc.to_date - 1.day)).each do |date|
       print '.'
       stats = StashEngine::CurationStats.find_or_create_by(date: date)
       stats.recalculate unless stats.created_at > 2.seconds.ago
@@ -1527,11 +1527,7 @@ namespace :journals do
   desc 'Compare journal differences between Dryad and Salesforce'
   task check_salesforce_sync: :environment do
     args = Tasks::ArgsParser.parse(:dry_run)
-    dry_run = if args.dry_run.blank?
-                true
-              else
-                args.dry_run != 'false'
-              end
+    dry_run = args.dry_run.blank? || args.dry_run != 'false'
 
     log 'Processing with DRY_RUN' if dry_run
 

@@ -1,6 +1,7 @@
 module StashEngine
   class GmailAuthController < ApplicationController
     include SharedSecurityController
+
     before_action :require_superuser
 
     def index

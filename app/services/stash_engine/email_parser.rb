@@ -43,7 +43,7 @@ module StashEngine
           break
         end
       end
-      @lines = @lines[0..last_dryad_line - 1] if last_dryad_line > 0
+      @lines = @lines[0..(last_dryad_line - 1)] if last_dryad_line > 0
       @lines
     end
 
@@ -60,20 +60,20 @@ module StashEngine
         next unless line.include?(':')
 
         colon_index = line.index(':')
-        tag = line[0..colon_index - 1].downcase
+        tag = line[0..(colon_index - 1)].downcase
         # if the tag is a legacy tag used by journals with the old EditorialManager style, transform it into a normal tag
         tag = transformed_tags[tag] if transformed_tags.keys.include?(tag)
         # if the line starts with a valid tag, add it to the hash
         if allowed_tags.include?(tag)
-          value = line[colon_index + 1..].strip.gsub(/\xC2|\xA0/n, '')
+          value = line[(colon_index + 1)..].strip.gsub(/\xC2|\xA0/n, '')
           value.downcase! if downcase_tags.include?(tag)
           @hash[tag] = value
         end
         # if the line starts the abstract, add all of the remaining lines, and break from the loop
         next unless tag == 'abstract'
 
-        value = line[colon_index + 1..]
-        remaining_lines = @lines[index + 1..]
+        value = line[(colon_index + 1)..]
+        remaining_lines = @lines[(index + 1)..]
         value += " #{remaining_lines.join(' ')}" if remaining_lines.present?
         @hash[tag] = value.strip
         break

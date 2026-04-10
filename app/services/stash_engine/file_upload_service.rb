@@ -1,6 +1,7 @@
 module StashEngine
   class FileUploadService
     attr_reader :resource, :file
+
     def initialize(resource:, file_params:, file_model: StashEngine::DataFile)
       @resource = resource
       @file_model = file_model

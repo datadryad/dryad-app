@@ -125,7 +125,7 @@ namespace :funders do
   task set_nih: :environment do
     nih = JSON.parse(File.read(File.join(Rails.root, 'spec/fixtures/nih_group.json')))
     cg = StashDatacite::ContributorGrouping.where(name_identifier_id: 'http://dx.doi.org/10.13039/100000002')
-    if cg.count == 0
+    if cg.none?
       StashDatacite::ContributorGrouping.create(
         contributor_name: 'National Institutes of Health',
         contributor_type: 'funder',

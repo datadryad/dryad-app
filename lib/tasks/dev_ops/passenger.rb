@@ -36,7 +36,6 @@ module Tasks
         end
         @bloated_pids
       end
-      # rubocop:enable
 
       def kill_bloated_pids!
         bloated_pids.each do |my_pid|
@@ -46,7 +45,7 @@ module Tasks
 
       def items_submitting?
         StashEngine::RepoQueueState.latest_per_resource.where(state: 'processing')
-          .where(hostname: StashEngine.repository.class.hostname).count.positive?
+          .where(hostname: StashEngine.repository.class.hostname).any?
       end
 
     end

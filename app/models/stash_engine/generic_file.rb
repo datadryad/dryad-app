@@ -227,7 +227,7 @@ module StashEngine
 
     def in_previous_version?
       prev_files = case_insensitive_previous_files
-      return false unless prev_files.count.positive?
+      return false unless prev_files.any?
 
       true
     end

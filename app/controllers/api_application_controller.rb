@@ -82,7 +82,7 @@ class ApiApplicationController < StashEngine::ApplicationController
 
   def require_resource_id(resource_id:)
     @stash_resources = StashEngine::Resource.where(id: resource_id)
-    @resource = @stash_resources&.first if @stash_resources.count.positive?
+    @resource = @stash_resources&.first if @stash_resources.any?
 
     return unless @stash_resources.count < 1
 

@@ -1,5 +1,4 @@
 require 'amatch'
-require 'set'
 require 'byebug'
 
 require_relative '../../../app/models/stash_engine/proposed_change'
