@@ -46,7 +46,8 @@ module StashEngine
 
     validates_associated :issns
     accepts_nested_attributes_for :flag, allow_destroy: true
-    accepts_nested_attributes_for(*%i[issns alternate_titles payment_configuration])
+    accepts_nested_attributes_for(*%i[issns alternate_titles])
+    accepts_nested_attributes_for :payment_configuration, allow_destroy: true, reject_if: :all_blank
 
     scope :servers, -> { where(preprint_server: true) }
     scope :sponsoring, -> { joins(:payment_configuration).where(payment_configuration: { payment_plan: PAYMENT_PLANS }) }

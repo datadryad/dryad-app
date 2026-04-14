@@ -22,7 +22,7 @@ module StashEngine
     has_many :roles, class_name: 'StashEngine::Role', as: :role_object, dependent: :destroy
     has_many :users, through: :roles
     has_one :payment_configuration, as: :partner, dependent: :destroy
-    accepts_nested_attributes_for(:payment_configuration)
+    accepts_nested_attributes_for :payment_configuration, allow_destroy: true, reject_if: :all_blank
 
     scope :has_children, -> { distinct.joins(:children) }
 

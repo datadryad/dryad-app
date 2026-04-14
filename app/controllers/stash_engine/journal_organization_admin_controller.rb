@@ -84,7 +84,7 @@ module StashEngine
 
     def edit_params
       params.permit(:id, :name, :contact, :parent_org_id,
-        payment_configuration_attributes: %i[id payment_plan covers_ldf ldf_limit yearly_ldf_limit])
+                    payment_configuration_attributes: %i[id payment_plan covers_ldf ldf_limit yearly_ldf_limit])
     end
 
   end
