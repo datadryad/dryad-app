@@ -1,5 +1,6 @@
 class DuplicateResourceService
   attr_reader :resource, :user
+
   def initialize(resource, user)
     @resource = resource
     @user = user

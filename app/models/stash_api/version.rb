@@ -5,7 +5,9 @@ module StashApi
     include Presenter
 
     attr_reader :resource
-    def initialize(resource_id:, item_view: false, post: false) # the item_view may present additional information if it's not generating a list
+
+    # the item_view may present additional information if it's not generating a list
+    def initialize(resource_id:, item_view: false, post: false)
       @resource = StashEngine::Resource.find(resource_id)
       @item_view = item_view
       @post = post

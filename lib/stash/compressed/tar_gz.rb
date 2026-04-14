@@ -11,6 +11,7 @@ module Stash
   module Compressed
     class TarGz
       attr_reader :presigned_url
+
       include Stash::Compressed::S3Size
 
       def initialize(presigned_url:)

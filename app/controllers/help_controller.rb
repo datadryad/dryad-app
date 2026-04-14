@@ -1,6 +1,7 @@
 class HelpController < ApplicationController
   include StashEngine::SharedController
   include StashEngine::SharedSecurityController
+
   caches_page :topic
 
   rescue_from 'ActionView::MissingTemplate' do

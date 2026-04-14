@@ -42,7 +42,7 @@ module StashDatacite
       readme = @resource.descriptions.where(description_type: :technicalinfo).first
       return unless readme.try(:description).present?
 
-      previous = resource.versions.map { |v| v.object_changes.slice('title').values.flatten }.reject { |a| a[1].blank? } .map do |a|
+      previous = resource.versions.map { |v| v.object_changes.slice('title').values.flatten }.reject { |a| a[1].blank? }.map do |a|
         a[1].gsub(%r{</?(em|i)>}, '*').gsub(%r{</?sup>}, '^').gsub(%r{</?sub>}, '~')
       end
       newest = previous.pop

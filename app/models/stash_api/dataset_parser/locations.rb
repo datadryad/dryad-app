@@ -47,7 +47,7 @@ module StashApi
         return false unless number?(item)
 
         numval = Float(item)
-        return true if numval <= 90.0 && numval >= -90.0
+        return true if numval.between?(-90.0, 90.0)
 
         false
       end
@@ -56,7 +56,7 @@ module StashApi
         return false unless number?(item)
 
         numval = Float(item)
-        return true if numval <= 180.0 && numval >= -180.0
+        return true if numval.between?(-180.0, 180.0)
 
         false
       end

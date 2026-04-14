@@ -5,6 +5,7 @@ module Tasks
     class S3Check
 
       attr_accessor :fn, :ark, :mrt_version
+
       def initialize(file:)
         @bkt_instance = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
         @file = file

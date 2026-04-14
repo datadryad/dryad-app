@@ -41,6 +41,7 @@ require 'byebug'
 module StashEngine
   class DataFile < GenericFile
     attr_accessor :skip_total_recalculation
+
     has_many :container_files, class_name: 'StashEngine::ContainerFile', dependent: :delete_all
 
     after_commit :recalculate_total, unless: :skip_total_recalculation

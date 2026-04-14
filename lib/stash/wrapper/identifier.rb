@@ -6,6 +6,7 @@ module Stash
     # Mapping class for `<st:identifier>`
     class Identifier
       include ::XML::Mapping
+
       typesafe_enum_node :type, '@type', class: IdentifierType, default_value: nil
       text_node :value, '.', default_value: nil
 

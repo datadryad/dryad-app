@@ -12,6 +12,7 @@ require 'cgi'
 # are used to special-sauce output for SOLR schema.
 
 # these patch datacite mapping modules for some extra stuff David added
+# rubocop:disable Style/OneClassPerFile
 module Datacite
   module Mapping
 
@@ -93,7 +94,7 @@ module Stash
       # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
       def formatted_funding
-        @resource.funders.completed.map { |f| "#{f.contributor_name}#{f.award_number.present? ? ": #{f.award_number}" : ''}" }.reject(&:blank?).uniq
+        @resource.funders.completed.map { |f| "#{f.contributor_name}#{": #{f.award_number}" if f.award_number.present?}" }.reject(&:blank?).uniq
       end
 
       def formatted_related_works
@@ -328,3 +329,4 @@ module Stash
   end
 end
 # rubocop:enable Metrics/ClassLength
+# rubocop:enable Style/OneClassPerFile

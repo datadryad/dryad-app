@@ -689,6 +689,7 @@ module StashEngine
       attr_reader :resource
       attr_reader :orig_state_id
       attr_reader :orig_version
+
       before(:each) do
         @resource = create(:resource, user_id: user.id)
         @orig_state_id = resource.current_resource_state_id
@@ -719,6 +720,7 @@ module StashEngine
 
     describe 'author' do
       attr_reader :resource
+
       before(:each) do
         @resource = create(:resource, user: user)
       end
@@ -834,6 +836,7 @@ module StashEngine
     describe 'resource state' do
       attr_reader :resource
       attr_reader :state
+
       before(:each) do
         Timecop.travel(Time.now.utc - 1.minute)
         allow_any_instance_of(Resource).to receive(:prepare_for_curation).and_return(true)
@@ -969,6 +972,7 @@ module StashEngine
         attr_reader :created_files
         attr_reader :copied_files
         attr_reader :deleted_files
+
         before(:each) do
           Timecop.travel(Time.now.utc - 1.minute)
           @res1 = create(:resource, user_id: user.id)
@@ -1140,6 +1144,7 @@ module StashEngine
 
     describe 'versioning' do
       attr_reader :resource
+
       before(:each) do
         @resource = create(:resource)
       end
@@ -1253,6 +1258,7 @@ module StashEngine
 
     describe 'identifiers' do
       attr_reader :resource
+
       before(:each) do
         @existing_ident = create(:identifier, identifier_type: 'DOI')
         @doi_value = @existing_ident.identifier
