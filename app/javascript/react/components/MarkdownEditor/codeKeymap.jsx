@@ -128,6 +128,42 @@ const insertLink = (view) => {
   return true;
 };
 
+const insertImage = (view) => {
+  const {state, dispatch} = view;
+  const changes = state.changeByRange((range) => {
+    let start = range.from;
+    let end = range.to;
+    const changeList = [];
+    const {node} = view.domAtPos(range.from);
+    const {parentElement} = node;
+    const hasClass = ['md_a', 'md_amark', 'md_img'].some((className) => parentElement.classList.contains(className));
+    if (hasClass) {
+      changeList.push({});
+    } else {
+      changeList.push({
+        from: range.from,
+        insert: Text.of(['![']),
+      }, {
+        from: range.to,
+        insert: Text.of([']( "")']),
+      });
+      start = range.to + 2;
+      end = range.to + 2;
+    }
+    return {
+      changes: changeList,
+      range: EditorSelection.range(start, end),
+    };
+  });
+  dispatch(
+    state.update(changes, {
+      scrollIntoView: true,
+      annotations: Transaction.userEvent.of('input'),
+    }),
+  );
+  return true;
+};
+
 const nodeWrap = (mark, view) => {
   const {state, dispatch} = view;
   const changes = state.changeByRange((range) => {
@@ -399,6 +435,7 @@ export const commands = {
   inlineCode: (v) => toggleMark(marks.inlineCode, classes.inlineCode, v),
   strike_through: (v) => toggleMark(marks.strike_through, classes.strike_through, v),
   link: (v) => insertLink(v),
+  image: (v) => insertImage(v),
   blockquote: (v) => nodeWrap(marks.blockquote, v),
   code_block: (v) => codeBlockWrap(marks.code_block, v),
   ordered_list: (v) => !inListCheck(v) && numberWrap(v),

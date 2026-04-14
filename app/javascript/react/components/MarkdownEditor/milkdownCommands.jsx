@@ -16,6 +16,8 @@ import {
   orderedListSchema,
   liftListItemCommand,
   sinkListItemCommand,
+  insertImageCommand,
+  updateImageCommand,
 } from '@milkdown/kit/preset/commonmark';
 import {
   insertTableCommand,
@@ -100,4 +102,6 @@ export const commands = {
   heading: wrapInHeadingCommand,
   link: toggleLinkCommand,
   linkEdit: updateLinkCommand,
+  image: insertImageCommand,
+  imageEdit: updateImageCommand,
 };

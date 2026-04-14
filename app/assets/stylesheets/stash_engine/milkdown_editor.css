@@ -135,6 +135,7 @@
 
 .markdown_editor .md_editor-buttons .headingSelect,
 .markdown_editor .md_editor-buttons .tableSelect,
+.markdown_editor .md_editor-buttons .imageSelect,
 .markdown_editor .md_editor-buttons .linkSelect,
 .markdown_editor .md_editor-buttons .listSelect {
   display: inline-block;
@@ -257,6 +258,7 @@
 .markdown_editor .md_editor-buttons .headingMenu,
 .markdown_editor .md_editor-buttons .tableMenu,
 .markdown_editor .md_editor-buttons .tableOptMenu,
+.markdown_editor .md_editor-buttons .imageMenu,
 .markdown_editor .md_editor-buttons .linkMenu,
 .markdown_editor .md_editor-buttons .listMenu {
   position: absolute;
@@ -268,6 +270,7 @@
 .markdown_editor .md_editor-buttons .headingMenu,
 .markdown_editor .md_editor-buttons .tableMenu > div,
 .markdown_editor .md_editor-buttons .tableOptMenu,
+.markdown_editor .md_editor-buttons .imageMenu,
 .markdown_editor .md_editor-buttons .linkMenu,
 .markdown_editor .md_editor-buttons .listMenu {
   margin: 0; padding: 0;
@@ -325,6 +328,7 @@
 }
 
 @container (width < 605px) and (width > 344px) {
+  .markdown_editor .md_editor-buttons .imageMenu,
   .markdown_editor .md_editor-buttons .linkMenu {
     left: auto; right: 0;
   }
@@ -497,11 +501,34 @@
   }
 }
 
+.markdown_editor .md_editor-buttons .imageMenu,
 .markdown_editor .md_editor-buttons .linkMenu {
   width: 300px;
-  height: 7rem;
   font-size: .9rem;
   padding: 5px 8px;
+}
+
+.markdown_editor .md_editor-buttons .imageMenu {
+  height: 13rem;
+}
+
+.markdown_editor .md_editor-buttons .linkMenu {
+  height: 7rem;
+}
+
+.markdown_editor .md_editor-buttons .imageMenu p {
+  display: flex;
+  align-items: center;
+  gap: 1ch;
+}
+
+.markdown_editor .md_editor-buttons .imageMenu label {
+  font-weight: bold;
+}
+
+.markdown_editor .md_editor-buttons .imageMenu textarea {
+  padding: 2px 2px;
+  flex: 1;
 }
 
 .markdown_editor .md_editor-buttons .linkMenu label {
@@ -512,6 +539,7 @@
   font-weight: bold;
 }
 
+.markdown_editor .md_editor-buttons .imageMenu input
 .markdown_editor .md_editor-buttons .linkMenu input {
   padding: 2px 4px;
   font-weight: normal;
@@ -521,23 +549,27 @@
   margin-left: 5px;
 }
 
+.markdown_editor .md_editor-buttons .imageMenu img {
+  max-height: 40px;
+  margin-right: auto;
+}
+
+.markdown_editor .md_editor-buttons .imageMenu .buttons,
 .markdown_editor .md_editor-buttons .linkMenu .buttons {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   flex-direction: row-reverse;
   margin-top: 5px;
+  gap: 6px;
 }
 
+.markdown_editor .md_editor-buttons .imageMenu .buttons button,
 .markdown_editor .md_editor-buttons .linkMenu .buttons button {
   border: thin solid #98cae2;
 }
 
-.markdown_editor .md_editor-buttons .linkMenu .buttons button:first-child {
-  background-color: #e4f1f7;
-  margin-left: 6px;
-}
-
+.markdown_editor .md_editor-buttons .imageMenu .buttons button:hover,
 .markdown_editor .md_editor-buttons .linkMenu .buttons button:hover {
   background-color: #98cae2;
 }

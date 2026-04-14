@@ -8,6 +8,7 @@ const hRule = Tag.define();
 const listMark = Tag.define();
 const linkRef = Tag.define();
 const link = Tag.define();
+const img = Tag.define();
 const linkMark = Tag.define();
 const quoteMark = Tag.define();
 const supMark = Tag.define();
@@ -26,6 +27,7 @@ export const markdownTags = {
       QuoteMark: quoteMark,
       Superscript: supMark,
       Subscript: subMark,
+      Image: img,
     }),
   ],
 };
@@ -56,6 +58,7 @@ export const dryadHighlightStyle = HighlightStyle.define([
   {tag: link, class: 'md_a'},
   {tag: linkMark, class: 'md_amark'},
   {tag: hRule, class: 'md_hr'},
+  {tag: img, class: 'md_image'},
 ]);
 
 export const dryadTheme = [dryadBase, syntaxHighlighting(dryadHighlightStyle)];

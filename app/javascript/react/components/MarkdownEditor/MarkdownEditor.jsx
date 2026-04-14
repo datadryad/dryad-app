@@ -112,7 +112,7 @@ function MilkdownCore({
 }
 
 const defaultButtons = ['heading', 'strong', 'emphasis', 'superscript', 'subscript', 'inlineCode',
-  'spacer', 'link', 'blockquote', 'code_block', 'table', 'spacer',
+  'spacer', 'link', 'blockquote', 'code_block', 'image', 'spacer', 'table', 'spacer',
   'list_menu', 'spacer', 'undo', 'redo'];
 
 function MilkdownEditor({
