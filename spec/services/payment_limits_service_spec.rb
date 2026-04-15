@@ -455,7 +455,8 @@ describe PaymentLimitsService do
 
         context 'when no limit is set' do
           let!(:payment_conf) do
-            create(:payment_configuration, partner: sponsor_journal_org, payment_plan: '2025', covers_dpc: true, covers_ldf: true, yearly_ldf_limit: nil)
+            create(:payment_configuration, partner: sponsor_journal_org, payment_plan: '2025', covers_dpc: true, covers_ldf: true,
+                                           yearly_ldf_limit: nil)
           end
 
           it { is_expected.to be_falsey }
