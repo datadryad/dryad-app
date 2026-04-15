@@ -14,4 +14,10 @@ class PayersService
   rescue StandardError
     payer
   end
+
+  def sponsored_limits
+    payer.sponsored_limits
+  rescue StandardError
+    payer&.payment_configuration
+  end
 end

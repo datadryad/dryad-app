@@ -181,5 +181,25 @@ module StashEngine
         }
       )
     end
+
+    def payment_sponsor
+      # top level publisher
+      # OR
+      # self
+      sponsor_obj = self
+      if sponsor
+        sponsor_obj = sponsor
+        sponsor_obj = sponsor_obj.parent_org while sponsor_obj.parent_org.present?
+      end
+      sponsor_obj
+    end
+
+    def sponsored_limits
+      # direct sponsor / first-level publisher
+      # OR
+      # self
+      obj = sponsor || self
+      obj.payment_configuration
+    end
   end
 end

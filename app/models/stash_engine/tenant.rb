@@ -144,5 +144,9 @@ module StashEngine
       sponsor_obj = sponsor_obj.sponsor while sponsor_obj.sponsor.present?
       sponsor_obj
     end
+
+    def sponsored_limits
+      payment_sponsor.payment_configuration
+    end
   end
 end

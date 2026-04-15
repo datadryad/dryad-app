@@ -81,7 +81,7 @@ RSpec.feature 'JournalOrganizationAdmin', type: :feature do
       within(:css, '#genericModalDialog') do
         within(:css, 'select#parent_org_id') do
           find("option[value='#{org.id}']").select_option
-          end
+        end
         find('input[name=commit]').click
       end
       expect(page.find("#row_#{@org.id}")).to have_text(org.name)

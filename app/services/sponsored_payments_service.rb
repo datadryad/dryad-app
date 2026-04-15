@@ -20,7 +20,7 @@ class SponsoredPaymentsService
       amount = ldf_fees(paid_before)
 
       should_skip_log = true if amount.zero?
-      should_skip_log = true if PaymentLimitsService.new(resource, PayersService.new(payer).payment_sponsor).exceeds_sponsor_yearly_limit?(amount)
+      should_skip_log = true if PaymentLimitsService.new(resource, payer).exceeds_sponsor_yearly_limit?(amount)
 
       update_identifier_files_size
       return if should_skip_log
