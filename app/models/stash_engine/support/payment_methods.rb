@@ -192,14 +192,14 @@ module StashEngine
       def clear_payment_for_changed_sponsor
         return unless payment_type.present?
 
-        # remove existing payment for added funder
         if funder_will_pay?
+          # remove existing payment for added funder
           return if payment_type == 'funder' && payment_id.include?(funder_payment_info&.contributor_name)
-        # remove existing payment for added institution
         elsif institution_will_pay?
+          # remove existing payment for added institution
           return if payment_type.include?('institution') && payment_id == latest_resource.tenant_id
-        # remove payment if paying journal has changed or been removed
         else
+          # remove payment if paying journal has changed or been removed
           return unless payment_type.include?('journal') || journal_will_pay?
           return if payment_id == journal&.single_issn
         end

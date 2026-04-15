@@ -53,7 +53,7 @@ module StashEngine
     scope :sponsoring, -> { joins(:payment_configuration).where(payment_configuration: { payment_plan: PAYMENT_PLANS }) }
 
     def will_pay?
-      PAYMENT_PLANS.include?(payment_configuration&.payment_plan)
+      PAYMENT_PLANS.include?(payment_sponsor.payment_configuration&.payment_plan)
     end
 
     def api_journal?
