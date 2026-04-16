@@ -90,8 +90,8 @@ function MilkdownCore({
           const list = [];
           const schema = ctxx.get(schemaCtx) || {};
           const {from, to} = selection;
-          const {path, parent} = doc.resolve(from);
-          path.forEach((i) => i.type && list.push(i.type.name));
+          const {parent} = doc.resolve(from);
+          doc.nodesBetween(from === to ? from - 1 : from, to, (node) => node.type && list.push(node.type.name));
           Object.keys(schema.marks).forEach((m) => {
             if (doc.rangeHasMark(from === to ? from - 1 : from, to, schema.marks[m])) list.push(schema.marks[m].name);
           });
