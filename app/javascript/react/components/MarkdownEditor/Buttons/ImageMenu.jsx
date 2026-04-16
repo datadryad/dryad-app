@@ -46,6 +46,8 @@ export default function ImageMenu({editor, editorId, active}) {
   };
 
   const uploadImage = () => {
+    setSrc('');
+    setError(null);
     const file = document.getElementById(imgId).files[0];
     const reader = new FileReader();
     const imageTest = new Image();
@@ -59,7 +61,11 @@ export default function ImageMenu({editor, editorId, active}) {
       imageTest.src = (reader.result);
     });
     if (file) {
-      reader.readAsDataURL(file);
+      if (file.size > 5000000) {
+        setError('File must be 5 MB or less');
+      } else {
+        reader.readAsDataURL(file);
+      }
     }
   };
 
@@ -133,25 +139,23 @@ export default function ImageMenu({editor, editorId, active}) {
       </button>
       <div className="imageMenu" id={`${editorId}imageMenu`} hidden>
         <form id={`${editorId}imageForm`} onSubmit={submit}>
-          <p><label htmlFor={textId}>Alt text</label>
-            <textarea id={textId} rows="1" value={text} onChange={(e) => setText(e.target.value)} required />
-          </p>
+          <p><label htmlFor={imgId}>Select image file (up to 5 MB)</label></p>
           <input
             id={imgId}
             type="file"
             accept="image/gif, image/png, image/jpg, image/jpeg, image/svg+xml, .gif, .png, .jpg, .jpeg, .svg, .svgz"
-            aria-label="Upload image file"
             style={{maxWidth: '100%'}}
             onChange={uploadImage}
             required
           />
+          <p><label htmlFor={textId}>Describe image (alternative text)</label></p>
+          <textarea id={textId} rows="1" value={text} onChange={(e) => setText(e.target.value)} required />
           <div className="buttons">
             <button type="submit">Save</button>
             {showRemove && <button type="button" onClick={removeImage}>Remove</button>}
             <img id={prevId} src={src} alt="" aria-hidden="true" />
             <div className="error-text" role="alert">{error}</div>
           </div>
-          <p>Alt text and image required</p>
         </form>
       </div>
     </div>

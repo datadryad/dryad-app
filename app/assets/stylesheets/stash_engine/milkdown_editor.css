@@ -505,11 +505,11 @@
 .markdown_editor .md_editor-buttons .linkMenu {
   width: 300px;
   font-size: .9rem;
-  padding: 5px 8px;
+  padding: 10px 8px;
 }
 
 .markdown_editor .md_editor-buttons .imageMenu {
-  height: 13rem;
+  height: 12.75rem;
 }
 
 .markdown_editor .md_editor-buttons .linkMenu {
@@ -517,9 +517,11 @@
 }
 
 .markdown_editor .md_editor-buttons .imageMenu p {
-  display: flex;
-  align-items: center;
-  gap: 1ch;
+  margin: 1rem 0 0.35rem;
+}
+
+.markdown_editor .md_editor-buttons .imageMenu p:first-child {
+  margin-top: 0;
 }
 
 .markdown_editor .md_editor-buttons .imageMenu label {
@@ -528,7 +530,9 @@
 
 .markdown_editor .md_editor-buttons .imageMenu textarea {
   padding: 2px 2px;
-  flex: 1;
+  width: 98%;
+  max-width: 98%;
+  min-height: 24px;
 }
 
 .markdown_editor .md_editor-buttons .linkMenu label {
@@ -550,7 +554,7 @@
 }
 
 .markdown_editor .md_editor-buttons .imageMenu img {
-  max-height: 40px;
+  max-height: 32px;
   margin-right: auto;
 }
 
@@ -566,12 +570,19 @@
 
 .markdown_editor .md_editor-buttons .imageMenu .buttons button,
 .markdown_editor .md_editor-buttons .linkMenu .buttons button {
+  height: auto;
+  padding: 8px;
   border: thin solid #98cae2;
+  background-color: #98cae2;
+  color: black;
 }
 
 .markdown_editor .md_editor-buttons .imageMenu .buttons button:hover,
-.markdown_editor .md_editor-buttons .linkMenu .buttons button:hover {
-  background-color: #98cae2;
+.markdown_editor .md_editor-buttons .imageMenu .buttons button:focus,
+.markdown_editor .md_editor-buttons .linkMenu .buttons button:hover,
+.markdown_editor .md_editor-buttons .linkMenu .buttons button:focus {
+  background-color: #0071a8;
+  color: #fff;
 }
 
 .markdown_editor .milkdown {
