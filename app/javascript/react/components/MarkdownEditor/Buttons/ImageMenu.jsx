@@ -8,6 +8,7 @@ import {icons, labels} from './Details';
 export default function ImageMenu({editor, editorId, active}) {
   const [text, setText] = useState('');
   const [src, setSrc] = useState('');
+  const [error, setError] = useState(null);
   const [showRemove, setRemove] = useState(false);
   const textId = useId();
   const imgId = useId();
@@ -47,8 +48,15 @@ export default function ImageMenu({editor, editorId, active}) {
   const uploadImage = () => {
     const file = document.getElementById(imgId).files[0];
     const reader = new FileReader();
+    const imageTest = new Image();
+    imageTest.addEventListener('load', () => {
+      setSrc(imageTest.src);
+    });
+    imageTest.addEventListener('error', () => {
+      setError('Please upload a valid image file');
+    });
     reader.addEventListener('load', () => {
-      setSrc(reader.result);
+      imageTest.src = (reader.result);
     });
     if (file) {
       reader.readAsDataURL(file);
@@ -133,6 +141,7 @@ export default function ImageMenu({editor, editorId, active}) {
             type="file"
             accept="image/gif, image/png, image/jpg, image/jpeg, image/svg+xml, .gif, .png, .jpg, .jpeg, .svg, .svgz"
             aria-label="Upload image file"
+            style={{maxWidth: '100%'}}
             onChange={uploadImage}
             required
           />
@@ -140,6 +149,7 @@ export default function ImageMenu({editor, editorId, active}) {
             <button type="submit">Save</button>
             {showRemove && <button type="button" onClick={removeImage}>Remove</button>}
             <img id={prevId} src={src} alt="" aria-hidden="true" />
+            <div className="error-text" role="alert">{error}</div>
           </div>
           <p>Alt text and image required</p>
         </form>
