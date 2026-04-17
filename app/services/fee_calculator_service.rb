@@ -16,9 +16,9 @@ class FeeCalculatorService
     calculator_class.constantize.new({}, resource: resource, payer_record: payer).ldf_sponsored_amount
   end
 
-  def sponsored_tier(payer)
+  def sponsored_tier(resource, payer)
     limits = PayersService.new(payer).sponsored_limits
-    calculator_class.constantize.new({})
+    calculator_class.constantize.new({}, resource: resource, payer_record: payer)
       .get_tier_by_value(
         ESTIMATED_FILES_SIZE,
         limits.ldf_limit

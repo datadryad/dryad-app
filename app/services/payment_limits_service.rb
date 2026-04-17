@@ -75,7 +75,7 @@ class PaymentLimitsService
   def ldf_limit_exceeded
     return false if payment_configuration.ldf_limit.nil?
 
-    tier = @calculator_service.sponsored_tier(payer)
+    tier = @calculator_service.sponsored_tier(resource, payer)
     tier[:range].max < resource.total_file_size.to_i
   end
 end

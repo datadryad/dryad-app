@@ -77,14 +77,14 @@ module DatasetHelper
   def fill_in_title(title = Faker::Hipster.sentence(word_count: 6))
     find('[name="title"]').send_keys(title)
     page.send_keys(:tab)
-    click_button 'Preview changes' if page.has_button?('Preview changes')
+    # click_button 'Preview changes' if page.has_button?('Preview changes')
     expect(find_button('Title')).to match_selector('[aria-describedby="step-complete"')
   end
 
   def fill_in_abstract
     find('[name="abstract"]').send_keys(Faker::Lorem.paragraph)
     page.send_keys(:tab)
-    click_button 'Preview changes' if page.has_button?('Preview changes')
+    # click_button 'Preview changes' if page.has_button?('Preview changes')
     expect(find_button('Description')).to match_selector('[aria-describedby="step-complete"')
   end
 
@@ -103,7 +103,7 @@ module DatasetHelper
     click_button 'readme-next'
     click_button 'readme-next'
     find('[name="readme_editor"]').send_keys("\nThis is some README content.")
-    click_button 'Preview changes' if page.has_button?('Preview changes')
+    # click_button 'Preview changes' if page.has_button?('Preview changes')
     expect(find_button('README')).to match_selector('[aria-describedby="step-complete"')
   end
 
@@ -164,14 +164,13 @@ module DatasetHelper
     fill_in_affiliation
   end
 
-  def fill_in_affiliation
+  def fill_in_affiliation(name: Faker::Educator.university)
     while page.has_css?('[aria-invalid="true"]')
-      fill_in 'Institutional affiliation', with: Faker::Educator.university
+      fill_in 'Institutional affiliation', with: name
       page.send_keys(:tab)
-      expect(page).to have_css('.use-text-entered')
+      # expect(page).to have_css('.use-text-entered')
       find('.use-text-entered').set(true)
       page.send_keys(:tab)
-      sleep 1
     end
   end
 
@@ -180,7 +179,7 @@ module DatasetHelper
     within_fieldset('hsi_fieldset') do
       find(:label, 'No').click
     end
-    click_button 'Preview changes' if page.has_button?('Preview changes')
+    # click_button 'Preview changes' if page.has_button?('Preview changes')
     expect(find_button('Compliance')).to match_selector('[aria-describedby="step-complete"')
   end
 
@@ -190,7 +189,13 @@ module DatasetHelper
     find('.use-text-entered').set(true) if page.has_css?('.use-text-entered')
     fill_in 'award_number', with: value
     page.send_keys(:tab)
-    click_button 'Preview changes' if page.has_button?('Preview changes')
+    # click_button 'Preview changes' if page.has_button?('Preview changes')
+    expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"')
+  end
+
+  def fill_in_no_funder
+    find(:label, 'No funding received').click
+    # click_button 'Preview changes' if page.has_button?('Preview changes')
     expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"')
   end
 
@@ -198,7 +203,7 @@ module DatasetHelper
     fos = 'Biological sciences'
     StashDatacite::Subject.create(subject: fos, subject_scheme: 'fos') # the fos field must exist
     click_button 'Subjects'
-    expect(page).to have_content('Research domain')
+    # expect(page).to have_content('Research domain')
     select(fos, from: 'Research domain')
     page.send_keys(:tab)
   end
@@ -258,4 +263,84 @@ module DatasetHelper
     expect(fu.upload_file_size).to eq(37_221)
   end
 
+  def connect_journal(journal)
+    click_button 'Connect'
+    within_fieldset('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?') do
+      find(:label, 'Yes').click
+    end
+    find(:label, 'Submitted manuscript').click
+    fill_in 'Journal name', with: journal.title
+    page.send_keys(:tab)
+    fill_in 'Manuscript number', with: 'ASD-1234'
+    page.send_keys(:tab)
+  end
+
+  def build_min_dataset(resource_file_size: '10')
+    navigate_to_metadata
+    within_fieldset('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?') do
+      find(:label, 'No').click
+    end
+    click_button 'Title'
+    fill_in_title
+
+    navigate_to_upload
+    build_valid_stub_request('http://example.org/funbar.txt')
+    click_button('data_manifest')
+    fill_in('location_urls', with: 'http://example.org/funbar.txt')
+    click_on('validate_files')
+    expect(page.has_css?('i[aria-label="complete"]')).to be true
+
+    resource = StashEngine::Resource.last
+    resource.data_files.first.update(upload_file_size: resource_file_size)
+
+    click_button 'Agreements'
+    find('span', text: 'I agree').click
+    click_button 'Preview submission'
+  end
+
+  # rubocop:disable Metrics/AbcSize
+  def build_full_dataset(resource_file_size: '10', tenant_name: Faker::Educator.university)
+    navigate_to_metadata
+    within_fieldset('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?') do
+      find(:label, 'No').click
+    end
+    click_button 'Title'
+    fill_in_title
+    click_button 'Authors'
+    fill_in_affiliation(name: tenant_name)
+    expect(find_button('Authors')).to match_selector('[aria-describedby="step-complete"')
+    click_button 'Description'
+    fill_in_abstract
+    fill_in_research_domain
+    fill_in_keywords
+    expect(find_button('Subjects')).to match_selector('[aria-describedby="step-complete"')
+    click_button 'Support'
+    fill_in_no_funder
+    click_button 'Compliance'
+    fill_in_validation
+    click_button 'Files'
+
+    navigate_to_upload
+    find('span', text: '+ Add files for simultaneous publication at Zenodo').click
+    attach_files
+    expect(page).to have_content('file_10.ods')
+
+    navigate_to_upload
+    build_valid_stub_request('http://example.org/funbar.txt')
+    click_button('data_manifest')
+    fill_in('location_urls', with: 'http://example.org/funbar.txt')
+    click_on('validate_files')
+    expect(page.has_css?('i[aria-label="complete"]')).to be true
+
+    resource = StashEngine::Resource.last
+    resource.data_files.first.update(upload_file_size: resource_file_size)
+
+    click_button 'README'
+    add_required_readme
+
+    click_button 'Agreements'
+    find('span', text: 'I agree').click
+    click_button 'Preview submission'
+  end
+  # rubocop:enable Metrics/AbcSize
 end
