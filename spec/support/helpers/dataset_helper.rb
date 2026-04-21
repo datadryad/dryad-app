@@ -52,6 +52,7 @@ module DatasetHelper
     add_required_data_files
     click_button 'README'
     add_required_readme
+    expect(find_button('README')).to match_selector('[aria-describedby="step-complete"')
   end
 
   def fill_required_metadata
@@ -72,19 +73,18 @@ module DatasetHelper
     expect(find_button('Subjects')).to match_selector('[aria-describedby="step-complete"')
     click_button 'Compliance'
     fill_in_validation
+    expect(find_button('Compliance')).to match_selector('[aria-describedby="step-complete"')
   end
 
   def fill_in_title(title = Faker::Hipster.sentence(word_count: 6))
     find('[name="title"]').send_keys(title)
     page.send_keys(:tab)
-    # click_button 'Preview changes' if page.has_button?('Preview changes')
     expect(find_button('Title')).to match_selector('[aria-describedby="step-complete"')
   end
 
   def fill_in_abstract
     find('[name="abstract"]').send_keys(Faker::Lorem.paragraph)
     page.send_keys(:tab)
-    # click_button 'Preview changes' if page.has_button?('Preview changes')
     expect(find_button('Description')).to match_selector('[aria-describedby="step-complete"')
   end
 
@@ -103,8 +103,6 @@ module DatasetHelper
     click_button 'readme-next'
     click_button 'readme-next'
     find('[name="readme_editor"]').send_keys("\nThis is some README content.")
-    # click_button 'Preview changes' if page.has_button?('Preview changes')
-    expect(find_button('README')).to match_selector('[aria-describedby="step-complete"')
   end
 
   def submit_form
@@ -179,8 +177,6 @@ module DatasetHelper
     within_fieldset('hsi_fieldset') do
       find(:label, 'No').click
     end
-    # click_button 'Preview changes' if page.has_button?('Preview changes')
-    # expect(find_button('Compliance')).to match_selector('[aria-describedby="step-complete"')
   end
 
   def fill_in_funder(name: Faker::Company.name, value: Faker::Alphanumeric.alphanumeric(number: 8, min_alpha: 2, min_numeric: 4))
@@ -189,13 +185,10 @@ module DatasetHelper
     find('.use-text-entered').set(true) if page.has_css?('.use-text-entered')
     fill_in 'award_number', with: value
     page.send_keys(:tab)
-    # click_button 'Preview changes' if page.has_button?('Preview changes')
-    expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"')
   end
 
   def fill_in_no_funder
     find(:label, 'No funding received').click
-    # click_button 'Preview changes' if page.has_button?('Preview changes')
     expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"')
   end
 
@@ -328,15 +321,18 @@ module DatasetHelper
 
     click_button 'Support'
     fill_in_no_funder
+    expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"')
 
     click_button 'Compliance'
     fill_in_validation
+    expect(find_button('Compliance')).to match_selector('[aria-describedby="step-complete"')
 
     click_button 'Files'
     upload_file(size: resource_file_size)
 
     click_button 'README'
     add_required_readme
+    expect(find_button('README')).to match_selector('[aria-describedby="step-complete"')
 
     click_button 'Agreements'
     find('span', text: 'I agree').click
