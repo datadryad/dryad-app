@@ -17,6 +17,14 @@ Rack::Attack.safelist_ip('89.167.84.16') # Markus Englund, research on data fabr
 Rack::Attack.safelist_ip('130.14.25.148') # NCBI LinkOut integrity checker
 Rack::Attack.safelist_ip('130.14.254.25') # NCBI LinkOut integrity checker
 Rack::Attack.safelist_ip('130.14.254.26') # NCBI LinkOut integrity checker
+Rack::Attack.safelist_ip('131.130.80.0/24') # Dunja Dragojevic, research on multiple sequence alignment files
+Rack::Attack.safelist_ip('77.80.40.0/24') # Dunja Dragojevic, research on multiple sequence alignment files
+Rack::Attack.safelist_ip('77.80.42.0/23') # Dunja Dragojevic, research on multiple sequence alignment files
+Rack::Attack.safelist_ip('77.80.49.0/24') # Dunja Dragojevic, research on multiple sequence alignment files
+Rack::Attack.safelist_ip('77.80.60.0/24') # Dunja Dragojevic, research on multiple sequence alignment files
+Rack::Attack.safelist_ip('77.80.62.128/25') # Dunja Dragojevic, research on multiple sequence alignment files
+Rack::Attack.safelist_ip('77.80.68.0/22') # Dunja Dragojevic, research on multiple sequence alignment files
+Rack::Attack.safelist_ip('131.130.108.0/22') # Dunja Dragojevic, research on multiple sequence alignment files
 
 def start_w_wo_stash?(path, path_match)
   path.start_with?(path_match, "/stash#{path_match}")
