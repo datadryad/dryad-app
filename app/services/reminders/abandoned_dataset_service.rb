@@ -20,7 +20,6 @@ module Reminders
           create_activity(reminder_flag, resource)
         end
       rescue StandardError => e
-        aaa
         p "    Exception! #{e.message}"
       end
       true

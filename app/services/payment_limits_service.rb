@@ -51,7 +51,7 @@ class PaymentLimitsService
   def verify_basics
     return true if sponsor.nil?
 
-    @storage_fee = ldf_sponsored_amount || @calculator_service.ldf_sponsored_amount(resource: resource, payer: payer)
+    @storage_fee ||= ldf_sponsored_amount || @calculator_service.ldf_sponsored_amount(resource: resource, payer: payer)
     return false if @storage_fee.zero?
     return true unless payment_configuration&.covers_ldf
 

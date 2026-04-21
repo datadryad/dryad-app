@@ -10,8 +10,10 @@ class SponsoredPaymentsService
   def log_payment
     # there is no payer
     return if payer.nil?
-    # user is not on 2025 plan
+    # payer is not on 2025 plan
     return unless PayersService.new(payer).is_2025_payer?
+    # payer does not cover ldf
+    return unless PayersService.new(payer).sponsored_limits&.covers_ldf?
 
     @calculator_service = calculator_service
     SponsoredPaymentLog.transaction do

@@ -2,6 +2,8 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
   include DatasetHelper
   include Mocks::RSolr
   include Mocks::Aws
+  include Mocks::DataFile
+  include Mocks::Stripe
 
   let!(:top_level_sponsor) { create(:journal_organization, parent_org: nil) }
   let!(:sponsor_payment) do
@@ -19,15 +21,17 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
   before do
     mock_solr_frontend!
     mock_aws!
+    mock_file_content!
+    mock_stripe!
 
     create(:sponsored_payment_log, payer: journal, sponsor_id: top_level_sponsor.id, ldf: paid_ldf)
 
     sign_in(user)
-    start_new_dataset
   end
 
   describe 'on first version' do
     before do
+      start_new_dataset
       build_min_dataset(resource_file_size: resource_file_size)
 
       connect_journal(journal)
@@ -152,7 +156,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
             end
           end
 
-          context 'dataset is over size the limit' do
+          context 'dataset is over the size limit' do
             let(:resource_file_size) { 51_200_000_000 }
 
             context 'and amount limit will not be reached' do
@@ -184,6 +188,230 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
                 expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
               end
             end
+          end
+        end
+      end
+    end
+  end
+
+  describe 'on second version' do
+    let(:last_invoiced_file_size) { 34 }
+    let(:resource_file_size) { 10 }
+    let!(:identifier) do
+      create(:identifier, payment_type: 'journal-2025', payment_id: journal&.single_issn,
+                          last_invoiced_file_size: last_invoiced_file_size, license_id: :cc0)
+    end
+    let(:resource) do
+      create(:resource, identifier: identifier, user: user, accepted_agreement: true,
+                        created_at: 1.minute.ago, total_file_size: last_invoiced_file_size)
+    end
+
+    before do
+      create(:description, resource: resource, description_type: 'technicalinfo')
+      create(:description, resource: resource, description_type: 'hsi_statement', description: nil)
+      create(:description, resource: resource, description_type: 'abstract', description: 'Abstract')
+
+      manuscript = create(:manuscript, identifier: resource.identifier, status: 'accepted', journal: journal)
+      create(:resource_publication, resource: resource, manuscript_number: manuscript.manuscript_number, publication_issn: journal.single_issn)
+
+      create(:data_file, resource: resource, download_filename: 'file1.txt', file_state: 'created', upload_file_size: 1000)
+      create(:data_file, resource: resource, download_filename: 'README.md', file_state: 'created', upload_file_size: 100)
+
+      CurationService.new(user: user, resource: resource, status: 'queued').process
+      resource.current_state = :submitted
+
+      click_link 'My datasets'
+      click_button 'Revise submission'
+
+      identifier.reload
+      resource.reload
+    end
+
+    include_examples 'user does not pay anything'
+
+    context 'payment value' do
+      context 'ldf is not covered' do
+        context 'when nothing changes' do
+          include_examples 'user does not pay anything'
+          include_examples 'no LDF sponsored payment log is created'
+        end
+
+        context 'when files are added' do
+          before do
+            upload_file(size: resource_file_size)
+            click_button 'Preview changes'
+          end
+
+          context 'and tier is not exceeded' do
+            include_examples 'user does not pay anything'
+            include_examples 'no LDF sponsored payment log is created'
+          end
+
+          context 'and tier is exceeded' do
+            let(:resource_file_size) { 20_000_000_000 }
+
+            include_examples 'user must pay', '20 GB', '259.00'
+            include_examples 'no LDF sponsored payment log is created'
+          end
+        end
+      end
+
+      context 'ldf is covered but not limited' do
+        let!(:limits_payment) { create(:payment_configuration, partner: level_one_sponsor, covers_ldf: true) }
+
+        context 'when nothing changes' do
+          include_examples 'user does not pay anything'
+          include_examples 'no LDF sponsored payment log is created'
+        end
+
+        context 'when files are added' do
+          before do
+            upload_file(size: resource_file_size)
+            click_button 'Preview changes'
+          end
+
+          context 'and tier is not changed' do
+            include_examples 'user does not pay anything'
+            include_examples 'no LDF sponsored payment log is created'
+          end
+
+          context 'and tier is changed' do
+            let(:resource_file_size) { 53_200_000_000 }
+
+            include_examples 'user does not pay anything'
+            include_examples 'logs sponsored LDF value', 464
+          end
+        end
+      end
+
+      context 'ldf is covered and limited by size' do
+        let!(:limits_payment) { create(:payment_configuration, partner: level_one_sponsor, covers_ldf: true, ldf_limit: 2) }
+
+        context 'when nothing changes' do
+          include_examples 'user does not pay anything'
+          include_examples 'no LDF sponsored payment log is created'
+        end
+
+        context 'when files are added' do
+          before do
+            upload_file(size: resource_file_size)
+            click_button 'Preview changes'
+          end
+
+          context 'when limit tier is not changed' do
+            let(:last_invoiced_file_size) { 20_000_000_000 }
+            let(:resource_file_size) { 44_200_000_000 }
+
+            include_examples 'user does not pay anything'
+            include_examples 'no LDF sponsored payment log is created'
+          end
+
+          context 'when limit tier is exceeded' do
+            let(:resource_file_size) { 153_200_000_000 }
+
+            include_examples 'user must pay', '153.2 GB', '659.00'
+            include_examples 'logs sponsored LDF value', 464
+          end
+
+          context 'when limit tier is not exceeded, logs only the difference' do
+            let(:last_invoiced_file_size) { 12_000_000_000 }
+            let(:resource_file_size) { 55_000_000_000 }
+
+            include_examples 'user does not pay anything'
+            include_examples 'logs sponsored LDF value', 205
+          end
+        end
+      end
+
+      context 'ldf is covered and limited by yearly amount' do
+        let!(:limits_payment) { create(:payment_configuration, partner: level_one_sponsor, covers_ldf: true, yearly_ldf_limit: 1_000) }
+
+        context 'when nothing changes' do
+          include_examples 'user does not pay anything'
+          include_examples 'no LDF sponsored payment log is created'
+        end
+
+        context 'when files are added' do
+          before do
+            upload_file(size: resource_file_size)
+            click_button 'Preview changes'
+          end
+
+          context 'and LDF tier is not changed' do
+            let(:last_invoiced_file_size) { 20_000_000_000 }
+            let(:resource_file_size) { 44_200_000_000 }
+
+            include_examples 'user does not pay anything'
+            include_examples 'no LDF sponsored payment log is created'
+          end
+
+          context 'when yearly limit is exceeded' do
+            let(:resource_file_size) { 153_200_000_000 }
+
+            include_examples 'user must pay', '153.2 GB', '1,123.00'
+            include_examples 'no LDF sponsored payment log is created'
+          end
+
+          context 'when LDF tier is exceeded, logs only the difference' do
+            let(:last_invoiced_file_size) { 12_000_000_000 }
+            let(:resource_file_size) { 55_000_000_000 }
+
+            include_examples 'user does not pay anything'
+            include_examples 'logs sponsored LDF value', 205
+          end
+        end
+      end
+
+      context 'ldf is covered and limited by size and yearly amount' do
+        let!(:limits_payment) do
+          create(:payment_configuration, partner: level_one_sponsor, covers_ldf: true,
+                                         ldf_limit: 2, yearly_ldf_limit: 1_000)
+        end
+
+        context 'when nothing changes' do
+          include_examples 'user does not pay anything'
+          include_examples 'no LDF sponsored payment log is created'
+        end
+
+        context 'when files are added' do
+          before do
+            upload_file(size: resource_file_size)
+            click_button 'Preview changes'
+          end
+
+          context 'and LDF tier is not changed' do
+            let(:last_invoiced_file_size) { 20_000_000_000 }
+            let(:resource_file_size) { 44_200_000_000 }
+
+            include_examples 'user does not pay anything'
+            include_examples 'no LDF sponsored payment log is created'
+          end
+
+          context 'when LDF limit will be exceeded, but yearly limit not' do
+            let(:last_invoiced_file_size) { 12_200_000_000 }
+            let(:resource_file_size) { 153_200_000_000 }
+
+            include_examples 'user must pay', '153.2 GB', '659.00'
+            include_examples 'logs sponsored LDF value', 205
+          end
+
+          context 'when LDF limit is already exceeded, but yearly limit not' do
+            let(:last_invoiced_file_size) { 53_200_000_000 }
+            let(:resource_file_size) { 153_200_000_000 }
+
+            include_examples 'user must pay', '153.2 GB', '659.00'
+            include_examples 'no LDF sponsored payment log is created'
+          end
+
+          context 'when LDF limit is exceeded, and yearly limit is exceeded' do
+            let(:last_invoiced_file_size) { 12_000_000_000 }
+            let(:resource_file_size) { 153_200_000_000 }
+            let!(:sponsored_payment_log) do
+              create(:sponsored_payment_log, ldf: 900, resource_id: resource.id, payer: journal, sponsor_id: top_level_sponsor.id)
+            end
+
+            include_examples 'user must pay', '153.2 GB', '864.00'
+            include_examples 'no LDF sponsored payment log is created'
           end
         end
       end

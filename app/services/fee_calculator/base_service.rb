@@ -7,13 +7,12 @@ module FeeCalculator
       @options = options
       @sum_options = {}
       @resource = resource
-      payer_record ||= (resource ? resource.identifier.payer : nil)
-      @payer = PayersService.new(payer_record).payment_sponsor if payer_record
+      @payer_record = payer_record || (resource ? resource.identifier.payer : nil)
+      @payer = PayersService.new(@payer_record).payment_sponsor if @payer_record
 
       @payment_plan_is_2025 = resource ? resource.identifier.payer_2025?(@payer) : false
-      @limits_service = PaymentLimitsService.new(resource, payer_record, ldf_sponsored_amount: ldf_sponsored_amount)
-      @covers_ldf = resource ? PayersService.new(payer_record).sponsored_limits&.covers_ldf : false
-      @ldf_limit = resource ? PayersService.new(payer_record).sponsored_limits&.ldf_limit : nil
+      @covers_ldf = resource ? PayersService.new(@payer_record).sponsored_limits&.covers_ldf : false
+      @ldf_limit = resource ? PayersService.new(@payer_record).sponsored_limits&.ldf_limit : nil
     end
 
     # rubocop:disable Metrics/MethodLength
@@ -34,6 +33,7 @@ module FeeCalculator
         add_zero_fee(:dpc_tier)
 
         if @covers_ldf
+          @limits_service = PaymentLimitsService.new(resource, @payer_record, ldf_sponsored_amount: ldf_sponsored_amount)
           @sum_options[:storage_fee_label] = PRODUCT_NAME_MAPPER[:storage_fee_overage] unless @ldf_limit.nil?
           if @ldf_limit.nil? && @limits_service.payment_allowed?
             # if no limit is hit,
@@ -91,13 +91,12 @@ module FeeCalculator
       return diff if diff.zero?
       return diff if !@payment_plan_is_2025 || !@covers_ldf || @ldf_limit.nil?
 
-      sponsored_price = 0
-      if @ldf_limit.present?
-        sponsored_tier = get_tier_by_value(storage_fee_tiers, @ldf_limit)
-        sponsored_price = sponsored_tier[:price]
-      end
+      sponsored_tier = get_tier_by_value(storage_fee_tiers, @ldf_limit)
+      sponsored_price = sponsored_tier[:price]
 
-      [diff, sponsored_price].min
+      return diff if (sponsored_price - paid_tier_price).zero?
+
+      [sponsored_price - paid_tier_price, diff].min
     end
 
     def storage_fee_tier

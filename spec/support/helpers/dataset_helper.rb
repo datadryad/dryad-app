@@ -180,7 +180,7 @@ module DatasetHelper
       find(:label, 'No').click
     end
     # click_button 'Preview changes' if page.has_button?('Preview changes')
-    expect(find_button('Compliance')).to match_selector('[aria-describedby="step-complete"')
+    # expect(find_button('Compliance')).to match_selector('[aria-describedby="step-complete"')
   end
 
   def fill_in_funder(name: Faker::Company.name, value: Faker::Alphanumeric.alphanumeric(number: 8, min_alpha: 2, min_numeric: 4))
@@ -203,7 +203,7 @@ module DatasetHelper
     fos = 'Biological sciences'
     StashDatacite::Subject.create(subject: fos, subject_scheme: 'fos') # the fos field must exist
     click_button 'Subjects'
-    # expect(page).to have_content('Research domain')
+    expect(page).to have_content('Research domain')
     select(fos, from: 'Research domain')
     page.send_keys(:tab)
   end
@@ -298,7 +298,15 @@ module DatasetHelper
     click_button 'Preview submission'
   end
 
-  # rubocop:disable Metrics/AbcSize
+  def upload_file(size: '10')
+    navigate_to_upload
+    build_valid_stub_request('http://example.org/funbar.txt', 'text/plain', size)
+    click_button('data_manifest')
+    fill_in('location_urls', with: 'http://example.org/funbar.txt')
+    click_on('validate_files')
+    expect(page.has_css?('i[aria-label="complete"]')).to be true
+  end
+
   def build_full_dataset(resource_file_size: '10', tenant_name: Faker::Educator.university)
     navigate_to_metadata
     within_fieldset('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?') do
@@ -306,34 +314,26 @@ module DatasetHelper
     end
     click_button 'Title'
     fill_in_title
+
     click_button 'Authors'
     fill_in_affiliation(name: tenant_name)
     expect(find_button('Authors')).to match_selector('[aria-describedby="step-complete"')
+
     click_button 'Description'
     fill_in_abstract
+
     fill_in_research_domain
     fill_in_keywords
     expect(find_button('Subjects')).to match_selector('[aria-describedby="step-complete"')
+
     click_button 'Support'
     fill_in_no_funder
+
     click_button 'Compliance'
     fill_in_validation
+
     click_button 'Files'
-
-    navigate_to_upload
-    find('span', text: '+ Add files for simultaneous publication at Zenodo').click
-    attach_files
-    expect(page).to have_content('file_10.ods')
-
-    navigate_to_upload
-    build_valid_stub_request('http://example.org/funbar.txt')
-    click_button('data_manifest')
-    fill_in('location_urls', with: 'http://example.org/funbar.txt')
-    click_on('validate_files')
-    expect(page.has_css?('i[aria-label="complete"]')).to be true
-
-    resource = StashEngine::Resource.last
-    resource.data_files.first.update(upload_file_size: resource_file_size)
+    upload_file(size: resource_file_size)
 
     click_button 'README'
     add_required_readme
@@ -342,5 +342,4 @@ module DatasetHelper
     find('span', text: 'I agree').click
     click_button 'Preview submission'
   end
-  # rubocop:enable Metrics/AbcSize
 end

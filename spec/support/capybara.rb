@@ -68,7 +68,7 @@ RSpec.configure do |config|
 end
 
 Capybara.configure do |config|
-  config.default_max_wait_time = 10 # used to be 5 or 15 seconds until travis started acting up
+  config.default_max_wait_time = 5 # used to be 5 or 15 seconds until travis started acting up
   config.server                = :puma # used to be webrick
   config.raise_server_errors   = true
   config.server_port = 33_000
