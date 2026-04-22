@@ -151,7 +151,8 @@ module DatasetHelper
     Faker::Creature::Animal.unique.clear
   end
 
-  def fill_in_author(first_name: Faker::Name.unique.first_name, last_name: Faker::Name.unique.last_name, email: Faker::Internet.email)
+  def fill_in_author(first_name: Faker::Name.unique.first_name, last_name: Faker::Name.unique.last_name, email: Faker::Internet.email,
+                     has_orcid: false)
     fill_in 'author_first_name', with: first_name
     page.send_keys(:tab)
     expect(page.document).to have_content('All progress saved')
@@ -160,6 +161,7 @@ module DatasetHelper
     expect(page.document).to have_content('All progress saved')
     fill_in 'author_email', with: email
     page.send_keys(:tab)
+    click_button 'Add email' if has_orcid
     expect(page.document).to have_content('All progress saved')
     fill_in_affiliation
   end
