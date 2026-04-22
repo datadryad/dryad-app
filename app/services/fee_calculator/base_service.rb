@@ -94,7 +94,9 @@ module FeeCalculator
       sponsored_tier = get_tier_by_value(storage_fee_tiers, @ldf_limit)
       sponsored_price = sponsored_tier[:price]
 
-      return diff if (sponsored_price - paid_tier_price).zero?
+      # negative value is for flagging that the user must pay
+      # and no SponsoredPaymentLog is created
+      return -1 if sponsored_price < paid_tier_price || (sponsored_price == paid_tier_price && sponsored_price < new_tier_price)
 
       [sponsored_price - paid_tier_price, diff].min
     end

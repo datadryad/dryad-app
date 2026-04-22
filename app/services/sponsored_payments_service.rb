@@ -21,8 +21,8 @@ class SponsoredPaymentsService
       paid_before = delete_larger_file_size_logs
       amount = ldf_fees(paid_before)
 
-      should_skip_log = true if amount.zero?
-      should_skip_log = true if PaymentLimitsService.new(resource, payer).exceeds_sponsor_yearly_limit?(amount)
+      should_skip_log = true if amount <= 0
+      should_skip_log = true if !should_skip_log && PaymentLimitsService.new(resource, payer).exceeds_sponsor_yearly_limit?(amount)
 
       update_identifier_files_size
       return if should_skip_log

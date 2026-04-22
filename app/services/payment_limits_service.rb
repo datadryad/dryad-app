@@ -52,6 +52,7 @@ class PaymentLimitsService
     return true if sponsor.nil?
 
     @storage_fee ||= ldf_sponsored_amount || @calculator_service.ldf_sponsored_amount(resource: resource, payer: payer)
+    return true if @storage_fee.negative?
     return false if @storage_fee.zero?
     return true unless payment_configuration&.covers_ldf
 
