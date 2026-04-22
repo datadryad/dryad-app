@@ -1121,7 +1121,8 @@ namespace :identifiers do
   # example: RAILS_ENV=production bundle exec rake identifiers:dataset_origin_report -- --year_month 2024-05
   desc 'Generate a summary report of where submitted datasets are originating'
   task dataset_origin_report: :environment do
-    # For each day of the month, for each dataset that is "new to queue" or "PPR to queue",
+    # For each day of the month, for each dataset that has been
+    # submitted (includes "new to queue", "PPR to queue", and "awaiting payment"),
     # report on the associated institution(s) and journal
 
     # Get the year-month specified in --year_month argument.
@@ -1152,10 +1153,10 @@ namespace :identifiers do
 
       puts("  gathering identifiers first submitted in period: #{origin_date} to #{end_date}")
 
-      # Identifiers that have their FIRST submitted date in the given period
+      # Identifiers that were submitted and internally processed on a date in the given period
       found_identifiers = Set[]
       first_queued = StashEngine::Identifier.joins(:process_date)
-        .where(stash_engine_process_dates: { queued: origin_date..end_date })
+        .where(stash_engine_process_dates: { processing: origin_date..end_date })
         .distinct
       found_identifiers.merge(first_queued)
 
