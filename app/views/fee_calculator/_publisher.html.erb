@@ -11,8 +11,8 @@
   </p>
   <div class="input-line spaced" style="justify-content: stretch;">
     <h3 style="font-weight: bold" id="total_label">Partner fee estimate for one year:</h3>
-    <output id="total_estimate" for="service_tier dpc_tier" aria-labelledby="total_label"></output>
+    <output id="total_estimate" for="service_tier dpc_tier" aria-labelledby="total_label" aria-describedby="total_desc"></output>
   </div>
-  <h4 style="text-align: center; margin: 1rem auto; padding-bottom: 1.5rem">50% Annual Service Fee <a href="#discount-table">discount available with three-year agreement</a></h4> 
+  <h4 id="total_desc" style="text-align: center; margin: 1rem auto; padding-bottom: 1.5rem">Includes 50% discount on Annual Service Fee for a <a href="#discount-table">three-year agreement</a></h4>  
 <% end %>
 <script type="text/javascript" src="<%= asset_path 'calculator.js'%>"></script>

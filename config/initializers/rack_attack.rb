@@ -96,7 +96,11 @@ Rack::Attack.throttle('all_requests_by_IP', limit: APP_CONFIG[:rate_limit][:all_
   req.ip unless req.path.start_with?('/assets') ||
     req.path.match(%r{^/stash/[a-z]+_file/presign_upload/\d+}) ||
     req.path.match(%r{^/[a-z]+_file/presign_upload/\d+}) ||
-    start_w_wo_stash?(req.path, '/data_file/preview_check')
+    start_w_wo_stash?(req.path, '/data_file/preview_check') ||
+    req.path.match(%r{^/resource_fee_calculator/\d+}) ||
+    req.path.match(%r{^/resources/\d+/dpc_status}) ||
+    req.path.match(%r{^/resources/\d+/payer_check}) ||
+    req.path.match(%r{^/resources/\d+/dupe_check})
 end
 
 # File download throttling
