@@ -198,6 +198,7 @@ class ApiApplicationController < StashEngine::ApplicationController
 
   def log_request
     api_logger.info('---')
+    api_logger.info("IP: #{request.remote_ip}")
     api_logger.info("Path: #{request.path}")
     api_logger.info("Params: #{request.params}")
     api_logger.info("Body: #{request.body}")
