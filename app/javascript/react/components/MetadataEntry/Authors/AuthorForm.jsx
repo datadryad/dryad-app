@@ -3,12 +3,14 @@ import {Field, Form, Formik} from 'formik';
 import Affiliations from './Affiliations';
 import OrcidInfo from './OrcidInfo';
 import Editor from './Editor';
+import EmailConfirm from './EmailConfirm';
 
 export default function AuthorForm({
-  author, users, update, invite, user,
+  author, users, emails, update, invite, user,
 }) {
   const formRef = useRef(0);
   const [affiliations, setAffiliations] = useState(author?.affiliations);
+  const [confirmed, setConfirmed] = useState(false);
   const editor = author.author_orcid && users.find((u) => u.orcid === author.author_orcid);
 
   const submitForm = (values) => {
@@ -25,11 +27,27 @@ export default function AuthorForm({
   };
 
   const validateEmail = (value) => {
-    if (value && !/^[\w+\-.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+$/i.test(value)) {
+    if (!value) return null;
+    if (!/^[\w+\-.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+$/i.test(value)) {
       return 'Invalid email address';
+    }
+    if (emails.includes(value)) {
+      return 'Email already belongs to another author';
+    }
+    if (value !== author.author_email && author.author_orcid && !confirmed) {
+      document.getElementById(`confirm-dialog${author.id}`).showModal();
+      return 'Check email ORCID';
     }
     return null;
   };
+
+  useEffect(() => {
+    if (formRef.current && confirmed) {
+      formRef.current.validateField('author_email');
+      formRef.current.handleSubmit();
+      setConfirmed(false);
+    }
+  }, [confirmed]);
 
   useEffect(() => {
     if (formRef.current && affiliations.length < author.affiliations.length) formRef.current.handleSubmit();
@@ -53,7 +71,9 @@ export default function AuthorForm({
       }}
       validateOnChange={false}
     >
-      {({handleSubmit, errors, touched}) => (
+      {({
+        handleSubmit, errors, touched, values, initialValues, setFieldValue,
+      }) => (
         <Form className="author-form">
           <Field name="id" type="hidden" />
           {author.author_org_name !== null ? (
@@ -143,6 +163,17 @@ export default function AuthorForm({
                 <p style={{marginTop: 0, fontSize: '.98rem'}}>
                   You can update your email address for Dryad communications from <a href="/account">My account</a>
                 </p>
+              )}
+              {(author.author_orcid && !confirmed) && (
+                <EmailConfirm
+                  email={values.author_email}
+                  author={author}
+                  reset={() => {
+                    setFieldValue('author_email', initialValues.author_email);
+                    setConfirmed(true);
+                  }}
+                  confirm={() => setConfirmed(true)}
+                />
               )}
             </>
           )}

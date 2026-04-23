@@ -114,7 +114,14 @@ export default function Authors({
       <DragonDropList model="author" typeName="author" items={authors} path="/stash_datacite/authors/reorder" setItems={setAuthors}>
         {orderedItems({items: authors, typeName: 'author'}).map((author) => (
           <DragonListItem key={author.id} item={author} typeName="author">
-            <AuthorForm author={author} users={users} update={updateItem} invite={inviteAuthor} user={user} />
+            <AuthorForm
+              author={author}
+              user={user}
+              users={users}
+              update={updateItem}
+              invite={inviteAuthor}
+              emails={authors.filter((a) => a.id !== author.id).map((a) => a.author_email)}
+            />
             <button
               type="button"
               className="remove-record"
