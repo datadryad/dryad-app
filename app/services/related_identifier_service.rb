@@ -1,5 +1,6 @@
 class RelatedIdentifierService
   attr_reader :primary_article, :resource
+
   include PublicationMixin
 
   def initialize(resource)

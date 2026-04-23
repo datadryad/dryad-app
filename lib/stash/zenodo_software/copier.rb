@@ -160,7 +160,7 @@ module Stash
         @deposit.reopen_for_editing if @resp[:state] == 'done'
         @deposit.update_metadata(dataset_type: @dataset_type, doi: @copy.software_doi)
         # do not actually publish unless there are files
-        if @resource.send(@resource_method).present_files.count > 0
+        if @resource.send(@resource_method).present_files.any?
           @deposit.publish
         else
           # if there are no files the empty draft can be deleted
@@ -205,7 +205,7 @@ module Stash
       end
 
       def error_if_more_than_one_replication_for_resource
-        return if @resource.zenodo_copies.where(copy_type: @copy.copy_type).count == 1 # can have software and software_publish for same resource
+        return if @resource.zenodo_copies.where(copy_type: @copy.copy_type).one? # can have software and software_publish for same resource
 
         raise ZE, "resource_id #{@resource.id}: Exactly one replication of the same type (software or data) is allowed per resource."
       end

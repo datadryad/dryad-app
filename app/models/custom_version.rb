@@ -20,8 +20,11 @@
 #  index_paper_trail_versions_on_resource_id            (resource_id)
 #  index_paper_trail_versions_on_whodunnit              (whodunnit)
 #
+
+# rubocop:disable Style/OneClassPerFile
 class ApplicationVersion < ActiveRecord::Base
   include PaperTrail::VersionConcern
+
   self.abstract_class = true
 end
 
@@ -30,3 +33,4 @@ class CustomVersion < ApplicationVersion
 
   has_one :user, class_name: 'StashEngine::User', primary_key: 'whodunnit', foreign_key: 'id', touch: false, dependent: nil
 end
+# rubocop:enable Style/OneClassPerFile

@@ -76,7 +76,7 @@ class MoveCedarToTables < ActiveRecord::Migration[8.0]
       wb = CedarWordBank.create(label: b[:label], keywords: b[:kw])
       b[:ids].each do |templ|
         loc = Rails.root.join('public/cedar-embeddable-editor/templates', templ.first, 'template.json').to_s
-        file = File.open(loc)
+        file = File.new(loc)
         json = JSON.load(file)
         ct = CedarTemplate.create(id: templ.first, title: templ.last, template: json, word_bank_id: wb.id)
         file.close

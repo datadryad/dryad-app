@@ -1,5 +1,6 @@
 class PrimaryArticleJob < BaseJob
   include Sidekiq::Worker
+
   sidekiq_options queue: :default, retry: 2, lock: :until_and_while_executing
 
   def perform(work_id)

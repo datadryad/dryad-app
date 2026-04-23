@@ -165,7 +165,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       mime_type = url == url_csv ? %w[text/csv application/octet-stream].sample : 'text/csv'
       build_valid_stub_request(url, mime_type)
 
-      stub_file = File.open(File.expand_path('spec/fixtures/stash_engine/valid.csv'))
+      stub_file = File.new(File.expand_path('spec/fixtures/stash_engine/valid.csv'))
       stub_request(:get, url)
         .to_return(body: stub_file, status: 200)
       sleep 1
@@ -194,13 +194,13 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       build_valid_stub_request(url_csv_2, 'text/csv')
       build_valid_stub_request(url_non_csv, 'application/ods')
 
-      stub_file1 = File.open(File.expand_path('spec/fixtures/stash_engine/valid.csv'))
+      stub_file1 = File.new(File.expand_path('spec/fixtures/stash_engine/valid.csv'))
       stub_request(:get, url_csv_1)
         .to_return(body: stub_file1, status: 200)
-      stub_file2 = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.csv'))
+      stub_file2 = File.new(File.expand_path('spec/fixtures/stash_engine/invalid.csv'))
       stub_request(:get, url_csv_2)
         .to_return(body: stub_file2, status: 200)
-      stub_file3 = File.open(File.expand_path('spec/fixtures/stash_engine/file_10.ods'))
+      stub_file3 = File.new(File.expand_path('spec/fixtures/stash_engine/file_10.ods'))
       stub_request(:get, url_non_csv)
         .to_return(body: stub_file3, status: 200)
       sleep 1
@@ -221,7 +221,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       url = 'http://example.org/valid.csv'
       build_valid_stub_request(url)
 
-      stub_file = File.open(File.expand_path('spec/fixtures/stash_engine/valid.csv'))
+      stub_file = File.new(File.expand_path('spec/fixtures/stash_engine/valid.csv'))
       stub_request(:get, url)
         .to_return(body: stub_file, status: 200)
       sleep 1
@@ -241,7 +241,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       url = 'http://example.org/invalid.csv'
       build_valid_stub_request(url)
 
-      stub_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.csv'))
+      stub_file = File.new(File.expand_path('spec/fixtures/stash_engine/invalid.csv'))
       stub_request(:get, url)
         .to_return(body: stub_file, status: 200)
       sleep 1
@@ -265,13 +265,13 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       build_valid_stub_request(url_csv_2, 'text/csv')
       build_valid_stub_request(url_non_csv, 'application/ods')
 
-      stub_file1 = File.open(File.expand_path('spec/fixtures/stash_engine/valid.csv'))
+      stub_file1 = File.new(File.expand_path('spec/fixtures/stash_engine/valid.csv'))
       stub_request(:get, url_csv_1)
         .to_return(body: stub_file1, status: 200)
-      stub_file2 = File.open(File.expand_path('spec/fixtures/stash_engine/valid2.csv'))
+      stub_file2 = File.new(File.expand_path('spec/fixtures/stash_engine/valid2.csv'))
       stub_request(:get, url_csv_2)
         .to_return(body: stub_file2, status: 200)
-      stub_file3 = File.open(File.expand_path('spec/fixtures/stash_engine/file_10.ods'))
+      stub_file3 = File.new(File.expand_path('spec/fixtures/stash_engine/file_10.ods'))
       stub_request(:get, url_non_csv)
         .to_return(body: stub_file3, status: 200)
       sleep 1

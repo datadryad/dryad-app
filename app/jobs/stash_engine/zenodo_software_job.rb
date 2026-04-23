@@ -3,6 +3,7 @@ require 'stash/zenodo_software'
 module StashEngine
   class ZenodoSoftwareJob
     include Sidekiq::Worker
+
     sidekiq_options queue: :zenodo_software, retry: false
 
     attr_accessor :job_entry

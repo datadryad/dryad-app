@@ -281,7 +281,7 @@ module StashEngine
         next if datasets_found.include?(ca.identifier_id)
 
         # action_required is either a previous status in this version, or the last status of the previous version
-        if CurationActivity.where(resource_id: ca.resource_id, id: 0..ca.id - 1, status: 'action_required').present?
+        if CurationActivity.where(resource_id: ca.resource_id, id: 0..(ca.id - 1), status: 'action_required').present?
           datasets_found.add(ca.identifier_id)
           next
         end

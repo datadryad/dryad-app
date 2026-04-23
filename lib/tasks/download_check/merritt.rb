@@ -75,7 +75,6 @@ module Tasks
           end
         end
       end
-      # rubocop:enable
 
       def save_error(resource:, file:, error:)
         ark = %r{/d/(.+)$}.match(resource.download_uri)
