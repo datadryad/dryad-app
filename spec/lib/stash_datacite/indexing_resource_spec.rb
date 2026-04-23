@@ -361,7 +361,7 @@ module Stash
             funder_awd_ids_sm: @resource.funders.map(&:award_number).reject(&:blank?).uniq,
             funder_ror_ids_sm: @resource.funders.rors.map(&:name_identifier_id).reject(&:blank?).uniq,
             funding_sm: @resource.funders.map do |f|
-              "#{f.contributor_name}#{f.award_number.present? ? ": #{f.award_number}" : ''}"
+              "#{f.contributor_name}#{": #{f.award_number}" if f.award_number.present?}"
             end.reject(&:blank?).uniq,
             sponsor_ror_ids_sm: @resource.contributors.sponsors.rors.map(&:name_identifier_id).reject(&:blank?).uniq,
             rw_sim: ['id=doi123,type=primary_article'],

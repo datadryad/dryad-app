@@ -6,6 +6,7 @@ module Stash
     # Mapping for `<st:version>`
     class Version
       include ::XML::Mapping
+
       numeric_node :version_number, 'version_number'
       date_node :date, 'date', zulu: true
       text_node :note, 'note', default_value: nil

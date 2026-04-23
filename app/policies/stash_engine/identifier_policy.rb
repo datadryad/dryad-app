@@ -3,13 +3,13 @@ module StashEngine
 
     def destroy?
       @user.min_manager? &&
-        @record.resources.count == 1 &&
+        @record.resources.one? &&
         @record.resources.first.curation_activities.pluck(:status).uniq == ['in_progress']
     end
 
     def reset_payments?
       @user.min_manager? &&
-        @record.payments.count == 1 &&
+        @record.payments.one? &&
         @record.payments.first.pay_with_invoice
     end
 

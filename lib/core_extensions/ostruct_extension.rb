@@ -1,5 +1,5 @@
 require 'ostruct'
-
+# rubocop:disable all
 class OpenStruct
   def self_and_field_pairs
     each_pair.map { |field, _| [self, field] }
@@ -11,7 +11,7 @@ class Hash
   # and all its sub-hashes become OpenStruct instances in the resulting
   # structure.
 
-  # rubocop:disable all
+
   def to_ostruct
     top_ostruct = OpenStruct.new(self)
     stack = top_ostruct.self_and_field_pairs
@@ -37,5 +37,5 @@ class Hash
     end
     top_ostruct
   end
-  # rubocop:enable all
 end
+# rubocop:enable all

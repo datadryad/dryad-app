@@ -146,7 +146,7 @@ module Stash
           expect do
             ZenodoConnection.standard_request(:get,
                                               'https://example.test.com', params: { sugarplum: 'catnip' })
-          end .to raise_error(Stash::ZenodoReplicate::ZenodoError)
+          end.to raise_error(Stash::ZenodoReplicate::ZenodoError)
         end
 
         it 'raises error if there is a parsing error' do

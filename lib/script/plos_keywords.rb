@@ -10,7 +10,8 @@ module Script
     SCHEME = 'PLOS Subject Area Thesaurus'.freeze
     SCHEME_URI = 'https://github.com/PLOS/plos-thesaurus'.freeze
 
-    def initialize(filename_of_tsv = '/Users/scottfisher/Desktop/plosthes.2016-3.full.txt') # should be full path
+    # should be full path
+    def initialize(filename_of_tsv = '/Users/scottfisher/Desktop/plosthes.2016-3.full.txt')
       @fn = filename_of_tsv
     end
 

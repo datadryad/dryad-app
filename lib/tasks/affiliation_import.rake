@@ -87,8 +87,8 @@ namespace :affiliation_import do
 
       puts "Processing #{idx + 1}/#{stash_ids.length}: #{i.identifier}"
       authors = i.latest_resource.authors
-      (0..authors.size - 1).each do |a|
-        (a + 1..authors.size - 1).each do |b|
+      (0..(authors.size - 1)).each do |a|
+        ((a + 1)..(authors.size - 1)).each do |b|
           # see if the author has any potential duplicates
           next unless duplicates?(authors[a], authors[b])
 
@@ -438,7 +438,7 @@ namespace :affiliation_import do
     parts = name.split
     author = nil
     (1..parts.size).each do |space_to_try|
-      first = parts[0..space_to_try - 1].join(' ')
+      first = parts[0..(space_to_try - 1)].join(' ')
       last = parts[space_to_try..].join(' ')
       puts "  searching authors for resource #{resource.id}, first[#{first}], last[#{last}]"
       author = StashEngine::Author.where('stash_engine_authors.resource_id = ? ' \

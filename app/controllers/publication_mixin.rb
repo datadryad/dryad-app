@@ -18,6 +18,7 @@ module PublicationMixin
         status: 'queued',
         note: 'Release from peer review through publication information'
       ).process
+      resource.update(user_id: nil) unless resource.curator&.curator?
       StashEngine::UserMailer.peer_review_pub_linked(resource).deliver_now
     end
   end

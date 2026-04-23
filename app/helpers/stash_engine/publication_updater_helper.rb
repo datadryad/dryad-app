@@ -70,7 +70,7 @@ module StashEngine
     end
 
     def output_authors(authors:)
-      return authors[0..2]&.sort { |a, b| a <=> b }&. + ['et al.'] if authors.length > 3
+      return authors[0..2]&.sort { |a, b| a <=> b }&.+ ['et al.'] if authors.length > 3
 
       authors&.sort { |a, b| a <=> b }
     end

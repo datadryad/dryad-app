@@ -82,7 +82,7 @@ class ApiApplicationController < StashEngine::ApplicationController
 
   def require_resource_id(resource_id:)
     @stash_resources = StashEngine::Resource.where(id: resource_id)
-    @resource = @stash_resources&.first if @stash_resources.count.positive?
+    @resource = @stash_resources&.first if @stash_resources.any?
 
     return unless @stash_resources.count < 1
 
@@ -198,6 +198,7 @@ class ApiApplicationController < StashEngine::ApplicationController
 
   def log_request
     api_logger.info('---')
+    api_logger.info("IP: #{request.remote_ip}")
     api_logger.info("Path: #{request.path}")
     api_logger.info("Params: #{request.params}")
     api_logger.info("Body: #{request.body}")
