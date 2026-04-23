@@ -46,13 +46,14 @@ module StashEngine
 
     validates_associated :issns
     accepts_nested_attributes_for :flag, allow_destroy: true
-    accepts_nested_attributes_for(*%i[issns alternate_titles payment_configuration])
+    accepts_nested_attributes_for(*%i[issns alternate_titles])
+    accepts_nested_attributes_for :payment_configuration, allow_destroy: true, reject_if: :all_blank
 
     scope :servers, -> { where(preprint_server: true) }
     scope :sponsoring, -> { joins(:payment_configuration).where(payment_configuration: { payment_plan: PAYMENT_PLANS }) }
 
     def will_pay?
-      PAYMENT_PLANS.include?(payment_configuration&.payment_plan)
+      PAYMENT_PLANS.include?(payment_sponsor.payment_configuration&.payment_plan)
     end
 
     def api_journal?
@@ -179,6 +180,26 @@ module StashEngine
           payment_configuration: { only: %i[payment_plan covers_dpc covers_ldf ldf_limit yearly_ldf_fee_limit] }
         }
       )
+    end
+
+    def payment_sponsor
+      # top level publisher
+      # OR
+      # self
+      sponsor_obj = self
+      if sponsor
+        sponsor_obj = sponsor
+        sponsor_obj = sponsor_obj.parent_org while sponsor_obj.parent_org.present?
+      end
+      sponsor_obj
+    end
+
+    def sponsored_limits
+      # direct sponsor / first-level publisher
+      # OR
+      # self
+      obj = sponsor || self
+      obj.payment_configuration
     end
   end
 end

@@ -59,6 +59,7 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
         click_button 'Title'
         resource.title.length.times { find('[name="title"]').send_keys([:backspace]) }
         fill_in_title(title)
+        expect(page).to have_text('All progress saved')
         click_button 'README'
         expect(page).to have_content('a README file must be included')
         expect(page).to have_text(title)

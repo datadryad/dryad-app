@@ -14,7 +14,7 @@ module StashEngine
         return false if old_system_valid_payer?
         return false if latest_resource.resource_type&.resource_type == 'collection'
         return false if waiver? && old_payment_system
-        return PaymentLimitsService.new(latest_resource, PayersService.new(payer).payment_sponsor).limits_exceeded? if sponsored?
+        return PaymentLimitsService.new(latest_resource, payer).limits_exceeded? if sponsored?
 
         true
       end
@@ -105,11 +105,13 @@ module StashEngine
           self.payment_id = "funder:#{contrib.contributor_name}|award:#{contrib.award_number}"
           self.old_payment_system = false
         elsif institution_will_pay?
+          payer_sponsor = PayersService.new(latest_resource&.tenant).payment_sponsor
           self.payment_id = latest_resource&.tenant&.id
-          self.payment_type = "institution#{'-TIERED' if latest_resource&.tenant&.payment_configuration&.payment_plan == 'TIERED'}"
+          self.payment_type = "institution#{'-TIERED' if payer_sponsor&.payment_configuration&.payment_plan == 'TIERED'}"
           self.old_payment_system = false
         elsif journal_will_pay?
-          self.payment_type = "journal-#{journal.payment_configuration.payment_plan}"
+          payer_sponsor = PayersService.new(journal).payment_sponsor
+          self.payment_type = "journal-#{payer_sponsor&.payment_configuration&.payment_plan}"
           self.payment_id = publication_issn
           self.old_payment_system = false
         elsif payments.any? && !old_system_valid_payer?
@@ -192,14 +194,14 @@ module StashEngine
       def clear_payment_for_changed_sponsor
         return unless payment_type.present?
 
-        # remove existing payment for added funder
         if funder_will_pay?
+          # remove existing payment for added funder
           return if payment_type == 'funder' && payment_id.include?(funder_payment_info&.contributor_name)
-        # remove existing payment for added institution
         elsif institution_will_pay?
+          # remove existing payment for added institution
           return if payment_type.include?('institution') && payment_id == latest_resource.tenant_id
-        # remove payment if paying journal has changed or been removed
         else
+          # remove payment if paying journal has changed or been removed
           return unless payment_type.include?('journal') || journal_will_pay?
           return if payment_id == journal&.single_issn
         end

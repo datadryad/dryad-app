@@ -47,7 +47,7 @@ Capybara.disable_animation = true
 Capybara.register_driver :selenium_chrome_headless do |app|
   # Capybara::Selenium::Driver.load_selenium
   browser_options = Selenium::WebDriver::Chrome::Options.new.tap do |opts|
-    opts.args << '--window-size=1920,1080'
+    opts.args << '--window-size=1920,2080'
     opts.args << '--force-device-scale-factor=0.95'
     opts.args << '--headless'
     opts.args << '--incognito'
@@ -68,7 +68,7 @@ RSpec.configure do |config|
 end
 
 Capybara.configure do |config|
-  config.default_max_wait_time = 15 # used to be 5 or 15 seconds until travis started acting up
+  config.default_max_wait_time = 5 # used to be 5 or 15 seconds until travis started acting up
   config.server                = :puma # used to be webrick
   config.raise_server_errors   = true
   config.server_port = 33_000

@@ -1,0 +1,18 @@
+// open a modal dialog
+document.getElementById('genericModalContent').innerHTML = "<%= escape_javascript(render partial: html_partial) %>";
+document.getElementById('genericModalDialog').showModal();
+document.getElementById('cancel_dialog').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('genericModalDialog').close();
+});
+
+var sponsor_id = document.getElementById('parent_org_id')
+sponsor_id.addEventListener('change', () => {
+  if (sponsor_id.value === '') {
+    document.getElementById('payment_plan_container').removeAttribute('hidden');
+  } else {
+    document.getElementById('payment_plan_container').setAttribute('hidden', '');
+  }
+});
+
+<%= render '/stash_engine/payment_configuration/js_form', format: :js %>

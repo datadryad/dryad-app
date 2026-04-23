@@ -99,6 +99,8 @@ RSpec.feature 'ChangeLog', type: :feature, js: true do
         click_button 'Preview changes'
         click_button 'Compliance'
         fill_in_validation
+        click_button 'Preview changes'
+        expect(find_button('Compliance')).to match_selector('[aria-describedby="step-complete"')
         submit_form
         expect(page).to have_content('My datasets')
         sign_out

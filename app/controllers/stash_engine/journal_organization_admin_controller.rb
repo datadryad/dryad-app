@@ -26,6 +26,7 @@ module StashEngine
 
     def edit
       @org = authorize StashEngine::JournalOrganization.find(params[:id])
+      @payment_configuration = @org.payment_configuration || @org.build_payment_configuration
       respond_to(&:js)
     end
 
@@ -42,6 +43,7 @@ module StashEngine
 
     def new
       @org = authorize StashEngine::JournalOrganization.new
+      @payment_configuration = @org.build_payment_configuration
       respond_to(&:js)
     end
 
@@ -73,7 +75,7 @@ module StashEngine
     end
 
     def update_hash
-      valid = %i[name parent_org_id]
+      valid = %i[name parent_org_id payment_configuration_attributes]
       update = edit_params.slice(*valid)
       update[:parent_org_id] = nil if edit_params.key?(:parent_org_id) && edit_params[:parent_org_id].blank?
       update[:contact] = edit_params[:contact].split("\n").map(&:strip).to_json if edit_params[:contact]
@@ -81,7 +83,8 @@ module StashEngine
     end
 
     def edit_params
-      params.permit(:id, :name, :contact, :parent_org_id)
+      params.permit(:id, :name, :contact, :parent_org_id,
+                    payment_configuration_attributes: %i[id payment_plan covers_ldf ldf_limit yearly_ldf_limit])
     end
 
   end
