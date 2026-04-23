@@ -14,19 +14,12 @@ module FeeCalculator
       @ldf_limit = resource ? @payer&.payment_configuration&.ldf_limit : nil
     end
 
-    # rubocop:disable Metrics/MethodLength
     def call
       verify_payer
       verify_new_payment_system
 
       if resource.present?
-        if resource.identifier.old_system_valid_payer?
-          add_zero_fee(:service_tier)
-          add_zero_fee(:dpc_tier)
-          add_zero_fee(:storage_fee)
-          @sum_options[:storage_fee_label] = PRODUCT_NAME_MAPPER[:storage_fee]
-          return @sum_options.merge(total: @sum)
-        end
+        return no_payment_required if resource.identifier.old_system_valid_payer? || resource.hold_for_peer_review
 
         add_zero_fee(:service_tier)
         add_zero_fee(:dpc_tier)
@@ -61,7 +54,6 @@ module FeeCalculator
       add_storage_fee_label
       @sum_options.merge(total: @sum)
     end
-    # rubocop:enable Metrics/MethodLength
 
     def storage_fee_tiers
       ESTIMATED_FILES_SIZE
@@ -248,6 +240,14 @@ module FeeCalculator
 
     def add_coupon(coupon_id)
       @sum_options[:coupon_id] = coupon_id
+    end
+
+    def no_payment_required
+      add_zero_fee(:service_tier)
+      add_zero_fee(:dpc_tier)
+      add_zero_fee(:storage_fee)
+      @sum_options[:storage_fee_label] = PRODUCT_NAME_MAPPER[:storage_fee]
+      @sum_options.merge(total: @sum)
     end
   end
 end

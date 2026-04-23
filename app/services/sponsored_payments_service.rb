@@ -12,6 +12,8 @@ class SponsoredPaymentsService
     return if payer.nil?
     # user is not on 2025 plan
     return unless PayersService.new(payer).is_2025_payer?
+    # do not log payment if dataset is set for PPR
+    return if resource.hold_for_peer_review?
 
     @calculator_service = calculator_service
     SponsoredPaymentLog.transaction do
