@@ -5,7 +5,7 @@ import {TextSelection} from '@milkdown/kit/prose/state';
 import {commands} from './milkdownCommands';
 import {commands as mdCommands} from './codeKeymap';
 import {
-  Table, Heading, LinkMenu, List, icons, labels,
+  Table, Heading, ImageMenu, LinkMenu, List, icons, labels,
 } from './Buttons';
 
 function Toggle({
@@ -124,7 +124,8 @@ function Button({
         || (activeEditor === 'markdown' && type.includes('list') && activeList),
       );
       setDisabled(
-        (type.includes('dent') && !activeList)
+        (activeEditor === 'markdown' && type === 'image')
+        || (type.includes('dent') && !activeList)
         || (activeEditor === 'markdown' && type.includes('_list') && active),
       );
     }
@@ -133,6 +134,7 @@ function Button({
   if (type === 'spacer') return <span className="spacer" role="separator" />;
   if (activeEditor === 'visual') {
     if (type === 'link') return <LinkMenu active={active} editor={editor} editorId={editorId} />;
+    if (type === 'image') return <ImageMenu active={active} editor={editor} editorId={editorId} />;
     if (type.includes('_list')) return <List active={active} editor={editor} type={type} />;
     if (['strong', 'emphasis', 'inlineCode', 'strike_through'].includes(type)) {
       return <Toggle active={active} editor={editor} type={type} disabled={disabled} />;
