@@ -14,6 +14,8 @@ class SponsoredPaymentsService
     return unless PayersService.new(payer).is_2025_payer?
     # payer does not cover ldf
     return unless PayersService.new(payer).sponsored_limits&.covers_ldf?
+    # do not log payment if dataset is set for PPR
+    return if resource.hold_for_peer_review?
 
     @calculator_service = calculator_service
     SponsoredPaymentLog.transaction do

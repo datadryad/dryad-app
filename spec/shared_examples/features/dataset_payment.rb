@@ -32,7 +32,6 @@ RSpec.shared_examples('no LDF sponsored payment log is created') do
     click_button 'Submit for publication'
 
     expect(page).to have_text('Your dataset with the DOI')
-    pp identifier.reload.latest_resource.sponsored_payment_log
     expect(identifier.reload.latest_resource.sponsored_payment_log).to be_nil
   end
 end
