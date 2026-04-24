@@ -27,7 +27,7 @@ module DatasetHelper
   def navigate_to_upload
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    page.find('#checklist-button').click unless page.has_button?('Files')
+    # page.find('#checklist-button').click unless page.has_button?('Files')
     click_button 'Files'
     expect(page).to have_content('Choose files')
     expect(page).to have_content('Enter URLs')
@@ -291,11 +291,11 @@ module DatasetHelper
     click_button 'Preview submission'
   end
 
-  def upload_file(size: '10')
+  def upload_file(size: '10', file_name: 'funbar.txt')
     navigate_to_upload
-    build_valid_stub_request('http://example.org/funbar.txt', 'text/plain', size)
+    build_valid_stub_request("http://example.org/#{file_name}", 'text/plain', size)
     click_button('data_manifest')
-    fill_in('location_urls', with: 'http://example.org/funbar.txt')
+    fill_in('location_urls', with: "http://example.org/#{file_name}")
     click_on('validate_files')
     expect(page.has_css?('i[aria-label="complete"]')).to be true
   end
