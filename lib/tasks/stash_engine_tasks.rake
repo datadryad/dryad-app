@@ -1135,7 +1135,7 @@ namespace :identifiers do
       year = matchdata[1]&.to_i
       month = matchdata[2]&.to_i
       exit unless year.present? && month.present?
-      filename = "dataset_origin_report-#{year}-#{"%02d" % month}.csv"
+      filename = "dataset_origin_report-#{year}-#{format('%02d', month)}.csv"
       origin_date = Date.new(year, month, 1)
       end_date = origin_date.end_of_month.end_of_day
     end
