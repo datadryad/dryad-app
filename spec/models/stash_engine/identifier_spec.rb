@@ -457,7 +457,7 @@ module StashEngine
       context 'when individual payment has a waiver' do
         let(:identifier) { create(:identifier, payment_type: 'waiver') }
 
-        it { is_expected.to be_truthy }
+        it { is_expected.to be_falsey }
       end
 
       context 'when individual payment has a waiver on an old_payment_system dataset' do
