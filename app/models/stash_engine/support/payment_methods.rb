@@ -13,7 +13,7 @@ module StashEngine
       def user_must_pay?
         return false if old_system_valid_payer?
         return false if latest_resource.resource_type&.resource_type == 'collection'
-        return false if waiver? && old_payment_system
+        return false if waiver? || old_payment_system
         return PaymentLimitsService.new(latest_resource, PayersService.new(payer).payment_sponsor).limits_exceeded? if sponsored?
 
         true
