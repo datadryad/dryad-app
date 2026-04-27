@@ -1,4 +1,4 @@
-RSpec.feature 'PPR PaymentFlows', type: :feature, js: true do
+RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true do
   include DatasetHelper
   include Mocks::RSolr
   include Mocks::Aws
@@ -42,7 +42,10 @@ RSpec.feature 'PPR PaymentFlows', type: :feature, js: true do
         it 'user is informed he can pay only the PPR fee' do
           expect(page).not_to have_content('Payment for this submission is sponsored by')
           expect(page).to have_content('dataset has a Data Publishing Charge of $150.00')
-          expect(page).to have_content('You may choose to pay only $50.00, with the remainder due at the end of the peer review period. The Private for Peer Review Fee is nonrefundable.')
+          expect(page).to have_content(
+            'You may choose to pay only $50.00, with the remainder due at the end ' \
+            'of the peer review period. The Private for Peer Review Fee is nonrefundable.'
+          )
 
           expect(page).to have_css('button', exact_text: 'Pay & Submit for peer review')
         end
@@ -52,7 +55,10 @@ RSpec.feature 'PPR PaymentFlows', type: :feature, js: true do
             click_button 'Pay & Submit for peer review'
 
             expect(page).to have_content('dataset has a Data Publishing Charge of $150.00')
-            expect(page).to have_content('You may choose to pay only $50.00, with the remainder due at the end of the peer review period. The Private for Peer Review Fee is nonrefundable.')
+            expect(page).to have_content(
+              'You may choose to pay only $50.00, with the remainder due at the end of the ' \
+              'peer review period. The Private for Peer Review Fee is nonrefundable.'
+            )
 
             expect(page).to have_css('button', exact_text: 'Pay full $150.00 now')
             expect(page).to have_css('button', exact_text: 'Pay $50.00 Peer Review Fee')
@@ -68,7 +74,10 @@ RSpec.feature 'PPR PaymentFlows', type: :feature, js: true do
           it 'user is informed he can pay only the PPR fee' do
             expect(page).not_to have_content('Payment for this submission is sponsored by')
             expect(page).to have_content('This 54 GB dataset has a Data Publishing Charge of $808.00')
-            expect(page).to have_content('You may choose to pay only $50.00, with the remainder due at the end of the peer review period. The Private for Peer Review Fee is nonrefundable.')
+            expect(page).to have_content(
+              'You may choose to pay only $50.00, with the remainder due at the end of the ' \
+              'peer review period. The Private for Peer Review Fee is nonrefundable.'
+            )
 
             expect(page).to have_css('button', exact_text: 'Pay & Submit for peer review')
           end
@@ -78,7 +87,10 @@ RSpec.feature 'PPR PaymentFlows', type: :feature, js: true do
               click_button 'Pay & Submit for peer review'
 
               expect(page).to have_content('This 54 GB dataset has a Data Publishing Charge of $808.00')
-              expect(page).to have_content('You may choose to pay only $50.00, with the remainder due at the end of the peer review period. The Private for Peer Review Fee is nonrefundable.')
+              expect(page).to have_content(
+                'You may choose to pay only $50.00, with the remainder due at the end of ' \
+                'the peer review period. The Private for Peer Review Fee is nonrefundable.'
+              )
 
               expect(page).to have_css('button', exact_text: 'Pay full $808.00 now')
               expect(page).to have_css('button', exact_text: 'Pay $50.00 Peer Review Fee')
@@ -97,7 +109,7 @@ RSpec.feature 'PPR PaymentFlows', type: :feature, js: true do
     end
     let(:resource) do
       create(:resource, identifier: identifier, user: user, accepted_agreement: true, hold_for_peer_review: true,
-             created_at: 1.minute.ago, total_file_size: last_invoiced_file_size)
+                        created_at: 1.minute.ago, total_file_size: last_invoiced_file_size)
     end
     let!(:payment) do
       create(:resource_payment, resource: resource, amount: 150, payment_type: 'stripe', status: :paid)
@@ -148,7 +160,10 @@ RSpec.feature 'PPR PaymentFlows', type: :feature, js: true do
               include_examples 'ppr - no LDF sponsored payment log is created'
 
               it 'user is not prompted to pay the PPR fee' do
-                expect(page).not_to have_content('You may choose to pay only $50.00, with the remainder due at the end of the peer review period. The Private for Peer Review Fee is nonrefundable.')
+                expect(page).not_to have_content(
+                  'You may choose to pay only $50.00, with the remainder due at the ' \
+                  'end of the peer review period. The Private for Peer Review Fee is nonrefundable.'
+                )
               end
 
               context 'when on payment page' do
@@ -158,8 +173,14 @@ RSpec.feature 'PPR PaymentFlows', type: :feature, js: true do
                   it 'user can not choose PPR fee' do
                     click_button 'Pay & Submit for peer review'
 
-                    expect(page).to have_content('Since the dataset size has increased to 20 GB, submitting this new version will come with an additional charge of $370.00.')
-                    expect(page).not_to have_content('You may choose to pay only $50.00, with the remainder due at the end of the peer review period. The Private for Peer Review Fee is nonrefundable.')
+                    expect(page).to have_content(
+                      'Since the dataset size has increased to 20 GB, submitting this new ' \
+                      'version will come with an additional charge of $370.00.'
+                    )
+                    expect(page).not_to have_content(
+                      'You may choose to pay only $50.00, with the remainder due at ' \
+                      'the end of the peer review period. The Private for Peer Review Fee is nonrefundable.'
+                    )
 
                     expect(page).not_to have_css('button', exact_text: 'Pay full $150.00 now')
                     expect(page).not_to have_css('button', exact_text: 'Pay $50.00 Peer Review Fee')
@@ -176,7 +197,11 @@ RSpec.feature 'PPR PaymentFlows', type: :feature, js: true do
               include_examples 'ppr - individual user does not pay anything'
 
               xit 'notifies the user that the PPR fee was already paid' do
-                expect(page).to have_content('The $50.00 Private for Peer Review Fee has been paid. The remainder of the Data Publishing Charge is due at submission for curation and publication.')
+                # works as expected when testing manual
+                expect(page).to have_content(
+                  'The $50.00 Private for Peer Review Fee has been paid. ' \
+                  'The remainder of the Data Publishing Charge is due at submission for curation and publication.'
+                )
               end
             end
           end

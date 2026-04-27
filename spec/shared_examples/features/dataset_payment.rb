@@ -85,3 +85,11 @@ RSpec.shared_examples('ppr - individual user must pay') do |size, amount|
     expect(page).not_to have_css('button', exact_text: 'Submit for peer review')
   end
 end
+
+RSpec.shared_examples('ppr - sponsored user does not pay anything') do
+  it 'user does not pay anything' do
+    expect(page).to have_text("Payment for this submission is sponsored by #{payer_name}")
+    expect(page).to have_css('button', exact_text: 'Submit for peer review')
+    expect(page).not_to have_css('button', exact_text: 'Pay & Submit for peer review')
+  end
+end
