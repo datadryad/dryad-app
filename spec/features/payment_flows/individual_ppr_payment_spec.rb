@@ -135,7 +135,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
     include_examples 'ppr - individual user does not pay anything'
 
     context 'payment value' do
-      context 'when paid in fill' do
+      context 'when kept in PPR' do
         context 'when nothing changes' do
           include_examples 'ppr - individual user does not pay anything'
           include_examples 'ppr - no LDF sponsored payment log is created'
@@ -157,7 +157,6 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
 
             context 'when DPC was paid in full (not the PPR fee)' do
               include_examples 'ppr - individual user must pay', '20 GB', '370.00'
-              include_examples 'ppr - no LDF sponsored payment log is created'
 
               it 'user is not prompted to pay the PPR fee' do
                 expect(page).not_to have_content(
@@ -167,24 +166,22 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
               end
 
               context 'when on payment page' do
-                context 'when DPC was paid in full (not the PPR fee)' do
-                  include_examples 'ppr - individual user must pay', '20 GB', '370.00'
+                include_examples 'ppr - individual user must pay', '20 GB', '370.00'
 
-                  it 'user can not choose PPR fee' do
-                    click_button 'Pay & Submit for peer review'
+                it 'user can not choose PPR fee' do
+                  click_button 'Pay & Submit for peer review'
 
-                    expect(page).to have_content(
-                      'Since the dataset size has increased to 20 GB, submitting this new ' \
-                      'version will come with an additional charge of $370.00.'
-                    )
-                    expect(page).not_to have_content(
-                      'You may choose to pay only $50.00, with the remainder due at ' \
-                      'the end of the peer review period. The Private for Peer Review Fee is nonrefundable.'
-                    )
+                  expect(page).to have_content(
+                    'Since the dataset size has increased to 20 GB, submitting this new ' \
+                    'version will come with an additional charge of $370.00.'
+                  )
+                  expect(page).not_to have_content(
+                    'You may choose to pay only $50.00, with the remainder due at ' \
+                    'the end of the peer review period. The Private for Peer Review Fee is nonrefundable.'
+                  )
 
-                    expect(page).not_to have_css('button', exact_text: 'Pay full $150.00 now')
-                    expect(page).not_to have_css('button', exact_text: 'Pay $50.00 Peer Review Fee')
-                  end
+                  expect(page).not_to have_css('button', exact_text: 'Pay full $370.00 now')
+                  expect(page).not_to have_css('button', exact_text: 'Pay $50.00 Peer Review Fee')
                 end
               end
             end
@@ -203,6 +200,74 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
                   'The remainder of the Data Publishing Charge is due at submission for curation and publication.'
                 )
               end
+            end
+          end
+        end
+      end
+
+      context 'when removed from PPR' do
+        before do
+          click_button 'Agreements'
+          find('label', text: 'My files should be available for public download as soon as possible').click
+          click_button 'Preview changes'
+        end
+
+        context 'when nothing changes' do
+          include_examples 'individual user does not pay anything'
+          include_examples 'no LDF sponsored payment log is created'
+        end
+
+        context 'when files are added' do
+          before do
+            upload_file(size: resource_file_size, file_name: 'ldf.txt')
+            click_button 'Preview changes'
+          end
+
+          context 'and tier is not exceeded' do
+            include_examples 'individual user does not pay anything'
+            include_examples 'no LDF sponsored payment log is created'
+          end
+
+          context 'and tier is exceeded' do
+            let(:resource_file_size) { 20_000_000_000 }
+
+            context 'when DPC was paid in full (not the PPR fee)' do
+              include_examples 'individual user must pay', '20 GB', '370.00'
+
+              it 'user is not prompted to pay the PPR fee' do
+                expect(page).not_to have_content(
+                  'You may choose to pay only $50.00, with the remainder due at the ' \
+                  'end of the peer review period. The Private for Peer Review Fee is nonrefundable.'
+                )
+              end
+
+              context 'when on payment page' do
+                include_examples 'individual user must pay', '20 GB', '370.00'
+
+                it 'user can not choose PPR fee' do
+                  click_button 'Pay & Submit for publication'
+
+                  expect(page).to have_content(
+                    'Since the dataset size has increased to 20 GB, submitting this new ' \
+                    'version will come with an additional charge of $370.00.'
+                  )
+                  expect(page).not_to have_content(
+                    'You may choose to pay only $50.00, with the remainder due at ' \
+                    'the end of the peer review period. The Private for Peer Review Fee is nonrefundable.'
+                  )
+
+                  expect(page).not_to have_css('button', exact_text: 'Pay full $370.00 now')
+                  expect(page).not_to have_css('button', exact_text: 'Pay $50.00 Peer Review Fee')
+                end
+              end
+            end
+
+            context 'when only the ppr fee was paid' do
+              let!(:payment) do
+                create(:resource_payment, resource: resource, amount: 50, payment_type: 'stripe', status: :paid, ppr_fee_paid: true)
+              end
+
+              include_examples 'individual user must pay', '20 GB', '370.00'
             end
           end
         end

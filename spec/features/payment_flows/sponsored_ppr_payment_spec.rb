@@ -90,9 +90,41 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
 
     include_examples 'ppr - sponsored user does not pay anything'
 
-    context 'payment value' do
+    context 'when kept in PPR' do
+      context 'payment value' do
+        context 'when nothing changes' do
+          include_examples 'ppr - sponsored user does not pay anything'
+        end
+
+        context 'when files are added' do
+          before do
+            upload_file(size: resource_file_size, file_name: 'ldf.txt')
+            click_button 'Preview changes'
+          end
+
+          context 'and tier is not exceeded' do
+            include_examples 'ppr - sponsored user does not pay anything'
+          end
+
+          context 'and tier is exceeded' do
+            let(:resource_file_size) { 20_000_000_000 }
+
+            include_examples 'ppr - sponsored user does not pay anything'
+          end
+        end
+      end
+    end
+
+    context 'when removed from PPR' do
+      before do
+        click_button 'Agreements'
+        find('label', text: 'My files should be available for public download as soon as possible').click
+        click_button 'Preview changes'
+      end
+
       context 'when nothing changes' do
-        include_examples 'ppr - sponsored user does not pay anything'
+        include_examples 'sponsored user does not pay anything'
+        include_examples 'no LDF sponsored payment log is created'
       end
 
       context 'when files are added' do
@@ -102,13 +134,15 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
         end
 
         context 'and tier is not exceeded' do
-          include_examples 'ppr - sponsored user does not pay anything'
+          include_examples 'individual user does not pay anything'
+          include_examples 'no LDF sponsored payment log is created'
         end
 
         context 'and tier is exceeded' do
           let(:resource_file_size) { 20_000_000_000 }
 
-          include_examples 'ppr - sponsored user does not pay anything'
+          include_examples 'sponsored user must pay', '20 GB', '259.00'
+          include_examples 'no LDF sponsored payment log is created'
         end
       end
     end
