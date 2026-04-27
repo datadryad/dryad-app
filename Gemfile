@@ -118,10 +118,6 @@ group :test do
   gem 'diffy' # used to define custom matchers in rspec_custom_matchers.rb
   # required for weird-ass rspec_custom_matchers that isn't in any actual gem/engine, but gets loaded in some weird circumstances
   gem 'equivalent-xml' # used to define custom matchers in rspec_custom_matchers.rb
-  # factory_bot_rails provides integration between factory_bot and rails 3 or newer (http://github.com/thoughtbot/factory_bot_rails)
-  gem 'factory_bot_rails'
-  # Easily generate fake data (https://github.com/stympy/faker)
-  gem 'faker'
   # RSpec progress bar formatter (https://github.com/thekompanee/fuubar)
   gem 'fuubar'
   # Guard keeps an eye on your file modifications (http://guardgem.org)
@@ -157,6 +153,10 @@ group :development, :test, :dev do
   # Ruby fast debugger - base + CLI (http://github.com/deivid-rodriguez/byebug)
   gem 'byebug'
   gem 'drb'
+  # Easily generate fake data (https://github.com/stympy/faker)
+  gem 'faker'
+  # factory_bot_rails provides integration between factory_bot and rails 3 or newer (http://github.com/thoughtbot/factory_bot_rails)
+  gem 'factory_bot_rails'
   gem 'listen'
   gem 'pry'
   gem 'pry-rails'
