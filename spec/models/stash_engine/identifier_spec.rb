@@ -454,8 +454,15 @@ module StashEngine
         it { is_expected.to be_truthy }
       end
 
-      context 'when individual payment has a waiver' do
+      context 'when individual payment has a waiver but is over 10 GB' do
         let(:identifier) { create(:identifier, payment_type: 'waiver') }
+
+        it { is_expected.to be_truthy }
+      end
+
+      context 'when individual payment has a waiver and dataset size under 10 GB' do
+        let(:identifier) { create(:identifier, payment_type: 'waiver') }
+        let(:new_size_limit) { 9_000_000_000 }
 
         it { is_expected.to be_falsey }
       end
