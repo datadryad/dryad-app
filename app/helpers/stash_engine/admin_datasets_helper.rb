@@ -112,9 +112,7 @@ module StashEngine
 
     def display_issues(issues)
       issues&.map do |issue|
-        uri = URI.parse("https://api.github.com/repos/datadryad/dryad-product-roadmap/issues/#{issue}")
-        response = Net::HTTP.get_response(uri)
-        json = JSON.parse(response.body)
+        json = Integrations::Github.new.query_issue(issue)
         next unless json['title'].present?
 
         {

@@ -148,6 +148,10 @@ defaults: &DEFAULTS
     member: true
     sandbox: true
     api: https://api.sandbox.orcid.org
+  github: 
+    app_id: <%= Rails.application.credentials[Rails.env.to_sym][:github_app_id] %>
+    client_id: <%= Rails.application.credentials[Rails.env.to_sym][:github_client_id] %>
+    pem: "<%= Rails.application.credentials[Rails.env.to_sym][:github_pem] %>"
   submission_error_email: [dryad.submission.error.emails@mailinator.com]
   zenodo_error_email: [dryad.submission.error.emails@mailinator.com]
   submission_bc_emails: [""]
