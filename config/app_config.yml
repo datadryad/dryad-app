@@ -19,6 +19,10 @@ test:
     member: true
     sandbox: true
     api: https://api.sandbox.orcid.org
+  github: 
+    app_id: 000000
+    client_id: sfsFVSDFDSF
+    pem: aDHADSADSJAGF
   submission_error_email: [my.fun.submission.error.emails@example.com]
   submission_bc_emails: [""]
   zenodo_error_email: [my.fun.zenodo.error.emails@example.com]
