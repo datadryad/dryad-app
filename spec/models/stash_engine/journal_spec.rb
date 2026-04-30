@@ -165,5 +165,40 @@ module StashEngine
       end
     end
 
+    describe 'payment details' do
+      let!(:top_level_sponsor) { create(:journal_organization, parent_org: nil) }
+      let!(:top_level_sponsor_payment_conf) { create(:payment_configuration, partner: top_level_sponsor) }
+
+      let!(:level_one_sponsor) { create(:journal_organization, parent_org: top_level_sponsor) }
+      let!(:level_one_sponsor_payment_conf) { create(:payment_configuration, partner: level_one_sponsor) }
+
+      let!(:journal) { create(:journal, sponsor: level_one_sponsor) }
+      let!(:journal_payment_conf) { create(:payment_configuration, partner: journal) }
+
+      context 'when journal has no sponsor' do
+        let!(:level_one_sponsor) { nil }
+
+        it 'are taken form journal' do
+          expect(journal.payment_sponsor).to eq(journal)
+          expect(journal.sponsored_limits).to eq(journal_payment_conf)
+        end
+      end
+
+      context 'when journal has one sponsor' do
+        let!(:top_level_sponsor) { nil }
+
+        it 'are taken form journal\'s sponsor' do
+          expect(journal.payment_sponsor).to eq(level_one_sponsor)
+          expect(journal.sponsored_limits).to eq(level_one_sponsor_payment_conf)
+        end
+      end
+
+      context 'when journal has multiple sponsors chain' do
+        it 'are taken form journal\'s top level sponsor' do
+          expect(journal.payment_sponsor).to eq(top_level_sponsor)
+          expect(journal.sponsored_limits).to eq(level_one_sponsor_payment_conf)
+        end
+      end
+    end
   end
 end

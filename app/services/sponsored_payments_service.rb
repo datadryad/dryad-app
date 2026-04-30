@@ -10,8 +10,10 @@ class SponsoredPaymentsService
   def log_payment
     # there is no payer
     return if payer.nil?
-    # user is not on 2025 plan
+    # payer is not on 2025 plan
     return unless PayersService.new(payer).is_2025_payer?
+    # payer does not cover ldf
+    return unless PayersService.new(payer).sponsored_limits&.covers_ldf?
     # do not log payment if dataset is set for PPR
     return if resource.hold_for_peer_review?
 
@@ -21,8 +23,8 @@ class SponsoredPaymentsService
       paid_before = delete_larger_file_size_logs
       amount = ldf_fees(paid_before)
 
-      should_skip_log = true if amount.zero?
-      should_skip_log = true if PaymentLimitsService.new(resource, PayersService.new(payer).payment_sponsor).exceeds_sponsor_yearly_limit?(amount)
+      should_skip_log = true if amount <= 0
+      should_skip_log = true if !should_skip_log && PaymentLimitsService.new(resource, payer).exceeds_sponsor_yearly_limit?(amount)
 
       update_identifier_files_size
       return if should_skip_log

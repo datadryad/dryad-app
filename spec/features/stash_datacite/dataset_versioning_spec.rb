@@ -298,6 +298,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     click_button 'Preview changes'
     click_button 'Support'
     fill_in_funder
+    click_button 'Preview changes'
+    expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"')
     set_and_submit
   end
 
@@ -322,5 +324,4 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     fill_in('Describe edits made', with: Faker::Lorem.sentence) if curator
     set_and_submit
   end
-
 end
