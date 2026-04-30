@@ -50,7 +50,6 @@ module StashEngine
     accepts_nested_attributes_for :payment_configuration, allow_destroy: true, reject_if: :all_blank
 
     scope :servers, -> { where(preprint_server: true) }
-    scope :sponsoring, -> { joins(:payment_configuration).where(payment_configuration: { payment_plan: PAYMENT_PLANS }) }
 
     def will_pay?
       PAYMENT_PLANS.include?(payment_sponsor.payment_configuration&.payment_plan)
@@ -136,6 +135,22 @@ module StashEngine
       api_journals | api_journals2
     end
 
+    def self.with_sponsorship
+      StashEngine::Journal.with_recursive(
+        top_sponsor: [
+          StashEngine::JournalOrganization.all.select(:id, { id: :root_org_id }, :parent_org_id),
+          StashEngine::JournalOrganization.joins('JOIN top_sponsor ON stash_engine_journal_organizations.id = top_sponsor.parent_org_id').select(
+            'top_sponsor.id', { id: :root_org_id }, :parent_org_id
+          )
+        ]
+      )
+        .joins('LEFT OUTER JOIN top_sponsor on stash_engine_journals.sponsor_id = top_sponsor.id')
+        .joins("LEFT OUTER JOIN payment_configurations pc
+          ON pc.partner_type = 'StashEngine::JournalOrganization' AND pc.partner_id = top_sponsor.root_org_id")
+        .select({ stash_engine_journals: ['*'] }, { top_sponsor: [:root_org_id] }, { pc: [:payment_plan] })
+        .where('top_sponsor.parent_org_id': nil)
+    end
+
     # Replace an uncontrolled journal name (typically containing '*')
     # with a controlled journal reference, using an id
     def self.replace_uncontrolled_journal(old_name:, new_journal:)
@@ -184,14 +199,7 @@ module StashEngine
 
     def payment_sponsor
       # top level publisher
-      # OR
-      # self
-      sponsor_obj = self
-      if sponsor
-        sponsor_obj = sponsor
-        sponsor_obj = sponsor_obj.parent_org while sponsor_obj.parent_org.present?
-      end
-      sponsor_obj
+      top_level_org || self
     end
 
     def sponsored_limits
