@@ -7,11 +7,12 @@ module FeeCalculator
       @options = options
       @sum_options = {}
       @resource = resource
-      @payer = payer_record || (resource ? resource.identifier.payer : nil)
-      @payer = PayersService.new(@payer).payment_sponsor if @payer
+      @payer_record = payer_record || (resource ? resource.identifier.payer : nil)
+      @payer = PayersService.new(@payer_record).payment_sponsor if @payer_record
+
       @payment_plan_is_2025 = resource ? resource.identifier.payer_2025?(@payer) : false
-      @covers_ldf = resource ? @payer&.payment_configuration&.covers_ldf : false
-      @ldf_limit = resource ? @payer&.payment_configuration&.ldf_limit : nil
+      @covers_ldf = resource ? PayersService.new(@payer_record).sponsored_limits&.covers_ldf : false
+      @ldf_limit = resource ? PayersService.new(@payer_record).sponsored_limits&.ldf_limit : nil
     end
 
     def call
@@ -23,16 +24,16 @@ module FeeCalculator
 
         add_zero_fee(:service_tier)
         add_zero_fee(:dpc_tier)
-        limits_service = PaymentLimitsService.new(resource, @payer, ldf_sponsored_amount: ldf_sponsored_amount)
 
         if @covers_ldf
+          @limits_service = PaymentLimitsService.new(resource, @payer_record, ldf_sponsored_amount: ldf_sponsored_amount)
           @sum_options[:storage_fee_label] = PRODUCT_NAME_MAPPER[:storage_fee_overage] unless @ldf_limit.nil?
-          if @ldf_limit.nil? && limits_service.payment_allowed?
+          if @ldf_limit.nil? && @limits_service.payment_allowed?
             # if no limit is hit,
             # the user pays no storage fee
             verify_max_storage_size
             add_zero_fee(:storage_size)
-          elsif limits_service.amount_limits_exceeded?
+          elsif @limits_service.amount_limits_exceeded?
             # if the yearly amount limit is hit,
             # the user needs to pay the full storage difference
             add_storage_fee_difference
@@ -82,13 +83,14 @@ module FeeCalculator
       return diff if diff.zero?
       return diff if !@payment_plan_is_2025 || !@covers_ldf || @ldf_limit.nil?
 
-      sponsored_price = 0
-      if @ldf_limit.present?
-        sponsored_tier = get_tier_by_value(storage_fee_tiers, @ldf_limit)
-        sponsored_price = sponsored_tier[:price]
-      end
+      sponsored_tier = get_tier_by_value(storage_fee_tiers, @ldf_limit)
+      sponsored_price = sponsored_tier[:price]
 
-      [diff, sponsored_price].min
+      # negative value is for flagging that the user must pay
+      # and no SponsoredPaymentLog is created
+      return -1 if sponsored_price < paid_tier_price || (sponsored_price == paid_tier_price && sponsored_price < new_tier_price)
+
+      [sponsored_price - paid_tier_price, diff].min
     end
 
     def storage_fee_tier

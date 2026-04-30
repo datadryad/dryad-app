@@ -19,6 +19,10 @@ test:
     member: true
     sandbox: true
     api: https://api.sandbox.orcid.org
+  github: 
+    app_id: 000000
+    client_id: sfsFVSDFDSF
+    pem: aDHADSADSJAGF
   submission_error_email: [my.fun.submission.error.emails@example.com]
   submission_bc_emails: [""]
   zenodo_error_email: [my.fun.zenodo.error.emails@example.com]
@@ -148,6 +152,10 @@ defaults: &DEFAULTS
     member: true
     sandbox: true
     api: https://api.sandbox.orcid.org
+  github: 
+    app_id: <%= Rails.application.credentials[Rails.env.to_sym][:github_app_id] %>
+    client_id: <%= Rails.application.credentials[Rails.env.to_sym][:github_client_id] %>
+    pem: "<%= Rails.application.credentials[Rails.env.to_sym][:github_pem] %>"
   submission_error_email: [dryad.submission.error.emails@mailinator.com]
   zenodo_error_email: [dryad.submission.error.emails@mailinator.com]
   submission_bc_emails: [""]

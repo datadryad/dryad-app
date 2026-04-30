@@ -1,0 +1,29 @@
+// open a modal dialog
+document.getElementById('genericModalContent').innerHTML = '';
+document.getElementById('genericModalContent').append(document.createRange().createContextualFragment("<%= escape_javascript(render partial: html_partial) %>"));
+document.getElementById('genericModalDialog').showModal();
+document.getElementById('cancel_dialog').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('genericModalDialog').close();
+});
+var chk = document.getElementById('flag_attributes_flag')
+chk.addEventListener('change', () => {
+  var destroy = document.getElementById('flag_attributes__destroy')
+  destroy.value = !chk.checked
+  var note = document.getElementById('flag_attributes_note')
+  note.disabled = !chk.checked
+  if (!chk.checked) note.value = ''
+})
+
+var sponsor_id = document.getElementById('sponsor_id')
+sponsor_id.addEventListener('change', () => {
+  if (sponsor_id.value === '') {
+    document.getElementById('payment_notice').setAttribute('hidden', '');
+    document.getElementById('payment_container').removeAttribute('hidden');
+  } else {
+    document.getElementById('payment_container').setAttribute('hidden', '');
+    document.getElementById('payment_notice').removeAttribute('hidden');
+  }
+});
+
+<%= render '/stash_engine/payment_configuration/js_form', format: :js %>

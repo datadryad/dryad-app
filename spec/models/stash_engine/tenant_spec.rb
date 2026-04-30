@@ -86,5 +86,40 @@ module StashEngine
       end
     end
 
+    describe 'payment details' do
+      let!(:top_level_sponsor) { create(:tenant, sponsor: nil, id: 'top_level') }
+      let!(:top_level_sponsor_payment_conf) { create(:payment_configuration, partner: top_level_sponsor) }
+
+      let!(:level_one_sponsor) { create(:tenant, sponsor: top_level_sponsor, id: 'first_level') }
+      let!(:level_one_sponsor_payment_conf) { create(:payment_configuration, partner: level_one_sponsor) }
+
+      let!(:tenant) { create(:tenant, sponsor: level_one_sponsor, id: 'payer') }
+      let!(:tenant_payment_conf) { create(:payment_configuration, partner: tenant) }
+
+      context 'when tenant has no sponsor' do
+        let!(:level_one_sponsor) { nil }
+
+        it 'are taken form tenant' do
+          expect(tenant.payment_sponsor).to eq(tenant)
+          expect(tenant.sponsored_limits).to eq(tenant_payment_conf)
+        end
+      end
+
+      context 'when tenant has one sponsor' do
+        let!(:top_level_sponsor) { nil }
+
+        it 'are taken form tenant\'s sponsor' do
+          expect(tenant.payment_sponsor).to eq(level_one_sponsor)
+          expect(tenant.sponsored_limits).to eq(level_one_sponsor_payment_conf)
+        end
+      end
+
+      context 'when tenant has multiple sponsors chain' do
+        it 'are taken form tenant\'s top level sponsor' do
+          expect(tenant.payment_sponsor).to eq(top_level_sponsor)
+          expect(tenant.sponsored_limits).to eq(top_level_sponsor_payment_conf)
+        end
+      end
+    end
   end
 end

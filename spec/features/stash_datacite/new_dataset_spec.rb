@@ -97,7 +97,7 @@ RSpec.feature 'NewDataset', type: :feature do
       second_author = { first: Faker::Name.unique.first_name, last: Faker::Name.unique.last_name, email: Faker::Internet.email }
 
       # fill first
-      fill_in_author(first_name: first_author[:first], last_name: first_author[:last], email: first_author[:email])
+      fill_in_author(first_name: first_author[:first], last_name: first_author[:last], email: first_author[:email], has_orcid: true)
 
       # fill second
       click_button 'Add author'
