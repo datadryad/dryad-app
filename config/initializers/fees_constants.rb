@@ -62,7 +62,7 @@ else
     { tier: 5, range:   500_000_000_001..1_000_000_000_000, price: 4_347 },
     { tier: 6, range: 1_000_000_000_001..2_000_000_000_000, price: 8_809 }
   ].freeze
-  end
+end
 
 ESTIMATED_DATASETS = [
   { tier:  1, range:   0..  5, price:      0 },

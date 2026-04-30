@@ -14,35 +14,6 @@
 <%= form.text_area(:alt_title, value: @journal.alternate_titles.map(&:title).join("\n"), class: 'c-input__textarea', style: 'width:100%;') %>
 </div>
 <p><%= form.check_box :preprint_server, {checked: @journal.preprint_server}, 1, 0 %> <%= form.label :preprint_server, "When checked, the journal is included on lists of preprint servers" %></p>
-<%= fields_for :payment_configuration_attributes do |pf| %>
-  <%= pf.hidden_field :id, value: @payment_configuration.id %>
-  <%
-    plan_radios = [ ['', 'None'] ] + StashEngine::Journal::PAYMENT_PLANS.map {|p| [p, p.capitalize]}
-  %>
-  <h2>Membership</h2>
-  <fieldset class="c-fieldset">
-    <legend>Payment plan type:</legend>
-    <% plan_radios.each do |plan| %>
-      <%= pf.radio_button :payment_plan, plan.first, checked: plan.first == @payment_configuration.payment_plan %>
-      <label for="<%= "payment_configuration_attributes_payment_plan_#{plan.first.downcase}" %>"><%= plan[1] %></label>
-      <br />
-    <% end %>
-  </fieldset>
-
-  <p>
-    <%= pf.check_box :covers_ldf, {checked: @payment_configuration.covers_ldf}, 1, 0 %>
-    <%= pf.label :covers_ldf, "When checked, journal covers Large Data Fees" %>
-  </p>
-  <p>
-    <%= pf.label :ldf_limit, "Covered Large Data Fee limit (GB)" %>
-    <%= pf.select :ldf_limit, ldf_pricing_tiers_options, { selected: @payment_configuration.ldf_limit }, class: 'c-input__select', disabled: !@payment_configuration.covers_ldf %>
-  </p>
-  <p>
-    <%= pf.label :yearly_ldf_limit, "Yearly Large Data Fee limit $" %>
-    <%= pf.number_field :yearly_ldf_limit, value: @payment_configuration.yearly_ldf_limit, class: 'c-input__text', disabled: !@payment_configuration.covers_ldf %>
-  </p>
-<% end %>
-
 <p class="o-admin-form-inline">
 <%= form.label :journal_code, "Identifying short code for email integration"%>
 <%= form.text_field(:journal_code, value: @journal.journal_code, class: 'c-input__text', style: 'font-family: Monaco, monospace; font-size: .8em;') %>
@@ -85,3 +56,9 @@
   <%= label_tag 'sponsor_id', 'Choose a sponsoring organization'%>
   <%= select_tag('sponsor_id', options_for_select(options, @journal.sponsor_id), class: 'c-input__select') %>  
 </div>
+
+<%= render '/stash_engine/payment_configuration/form', format: :html,
+  sponsor_id: @journal.sponsor_id,
+  payment_configuration: @payment_configuration,
+  plan_options: [ ['', 'None'] ] + StashEngine::Journal::PAYMENT_PLANS.map {|p| [p, p.capitalize]}
+%>

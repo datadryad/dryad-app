@@ -6,7 +6,6 @@ import {useStore} from '../shared/store';
 export default function CalculateFees({resource, ppr = false}) {
   const {storeState: {fees, dpc}} = useStore();
   const paid = !!resource.identifier.last_invoiced_file_size;
-  const can_pay_ppr_fee = ppr && !fees.ppr_discount && !dpc.funder_will_pay && !dpc.journal_will_pay && !dpc.institution_will_pay;
 
   /* eslint-disable max-len */
   if (paid && fees.storage_fee_label) {
@@ -30,7 +29,7 @@ export default function CalculateFees({resource, ppr = false}) {
     return (
       <>
         <p>This {formatSizeUnits(resource.total_file_size)} dataset has a <a href="/costs" target="blank">{fees.storage_fee_label}<ExitIcon /></a> of <b>{fees.storage_fee.toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</b>{fees.ppr_discount && <>, requiring payment of <b>{(fees.invoice_fee ? fees.total - fees.invoice_fee : fees.total).toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</b> minus the Private for Peer Review Fee</>}.</p>
-        {can_pay_ppr_fee && <p>You may choose to pay only <b>{(50).toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</b>, with the remainder due at the end of the peer review period. The Private for Peer Review Fee is nonrefundable.</p>}
+        {dpc.can_pay_ppr_fee && <p>You may choose to pay only <b>{(50).toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</b>, with the remainder due at the end of the peer review period. The Private for Peer Review Fee is nonrefundable.</p>}
       </>
     );
   }
