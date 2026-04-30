@@ -5,6 +5,7 @@ module Stash
   module Payments
     describe Invoicer do
       include Mocks::Salesforce
+
       before do
         mock_salesforce!
       end

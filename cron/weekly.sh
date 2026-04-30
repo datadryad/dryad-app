@@ -15,6 +15,8 @@ bundle exec rails publication_updater:query_preprints >> /home/ec2-user/deploy/s
 
 bundle exec rails publication_updater:crossref >> /home/ec2-user/deploy/shared/log/publication_updater_crossref.log 2>&1
 
+bundle exec rails retractions:date_updates >> /home/ec2-user/deploy/shared/log/crossref_retractions.log 2>&1
+
 bundle exec rails identifiers:voided_invoices_report >> /home/ec2-user/deploy/shared/log/voided_invoices_report.log 2>&1
 
 # putting this in background since I don't want to delay the counter processor starting

@@ -7,7 +7,8 @@ require 'fileutils'
 require 'stash/download'
 
 module Stash
-  module S3Download # was MerrittDownload
+  # was MerrittDownload
+  module S3Download
 
     # calling this class File means we need to namespace the built-in Ruby file class when calling it in here
     class File

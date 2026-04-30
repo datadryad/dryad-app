@@ -1,5 +1,6 @@
 class PubStateService
   attr_reader :identifier
+
   def initialize(identifier)
     @identifier = identifier
   end

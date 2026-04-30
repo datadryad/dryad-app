@@ -34,7 +34,7 @@ Dryad is a non-profit organization that makes it easy and affordable to curate, 
 
 * generally, meets the needs of its stakeholders for a trustworthy data curation and publication service.
 
-All of the above functions and offerings, including associated systems, hardware, software, and know-how, are referred to in these Terms as the “<span role="emphasis" aria-describedby="term-desc">Dryad Infrastructure and Services</span>.”
+All of the above functions and offerings, including associated systems, hardware, software, and know-how, are referred to in these Terms as the Dryad “<span role="emphasis" aria-describedby="term-desc">Infrastructure and Services</span>.”
 
 When you <span role="emphasis" aria-describedby="term-desc">Publish</span> your <span role="emphasis" aria-describedby="term-desc">Research Data</span> with Dryad, you join a community of researchers and organizations committed to leading in best practices for open data curation and publishing.
 

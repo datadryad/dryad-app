@@ -11,9 +11,14 @@ module StashEngine
       #  - institution should pay DPC
       #  - user pays LDF calculated as per institution
       def user_must_pay?
+        return false if old_system_valid_payer?
         return false if latest_resource.resource_type&.resource_type == 'collection'
         return false if waiver? && old_payment_system
-        return PaymentLimitsService.new(latest_resource, PayersService.new(payer).payment_sponsor).limits_exceeded? if sponsored?
+        if sponsored?
+          return PaymentLimitsService.new(latest_resource, payer).limits_exceeded?
+        elsif waiver? && payer_2025?
+          return false if ResourceFeeCalculatorService.new(latest_resource).calculate({})[:total].zero?
+        end
 
         true
       end
@@ -60,7 +65,7 @@ module StashEngine
         return false unless user_must_pay?
         return false if old_payment_system
 
-        if payments.count > 0
+        if payments.any?
           invoicer = Stash::Payments::StripeInvoicer.new(payments.last.resource)
           return !invoicer.invoice_paid? if invoicer.invoice_created?
         end
@@ -74,11 +79,14 @@ module StashEngine
         payer.present?
       end
 
+      # Payers that are:
+      #  - not on 2025 plan
+      #  - not in exceptions list
       def old_system_valid_payer?(current_payer: payer)
         current_payer = PayersService.new(current_payer).payment_sponsor
         return false if current_payer.blank?
-
-        return true if old_payment_system?
+        return false if payer_2025?(current_payer) || old_payment_system
+        return true if current_payer.payment_configuration&.covers_dpc && current_payer.payment_configuration&.payment_plan.present?
 
         rs = StashEngine::JournalOrganization.find_by(name: 'The Royal Society')
         acs = StashEngine::JournalOrganization.find_by(name: 'American Chemical Society')
@@ -101,14 +109,16 @@ module StashEngine
           self.payment_id = "funder:#{contrib.contributor_name}|award:#{contrib.award_number}"
           self.old_payment_system = false
         elsif institution_will_pay?
+          payer_sponsor = PayersService.new(latest_resource&.tenant).payment_sponsor
           self.payment_id = latest_resource&.tenant&.id
-          self.payment_type = "institution#{'-TIERED' if latest_resource&.tenant&.payment_configuration&.payment_plan == 'TIERED'}"
+          self.payment_type = "institution#{'-TIERED' if payer_sponsor&.payment_configuration&.payment_plan == 'TIERED'}"
           self.old_payment_system = false
         elsif journal_will_pay?
-          self.payment_type = "journal-#{journal.payment_configuration.payment_plan}"
+          payer_sponsor = PayersService.new(journal).payment_sponsor
+          self.payment_type = "journal-#{payer_sponsor&.payment_configuration&.payment_plan}"
           self.payment_id = publication_issn
           self.old_payment_system = false
-        elsif payments.count > 0 && !old_system_valid_payer?
+        elsif payments.any? && !old_system_valid_payer?
           self.payment_type = 'stripe'
           self.payment_id = payments.paid.last&.payment_id
         else
@@ -158,6 +168,10 @@ module StashEngine
         # do not remove recorded journal due to journal sponsorship change
         return true if payment_id == publication_issn
 
+        rs = StashEngine::JournalOrganization.find_by(name: 'The Royal Society')
+        acs = StashEngine::JournalOrganization.find_by(name: 'American Chemical Society')
+        return true if journal.in?([rs, acs] + rs&.journals_sponsored_deep.to_a + acs&.journals_sponsored_deep.to_a)
+
         journal.will_pay?
       end
 
@@ -184,18 +198,18 @@ module StashEngine
       def clear_payment_for_changed_sponsor
         return unless payment_type.present?
 
-        # remove existing payment for added funder
         if funder_will_pay?
+          # remove existing payment for added funder
           return if payment_type == 'funder' && payment_id.include?(funder_payment_info&.contributor_name)
-        # remove existing payment for added institution
         elsif institution_will_pay?
+          # remove existing payment for added institution
           return if payment_type.include?('institution') && payment_id == latest_resource.tenant_id
-        # remove payment if paying journal has changed or been removed
         else
+          # remove payment if paying journal has changed or been removed
           return unless payment_type.include?('journal') || journal_will_pay?
           return if payment_id == journal&.single_issn
         end
-        return if payments.paid.count > 0
+        return if payments.paid.any?
 
         self.payment_type = nil
         self.payment_id = nil

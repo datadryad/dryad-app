@@ -64,7 +64,7 @@ module StashEngine
       end
       if @fields.include?('submitter')
         row << "#{dataset.submitter&.first_name} #{dataset.submitter&.last_name}#{
-          dataset.submitter.orcid.present? ? " ORCID: #{dataset.submitter.orcid}" : ''
+          " ORCID: #{dataset.submitter.orcid}" if dataset.submitter.orcid.present?
         }"
       end
       row << StashEngine::CurationActivity.readable_status(dataset.last_curation_activity.status) if @fields.include?('status')
@@ -95,7 +95,7 @@ module StashEngine
         row << dpc
       end
       row << dataset.last_curation_activity.updated_at if @fields.include?('updated_at')
-      row << (dataset.submitted_date) if @fields.include?('submit_date')
+      row << dataset.submitted_date if @fields.include?('submit_date')
       if @fields.include?('first_sub_date')
         row << (dataset.identifier.process_date.processing || dataset.identifier.process_date.queued || dataset.identifier.process_date.peer_review)
       end

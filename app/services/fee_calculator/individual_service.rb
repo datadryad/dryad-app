@@ -38,7 +38,7 @@ module FeeCalculator
       return if @sum.zero?
       return unless resource.present?
       return unless resource.identifier.payments.ppr_paid.paid.where.not(resource_id: resource.id).first&.amount == PPR_FEE
-      return unless resource.identifier.payments.with_discount.paid.where.not(resource_id: resource.id).count.zero?
+      return unless resource.identifier.payments.with_discount.paid.where.not(resource_id: resource.id).none?
 
       add_fee_to_total(:ppr_discount, -PPR_FEE)
       add_coupon(PPR_COUPON_ID)

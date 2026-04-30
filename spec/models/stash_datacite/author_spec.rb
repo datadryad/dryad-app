@@ -1,6 +1,7 @@
 require 'rails_helper'
 
-module StashEngine # TODO: are we testing Author or Affiliation? (Or AuthorPatch?)
+# TODO: are we testing Author or Affiliation? (Or AuthorPatch?)
+module StashEngine
   describe Author do
     include Mocks::Salesforce
 

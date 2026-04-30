@@ -33,7 +33,7 @@ module StashEngine
 
     def create_code
       code = SecureRandom.urlsafe_base64(16)
-      code = SecureRandom.urlsafe_base64(16) while SavedSearch.where(share_code: code).count > 0
+      code = SecureRandom.urlsafe_base64(16) while SavedSearch.where(share_code: code).any?
       update(share_code: code)
     end
   end

@@ -11,7 +11,7 @@ module FeeCalculator
       super
 
       return if @sum.zero?
-      return unless resource.identifier.payments.with_discount.paid.where.not(resource_id: resource.id).count.zero?
+      return unless resource.identifier.payments.with_discount.paid.where.not(resource_id: resource.id).none?
 
       add_storage_discount_fee(:waiver_discount, FREE_STORAGE_SIZE)
       add_coupon(DISCOUNT_STORAGE_COUPON_ID)

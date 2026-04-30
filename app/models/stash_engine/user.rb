@@ -28,6 +28,7 @@
 module StashEngine
   class User < ApplicationRecord
     include StashEngine::Support::UserRoles
+
     self.table_name = 'stash_engine_users'
     has_many :roles, dependent: :destroy
     has_many :resources, through: :roles, source: :role_object, source_type: 'StashEngine::Resource'
@@ -69,7 +70,7 @@ module StashEngine
         users = StashEngine::User.where(orcid: auth_hash[:uid])
       end
 
-      return users.first.update_user_orcid(orcid: auth_hash[:uid], temp_email: emails.try(:first)) if users.count == 1
+      return users.first.update_user_orcid(orcid: auth_hash[:uid], temp_email: emails.try(:first)) if users.one?
 
       create_user_with_orcid(auth_hash: auth_hash, temp_email: emails.try(:first))
     end

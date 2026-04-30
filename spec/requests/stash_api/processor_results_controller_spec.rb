@@ -30,7 +30,7 @@ module StashApi
 
       it 'gives rejection if public user that cannot view' do
         response_code = get "/api/v2/processor_results/#{@processor_result.id}", headers: default_json_headers
-        expect(response_code). to eq(401)
+        expect(response_code).to eq(401)
       end
     end
 

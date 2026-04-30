@@ -11,13 +11,15 @@
 #
 # Indexes
 #
-#  index_dcs_descriptions_on_resource_id  (resource_id)
+#  index_dcs_descriptions_on_description_type  (description_type)
+#  index_dcs_descriptions_on_resource_id       (resource_id)
 #
 require 'rails_helper'
 
 module StashDatacite
   describe Description do
     attr_reader :resource
+
     before(:each) do
       user = create(:user, email: 'lmuckenhaupt@example.edu', tenant_id: 'dataone')
       @resource = create(:resource, user: user)

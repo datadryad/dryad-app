@@ -17,6 +17,14 @@ Rack::Attack.safelist_ip('89.167.84.16') # Markus Englund, research on data fabr
 Rack::Attack.safelist_ip('130.14.25.148') # NCBI LinkOut integrity checker
 Rack::Attack.safelist_ip('130.14.254.25') # NCBI LinkOut integrity checker
 Rack::Attack.safelist_ip('130.14.254.26') # NCBI LinkOut integrity checker
+Rack::Attack.safelist_ip('131.130.80.0/24') # Dunja Dragojevic, research on multiple sequence alignment files
+Rack::Attack.safelist_ip('77.80.40.0/24') # Dunja Dragojevic, research on multiple sequence alignment files
+Rack::Attack.safelist_ip('77.80.42.0/23') # Dunja Dragojevic, research on multiple sequence alignment files
+Rack::Attack.safelist_ip('77.80.49.0/24') # Dunja Dragojevic, research on multiple sequence alignment files
+Rack::Attack.safelist_ip('77.80.60.0/24') # Dunja Dragojevic, research on multiple sequence alignment files
+Rack::Attack.safelist_ip('77.80.62.128/25') # Dunja Dragojevic, research on multiple sequence alignment files
+Rack::Attack.safelist_ip('77.80.68.0/22') # Dunja Dragojevic, research on multiple sequence alignment files
+Rack::Attack.safelist_ip('131.130.108.0/22') # Dunja Dragojevic, research on multiple sequence alignment files
 
 def start_w_wo_stash?(path, path_match)
   path.start_with?(path_match, "/stash#{path_match}")
@@ -88,7 +96,11 @@ Rack::Attack.throttle('all_requests_by_IP', limit: APP_CONFIG[:rate_limit][:all_
   req.ip unless req.path.start_with?('/assets') ||
     req.path.match(%r{^/stash/[a-z]+_file/presign_upload/\d+}) ||
     req.path.match(%r{^/[a-z]+_file/presign_upload/\d+}) ||
-    start_w_wo_stash?(req.path, '/data_file/preview_check')
+    start_w_wo_stash?(req.path, '/data_file/preview_check') ||
+    req.path.match(%r{^/resource_fee_calculator/\d+}) ||
+    req.path.match(%r{^/resources/\d+/dpc_status}) ||
+    req.path.match(%r{^/resources/\d+/payer_check}) ||
+    req.path.match(%r{^/resources/\d+/dupe_check})
 end
 
 # File download throttling

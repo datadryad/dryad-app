@@ -4,7 +4,8 @@ module StashApi
   class Version
     class Metadata
 
-      def initialize(resource:, item_view: false, post: false) # item view may present additional information not shown in list view
+      # item view may present additional information not shown in list view
+      def initialize(resource:, item_view: false, post: false)
         @resource = resource
         @item_view = item_view
         @post = post

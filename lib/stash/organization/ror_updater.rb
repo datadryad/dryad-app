@@ -25,8 +25,8 @@ module Stash
         if metadata.present?
           FileUtils.mkdir_p(FILE_DIR)
 
-          checksum = File.open(checksum_file, 'w+') unless File.exist?(checksum_file) && !force
-          checksum = File.open(checksum_file, 'r+') unless checksum.present?
+          checksum = File.new(checksum_file, 'w+') unless File.exist?(checksum_file) && !force
+          checksum = File.new(checksum_file, 'r+') unless checksum.present?
           old_checksum_val = checksum.read
 
           if old_checksum_val == metadata['checksum']
@@ -39,18 +39,18 @@ module Stash
             payload = download_ror_file(download_file)
 
             if payload.present?
-              file = File.open(zip_file, 'wb')
+              file = File.new(zip_file, 'wb')
               file.write(payload)
 
               if validate_downloaded_file(file_path: zip_file, checksum: metadata['checksum'])
                 # Hopefully, parse the correct filename out...though ROR hasn't been consistent with their names
                 dl_array = download_file.split('/')
                 # Get v2 json file
-                json_file = dl_array[dl_array.length - 2].gsub('.zip', '_schema_v2.json')
+                json_file = dl_array[-2].gsub('.zip', '_schema_v2.json')
 
                 # Process the ROR JSON
                 if process_ror_file(zip_file: zip_file, file: json_file)
-                  checksum = File.open(checksum_file, 'w')
+                  checksum = File.new(checksum_file, 'w')
                   checksum.write(metadata['checksum'])
                 end
               else
@@ -69,7 +69,7 @@ module Stash
 
       class << self
         def process_ror_json(json_file_path:)
-          json_file = File.open(json_file_path, 'r')
+          json_file = File.new(json_file_path, 'r')
           json = JSON.parse(json_file.read)
           cntr = 0
           total = json.length

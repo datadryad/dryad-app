@@ -8,6 +8,7 @@ module Stash
     class FileCollection
 
       attr_reader :path, :info_hash
+
       # path is just the path where files are stored
       # info_hash is key=filename and value={success: t/f, md5_hex, sha256_hex}
 

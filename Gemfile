@@ -21,7 +21,7 @@ gem 'capistrano-sidekiq', '~> 3.2.0'
 gem 'capistrano-yarn'
 gem 'ed25519', '>= 1.2', '< 2.0'
 gem 'rdoc', '~> 6.1.1' # for some reason needs to be installed for capistrano to work right
-gem 'rubocop', '~> 1.67.0', require: false
+gem 'rubocop', '~> 1.86.1', require: false
 # Use Puma as the app server
 gem 'puma', '6.6.0', group: :puma, require: false
 
@@ -47,7 +47,7 @@ gem 'commonmarker', '~> 2.7.0'
 gem 'concurrent-ruby', '~> 1.3.6'
 gem 'daemons', '~> 1.4.1'
 gem 'database_cleaner', '~> 2.1.0'
-gem 'datacite-mapping', git: 'https://github.com/CDLUC3/datacite-mapping.git'
+gem 'datacite-mapping'
 gem 'data_migrate'
 gem 'doorkeeper', '~> 5.9.0'
 gem 'down'
@@ -118,10 +118,6 @@ group :test do
   gem 'diffy' # used to define custom matchers in rspec_custom_matchers.rb
   # required for weird-ass rspec_custom_matchers that isn't in any actual gem/engine, but gets loaded in some weird circumstances
   gem 'equivalent-xml' # used to define custom matchers in rspec_custom_matchers.rb
-  # factory_bot_rails provides integration between factory_bot and rails 3 or newer (http://github.com/thoughtbot/factory_bot_rails)
-  gem 'factory_bot_rails'
-  # Easily generate fake data (https://github.com/stympy/faker)
-  gem 'faker'
   # RSpec progress bar formatter (https://github.com/thekompanee/fuubar)
   gem 'fuubar'
   # Guard keeps an eye on your file modifications (http://guardgem.org)
@@ -157,6 +153,10 @@ group :development, :test, :dev do
   # Ruby fast debugger - base + CLI (http://github.com/deivid-rodriguez/byebug)
   gem 'byebug'
   gem 'drb'
+  # Easily generate fake data (https://github.com/stympy/faker)
+  gem 'faker'
+  # factory_bot_rails provides integration between factory_bot and rails 3 or newer (http://github.com/thoughtbot/factory_bot_rails)
+  gem 'factory_bot_rails'
   gem 'listen'
   gem 'pry'
   gem 'pry-rails'

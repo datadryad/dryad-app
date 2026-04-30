@@ -1,6 +1,7 @@
 class SearchController < ApplicationController
   include StashEngine::SharedController
   include StashEngine::SharedSecurityController
+
   protect_from_forgery except: :metrics_chart
   before_action :sort_string
 

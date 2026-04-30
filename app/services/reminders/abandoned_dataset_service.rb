@@ -20,7 +20,6 @@ module Reminders
           create_activity(reminder_flag, resource)
         end
       rescue StandardError => e
-        aaa
         p "    Exception! #{e.message}"
       end
       true
@@ -34,9 +33,6 @@ module Reminders
         .where(stash_engine_curation_activities: { status: 'action_required' })
         .where(stash_engine_process_dates: { delete_calculation_date: (1.year - 1.day).ago.beginning_of_day..1.months.ago.end_of_day })
         .each do |resource|
-
-        # Only send for resources where the ID ends in 00-05, so we can stagger the load on the curators
-        next if (resource.id % 100) > 5
 
         reminder_flag = 'action_required_deletion_notice'
         last_reminder = resource.curation_activities.where('note LIKE ?', "%#{reminder_flag}%")&.last

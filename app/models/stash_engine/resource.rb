@@ -51,6 +51,7 @@ require 'cgi'
 module StashEngine
   class Resource < ApplicationRecord # rubocop:disable Metrics/ClassLength
     include StashEngine::Support::Statuses
+
     self.table_name = 'stash_engine_resources'
     acts_as_paranoid
     has_paper_trail meta: {
@@ -194,7 +195,7 @@ module StashEngine
       return if identifier_id.nil? || identifier.nil?
 
       identifier.reload
-      if identifier.resources.count.zero?
+      if identifier.resources.none?
         identifier.destroy
       else
         # ensure identifier latest_resource_id is being updated to previous resource
@@ -336,12 +337,12 @@ module StashEngine
     # types are software or supp
     def zenodo_published?(type: 'software')
       zc = zenodo_copies.where(copy_type: "#{type}_publish", state: 'finished')
-      zc.count.positive?
+      zc.any?
     end
 
     def zenodo_submitted?(type: 'software')
       zc = zenodo_copies.where(copy_type: type, state: 'finished')
-      zc.count.positive?
+      zc.any?
     end
 
     # gets the latest files that are not deleted in db, current files for this version
@@ -374,8 +375,8 @@ module StashEngine
 
     # returns the upload type either :files, :manifest, :unknown (unknown if no files are started for this version yet)
     def upload_type(association: 'data_files')
-      return :manifest if send(association).newly_created.url_submission.count > 0
-      return :files if send(association).newly_created.file_submission.count > 0
+      return :manifest if send(association).newly_created.url_submission.any?
+      return :files if send(association).newly_created.file_submission.any?
 
       :unknown
     end
@@ -400,7 +401,7 @@ module StashEngine
     end
 
     def url_in_version?(url:, association: 'data_files')
-      send(association).newly_created.where(url: url).where(status_code: 200).count > 0
+      send(association).newly_created.where(url: url).where(status_code: 200).any?
     end
 
     def files_unchanged?(association: 'data_files')
@@ -408,7 +409,7 @@ module StashEngine
     end
 
     def files_changed?(association: 'data_files')
-      send(association).where(file_state: %w[created deleted]).count.positive?
+      send(association).where(file_state: %w[created deleted]).any?
     end
 
     def files_changed_since(other_resource:, association: 'data_files')
@@ -810,7 +811,7 @@ module StashEngine
     end
 
     def fill_blank_author!
-      return if authors.count > 0 || submitter.blank? # already has some authors filled in or no user to know about
+      return if authors.any? || submitter.blank? # already has some authors filled in or no user to know about
 
       fill_author_from_user!
     end
@@ -843,7 +844,7 @@ module StashEngine
     # some previous resource with published files
     def files_published?
       file_true = self.class.where(identifier_id: identifier_id).where('created_at <= ?', created_at).where(file_view: true)
-      %w[published retracted].include?(identifier&.pub_state) && file_true.count.positive?
+      %w[published retracted].include?(identifier&.pub_state) && file_true.any?
     end
 
     # Metadata is published when the curator sets the status to published or embargoed
@@ -860,7 +861,7 @@ module StashEngine
     # returns boolean indicating if a version before the current resource has been made public (metadata view set to true)
     def previously_public?
       prev = self.class.where(identifier_id: identifier_id).where('created_at < ?', created_at).where(meta_view: true)
-      prev.count.positive?
+      prev.any?
     end
 
     def previously_published?
@@ -929,7 +930,7 @@ module StashEngine
       return unless identifier.has_zenodo_software?
 
       rep_type = (publish == true ? 'software_publish' : 'software')
-      return if ZenodoCopy.where(resource_id: id, copy_type: rep_type).count.positive? # don't add again if it's already sent
+      return if ZenodoCopy.where(resource_id: id, copy_type: rep_type).any? # don't add again if it's already sent
 
       zc = ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id, copy_type: rep_type)
       ZenodoSoftwareJob.perform_async(zc.id)
@@ -940,7 +941,7 @@ module StashEngine
       return unless identifier.has_zenodo_supp?
 
       rep_type = (publish == true ? 'supp_publish' : 'supp')
-      return if ZenodoCopy.where(resource_id: id, copy_type: rep_type).count.positive? # don't add again if it's already sent
+      return if ZenodoCopy.where(resource_id: id, copy_type: rep_type).any? # don't add again if it's already sent
 
       zc = ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id, copy_type: rep_type)
       ZenodoSuppJob.perform_async(zc.id)
@@ -1200,7 +1201,7 @@ module StashEngine
       return false unless previous_resource_published?
 
       changes = changed_fields(previous_resource)
-      changes = changes.delete_if { |c| c.is_a?(Array) }
+      changes.delete_if { |c| c.is_a?(Array) }
       if (changes - %w[related_identifiers subjects funders]).empty?
         # immediately create published status
         update(publication_date: previous_resource.publication_date)

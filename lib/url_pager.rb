@@ -70,7 +70,7 @@ class UrlPager
   # takes a URI
   def uri_output(u)
     if @path_only
-      "#{u.path}#{u.query ? "?#{u.query}" : ''}"
+      "#{u.path}#{"?#{u.query}" if u.query}"
     else
       u.to_s
     end

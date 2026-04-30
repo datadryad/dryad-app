@@ -42,15 +42,15 @@ RSpec.describe 'SubmissionFlow', type: :request do
   end
 
   context 'for old system payer journal ' do
-    let!(:payment_conf) { create(:payment_configuration, partner: journal, payment_plan: 'TIERED') }
+    let!(:payment_conf) { create(:payment_configuration, partner: journal, payment_plan: 'TIERED', covers_dpc: true) }
 
-    # can NOT submit, due to payment required
+    # can submit
     # old system payer journals are not sponsoring anymore
-    it_should_behave_like 'API submission flow', false, { status: 403, error: 'You need to pay a Data Publishing Charge of $150 in order to submit.' }
+    it_should_behave_like 'API submission flow', true, { status: 202 }
   end
 
   context 'for new system payer journal' do
-    let!(:payment_conf) { create(:payment_configuration, partner: journal, payment_plan: '2025', covers_ldf: false) }
+    let!(:payment_conf) { create(:payment_configuration, partner: journal, payment_plan: '2025', covers_dpc: true, covers_ldf: false) }
 
     # can submit
     it_should_behave_like 'API submission flow', true, { status: 202 }

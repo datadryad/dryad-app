@@ -70,7 +70,7 @@ module StashEngine
       end
       str += '<span id="doi-label" class="accepted">published</span>' if resource.identifier.publication_article_doi.present?
       unless resource.related_identifiers.empty?
-        str += "<br/>#{resource.related_identifiers.size} related work#{resource.related_identifiers.size > 1 ? 's' : ''}"
+        str += "<br/>#{resource.related_identifiers.size} related work#{'s' if resource.related_identifiers.size > 1}"
       end
       str.html_safe
     end
@@ -112,9 +112,7 @@ module StashEngine
 
     def display_issues(issues)
       issues&.map do |issue|
-        uri = URI.parse("https://api.github.com/repos/datadryad/dryad-product-roadmap/issues/#{issue}")
-        response = Net::HTTP.get_response(uri)
-        json = JSON.parse(response.body)
+        json = Integrations::Github.new.query_issue(issue)
         next unless json['title'].present?
 
         {

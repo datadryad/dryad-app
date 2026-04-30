@@ -91,7 +91,7 @@ module StashApi
     def establish_owning_user_id
       if @hash['userId']&.to_s&.match(/\d{4}-\d{4}-\d{4}-\d{3,4}X?/)
         owning_user_id_from_orcid
-      elsif @hash['userId'].to_s&.match(/\A\d+\z/)
+      elsif @hash['userId'].to_s.match(/\A\d+\z/)
         # If the userId is an integer, treat it as the id of an existing user
         begin
           StashEngine::User.find(@hash['userId']).id
@@ -230,7 +230,7 @@ module StashApi
       StashDatacite::ResourceType.create(resource_type_general: 'dataset', resource_type: 'dataset', resource_id: @resource.id)
     end
 
-    private def parse_email(email_string)
+    def parse_email(email_string)
       # is it an email with display name and brackets like "Bob Jones <bob.jones@example.org>"-- then suck email out
       matches = email_string&.match(/<(.+?@.+?)>/)
       return matches[1] if matches

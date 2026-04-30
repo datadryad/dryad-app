@@ -52,7 +52,7 @@ class CurationService
     # existing invitation for the identifier
     existing_invites = StashEngine::OrcidInvitation.where(identifier_id: @resource.identifier_id).pluck(:email).uniq
     authors = @resource.authors.where.not(author_email: existing_invites << nil).where(author_orcid: ['', nil]).to_a
-    authors = authors.delete_if { |au| au&.author_email.blank? }
+    authors.delete_if { |au| au&.author_email.blank? }
 
     return if authors.empty?
 

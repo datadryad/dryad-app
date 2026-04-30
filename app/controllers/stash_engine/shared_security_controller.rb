@@ -138,7 +138,7 @@ module StashEngine
       return if params[:id] == 'new'
       return if valid_edit_code?
 
-      ajax_blocked unless (current_user && resource) && resource.can_edit?(user: current_user)
+      ajax_blocked unless current_user && resource && resource.can_edit?(user: current_user)
     end
 
     def ajax_require_unsubmitted

@@ -57,14 +57,14 @@ module Datacite
     def query
       results = []
 
-      params = { doi: @doi, 'relation-type-id': (UNIQUE_INVESTIGATIONS + UNIQUE_REQUESTS).join(','), 'page[size]': 500 }
+      params = { doi: @doi, 'relation-type-id': (UNIQUE_INVESTIGATIONS + UNIQUE_REQUESTS).join(','), 'page[size]': 500, 'page[cursor]': 1 }
       query_result = Integrations::Datacite.new.query('/events', params)
 
       results.concat(query_result['data'])
 
       # if this doesn't contain full set of results, then keep going to the next page and adding them
       while query_result.dig('links', 'next').present?
-        params['page[number]'] = query_result.dig('meta', 'page').to_i + 1
+        params['page[cursor]'] = Rack::Utils.parse_nested_query(URI.parse(query_result.dig('links', 'next')).query)['page']['cursor']
         query_result = Integrations::Datacite.new.query('/events', params)
         results.concat(query_result['data'])
       end

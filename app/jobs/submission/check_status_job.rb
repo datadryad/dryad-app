@@ -1,6 +1,7 @@
 module Submission
   class CheckStatusJob < Submission::BaseJob
     include Sidekiq::Worker
+
     sidekiq_options queue: :submission_check, retry: 2
 
     def perform(resource_id)

@@ -5,6 +5,7 @@ module StashEngine
   class StatusDashboardController < ApplicationController
 
     include SharedController
+
     before_action :require_user_login
 
     # NOTE: that this is a bit confusing since it service checks tied in from various strange places.

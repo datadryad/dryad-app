@@ -49,35 +49,29 @@ describe ResourceFeeCalculatorService do
     let!(:payment_conf) { create(:payment_configuration, partner: journal, payment_plan: 'TIERED', covers_dpc: true) }
     let(:resource) { create(:resource, identifier: identifier, journal_issns: [journal.issns.first]) }
 
-    it 'returns an error only for exceptions' do
-
-      response = ResourceFeeCalculatorService.new(resource).calculate({})
-      expect(response).to eq({
-                               error: true,
-                               message: OLD_PAYMENT_SYSTEM_MESSAGE,
-                               old_payment_system: true
-                             })
+    it 'user does not pay anything' do
+      expect(ResourceFeeCalculatorService.new(resource).calculate({})[:total]).to eq(0)
     end
   end
 
-  context 'with non 2025 payment plan, but is not paying old fees' do
+  context 'with non 2025 payment plan and is not paying old fees' do
     context 'on new submission' do
       let(:journal_organization) { create(:journal_organization, name: 'NOT The Royal Society') }
       let!(:journal) { create(:journal, sponsor: journal_organization) }
-      let!(:payment_conf) { create(:payment_configuration, partner: journal, payment_plan: 'TIERED', covers_dpc: true) }
+      let!(:payment_conf) { create(:payment_configuration, partner: journal_organization, payment_plan: 'TIERED', covers_dpc: true) }
       let(:resource) { create(:resource, identifier: identifier, journal_issns: [journal.issns.first]) }
 
       it_should_behave_like 'calling FeeCalculatorService', 'individual'
-      it 'user pays individual DPC fee' do
-        expect(ResourceFeeCalculatorService.new(resource).calculate({})[:total]).to eq(150)
+      it 'user does not pay anything' do
+        expect(ResourceFeeCalculatorService.new(resource).calculate({})[:total]).to eq(0)
       end
     end
 
     context 'on second version' do
       let(:identifier) { create(:identifier, payment_type: 'journal_TIERED') }
       let(:journal_organization) { create(:journal_organization, name: 'NOT The Royal Society') }
-      let!(:journal) { create(:journal, sponsor: journal_organization) }
-      let!(:payment_conf) { create(:payment_configuration, partner: journal, payment_plan: 'TIERED', covers_dpc: true) }
+      let(:journal) { create(:journal, sponsor: journal_organization) }
+      let!(:payment_conf) { create(:payment_configuration, partner: journal_organization, payment_plan: 'TIERED', covers_dpc: true) }
       let(:resource) { create(:resource, identifier: identifier, journal_issns: [journal.issns.first]) }
 
       it_should_behave_like 'calling FeeCalculatorService', 'publisher'
@@ -88,11 +82,11 @@ describe ResourceFeeCalculatorService do
         end
       end
 
-      context 'when storage tier is not changed' do
+      context 'when storage tier is changing' do
         let(:resource) { create(:resource, identifier: identifier, journal_issns: [journal.issns.first], total_file_size: 70_000_000_000) }
 
-        it 'user pays LDF fee at publisher pricing tier' do
-          expect(ResourceFeeCalculatorService.new(resource).calculate({})[:total]).to eq(464)
+        it 'user does not pay anything' do
+          expect(ResourceFeeCalculatorService.new(resource).calculate({})[:total]).to eq(0)
         end
       end
     end

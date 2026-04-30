@@ -21,7 +21,7 @@ class PaymentConfiguration < ApplicationRecord
   belongs_to :partner, polymorphic: true, optional: true
 
   enum :payment_plan, { SUBSCRIPTION: 1, PREPAID: 2, DEFERRED: 3, TIERED: 4, '2025': 5 }
-  before_save :reset_limit
+  before_save :reset_limit, :set_covers_dpc
 
   private
 
@@ -30,5 +30,11 @@ class PaymentConfiguration < ApplicationRecord
 
     self.ldf_limit = nil
     self.yearly_ldf_limit = nil
+  end
+
+  def set_covers_dpc
+    return unless covers_dpc.nil?
+
+    self.covers_dpc = payment_plan.present?
   end
 end

@@ -3,6 +3,7 @@ module Stash
     describe StashFile do
       describe '#initialize' do
         attr_reader :params
+
         before(:each) do
           @params = {
             pathname: 'foo.txt',

@@ -3,6 +3,7 @@ require 'stash/zenodo_replicate'
 module StashEngine
   class ZenodoCopyJob
     include Sidekiq::Worker
+
     sidekiq_options queue: :zenodo_copy, retry: false
 
     DEFERRED_TOUCH_FILE = Rails.root.join('..', 'defer_jobs.txt').to_s

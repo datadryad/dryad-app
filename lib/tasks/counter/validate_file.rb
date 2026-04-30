@@ -22,7 +22,7 @@ module Tasks
 
       def validate_file
         File.open(@out_file, 'w:UTF-8') do |f|
-          File.open(@filename).each_with_index do |line, index|
+          File.new(@filename).each_with_index do |line, index|
             @badline = false # badline is set to true if it doesn't validate
             @line_no = index
             my_line = line.strip

@@ -37,7 +37,7 @@ module Stash
       # rubocop:disable Metrics/AbcSize
       def download(resource:)
         @resource ||= resource
-        if @resource&.total_file_size&. < APP_CONFIG[:maximums][:api_zip_size]
+        if @resource&.total_file_size&.< APP_CONFIG[:maximums][:api_zip_size]
           @resource.identifier.update_columns(downloaded_at: Time.now.utc)
           credentials = ::Aws::Credentials.new(APP_CONFIG[:s3][:key], APP_CONFIG[:s3][:secret])
           signer = ::Aws::Sigv4::Signer.new(service: 'lambda', region: APP_CONFIG[:s3][:region], credentials_provider: credentials)

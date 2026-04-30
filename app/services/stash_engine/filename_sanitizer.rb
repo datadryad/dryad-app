@@ -26,13 +26,13 @@
 
 module StashEngine
   class FilenameSanitizer
-    ILLEGAL_RE          = %r{[/?<>\\:*|\"]}
+    ILLEGAL_RE          = %r{[/?<>\\:*|"]}
     CONTROL_RE          = /[\x00-\x1f]/
     RESERVED_RE         = /^\.+$/
     WINDOWS_RESERVED_RE = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?$/i
     WINDOWS_TRAILING_RE = /[. ]+$/
-    S3_BADIES           = /[&$@=;+,{\}^%`\[\]~#']/
-    DRYAD_UNLIKED       = /[ ]/
+    S3_BADIES           = /[&$@=;+,{}^%`\[\]~#']/
+    DRYAD_UNLIKED       = / /
 
     attr_reader :filename, :replacement
 

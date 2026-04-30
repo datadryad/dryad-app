@@ -2,6 +2,7 @@ module StashEngine
   # rubocop:disable Metrics/ClassLength, Metrics/MethodLength
   class AdminDashboardController < ApplicationController
     include PublicationMixin
+
     helper SortableTableHelper
     helper AdminHelper
     helper AdminDashboardHelper
@@ -179,7 +180,7 @@ module StashEngine
       @datasets = @datasets.select('stash_engine_identifiers.created_at') if @sort == 'created_at'
       return unless @search_string.present?
 
-      search_string = %r{^10.[\S]+/[\S]+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string
+      search_string = %r{^10.\S+/\S+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string
       @datasets = @datasets.select(
         "MATCH(stash_engine_identifiers.search_words) AGAINST(#{ActiveRecord::Base.connection.quote(search_string)}) as relevance"
       )
@@ -213,9 +214,9 @@ module StashEngine
     def date_fields
       filter_on = @filters[:first_sub_date]&.values&.any?(&:present?)
       @datasets = @datasets.joins(
-        "#{filter_on ? '' : 'LEFT OUTER '}JOIN stash_engine_process_dates id_dates ON id_dates.processable_type = 'StashEngine::Identifier'
+        "#{'LEFT OUTER ' unless filter_on}JOIN stash_engine_process_dates id_dates ON id_dates.processable_type = 'StashEngine::Identifier'
           AND id_dates.processable_id = stash_engine_identifiers.id
-        #{filter_on ? " AND COALESCE(id_dates.processing, id_dates.queued, id_dates.peer_review) #{date_string(@filters[:first_sub_date])}" : ''}"
+        #{" AND COALESCE(id_dates.processing, id_dates.queued, id_dates.peer_review) #{date_string(@filters[:first_sub_date])}" if filter_on}"
       ).select(
         'COALESCE(id_dates.processing, id_dates.queued, id_dates.peer_review) as first_sub_date, id_dates.queued as queue_date'
       ).select('stash_engine_identifiers.publication_date as first_pub_date')
@@ -246,7 +247,7 @@ module StashEngine
         :affiliation, :value
       ).present?
       unless @search_string.blank?
-        search_string = %r{^10.[\S]+/[\S]+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string
+        search_string = %r{^10.\S+/\S+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string
         @datasets = @datasets.where("MATCH(stash_engine_identifiers.search_words) AGAINST(#{ActiveRecord::Base.connection.quote(search_string)}) > 0")
       end
       @datasets = @datasets.left_outer_joins(:related_identifiers).left_outer_joins(:resource_publication)
@@ -300,7 +301,7 @@ module StashEngine
       to = @filters.dig(:size, :most)
 
       @datasets = @datasets.where("#{
-        from.zero? ? 'stash_engine_resources.total_file_size IS NULL OR ' : ''
+        'stash_engine_resources.total_file_size IS NULL OR ' if from.zero?
       }stash_engine_resources.total_file_size #{"BETWEEN #{from} AND #{to.presence || 2_000_000_000_000}"}")
     end
 

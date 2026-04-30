@@ -180,14 +180,16 @@ module StashEngine
     def json_linkset
       {
         linkset: [
-          anchor: download_stream_url(file_id: @file.id),
-          type: [{ href: 'https://schema.org/DataDownload' }],
-          collection: [
-            {
-              href: show_url(id: @file.resource.identifier_str),
-              type: 'text/html'
-            }
-          ]
+          {
+            anchor: download_stream_url(file_id: @file.id),
+            type: [{ href: 'https://schema.org/DataDownload' }],
+            collection: [
+              {
+                href: show_url(id: @file.resource.identifier_str),
+                type: 'text/html'
+              }
+            ]
+          }
         ]
       }
     end

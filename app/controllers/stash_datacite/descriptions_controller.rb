@@ -1,6 +1,7 @@
 module StashDatacite
   class DescriptionsController < ApplicationController
     include ::ApplicationHelper
+
     before_action :set_description, only: %i[update destroy]
     before_action :ajax_require_permission, only: %i[update destroy]
     before_action :ajax_require_unsubmitted, only: %i[update destroy], unless: -> { description_params[:description_type] == 'concern' }
@@ -34,12 +35,14 @@ module StashDatacite
     def update
       items = description_params
       if %w[technicalinfo hsi_statement changelog].include?(@description&.description_type)
-        items[:description] = items[:description]&.gsub(/([\.\?\!,;:'"]) {2,}/, '\1 ')
+        items[:description] = items[:description]&.gsub(/([.?!,;:'"]) {2,}/, '\1 ')
       elsif items[:description].present?
         desc = helpers.markdown_render(content: items[:description], header_offset: 2)
         items[:description] =
           Loofah.fragment(desc).scrub!(:strip).to_s
       end
+
+      mass_edit(items[:description])
 
       respond_to do |format|
         if items[:description] == @description.description || @description.update(items)
@@ -59,7 +62,17 @@ module StashDatacite
 
     private
 
-    # Use callbacks to share common setup or constraints between actions.
+    def mass_edit(description)
+      # Duplicate concern notes for all versions since last published
+      return unless @description.description_type == 'concern'
+      return if @resource.id == @resource.identifier.latest_resource.id
+
+      @resource.identifier.resources.where('id > ?', @resource.id).each do |r|
+        copy = Description.find_or_create_by(resource_id: r.id, description_type: 'concern')
+        copy.update(description: description)
+      end
+    end
+
     def set_description
       @description = Description.find(description_params[:id])
       ajax_blocked unless resource.id == @description.resource_id
@@ -69,7 +82,6 @@ module StashDatacite
       @resource ||= (params[:description] ? StashEngine::Resource.find(description_params[:resource_id]) : @description.resource)
     end
 
-    # Only allow a trusted parameter "white list" through.
     def description_params
       params.require(:description).permit(:id, :description, :description_type, :resource_id)
     end

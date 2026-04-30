@@ -29,19 +29,17 @@ module StashDatacite
       end
 
       # Disabling Rubocop's stupid rule.  Yeah, I know what I want and I don't want to know if it's a "related_works?"
-      # rubocop:disable Naming/PredicateName
       def has_related_works?
-        @resource.related_identifiers.where.not(related_identifier: [nil, '']).count > 0
+        @resource.related_identifiers.where.not(related_identifier: [nil, '']).any?
       end
 
       def has_related_works_dois?
         return false unless has_related_works?
 
-        return true if @resource.related_identifiers.where(related_identifier_type: 'doi').count > 0
+        return true if @resource.related_identifiers.where(related_identifier_type: 'doi').any?
 
         false
       end
-      # rubocop:enable Naming/PredicateName
 
       def good_related_works_formatting?
         filled_related_dois = @resource.related_identifiers.where(related_identifier_type: 'doi').where.not(related_identifier: [nil, ''])

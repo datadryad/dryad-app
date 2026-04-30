@@ -301,7 +301,7 @@ module StashApi
 
       # once we have the solr_response, use the DOIs to build the 'real' response
       mapped_results = solr_response['docs'].map do |i|
-        Dataset.new(identifier: (i['dc_identifier_s']).to_s, user: @user).metadata
+        Dataset.new(identifier: i['dc_identifier_s'].to_s, user: @user).metadata
       end
       datasets = paging_hash_results(all_count: solr_response['numFound'], results: mapped_results)
 

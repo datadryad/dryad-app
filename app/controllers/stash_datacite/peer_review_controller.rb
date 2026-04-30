@@ -43,6 +43,7 @@ module StashDatacite
         CurationService.new(
           resource: @resource, user_id: current_user.id, status: 'queued', note: 'Release from PPR'
         ).process
+        @resource.update(user_id: nil) unless @resource.curator&.curator?
         @resource.reload
         redirect_to dashboard_path, notice: 'Dataset released from Private for Peer Review and queued for curation'
       end

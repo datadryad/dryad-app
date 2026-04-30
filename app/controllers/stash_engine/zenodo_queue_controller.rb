@@ -70,7 +70,7 @@ module StashEngine
           @sub_status = ''
           @sub_status = 'prerequisite' if previous_unfinished.positive?
 
-          @sub_status = 'in runner' if running_jobs(@zenodo_copy).count.positive?
+          @sub_status = 'in runner' if running_jobs(@zenodo_copy).any?
 
           resend_job if @sub_status.blank?
         end
@@ -86,7 +86,7 @@ module StashEngine
       @zenodo_copies = ZenodoCopy.find_by_sql(sql)
 
       @zenodo_copies.each do |zc|
-        zc.update(state: 'error') unless running_jobs(zc).count.positive?
+        zc.update(state: 'error') unless running_jobs(zc).any?
       end
     end
 

@@ -6,7 +6,8 @@ module Integrations
       def query_by_doi(doi:)
         return nil unless doi.present?
 
-        resp = Serrano.works(ids: doi.gsub(/\s+/, ''))
+        bare = bare_doi(doi_string: doi)
+        resp = Serrano.works(ids: bare.gsub(/\s+/, ''))
         return nil unless resp.first.present? && resp.first['message'].present?
 
         resp.first['message']
@@ -50,6 +51,16 @@ module Integrations
         sm['ISSN'] = get_journal_issn(sm) unless sm['ISSN'].present?
         sm
         # Stash::Import::CrossRef.new(resource: resource, json: sm)
+      rescue Serrano::NotFound, Serrano::BadGateway, Serrano::Error, Serrano::GatewayTimeout, Serrano::InternalServerError,
+             Serrano::ServiceUnavailable
+        nil
+      end
+
+      def query_updates(type: 'retraction', from_date: nil)
+        filters = { type: 'journal-article', 'update-type': type }
+        filters['from-pub-date'] = from_date unless from_date.nil?
+        resp = Serrano.works(filter: filters, limit: 1000)
+        resp['message']['items']
       rescue Serrano::NotFound, Serrano::BadGateway, Serrano::Error, Serrano::GatewayTimeout, Serrano::InternalServerError,
              Serrano::ServiceUnavailable
         nil

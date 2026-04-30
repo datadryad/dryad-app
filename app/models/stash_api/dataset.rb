@@ -7,7 +7,8 @@ module StashApi
   class Dataset
     include Presenter
 
-    def initialize(identifier:, user: nil, item_view: false, post: false) # item view means not in list and may show more info for individual record
+    # item view means not in list and may show more info for individual record
+    def initialize(identifier:, user: nil, item_view: false, post: false)
       id_type, iden = identifier.split(':', 2)
       @identifier_s = identifier
       @se_identifier = StashEngine::Identifier.where(identifier_type: id_type, identifier: iden).first

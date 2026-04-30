@@ -36,10 +36,6 @@ Layout/MultilineMethodCallIndentation:
 Layout/MultilineOperationIndentation:
   Enabled: false
 
-# because you want an exception that applies to your case, not something random
-Lint/ShadowedException:
-  Enabled: false
-
 # Reasonable line-length check; it's too easy for the cure to be worse than the disease
 Layout/LineLength:
   Max: 150
@@ -86,18 +82,6 @@ Naming/MethodParameterName:
 # Confusing and weird
 Naming/VariableNumber:
   Enabled: False
-  
-# Do what's readable in the context you're in
-Style/AccessModifierDeclarations:
-  Enabled: false
-
-# 👎 to cultural imperialism
-Style/AsciiComments:
-  Enabled: false
-
-# Seriously?
-Style/CommentedKeyword:
-  Enabled: False
 
 # Disable problematic module documentation check (see https://github.com/bbatsov/rubocop/issues/947)
 Style/Documentation:
@@ -139,13 +123,7 @@ Style/OpenStructUse:
 Bundler/OrderedGems:
   TreatCommentsAsGroupSeparators: true
 
-# ------------------------
-# new stuff in new rubocop
-# ------------------------
 Layout/EmptyLinesAroundAttributeAccessor:
-  Enabled: false
-
-Layout/SpaceAroundMethodCallOperator:
   Enabled: false
 
 Lint/DeprecatedOpenSSLConstant:
@@ -154,23 +132,8 @@ Lint/DeprecatedOpenSSLConstant:
 Lint/MixedRegexpCaptureTypes:
   Enabled: true
 
-Lint/RaiseException:
-  Enabled: false
-
 Lint/StructNewOverride:
   Enabled: true
-
-Style/ExponentialNotation:
-  Enabled: false
-
-Style/HashEachMethods:
-  Enabled: true
-
-Style/HashTransformKeys:
-  Enabled: false
-
-Style/HashTransformValues:
-  Enabled: false
 
 Style/RedundantRegexpCharacterClass:
   Enabled: true
@@ -181,3 +144,11 @@ Style/RedundantRegexpEscape:
 Style/SlicingWithRange:
   Enabled: true
 
+Style/SafeNavigationChainLength:
+  Enabled: false
+
+Naming/PredicateMethod:
+  Enabled: false
+
+Naming/PredicatePrefix:
+  Enabled: false

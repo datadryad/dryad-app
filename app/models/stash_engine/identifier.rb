@@ -90,7 +90,7 @@ module StashEngine
     # returns the identifiers that have resources with that *latest* curation state you specify (for any of the resources)
     scope :with_visibility, ->(states:, journal_issns: nil, funder_ids: nil, user_id: nil, tenant_id: nil) do
       where(id: Resource.with_visibility(states: states, journal_issns: journal_issns, funder_ids: funder_ids, user_id: user_id, tenant_id: tenant_id)
-                        .select('identifier_id').distinct.map(&:identifier_id))
+        .select('identifier_id').distinct.map(&:identifier_id))
     end
 
     scope :publicly_viewable, -> do
@@ -231,16 +231,16 @@ module StashEngine
 
     # @return true if there's a 'processing' version
     def processing?
-      resources.processing.count > 0
+      resources.processing.any?
     end
 
     # return true if there's an 'error' version
     def error?
-      resources.error.count > 0
+      resources.error.any?
     end
 
     def in_progress_only?
-      resources.in_progress_only.count > 0
+      resources.in_progress_only.any?
     end
 
     # @return Resource the current in-progress resource
@@ -251,7 +251,7 @@ module StashEngine
 
     # @return true if there is an in progress version
     def in_progress?
-      resources.in_progress.count > 0
+      resources.in_progress.any?
     end
 
     def published?
@@ -343,7 +343,6 @@ module StashEngine
       true
     end
 
-    # rubocop:disable Naming/PredicateName
     def has_accepted_manuscript?
       return false unless latest_manuscript.present?
 
@@ -370,7 +369,6 @@ module StashEngine
 
       false
     end
-    # rubocop:enable Naming/PredicateName
 
     def publication_article_doi
       dois = latest_resource.related_identifiers&.select { |id| id.related_identifier_type == 'doi' && id.work_type == 'primary_article' }
@@ -468,7 +466,7 @@ module StashEngine
     # make the display look desireable.  We can also put the old versions back and re-process the info to get corect views for these datasets.
     def borked_file_history?
       # I have been setting resources curators don't like to the negative identifier_id on the resource foreign key to orphan them
-      return true if Resource.where(identifier_id: -id).count.positive? || resources.with_file_changes.count.zero?
+      return true if Resource.where(identifier_id: -id).any? || resources.with_file_changes.none?
 
       false
     end
@@ -480,16 +478,14 @@ module StashEngine
 
     # checks if the identifier has a Zenodo software submission or has had any in the past. If we ever have a software
     # submission then we need to keep it up to date each time things change
-    # rubocop:disable Naming/PredicateName
     # Nope: I don't think taking the 'has_' off this method is helpful
     def has_zenodo_software?
-      SoftwareFile.joins(:resource).where(stash_engine_resources: { identifier_id: id }).count.positive?
+      SoftwareFile.joins(:resource).where(stash_engine_resources: { identifier_id: id }).any?
     end
 
     def has_zenodo_supp?
-      SuppFile.joins(:resource).where(stash_engine_resources: { identifier_id: id }).count.positive?
+      SuppFile.joins(:resource).where(stash_engine_resources: { identifier_id: id }).any?
     end
-    # rubocop:enable Naming/PredicateName
 
     # gets the resources which are in zenodo and have viewable files for the context, used by the landing page.
     # Only latest version after published is included if include_unpublished is true.

@@ -1,5 +1,6 @@
 class PublicationJob < BaseJob
   include Sidekiq::Worker
+
   sidekiq_options queue: :publication, retry: true, lock: :until_and_while_executing
 
   def perform(activity_id)

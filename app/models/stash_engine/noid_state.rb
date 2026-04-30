@@ -32,7 +32,7 @@ module StashEngine
     def self.mint
       the_id = nil # define here, needs to be available after this block
       Lock.acquire('dryad-minter') do
-        initialize_minter if NoidState.all.count == 0
+        initialize_minter if NoidState.all.none?
         minter = deserialize_from_db
         the_id = minter.mint
         serialize_to_db(minter)

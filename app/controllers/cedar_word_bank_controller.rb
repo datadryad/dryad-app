@@ -1,6 +1,7 @@
 class CedarWordBankController < ApplicationController
   include StashEngine::SharedController
   include StashEngine::SharedSecurityController
+
   helper StashEngine::SortableTableHelper
   before_action :require_user_login
   layout 'stash_engine/application'

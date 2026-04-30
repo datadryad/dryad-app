@@ -76,7 +76,7 @@ module StashDatacite
       end
 
       def abstract
-        return 'Abstract missing' unless @resource.descriptions.where(description_type: 'abstract').where.not(description: [nil, '']).count.positive?
+        return 'Abstract missing' unless @resource.descriptions.where(description_type: 'abstract').where.not(description: [nil, '']).any?
 
         false
       end
@@ -105,7 +105,7 @@ module StashDatacite
       end
 
       def collected_datasets
-        return 'No datasets in the collection' if @resource.related_identifiers.where(relation_type: 'haspart').count.zero?
+        return 'No datasets in the collection' if @resource.related_identifiers.where(relation_type: 'haspart').none?
 
         false
       end
@@ -177,9 +177,9 @@ module StashDatacite
         end
 
         if @resource.identifier.publication_date.blank? || @resource.identifier.publication_date > readme_md_require_date
-          return 'README file missing' if readme_md_files.count.zero? && no_techinfo
+          return 'README file missing' if readme_md_files.none? && no_techinfo
         elsif @resource.identifier.publication_date > readme_require_date
-          return 'README file missing' if readme_files.count.zero? && no_techinfo
+          return 'README file missing' if readme_files.none? && no_techinfo
         end
 
         false
@@ -206,7 +206,7 @@ module StashDatacite
       # Checks for existing data files, Dryad is a data repository and shouldn't be used only as a way to deposit in Zenodo
       # There must be at least one file *other than* the README file.
       def contains_data?
-        @resource.data_files.present_files.where("UPPER(download_filename) NOT LIKE 'README%'").count.positive?
+        @resource.data_files.present_files.where("UPPER(download_filename) NOT LIKE 'README%'").any?
       end
 
       def readme_files

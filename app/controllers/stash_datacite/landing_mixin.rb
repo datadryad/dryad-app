@@ -18,7 +18,8 @@ module StashDatacite
       @review ||= StashDatacite::Resource::Review.new(resource)
     end
 
-    def page_title # TODO: is this used?
+    # TODO: is this used?
+    def page_title
       @page_title ||= review.title_str
     end
 

@@ -75,7 +75,8 @@ FactoryBot.define do
       case id
       when 'email_auth', 'match_tenant', 'ucop'
         true
-      else false end
+      else false
+      end
     end
     sponsor_id { nil }
 

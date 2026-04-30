@@ -176,7 +176,7 @@ module StashDatacite
 
       # software file relation
       sfw_copy = resource.zenodo_copies.software.first
-      if sfw_copy&.software_doi.present? && resource.software_files.present_files.count.positive?
+      if sfw_copy&.software_doi.present? && resource.software_files.present_files.any?
         doi = standardize_doi(sfw_copy.software_doi)
         create(related_identifier: doi,
                related_identifier_type: 'doi',
@@ -190,7 +190,7 @@ module StashDatacite
       # supplemental file relations
       supp_copy = resource.zenodo_copies.supp.first
 
-      return unless supp_copy&.software_doi.present? && resource.supp_files.present_files.count.positive?
+      return unless supp_copy&.software_doi.present? && resource.supp_files.present_files.any?
 
       doi = standardize_doi(supp_copy.software_doi)
       create(related_identifier: doi,
@@ -311,7 +311,7 @@ module StashDatacite
       ACCESSION_TYPES.each do |k, v|
         next unless identifier.downcase.start_with?("#{k}:")
 
-        bare_id = identifier[k.length + 1..].strip # get rest of the string after that.
+        bare_id = identifier[(k.length + 1)..].strip # get rest of the string after that.
         return "#{v}#{ERB::Util.url_encode(bare_id)}"
 
       end

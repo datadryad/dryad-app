@@ -111,7 +111,7 @@ module Stash
             # if it had attempted any requests, we'd have webmock request errors
             @zc.reload
             expect(@zc.state).to eq('error')
-            expect(@zc.error_info). to include('Needs to be of the correct type')
+            expect(@zc.error_info).to include('Needs to be of the correct type')
           end
 
           it 'rejects multiple replications for the same resource and type (software)' do

@@ -236,7 +236,7 @@ module StashEngine
       resp = RestClient.get "#{APP_CONFIG.orcid.api}/v2.1/#{orcid}/email",
                             'Content-type' => 'application/vnd.orcid+json', 'Authorization' => "Bearer #{bearer_token}"
       my_info = JSON.parse(resp.body)
-      my_info['email'].map { |item| (item['email'].blank? ? nil : item['email']) }.compact
+      my_info['email'].map { |item| item['email'].blank? ? nil : item['email'] }.compact
     rescue RestClient::Exception => e
       logger.error(e)
       []
@@ -246,7 +246,7 @@ module StashEngine
       resp = RestClient.get "#{APP_CONFIG.orcid.api}/v2.1/#{orcid}/employments",
                             'Content-type' => 'application/vnd.orcid+json', 'Authorization' => "Bearer #{bearer_token}"
       my_info = JSON.parse(resp.body)
-      orgs = my_info['employment-summary'].map { |item| (item['organization'].blank? ? nil : item['organization']) }.compact
+      orgs = my_info['employment-summary'].map { |item| item['organization'].blank? ? nil : item['organization'] }.compact
       orgs = orgs.map do |org|
         affil = StashDatacite::Affiliation.from_long_name(long_name: org['name'])
         affil.save if affil.present?

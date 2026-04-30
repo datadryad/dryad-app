@@ -42,7 +42,7 @@ namespace :counter do
       puts ''
     end
     exit # makes the arguments not be interpreted as other rake tasks
-  end # end of task
+  end
 
   # example: RAILS_ENV=production bundle exec rake counter:cop_manual -- --json_directory /user/me/json-reports
   desc 'manually populate CoP stats from json files'

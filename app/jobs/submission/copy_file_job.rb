@@ -1,6 +1,7 @@
 module Submission
   class CopyFileJob < Submission::BaseJob
     include Sidekiq::Worker
+
     sidekiq_options queue: :submission_file, lock: :until_and_while_executing, retry: 1
 
     def perform(file_id)

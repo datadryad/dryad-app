@@ -34,8 +34,6 @@ require 'stash/import/crossref'
 
 module StashEngine
   class ProposedChange < ApplicationRecord
-    include PublicationMixin
-
     self.table_name = 'stash_engine_proposed_changes'
     belongs_to :identifier, class_name: 'StashEngine::Identifier'
     has_one :latest_resource, class_name: 'StashEngine::Resource', through: :identifier
@@ -87,15 +85,9 @@ module StashEngine
         cr.populate_pub_update!(article_type)
       end
 
-      if article_type == 'primary_article'
-        check_resource_payment(latest_resource)
-        release_resource(latest_resource)
-      end
-
       add_curation_note(latest_resource, approve_type)
-      check_reindex(latest_resource)
-
       update(approved: true, user_id: current_user.id)
+      RelatedIdentifierService.new(latest_resource).process
     end
 
     def reject!(current_user:)
@@ -103,12 +95,6 @@ module StashEngine
     end
 
     private
-
-    def check_reindex(resource)
-      return unless resource.status_published?
-
-      PublicationJob.perform_async(resource.last_curation_activity_id)
-    end
 
     def add_curation_note(resource, type)
       CurationService.new(

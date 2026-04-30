@@ -18,12 +18,13 @@ module PublicationMixin
         status: 'queued',
         note: 'Release from peer review through publication information'
       ).process
+      resource.update(user_id: nil) unless resource.curator&.curator?
       StashEngine::UserMailer.peer_review_pub_linked(resource).deliver_now
     end
   end
 
   def check_resource_payment(resource)
-    return unless resource.identifier.publication_date.blank?
+    return if resource.identifier.published? || resource.identifier.publication_date.present?
     return unless resource.submitted?
 
     resource.identifier.record_payment

@@ -182,7 +182,8 @@ module StashEngine
 
     def add_concern
       authorize %i[stash_engine admin_datasets]
-      @description = StashDatacite::Description.find_or_create_by(resource_id: @resource.id, description_type: 'concern')
+      resource = @resource.identifier.latest_resource_with_public_metadata
+      @description = StashDatacite::Description.find_or_create_by(resource_id: resource&.id || @resource.id, description_type: 'concern')
       respond_to(&:js)
     end
 

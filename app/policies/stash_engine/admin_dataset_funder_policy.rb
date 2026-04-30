@@ -11,11 +11,7 @@ module StashEngine
       end
 
       def resolve
-        if @user.tenant_limited?
-          true
-        else
-          @scope
-        end
+        @user.tenant_limited? || @scope
       end
 
       private

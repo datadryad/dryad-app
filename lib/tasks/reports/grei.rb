@@ -35,7 +35,7 @@ module Tasks
 
         private
 
-        # rubocop:disable Metrics/MethodLength (this method is long but it's mostly data retrieval)
+        # rubocop:disable Metrics/MethodLength
         # rubocop:disable Metrics/AbcSize
         # rubocop:disable Layout/LineLength
         def retrieve_datasets_info

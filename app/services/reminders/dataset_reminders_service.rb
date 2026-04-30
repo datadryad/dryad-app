@@ -35,9 +35,6 @@ module Reminders
         resource = item[:identifier]&.latest_resource
         next if resource.nil?
 
-        # Only send for resources where the ID ends in 00-05, so we can stagger the load on the curators
-        next if (resource.id % 100) > 5
-
         # send out reminder at two weeks
         next if item[:set_at] > 2.weeks.ago || item[:reminder_1].present?
 

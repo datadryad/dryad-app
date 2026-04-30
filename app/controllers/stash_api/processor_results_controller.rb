@@ -38,7 +38,9 @@ module StashApi
       render json: @processor_result
     end
 
-    private def require_resource_from_id
+    private
+
+    def require_resource_from_id
       @processor_result = StashEngine::ProcessorResult.where(id: params[:id]).first
       @resource = @processor_result&.resource
       render json: { error: 'Not found' }.to_json, status: 404 unless @processor_result.present? && @resource.present?

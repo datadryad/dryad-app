@@ -1,5 +1,6 @@
 class CedarController < ApplicationController
   include StashEngine::SharedSecurityController
+
   # Since the CEDAR form doesn't know about Rails, we don't use the default Rails CSRF validation.
   # Instead we pass the CSRF token as an "info" value in the form, and validate it explicitly in the save method
   skip_before_action :verify_authenticity_token, only: [:save]
@@ -8,7 +9,7 @@ class CedarController < ApplicationController
   def json_config
     json_output = {
       sampleTemplateLocationPrefix: '/cedar/',
-      loadSampleTemplateName: "#{params[:template]}#{params.key?(:viewer) ? "/#{params[:resource_id]}" : ''}",
+      loadSampleTemplateName: "#{params[:template]}#{"/#{params[:resource_id]}" if params.key?(:viewer)}",
       readOnlyMode: params.key?(:viewer),
       hideEmptyFields: params.key?(:viewer),
 

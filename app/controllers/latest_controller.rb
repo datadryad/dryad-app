@@ -1,6 +1,7 @@
 class LatestController < ApplicationController
   helper StashEngine::ApplicationHelper
   include StashEngine::SharedController
+
   skip_before_action :verify_authenticity_token, only: :index
 
   layout 'stash_engine/application'

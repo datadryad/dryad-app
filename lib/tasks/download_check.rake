@@ -31,7 +31,9 @@ namespace :download_check do
   task check_created_s3: :environment do
     # identifiers with some submitted resources
     se_ids = StashEngine::Identifier.joins(resources: :resource_states)
-      .where("stash_engine_resource_states.resource_state = 'submitted'").distinct
+      .where("stash_engine_resource_states.resource_state = 'submitted'")
+      .where.not(pub_state: 'withdrawn')
+      .distinct
 
     my_filename = "s3_check_#{Rails.env}_#{Time.new.strftime('%Y-%m-%d_%H-%M-%S')}.csv"
 

@@ -26,12 +26,12 @@ module StashEngine
 
     def self.make_unique(resource:, filename:, association:)
       dups = resource.send(association).present_files.where(download_filename: filename)
-      return filename unless dups.count > 0
+      return filename unless dups.any?
 
       ext = File.extname(filename)
       core_name = File.basename(filename, ext)
       counter = 2
-      counter += 1 while resource.send(association).present_files.where(download_filename: "#{core_name}-#{counter}#{ext}").count > 0
+      counter += 1 while resource.send(association).present_files.where(download_filename: "#{core_name}-#{counter}#{ext}").any?
       "#{core_name}-#{counter}#{ext}"
     end
 

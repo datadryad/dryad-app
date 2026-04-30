@@ -1,7 +1,5 @@
 module StashDatacite
   class RelatedIdentifiersController < ApplicationController
-    include PublicationMixin
-
     before_action :set_related_identifier, only: %i[update delete]
     before_action :ajax_require_permission, only: %i[update create delete]
 
@@ -17,7 +15,7 @@ module StashDatacite
       @related_identifier.verified = @related_identifier.live_url_valid?
       respond_to do |format|
         if @related_identifier.save
-          update_resource
+          RelatedIdentifierService.new(@resource).process
           format.js do
             load_activity
           end
@@ -42,7 +40,7 @@ module StashDatacite
       respond_to do |format|
         if @related_identifier.update(calc_related_identifier_params)
           @related_identifier.update(verified: @related_identifier.live_url_valid?) unless @related_identifier.verified?
-          update_resource
+          RelatedIdentifierService.new(@resource).process
           format.js do
             load_activity
           end
@@ -65,6 +63,7 @@ module StashDatacite
     # DELETE /related_identifiers/1
     def delete
       @related_identifier.destroy unless params[:id] == 'new'
+      RelatedIdentifierService.new(@resource).process
       respond_to do |format|
         format.js do
           load_activity
@@ -106,14 +105,6 @@ module StashDatacite
       @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id, pub_type: :primary_article)
       @preprint = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id, pub_type: :preprint)
       render template: 'stash_engine/admin_datasets/publications_reload', formats: [:js]
-    end
-
-    def update_resource
-      release_resource(@resource) if @resource.identifier&.publication_article_doi
-
-      return unless @resource.status_published?
-
-      PublicationJob.perform_async(@resource.last_curation_activity_id)
     end
 
     # these params are now being calculated based indirect information

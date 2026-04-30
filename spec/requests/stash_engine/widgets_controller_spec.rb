@@ -138,4 +138,3 @@ module StashEngine
     end
   end
 end
-# rubocop:enable
