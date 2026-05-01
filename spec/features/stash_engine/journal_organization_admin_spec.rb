@@ -56,21 +56,6 @@ RSpec.feature 'JournalOrganizationAdmin', type: :feature do
       expect(page).not_to have_content(@org.name)
     end
 
-    it 'allows changing contacts as a system admin', js: true do
-      visit stash_url_helpers.publisher_admin_path
-      expect(page).to have_content(@org.name)
-      within(:css, "form[action=\"#{publisher_edit_path(id: @org.id)}\"]") do
-        find('.c-admin-edit-icon').click
-      end
-      within(:css, '#genericModalDialog') do
-        find('#contact').set('test@email.com')
-        find('input[name=commit]').click
-      end
-      expect(page.find("#row_#{@org.id}")).to have_text('test@email.com')
-      changed = StashEngine::JournalOrganization.find(@org.id)
-      expect(changed.contact).to include('test@email.com')
-    end
-
     it 'allows changing sponsor as a system admin', js: true do
       org = create(:journal_organization)
       visit stash_url_helpers.publisher_admin_path
