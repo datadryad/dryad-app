@@ -18,19 +18,18 @@
 </div>
 
 <h2>Partnership</h2>
-
-<div role="status" class="callout warn">
-  <ul style="padding: 20px">
-    <li>The payment plan must be selected for the top level organization.</li>
-    <li>Payment limits must be set on the journal's parent organization.</li>
-  </ul>
-</div>
-
 <%
   plan_options = [['', 'None']] + StashEngine::Journal::PAYMENT_PLANS.map { |p| [p, p.capitalize] }
   sponsor_id = @org.parent_org_id
   has_children = @org.id && StashEngine::JournalOrganization.where(parent_org_id: @org.id).any?
 %>
+
+<% if sponsor_id || has_children %>
+<div role="status" class="callout warn">
+  <% if sponsor_id %><p>The payment plan must be selected for the top level organization.</p><% end %>
+  <% if has_children %><p>Payment limits must be set on the journal's parent organization.</p><% end %>
+</div>
+<% end %>
 
 <div id="payment_container">
   <%= fields_for :payment_configuration_attributes do |pf| %>
