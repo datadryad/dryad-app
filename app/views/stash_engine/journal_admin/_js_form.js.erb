@@ -21,18 +21,3 @@ ppr.addEventListener('change', () => {
   def.disabled = ppr.checked
   if (ppr.checked) def.checked = false
 })
-
-var sponsor_id = document.getElementById('sponsor_id')
-sponsor_id.addEventListener('change', () => {
-  if (sponsor_id.value === '') {
-    document.getElementById('payment_notice').setAttribute('hidden', '');
-    document.getElementById('payment_container').removeAttribute('hidden');
-    document.getElementById('payment_configuration_attributes__destroy').value = '0';
-  } else {
-    document.getElementById('payment_container').setAttribute('hidden', '');
-    document.getElementById('payment_notice').removeAttribute('hidden');
-    document.getElementById('payment_configuration_attributes__destroy').value = '1';
-  }
-});
-
-<%= render '/stash_engine/payment_configuration/js_form', format: :js %>

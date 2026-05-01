@@ -39,6 +39,12 @@ module StashEngine
       end
     end
 
+    def top_level_org
+      o = self
+      o = o.parent_org while o.parent_org
+      o
+    end
+
     # journals sponsored at any level by this org and its children
     def journals_sponsored_deep
       j = journals_sponsored

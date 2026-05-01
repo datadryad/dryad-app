@@ -8,20 +8,17 @@
       <th class="c-admin-table">
         ISSNs
       </th>
-      <th class="c-lined-table__sort" <%= sort_display('payment_plan') %>>
-        <%= sortable_column_head sort_field: 'payment_plan', title: 'Payment plan' %>
-      </th>
-      <th class="c-admin-table">
-        Publication contacts
-      </th>
-      <th class="c-admin-table">
-        Review contacts
-      </th>
       <th class="c-lined-table__sort" <%= sort_display('default_to_ppr') %>>
-        <%= sortable_column_head sort_field: 'default_to_ppr', title: 'PPR Default' %>
+        <%= sortable_column_head sort_field: 'default_to_ppr', title: 'Auto PPR' %>
       </th>
-      <th class="c-admin-table">
-        Parent org
+      <th class="c-lined-table__sort" <%= sort_display('payment_plan') %>>
+        <%= sortable_column_head sort_field: 'payment_plan', title: 'Partnership' %>
+      </th>
+      <th class="c-lined-table__sort" <%= sort_display('sponsor_id') %>>
+        <%= sortable_column_head sort_field: 'sponsor_id', title: 'Parent org' %>
+      </th>
+      <th class="c-lined-table__sort" <%= sort_display('root_org_id') %>>
+        <%= sortable_column_head sort_field: 'root_org_id', title: 'Top level org' %>
       </th>
     </tr>
   </thead>

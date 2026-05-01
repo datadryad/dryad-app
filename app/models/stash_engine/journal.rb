@@ -199,15 +199,12 @@ module StashEngine
 
     def payment_sponsor
       # top level publisher
-      top_level_org || self
+      top_level_org
     end
 
     def sponsored_limits
       # direct sponsor / first-level publisher
-      # OR
-      # self
-      obj = sponsor || self
-      obj.payment_configuration
+      sponsor&.payment_configuration
     end
   end
 end

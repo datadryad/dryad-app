@@ -1,12 +1,12 @@
+<h2>Partnership</h2>
 <div id="payment_notice"  role="status" class="callout warn" <%= !sponsor_id ? 'hidden' : ''  %> style="padding: 10px; margin-bottom: 20px">
-  Payment needs to be configured at the sponsor level.
+  Payment information must be set at the sponsor level.
 </div>
 
 <div id="payment_container" <%= sponsor_id ? 'hidden' : ''  %>>
   <%= fields_for :payment_configuration_attributes do |pf| %>
     <%= pf.hidden_field :id, value: payment_configuration.id %>
     <%= pf.hidden_field :_destroy %>
-    <h2>Membership</h2>
     <fieldset class="c-fieldset">
       <legend>Payment plan type:</legend>
       <% plan_options.each do |plan| %>
@@ -18,7 +18,7 @@
 
     <p>
       <%= pf.check_box :covers_ldf, {checked: payment_configuration.covers_ldf}, 1, 0 %>
-      <%= pf.label :covers_ldf, "When checked, journal covers Large Data Fees" %>
+      <%= pf.label :covers_ldf, "When checked, sponsor covers Large Data Fees" %>
     </p>
     <p>
       <%= pf.label :ldf_limit, "Covered Large Data Fee limit (GB)" %>

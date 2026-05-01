@@ -38,7 +38,7 @@
   </span>
 </td>
 <td>
-  <% if t.payment_plan.present? %>
+  <% if t.payment_sponsor&.payment_configuration&.payment_plan&.present? %>
     <b>Plan:</b> <%= t.payment_sponsor&.payment_configuration&.payment_plan&.humanize %><br/>
     <b>Covers LDF:</b> <%= t.payment_sponsor&.payment_configuration&.covers_ldf ? "Yes" : "No" %>
     <% if t.payment_sponsor&.payment_configuration&.covers_ldf %>
