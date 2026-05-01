@@ -33,14 +33,14 @@ describe PaymentLimitsService do
       context 'when tenant has no sponsor' do
         let!(:sponsor_tenant) { nil }
 
-        it 'are taken form tenant' do
+        it 'is taken from tenant' do
           expect(subject.payment_configuration).to eq(tenant_payment_conf)
           expect(subject.sponsor).to eq(tenant)
         end
       end
 
       context 'when tenant has one sponsor' do
-        it 'are taken form tenant\'s sponsor' do
+        it 'is taken from tenant\'s sponsor' do
           expect(subject.payment_configuration).to eq(payment_conf)
           expect(subject.sponsor).to eq(sponsor_tenant)
         end
@@ -51,7 +51,7 @@ describe PaymentLimitsService do
         let!(:second_level_payment_conf) { create(:payment_configuration, partner: second_level_sponsor, payment_plan: '2025', covers_dpc: true) }
         let!(:sponsor_tenant) { create(:tenant, id: 'sponsor', sponsor: second_level_sponsor) }
 
-        it 'are taken form tenant\'s top level sponsor' do
+        it 'is taken from tenant\'s top level sponsor' do
           expect(subject.payment_configuration).to eq(second_level_payment_conf)
           expect(subject.sponsor).to eq(second_level_sponsor)
         end
@@ -305,19 +305,16 @@ describe PaymentLimitsService do
     end
 
     describe 'sponsor and payment limits configuration' do
-      let!(:journal_payment_conf) { create(:payment_configuration, partner: journal, payment_plan: '2025', covers_dpc: true) }
-
       context 'when journal has no sponsor' do
         let!(:sponsor_journal_org) { nil }
 
-        it 'are taken form tenant' do
-          expect(subject.payment_configuration).to eq(journal_payment_conf)
-          expect(subject.sponsor).to eq(journal)
+        it 'journal will not pay' do
+          expect(subject.payment_configuration).to eq(nil)
         end
       end
 
       context 'when journal has one sponsor' do
-        it 'are taken form journals\'s sponsor' do
+        it 'is taken from journals\'s sponsor' do
           expect(subject.payment_configuration).to eq(payment_conf)
           expect(subject.sponsor).to eq(sponsor_journal_org)
         end
@@ -328,7 +325,7 @@ describe PaymentLimitsService do
         let!(:second_level_payment_conf) { create(:payment_configuration, partner: second_level_sponsor, payment_plan: '2025', covers_dpc: true) }
         let!(:sponsor_journal_org) { create(:journal_organization, parent_org: second_level_sponsor) }
 
-        it 'are taken form tenant\'s top level sponsor' do
+        it 'is taken from tenant\'s top level sponsor' do
           expect(subject.payment_configuration).to eq(payment_conf)
           expect(subject.sponsor).to eq(second_level_sponsor)
         end
