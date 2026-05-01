@@ -38,18 +38,17 @@
   </span>
 </td>
 <td>
-  <% if t.sponsor_id.present? %>
-    <a href="?id=<%= t.sponsor_id %>">Inherited</a>
-  <% elsif t.payment_configuration&.payment_plan.present? %>
-    <b>Plan:</b> <%= t.payment_configuration&.payment_plan&.humanize %><br/>
-    <b>Covers LDF:</b> <%= t.payment_configuration&.covers_ldf ? "Yes" : "No" %>
-    <% if t.payment_configuration&.covers_ldf %>
-      <% if t.payment_configuration&.ldf_limit&.present? %>
-        (Up to <%= filesize(ESTIMATED_FILES_SIZE.find{|tier| tier[:tier] == t.payment_configuration&.ldf_limit }[:range].max) %>)
+  <% if t.payment_plan.present? %>
+    <b>Plan:</b> <%= t.payment_sponsor&.payment_configuration&.payment_plan&.humanize %><br/>
+    <b>Covers LDF:</b> <%= t.payment_sponsor&.payment_configuration&.covers_ldf ? "Yes" : "No" %>
+    <% if t.payment_sponsor&.payment_configuration&.covers_ldf %>
+      <% if t.payment_sponsor&.payment_configuration&.ldf_limit&.present? %>
+        (Up to <%= filesize(ESTIMATED_FILES_SIZE.find{|tier| tier[:tier] == t.payment_sponsor&.payment_configuration&.ldf_limit }[:range].max) %>)
       <% end %>
-      <% if t.payment_configuration&.yearly_ldf_limit&.present? %>
-        <br/><b>Remaining LDF budget:</b> <%= t.payment_configuration&.yearly_ldf_limit - t.payment_logs.sum(:ldf) %>
+      <% if t.payment_sponsor&.payment_configuration&.yearly_ldf_limit&.present? %>
+        <br/><b>Remaining LDF budget:</b> <%= t.payment_sponsor&.payment_configuration&.yearly_ldf_limit - t.payment_sponsor&.payment_logs.sum(:ldf) %>
       <% end %>
+      <% if t.sponsor_id %><br/><b>Inherited from:</b> <a href="?id=<%= t.sponsor_id %>"><%= t.sponsor_id %></a><% end %>
     <% end %>
   <% else %>
     <span style="color: rgb(209, 44, 29)">Disabled</span>

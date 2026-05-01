@@ -8,7 +8,18 @@ module StashEngine
       authorize %i[stash_engine tenant], :admin?
       setup_consortia
 
-      @tenants = StashEngine::Tenant.left_outer_joins(:payment_configuration).select('stash_engine_tenants.*, payment_configurations.payment_plan')
+      @tenants = StashEngine::Tenant.with_recursive(
+        top_sponsor: [
+          StashEngine::Tenant.all.select(:id, { id: :top_sponsor_id }, :sponsor_id),
+          StashEngine::Tenant.joins('JOIN top_sponsor ON stash_engine_tenants.id = top_sponsor.sponsor_id')
+            .select('top_sponsor.id', { id: :top_sponsor_id }, :sponsor_id)
+        ]
+      )
+        .joins('LEFT OUTER JOIN top_sponsor on stash_engine_tenants.sponsor_id = top_sponsor.top_sponsor_id')
+        .joins("LEFT OUTER JOIN payment_configurations pc
+          ON pc.partner_type = 'StashEngine::Tenant' AND pc.partner_id = ifnull(top_sponsor.top_sponsor_id, stash_engine_tenants.id)")
+        .select({ stash_engine_tenants: ['*'] }, { top_sponsor: [:top_sponsor_id] }, { pc: [:payment_plan] })
+        .where('top_sponsor.sponsor_id': nil).distinct
 
       if params[:id]
         @tenants = @tenants.where(id: params[:id])
