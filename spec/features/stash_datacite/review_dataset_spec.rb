@@ -66,8 +66,9 @@ RSpec.feature 'ReviewDataset', type: :feature do
     end
 
     it 'waives the fee when the journal will pay' do
-      journal = create(:journal, title: 'Test Paying Journal')
-      create(:payment_configuration, partner: journal, payment_plan: 'SUBSCRIPTION')
+      org = create(:journal_organization)
+      journal = create(:journal, title: 'Test Paying Journal', sponsor: org)
+      create(:payment_configuration, partner: org, payment_plan: 'SUBSCRIPTION')
 
       click_button 'Connect'
       choose 'Yes'

@@ -31,8 +31,8 @@ module StashEngine
   RSpec.describe Journal, type: :model do
 
     before(:each) do
-      @journal = create(:journal)
-      @journal2 = create(:journal)
+      @org = create(:journal_organization)
+      @journal = create(:journal, sponsor: @org)
     end
 
     describe '#find_by_title' do
@@ -130,18 +130,18 @@ module StashEngine
     describe '#will_pay?' do
       StashEngine::Journal::PAYMENT_PLANS.each do |plan|
         it "returns true when there is a #{plan} plan" do
-          create(:payment_configuration, partner: @journal, payment_plan: plan)
+          create(:payment_configuration, partner: @org, payment_plan: plan)
           expect(@journal.will_pay?).to be(true)
         end
       end
 
       it 'returns false when there is a no plan' do
-        create(:payment_configuration, partner: @journal, payment_plan: nil)
+        create(:payment_configuration, partner: @org, payment_plan: nil)
         expect(@journal.will_pay?).to be(false)
       end
 
       it 'returns false when there is an unrecognized plan' do
-        pc = create(:payment_configuration, partner: @journal)
+        pc = create(:payment_configuration, partner: @org)
         allow(pc).to receive(:payment_plan).and_return('BOGUS-PLAN')
         expect(@journal.will_pay?).to be(false)
       end
@@ -149,19 +149,19 @@ module StashEngine
 
     describe '#top_level_org' do
       it 'returns nil when there is no parent org' do
+        @journal.update(sponsor_id: nil)
         expect(@journal.top_level_org).to be(nil)
       end
 
-      it 'returns correct top level org' do
+      it 'returns correct top single level org' do
         # single level
-        parent = build(:journal_organization)
-        @journal.sponsor = parent
-        expect(@journal.top_level_org).to be(parent)
+        expect(@journal.top_level_org).to eq(@org)
+      end
 
-        # multi level
-        grandparent = build(:journal_organization)
-        parent.parent_org = grandparent
-        expect(@journal.top_level_org).to be(grandparent)
+      it 'returns correct top multi level org' do
+        grandparent = create(:journal_organization)
+        @org.update(parent_org: grandparent)
+        expect(@journal.top_level_org).to eq(grandparent)
       end
     end
 
@@ -178,9 +178,9 @@ module StashEngine
       context 'when journal has no sponsor' do
         let!(:level_one_sponsor) { nil }
 
-        it 'are taken form journal' do
-          expect(journal.payment_sponsor).to eq(journal)
-          expect(journal.sponsored_limits).to eq(journal_payment_conf)
+        it 'are nil' do
+          expect(journal.payment_sponsor).to eq(nil)
+          expect(journal.sponsored_limits).to eq(nil)
         end
       end
 
