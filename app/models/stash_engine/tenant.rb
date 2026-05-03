@@ -129,7 +129,7 @@ module StashEngine
     end
 
     def payers_sponsored
-      sponsored_deep || self
+      [self] + sponsored_deep
     end
 
     def payment_sponsor
