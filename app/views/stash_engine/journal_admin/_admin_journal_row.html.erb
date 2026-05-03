@@ -26,11 +26,11 @@
     <b>Plan:</b> <%= j.payment_sponsor&.payment_configuration&.payment_plan&.humanize %><br/>
     <b>Covers LDF:</b> <%= j.sponsored_limits&.covers_ldf ? "Yes" : "No" %>
     <% if j.sponsored_limits&.covers_ldf %>
-      <% if j.sponsored_limits&.ldf_limit&.present? %>
-        (Up to <%= filesize(ESTIMATED_FILES_SIZE.find{|tier| tier[:tier] == j.sponsored_limits&.ldf_limit }[:range].max) %>)
+      <% if j.sponsored_limits.ldf_limit.present? %>
+        (Up to <%= filesize(ESTIMATED_FILES_SIZE.find{|tier| tier[:tier] == j.sponsored_limits.ldf_limit }[:range].max) %>)
       <% end %>
-      <% if j.sponsored_limits&.yearly_ldf_limit&.present? %>
-        <br/><b>Remaining LDF budget:</b> <%= j.sponsored_limits&.yearly_ldf_limit - j.sponsor&.payment_logs.sum(:ldf) %>
+      <% if j.sponsored_limits.yearly_ldf_limit.present? %>
+        <br/><b>Remaining LDF budget:</b> <%= j.sponsored_limits.yearly_ldf_limit - SponsoredPaymentLog.for_current_year.where(payer: j.sponsor.payers_sponsored).sum(:ldf) %>
       <% end %>
     <% end %>
   <% end %>
