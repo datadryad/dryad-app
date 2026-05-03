@@ -46,7 +46,7 @@
         (Up to <%= filesize(ESTIMATED_FILES_SIZE.find{|tier| tier[:tier] == t.payment_sponsor.payment_configuration.ldf_limit }[:range].max) %>)
       <% end %>
       <% if t.payment_sponsor.payment_configuration.yearly_ldf_limit.present? %>
-        <br/><b>Remaining LDF budget:</b> <%= t.payment_sponsor.payment_configuration.yearly_ldf_limit - t.payment_sponsor.payment_logs.for_current_year.sum(:ldf) %>
+        <br/><b>Remaining LDF budget:</b> <%= t.payment_sponsor.payment_configuration.yearly_ldf_limit - SponsoredPaymentLog.for_current_year.where(payer: t.payment_sponsor.payers_sponsored).sum(:ldf) %>
       <% end %>
       <% if t.sponsor_id %><br/><b>Inherited from:</b> <a href="?id=<%= t.sponsor_id %>"><%= t.sponsor_id %></a><% end %>
     <% end %>
