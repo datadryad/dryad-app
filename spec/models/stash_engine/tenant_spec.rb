@@ -99,7 +99,7 @@ module StashEngine
       context 'when tenant has no sponsor' do
         let!(:level_one_sponsor) { nil }
 
-        it 'are taken form tenant' do
+        it 'is taken from tenant' do
           expect(tenant.payment_sponsor).to eq(tenant)
           expect(tenant.sponsored_limits).to eq(tenant_payment_conf)
         end
@@ -108,14 +108,14 @@ module StashEngine
       context 'when tenant has one sponsor' do
         let!(:top_level_sponsor) { nil }
 
-        it 'are taken form tenant\'s sponsor' do
+        it 'is taken from tenant\'s sponsor' do
           expect(tenant.payment_sponsor).to eq(level_one_sponsor)
           expect(tenant.sponsored_limits).to eq(level_one_sponsor_payment_conf)
         end
       end
 
       context 'when tenant has multiple sponsors chain' do
-        it 'are taken form tenant\'s top level sponsor' do
+        it 'is taken from tenant\'s top level sponsor' do
           expect(tenant.payment_sponsor).to eq(top_level_sponsor)
           expect(tenant.sponsored_limits).to eq(top_level_sponsor_payment_conf)
         end

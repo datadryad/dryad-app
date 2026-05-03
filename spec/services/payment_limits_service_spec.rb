@@ -432,6 +432,51 @@ describe PaymentLimitsService do
           end
         end
 
+        context 'when journal has multiple sponsors chain' do
+          let(:second_level_sponsor) { create(:journal_organization) }
+          let!(:second_level_payment_conf) { create(:payment_configuration, partner: second_level_sponsor, payment_plan: '2025', covers_dpc: true) }
+          before { second_level_sponsor.update(parent_org_id: second_level_sponsor.id) }
+
+          context 'when limit is already exceeded' do
+            let!(:log) { create(:sponsored_payment_log, payer: other_journal, ldf: 1_001, sponsor_id: second_level_sponsor.id) }
+
+            it { is_expected.to be_truthy }
+
+            context 'but resource LDF is 0' do
+              let(:total_file_size) { 10_000 }
+
+              it { is_expected.to be_falsey }
+            end
+          end
+
+          context 'when limit is not reached but with current resource it will be exceeded' do
+            let!(:log) { create(:sponsored_payment_log, payer: other_journal, ldf: 999, sponsor_id: second_level_sponsor.id) }
+
+            it { is_expected.to be_truthy }
+          end
+
+          context 'when limit is not reached and with current resource it will not be exceeded' do
+            let!(:log) { create(:sponsored_payment_log, payer: other_journal, ldf: 100, sponsor_id: second_level_sponsor.id) }
+
+            it { is_expected.to be_falsey }
+          end
+
+          context 'but resource LDF is 0' do
+            let(:total_file_size) { 10_000 }
+
+            it { is_expected.to be_falsey }
+          end
+
+          context 'with logs on previous year' do
+            let!(:log) { create(:sponsored_payment_log, payer: journal, ldf: 1_001, created_at: 1.year.ago, sponsor_id: second_level_sponsor.id) }
+            let!(:log2) do
+              create(:sponsored_payment_log, payer: other_journal, ldf: 1_001, created_at: 1.year.ago, sponsor_id: second_level_sponsor.id)
+            end
+
+            it { is_expected.to be_falsey }
+          end
+        end
+
         context 'when dataset size limit is set' do
           context 'but not reached' do
             it { is_expected.to be_falsey }

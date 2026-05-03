@@ -50,34 +50,15 @@ module StashEngine
     scope :enabled, -> { where(enabled: true).order(:short_name) }
     scope :partner_list, -> { enabled.where(partner_display: true) }
     scope :connect_list, -> {
-      # Get all root tenant IDs that have covers_dpc: true
-      root_ids = joins(:payment_configuration)
-        .where(sponsor_id: nil, payment_configurations: { covers_dpc: true })
-        .pluck(:id)
-
-      return none if root_ids.empty?
-
-      # Use a recursive CTE to get all descendants of those roots
-      partner_list.where(<<~SQL, root_ids: root_ids)
-        stash_engine_tenants.id IN (
-          WITH RECURSIVE tenant_tree AS (
-            SELECT id, sponsor_id
-            FROM stash_engine_tenants
-            WHERE id IN (:root_ids)
-
-            UNION ALL
-
-            SELECT t.id, t.sponsor_id
-            FROM stash_engine_tenants t
-            INNER JOIN tenant_tree tt ON t.sponsor_id = tt.id
-          )
-          SELECT id FROM tenant_tree
-        )
-      SQL
+      partner_list.with_recursive(
+        tenant_tree: [
+          StashEngine::Tenant.partner_list.joins(:payment_configuration).where(sponsor_id: nil, payment_configuration: { covers_dpc: true }),
+          StashEngine::Tenant.joins('JOIN tenant_tree ON stash_engine_tenants.sponsor_id = tenant_tree.id')
+        ]
+      )
     }
     scope :tiered, -> { enabled.joins(:payment_configuration).where(payment_configurations: { payment_plan: 'TIERED' }) }
     scope :fees_2025, -> { enabled.joins(:payment_configuration).where(payment_configurations: { payment_plan: '2025' }) }
-    scope :sponsored, -> { enabled.distinct.joins(:sponsored) }
 
     def authentication
       JSON.parse(super, object_class: OpenStruct) if super.present?
@@ -137,6 +118,18 @@ module StashEngine
       else
         URI::HTTPS.build(host: d[:host], port: d[:port], path: path).to_s
       end
+    end
+
+    def sponsored_deep
+      s = sponsored
+      sponsored&.each do |suborg|
+        s |= suborg.sponsored_deep
+      end
+      s
+    end
+
+    def payers_sponsored
+      sponsored_deep || self
     end
 
     def payment_sponsor
