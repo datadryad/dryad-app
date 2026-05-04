@@ -61,5 +61,15 @@ module StashEngine
       end
       all_orgs
     end
+
+    def top_level_org
+      o = self
+      o = o.parent_org while o.parent_org
+      o
+    end
+
+    def payers_sponsored
+      journals_sponsored
+    end
   end
 end

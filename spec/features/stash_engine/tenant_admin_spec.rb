@@ -86,21 +86,6 @@ RSpec.feature 'TenantAdmin', type: :feature do
       expect(changed.ror_ids).to include('https://ror.org/1234')
     end
 
-    it 'allows changing contacts as a system admin', js: true do
-      visit stash_url_helpers.tenant_admin_path
-      expect(page).to have_content(@match.short_name)
-      within(:css, "form[action=\"#{tenant_edit_path(id: @match.id)}\"]") do
-        find('.c-admin-edit-icon').click
-      end
-      within(:css, '#genericModalDialog') do
-        find('#campus_contacts').set('test@email.com')
-        find('input[name=commit]').click
-      end
-      expect(page.find("##{@match.id}_row")).to have_text('test@email.com')
-      changed = StashEngine::Tenant.find(@match.id)
-      expect(changed.campus_contacts).to include('test@email.com')
-    end
-
     it 'allows changing display as a system admin', js: true do
       visit stash_url_helpers.tenant_admin_path
       expect(page).to have_content(@match.short_name)

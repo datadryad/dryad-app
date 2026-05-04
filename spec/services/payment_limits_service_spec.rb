@@ -33,14 +33,14 @@ describe PaymentLimitsService do
       context 'when tenant has no sponsor' do
         let!(:sponsor_tenant) { nil }
 
-        it 'are taken form tenant' do
+        it 'is taken from tenant' do
           expect(subject.payment_configuration).to eq(tenant_payment_conf)
           expect(subject.sponsor).to eq(tenant)
         end
       end
 
       context 'when tenant has one sponsor' do
-        it 'are taken form tenant\'s sponsor' do
+        it 'is taken from tenant\'s sponsor' do
           expect(subject.payment_configuration).to eq(payment_conf)
           expect(subject.sponsor).to eq(sponsor_tenant)
         end
@@ -51,7 +51,7 @@ describe PaymentLimitsService do
         let!(:second_level_payment_conf) { create(:payment_configuration, partner: second_level_sponsor, payment_plan: '2025', covers_dpc: true) }
         let!(:sponsor_tenant) { create(:tenant, id: 'sponsor', sponsor: second_level_sponsor) }
 
-        it 'are taken form tenant\'s top level sponsor' do
+        it 'is taken from tenant\'s top level sponsor' do
           expect(subject.payment_configuration).to eq(second_level_payment_conf)
           expect(subject.sponsor).to eq(second_level_sponsor)
         end
@@ -202,6 +202,32 @@ describe PaymentLimitsService do
           end
         end
 
+        context 'when tenant sponsor is changed' do
+          let!(:sponsor_org_2) { create(:tenant, sponsor: nil) }
+          let!(:payment_conf2) do
+            create(:payment_configuration,
+                   partner: sponsor_org_2,
+                   payment_plan: '2025',
+                   covers_dpc: true,
+                   covers_ldf: true,
+                   yearly_ldf_limit: 1_000)
+          end
+
+          context 'when limit is exceeded on the old sponsor' do
+            let!(:log) { create(:sponsored_payment_log, payer: tenant, ldf: 1_001, sponsor_id: sponsor_tenant.id) }
+            before { tenant.update(sponsor: sponsor_org_2) }
+
+            it { is_expected.to be_falsey }
+          end
+
+          context 'when limit is exceeded with a different tenant on the old sponsor' do
+            let!(:log) { create(:sponsored_payment_log, payer: other_tenant, ldf: 1_001, sponsor_id: sponsor_tenant.id) }
+            before { tenant.update(sponsor: sponsor_org_2) }
+
+            it { is_expected.to be_falsey }
+          end
+        end
+
         context 'when dataset size limit is set' do
           context 'but not reached' do
             it { is_expected.to be_falsey }
@@ -305,19 +331,16 @@ describe PaymentLimitsService do
     end
 
     describe 'sponsor and payment limits configuration' do
-      let!(:journal_payment_conf) { create(:payment_configuration, partner: journal, payment_plan: '2025', covers_dpc: true) }
-
       context 'when journal has no sponsor' do
         let!(:sponsor_journal_org) { nil }
 
-        it 'are taken form tenant' do
-          expect(subject.payment_configuration).to eq(journal_payment_conf)
-          expect(subject.sponsor).to eq(journal)
+        it 'journal will not pay' do
+          expect(subject.payment_configuration).to eq(nil)
         end
       end
 
       context 'when journal has one sponsor' do
-        it 'are taken form journals\'s sponsor' do
+        it 'is taken from journals\'s sponsor' do
           expect(subject.payment_configuration).to eq(payment_conf)
           expect(subject.sponsor).to eq(sponsor_journal_org)
         end
@@ -328,9 +351,9 @@ describe PaymentLimitsService do
         let!(:second_level_payment_conf) { create(:payment_configuration, partner: second_level_sponsor, payment_plan: '2025', covers_dpc: true) }
         let!(:sponsor_journal_org) { create(:journal_organization, parent_org: second_level_sponsor) }
 
-        it 'are taken form tenant\'s top level sponsor' do
+        it 'is taken from journal\'s immediate sponsor' do
           expect(subject.payment_configuration).to eq(payment_conf)
-          expect(subject.sponsor).to eq(second_level_sponsor)
+          expect(subject.sponsor).to eq(sponsor_journal_org)
         end
       end
     end
@@ -429,6 +452,77 @@ describe PaymentLimitsService do
             let!(:log) { create(:sponsored_payment_log, payer: journal, ldf: 1_001, created_at: 1.year.ago, sponsor_id: sponsor_journal_org.id) }
             let!(:log2) do
               create(:sponsored_payment_log, payer: other_journal, ldf: 1_001, created_at: 1.year.ago, sponsor_id: sponsor_journal_org.id)
+            end
+
+            it { is_expected.to be_falsey }
+          end
+        end
+
+        context 'when journal sponsor is changed' do
+          let!(:sponsor_org_2) { create(:journal_organization) }
+          let!(:payment_conf2) do
+            create(:payment_configuration,
+                   partner: sponsor_org_2,
+                   payment_plan: '2025',
+                   covers_dpc: true,
+                   covers_ldf: true,
+                   yearly_ldf_limit: 1_000)
+          end
+
+          context 'when limit is exceeded on the old sponsor' do
+            let!(:log) { create(:sponsored_payment_log, payer: journal, ldf: 1_001, sponsor_id: sponsor_journal_org.id) }
+            before { journal.update(sponsor: sponsor_org_2) }
+
+            it { is_expected.to be_falsey }
+          end
+
+          context 'when limit is exceeded with a different journal on the old sponsor' do
+            let!(:log) { create(:sponsored_payment_log, payer: other_journal, ldf: 1_001, sponsor_id: sponsor_journal_org.id) }
+            before { journal.update(sponsor: sponsor_org_2) }
+
+            it { is_expected.to be_falsey }
+          end
+        end
+
+        context 'when journal has multiple sponsors chain' do
+          let(:second_level_sponsor) { create(:journal_organization) }
+          let!(:second_level_payment_conf) { create(:payment_configuration, partner: second_level_sponsor, payment_plan: '2025', covers_dpc: true) }
+          before { sponsor_journal_org.update(parent_org_id: second_level_sponsor.id) }
+
+          context 'when limit is already exceeded' do
+            let!(:log) { create(:sponsored_payment_log, payer: other_journal, ldf: 1_001, sponsor_id: second_level_sponsor.id) }
+
+            it { is_expected.to be_truthy }
+
+            context 'but resource LDF is 0' do
+              let(:total_file_size) { 10_000 }
+
+              it { is_expected.to be_falsey }
+            end
+          end
+
+          context 'when limit is not reached but with current resource it will be exceeded' do
+            let!(:log) { create(:sponsored_payment_log, payer: other_journal, ldf: 999, sponsor_id: second_level_sponsor.id) }
+
+            it { is_expected.to be_truthy }
+          end
+
+          context 'when limit is not reached and with current resource it will not be exceeded' do
+            let!(:log) { create(:sponsored_payment_log, payer: other_journal, ldf: 100, sponsor_id: second_level_sponsor.id) }
+
+            it { is_expected.to be_falsey }
+          end
+
+          context 'but resource LDF is 0' do
+            let(:total_file_size) { 10_000 }
+
+            it { is_expected.to be_falsey }
+          end
+
+          context 'with logs on previous year' do
+            let!(:log) { create(:sponsored_payment_log, payer: journal, ldf: 1_001, created_at: 1.year.ago, sponsor_id: second_level_sponsor.id) }
+            let!(:log2) do
+              create(:sponsored_payment_log, payer: other_journal, ldf: 1_001, created_at: 1.year.ago, sponsor_id: second_level_sponsor.id)
             end
 
             it { is_expected.to be_falsey }

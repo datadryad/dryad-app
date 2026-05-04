@@ -7,29 +7,27 @@ module StashEngine
     def index
       setup_sponsors
 
-      @journals = authorize StashEngine::Journal
-        .left_outer_joins(%i[issns sponsor flag payment_configuration])
-        .select('stash_engine_journals.*, payment_configurations.payment_plan').distinct
+      @journals = authorize StashEngine::Journal.with_sponsorship
 
       if params[:q]
         q = params[:q]
         # search the query in any searchable field
-        @journals = @journals.left_outer_joins(:alternate_titles)
+        @journals = @journals.left_outer_joins(%i[alternate_titles issns])
           .where(
             'LOWER(stash_engine_journals.title) LIKE LOWER(?)
             OR LOWER(stash_engine_journal_titles.title) LIKE LOWER(?)
             OR stash_engine_journal_issns.id LIKE ?',
             "%#{q.strip}%", "%#{q.strip}%", "%#{q.strip}%"
-          )
+          ).distinct
       end
 
       @journals = @journals.where('sponsor_id= ?', params[:sponsor]) if params[:sponsor].present?
 
-      ord = helpers.sortable_table_order(whitelist: %w[title issns payment_plan default_to_ppr])
+      ord = helpers.sortable_table_order(whitelist: %w[title default_to_ppr payment_plan sponsor_id root_org_id])
       @journals = @journals.order(ord)
 
       # paginate for display
-      @journals = @journals.page(@page).per(@page_size)
+      @journals = @journals.page(@page).per(@page_size).includes(%i[flag issns sponsor])
     end
 
     def edit

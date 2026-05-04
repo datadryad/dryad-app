@@ -31,31 +31,29 @@ Dryad partner, you will be responsible for paying the DPC as well as any overage
         <th class="c-lined-table__sort" <%= sort_display('sponsor_id') %>>
           <%= sortable_column_head sort_field: 'sponsor_id', title: 'Parent org' %>
         </th>
-        <th class="c-lined-table__sort" <%= sort_display('parent_org_id') %>>
-          <%= sortable_column_head sort_field: 'parent_org_id', title: 'Top level org' %>
+        <th class="c-lined-table__sort" <%= sort_display('root_org_id') %>>
+          <%= sortable_column_head sort_field: 'root_org_id', title: 'Top level org' %>
         </th>
       <% end %>
-      <% if policy(@journals).detail? %>
-        <th class="c-lined-table__sort" <%= sort_display('manuscript_number') %>>
-          <%= sortable_column_head sort_field: 'manuscript_number', title: 'Integration type' %>
+      <th>Integrated data</th>
+      <% if policy(@journals).detail? %>        
+        <th class="c-lined-table__sort" <%= sort_display('integrated_at') %>>
+          <%= sortable_column_head sort_field: 'integrated_at', title: 'Last received' %>
         </th>
-        <th>Data last received</th>
         <th class="c-lined-table__sort" <%= sort_display('default_to_ppr') %>>
           <%= sortable_column_head sort_field: 'default_to_ppr', title: 'Auto PPR' %>
         </th>
-      <% else %>
-        <th>Integrated data</th>
       <% end %>
       </tr>
   </thead>
 <tbody class="journals-list">
-  <% @journals.uniq.each do |journal| %>
+  <% @journals.each do |journal| %>
   <tr class="c-lined-table__row" id="js-dataset-row-id-<%= journal.id %>">
     <td><%= journal.title %></td>
     <td class="c-lined-table__digits" style="white-space: nowrap;"><%= journal.issn_array.join(', ') %></span></td>
-    <td><% if journal.payment_configuration&.payment_plan.present? %><i class="fa fa-check-circle" aria-hidden="true" title="Sponsored" role="img" aria-label="Sponsored"></i><% end %></td>
+    <td><% if journal.payment_sponsor&.payment_configuration&.payment_plan.present? %><i class="fa fa-check-circle" aria-hidden="true" title="Sponsored" role="img" aria-label="Sponsored"></i><% end %></td>
     <% if policy(@journals).detail? %>
-      <td class="c-lined-table__digits"><%= journal.payment_configuration&.payment_plan %></td>
+      <td class="c-lined-table__digits"><%= journal.payment_sponsor&.payment_configuration&.payment_plan %></td>
       <td><%= journal.sponsor&.name %></td>
       <td><%= journal.top_level_org&.name == journal.sponsor&.name ? '' : journal.top_level_org&.name %></td>
     <% end %>

@@ -17,25 +17,25 @@
   <%= select_tag('parent_org_id', options_for_select(options, @org.parent_org_id), class: 'c-input__select') %>
 </div>
 
-<div role="status" class="callout warn">
-  <ul style="padding: 20px">
-    <li>Payment plan needs to be configured on top level sponsor publisher.</li>
-    <li>Payment limits need to be configured on journal's first level publisher.</li>
-  </ul>
-</div>
-
+<h2>Partnership</h2>
 <%
   plan_options = [['', 'None']] + StashEngine::Journal::PAYMENT_PLANS.map { |p| [p, p.capitalize] }
   sponsor_id = @org.parent_org_id
   has_children = @org.id && StashEngine::JournalOrganization.where(parent_org_id: @org.id).any?
 %>
 
+<% if sponsor_id || has_children %>
+<div role="status" class="callout warn">
+  <% if sponsor_id %><p>The payment plan must be selected for the top level organization.</p><% end %>
+  <% if has_children %><p>Payment limits must be set on the journal's parent organization.</p><% end %>
+</div>
+<% end %>
+
 <div id="payment_container">
   <%= fields_for :payment_configuration_attributes do |pf| %>
     <%= pf.hidden_field :id, value: @payment_configuration.id %>
     <%= pf.hidden_field :_destroy %>
     <div id="payment_plan_container" <%= sponsor_id ? 'hidden' : ''  %>>
-      <h2>Membership</h2>
       <fieldset class="c-fieldset">
         <legend>Payment plan type:</legend>
         <% plan_options.each do |plan| %>
@@ -48,7 +48,7 @@
     <div id="payment_limits_container" <%= has_children ? 'hidden' : ''  %>>
       <p>
         <%= pf.check_box :covers_ldf, { checked: @payment_configuration.covers_ldf }, 1, 0 %>
-        <%= pf.label :covers_ldf, "When checked, journal covers Large Data Fees" %>
+        <%= pf.label :covers_ldf, "When checked, publisher covers Large Data Fees" %>
       </p>
       <p>
         <%= pf.label :ldf_limit, "Covered Large Data Fee limit (GB)" %>
