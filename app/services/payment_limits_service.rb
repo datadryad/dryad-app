@@ -42,7 +42,7 @@ class PaymentLimitsService
     return false if sponsor.nil?
     return false if payment_configuration&.yearly_ldf_limit.nil?
 
-    paid_amount = SponsoredPaymentLog.for_current_year.where(payer: sponsor.payers_sponsored).sum(:ldf)
+    paid_amount = SponsoredPaymentLog.for_current_year.where(payer: sponsor.payers_sponsored, sponsor_id: payer.payment_sponsor&.id).sum(:ldf)
     paid_amount + storage_fee > payment_configuration.yearly_ldf_limit.to_f
   end
 
