@@ -325,9 +325,9 @@ describe PaymentLimitsService do
         let!(:second_level_payment_conf) { create(:payment_configuration, partner: second_level_sponsor, payment_plan: '2025', covers_dpc: true) }
         let!(:sponsor_journal_org) { create(:journal_organization, parent_org: second_level_sponsor) }
 
-        it 'is taken from tenant\'s top level sponsor' do
+        it 'is taken from journal\'s immediate sponsor' do
           expect(subject.payment_configuration).to eq(payment_conf)
-          expect(subject.sponsor).to eq(second_level_sponsor)
+          expect(subject.sponsor).to eq(sponsor_journal_org)
         end
       end
     end

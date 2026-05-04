@@ -4,7 +4,7 @@ class PaymentLimitsService
   def initialize(resource, payer, ldf_sponsored_amount: nil)
     @resource = resource
     @payer = payer
-    @sponsor = PayersService.new(payer).payment_sponsor
+    @sponsor = PayersService.new(payer).limits_sponsor
     @ldf_sponsored_amount = ldf_sponsored_amount
     @payment_configuration = PayersService.new(payer).sponsored_limits
     set_calculator_service

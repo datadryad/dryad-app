@@ -180,7 +180,7 @@ module StashEngine
 
         it 'are nil' do
           expect(journal.payment_sponsor).to eq(nil)
-          expect(journal.sponsored_limits).to eq(nil)
+          expect(journal.limits_sponsor).to eq(nil)
         end
       end
 
@@ -189,14 +189,14 @@ module StashEngine
 
         it 'are taken form journal\'s sponsor' do
           expect(journal.payment_sponsor).to eq(level_one_sponsor)
-          expect(journal.sponsored_limits).to eq(level_one_sponsor_payment_conf)
+          expect(journal.limits_sponsor).to eq(level_one_sponsor)
         end
       end
 
       context 'when journal has multiple sponsors chain' do
         it 'are taken form journal\'s top level sponsor' do
           expect(journal.payment_sponsor).to eq(top_level_sponsor)
-          expect(journal.sponsored_limits).to eq(level_one_sponsor_payment_conf)
+          expect(journal.limits_sponsor).to eq(level_one_sponsor)
         end
       end
     end

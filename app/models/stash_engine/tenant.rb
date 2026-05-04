@@ -138,8 +138,8 @@ module StashEngine
       sponsor_obj
     end
 
-    def sponsored_limits
-      payment_sponsor.payment_configuration
+    def limits_sponsor
+      payment_sponsor
     end
   end
 end

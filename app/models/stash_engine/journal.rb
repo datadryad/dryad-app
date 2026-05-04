@@ -202,9 +202,8 @@ module StashEngine
       top_level_org
     end
 
-    def sponsored_limits
-      # direct sponsor / first-level publisher
-      sponsor&.payment_configuration
+    def limits_sponsor
+      sponsor
     end
   end
 end

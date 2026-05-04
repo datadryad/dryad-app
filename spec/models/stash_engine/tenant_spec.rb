@@ -101,7 +101,7 @@ module StashEngine
 
         it 'is taken from tenant' do
           expect(tenant.payment_sponsor).to eq(tenant)
-          expect(tenant.sponsored_limits).to eq(tenant_payment_conf)
+          expect(tenant.limits_sponsor).to eq(tenant)
         end
       end
 
@@ -110,14 +110,14 @@ module StashEngine
 
         it 'is taken from tenant\'s sponsor' do
           expect(tenant.payment_sponsor).to eq(level_one_sponsor)
-          expect(tenant.sponsored_limits).to eq(level_one_sponsor_payment_conf)
+          expect(tenant.limits_sponsor).to eq(level_one_sponsor)
         end
       end
 
       context 'when tenant has multiple sponsors chain' do
         it 'is taken from tenant\'s top level sponsor' do
           expect(tenant.payment_sponsor).to eq(top_level_sponsor)
-          expect(tenant.sponsored_limits).to eq(top_level_sponsor_payment_conf)
+          expect(tenant.limits_sponsor).to eq(top_level_sponsor)
         end
       end
     end
