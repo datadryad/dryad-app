@@ -49,7 +49,7 @@ class PaymentsController < ApplicationController
     #  - success page refresh
     return if payment.paid?
 
-    identifier.update(last_invoiced_file_size: [identifier.last_invoiced_file_size.to_i, @resource.total_file_size].max) unless payment.ppr_fee_paid?
+    identifier.update(last_invoiced_file_size: [identifier.last_invoiced_file_size.to_i, @resource.total_file_size].max) unless payment.ppr_fee_paid? || @resource.identifier.payer
 
     payment.update(
       status: :paid,
