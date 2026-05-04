@@ -251,7 +251,7 @@ export default function Agreements({
             )}
         </>
       )}
-      <NoSubmitterWarning {...{preview, isSubmitter, curated}} />
+      <NoSubmitterWarning {...{preview, isSubmitter}} />
       {isSubmitter && (
         <>
           {(subType !== 'collection'
