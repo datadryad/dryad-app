@@ -97,7 +97,7 @@ class PaymentsController < ApplicationController
   end
 
   def update_identifier_files_size
-    return if @resource.payment.ppr_fee_paid
+    return if @resource.payment.ppr_fee_paid?
     return if SponsoredPaymentsService.new(@resource).loggable?
 
     @identifier.update(last_invoiced_file_size: [identifier.last_invoiced_file_size.to_i, @resource.total_file_size].max)
