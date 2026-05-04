@@ -46,6 +46,7 @@ module StashEngine
     def edit
       @tenant = authorize StashEngine::Tenant.find(params[:id])
       @payment_configuration = @tenant.payment_configuration || @tenant.build_payment_configuration
+      @sponsor_options = StashEngine::Tenant.enabled.where.not(id: @tenant.payers_sponsored.map(&:id))
       respond_to(&:js)
     end
 
@@ -64,6 +65,7 @@ module StashEngine
     def new
       @tenant = authorize StashEngine::Tenant.new
       @payment_configuration = @tenant.build_payment_configuration
+      @sponsor_options = StashEngine::Tenant.enabled
       respond_to(&:js)
     end
 

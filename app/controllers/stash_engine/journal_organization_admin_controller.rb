@@ -27,6 +27,7 @@ module StashEngine
     def edit
       @org = authorize StashEngine::JournalOrganization.find(params[:id])
       @payment_configuration = @org.payment_configuration || @org.build_payment_configuration
+      @publishers = StashEngine::JournalOrganization.where.not(id: @org.orgs_included.map(&:id))
       respond_to(&:js)
     end
 
@@ -44,6 +45,7 @@ module StashEngine
     def new
       @org = authorize StashEngine::JournalOrganization.new
       @payment_configuration = @org.build_payment_configuration
+      @publishers = StashEngine::JournalOrganization.all
       respond_to(&:js)
     end
 
