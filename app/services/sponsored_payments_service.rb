@@ -7,15 +7,21 @@ class SponsoredPaymentsService
     @payer = @identifier.payer
   end
 
-  def log_payment
+  def loggable?
     # there is no payer
-    return if payer.nil?
+    return false if payer.nil?
     # payer is not on 2025 plan
-    return unless PayersService.new(payer).is_2025_payer?
+    return false unless PayersService.new(payer).is_2025_payer?
     # payer does not cover ldf
-    return unless PayersService.new(payer).sponsored_limits&.covers_ldf?
+    return false unless PayersService.new(payer).sponsored_limits&.covers_ldf?
     # do not log payment if dataset is set for PPR
-    return if resource.hold_for_peer_review?
+    return false if resource.hold_for_peer_review?
+
+    true
+  end
+
+  def log_payment
+    return unless loggable?
 
     @calculator_service = calculator_service
     SponsoredPaymentLog.transaction do
