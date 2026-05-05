@@ -1,24 +1,26 @@
 module Integrations
   class PubMed < Integrations::Base
+    # https://www.ncbi.nlm.nih.gov/home/develop/api/
+    # https://www.ncbi.nlm.nih.gov/books/NBK25499/
+    API_KEY = APP_CONFIG.link_out.pubmed.api_key
+
     def esearch(term:, database: 'pubmed', retmode: 'json')
-      url = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?'
-      query = { term: term, db: database, retmode: retmode }
+      url = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi'
+      query = { term: term, db: database, retmode: retmode, api_key: API_KEY }
       return get_json(url, query) if retmode == 'json'
 
       get_xml(url, query) if retmode == 'xml'
     end
 
-    # Example: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=40959162
     def efetch(id:, database: 'pubmed', retmode: 'xml')
       url = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi'
-      query = { id: id, db: database, retmode: retmode }
+      query = { id: id, db: database, retmode: retmode, api_key: API_KEY }
       return get_xml(url, query) if retmode == 'xml'
 
       get_json(url, query) if retmode == 'json'
     end
 
-    # Only works if record is in PMC
-    # Example: https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/?tool=my_tool&ids=10.1007/s11249-025-02049-1
+    # Only works if record is in PMC (free full text)
     def id_converter(id:, type:)
       url = 'https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/'
       get_json(url, { ids: id, idtype: type, format: 'json', tool: 'dryad', email: APP_CONFIG['submission_error_email'] })
@@ -36,15 +38,15 @@ module Integrations
       []
     end
 
+    def pmid_by_doi(doi)
+      response = id_converter(id: doi, type: 'doi')
+      response.dig('records', 0, 'pmid')&.to_s
+    end
+
     # Use EFetch rather than IDConverter for more results
     def doi_by_pmid(pmid)
       response = efetch(id: pmid)
       response.at_xpath("//ELocationID[@EIdType='doi']").text
-    end
-
-    def pmid_by_doi(doi)
-      response = id_converter(id: doi, type: 'doi')
-      response.dig('records', 0, 'pmid')&.to_s
     end
   end
 end
