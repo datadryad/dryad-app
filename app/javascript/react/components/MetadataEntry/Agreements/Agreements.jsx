@@ -38,6 +38,54 @@ function NoSubmitterWarning({preview, isSubmitter}) {
   );
 }
 
+function PPRSetting({
+  togglePPR, ppr, dpc, curated, subType, reason,
+}) {
+  if (!curated && dpc.automatic_ppr) {
+    return (
+      <>
+        <h3>{subType === 'collection' ? 'Is your collection' : 'Are your files'} ready to publish?</h3>
+        <p>
+          This submission is associated with a manuscript from an{' '}
+          <a href="/journals" target="_blank">integrated journal<ExitIcon /></a>.
+          It will remain Private for Peer Review until formal acceptance of the associated manuscript.
+        </p>
+      </>
+    );
+  } if (!curated && dpc.allow_review) {
+    return (
+      <fieldset onChange={togglePPR} aria-labelledby="toggle-ppr">
+        <h3 style={{margin: '0'}} id="toggle-ppr">
+          {`${subType === 'collection' ? 'Is your collection' : 'Are your files'} ready to publish?`}
+        </h3>
+        <p className="radio_choice">
+          <label style={!ppr ? {fontWeight: 'bold'} : {}}>
+            <input type="radio" name="peer_review" value="0" defaultChecked={!ppr} />
+            {`My ${subType === 'collection'
+              ? 'collection should be publically viewable '
+              : 'files should be available for public download '} as soon as possible`}
+          </label>
+        </p>
+        <p className="radio_choice" style={{marginBottom: 0}}>
+          <label style={ppr ? {fontWeight: 'bold'} : {}}>
+            <input type="radio" name="peer_review" value="1" defaultChecked={ppr} />
+            {`Keep my ${subType === 'collection' ? 'collection' : 'files'} private while my manuscript undergoes peer review`}
+          </label>
+        </p>
+      </fieldset>
+    );
+  }
+  return (
+    <>
+      <h3>{subType === 'collection' ? 'Is your collection' : 'Are your files'} ready to publish?</h3>
+      <p>
+          The Private for Peer Review option is not available for this submission{reason}.
+          The submission will proceed to our curation process for evaluation and publication.
+      </p>
+    </>
+  );
+}
+
 export default function Agreements({
   resource, setResource, user, form, previous, config, current, setAuthorStep, preview = false,
 }) {
@@ -160,47 +208,10 @@ export default function Agreements({
         </>
       )}
       {!preview && (
-        <>
-          {!curated && dpc.automatic_ppr && (
-            <>
-              <h3>{subType === 'collection' ? 'Is your collection' : 'Are your files'} ready to publish?</h3>
-              <p>
-                This submission is associated with a manuscript from an{' '}
-                <a href="/journals" target="_blank">integrated journal<ExitIcon /></a>.
-                It will remain Private for Peer Review until formal acceptance of the associated manuscript.
-              </p>
-            </>
-          )}
-          {!curated && dpc.allow_review ? (
-            <fieldset onChange={togglePPR} aria-labelledby="toggle-ppr">
-              <h3 style={{margin: '0'}} id="toggle-ppr">
-                {`${subType === 'collection' ? 'Is your collection' : 'Are your files'} ready to publish?`}
-              </h3>
-              <p className="radio_choice">
-                <label style={!ppr ? {fontWeight: 'bold'} : {}}>
-                  <input type="radio" name="peer_review" value="0" defaultChecked={!ppr} />
-                  {`My ${subType === 'collection'
-                    ? 'collection should be publically viewable '
-                    : 'files should be available for public download '} as soon as possible`}
-                </label>
-              </p>
-              <p className="radio_choice" style={{marginBottom: 0}}>
-                <label style={ppr ? {fontWeight: 'bold'} : {}}>
-                  <input type="radio" name="peer_review" value="1" defaultChecked={ppr} />
-                  {`Keep my ${subType === 'collection' ? 'collection' : 'files'} private while my manuscript undergoes peer review`}
-                </label>
-              </p>
-            </fieldset>
-          ) : (
-            <>
-              <h3>{subType === 'collection' ? 'Is your collection' : 'Are your files'} ready to publish?</h3>
-              <p>
-                The Private for Peer Review option is not available for this submission{reason}.
-                The submission will proceed to our curation process for evaluation and publication.
-              </p>
-            </>
-          )}
-        </>
+        <PPRSetting {...{
+          togglePPR, ppr, curated, dpc, subType, reason,
+        }}
+        />
       )}
       {preview ? <h2>Do you agree to Dryad’s terms?</h2> : <h3 style={{marginTop: '3rem'}}>Do you agree to Dryad’s terms?</h3>}
       {subType !== 'collection' && (
