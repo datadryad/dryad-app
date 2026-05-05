@@ -10,7 +10,7 @@ Basic Dryad Submission Flow
 3. Review before submit
     * Missing required data shown
     * Review display
-    * Private-for- peer-review can be set
+    * Private for peer review can be set
     * Accept license
 4. Submission
     * Update metadata with DataCite for the submitted item
@@ -18,10 +18,8 @@ Basic Dryad Submission Flow
     * Package sent contains manifest (for URLs) or zip file with metadata files and data files
       * Mrt-datacite.xml, mrt-dataone-manifest.txt, mrt-embargo.txt, mrt-oaidc.xml, stash-wrapper.xml
 5. Notifying of completion
-    * A daemon in a rake task runs to check for updates can be
-      started like `RAILS_ENV=development rails merritt_status:update` or
-      likely will be added to systemd startup scripts on one server.
-    * With new updates it updates status for items that have been stored
+    * A system of background jobs ran in Sidekiq will submit the resource
+    * It updates the status for items that have been stored
 6. UI finishes actions for successfully submitted dataset
     * Sets download_uri and update_uri if needed
     * Changes state to ‘submitted’
@@ -56,4 +54,3 @@ Allowable values:
   the curator or automatically based on the journal's notification of a rejected article
 - embargoed = metadata for the resource is published, but data files are not publicly available
 - published = the resource is fully available to the public
-

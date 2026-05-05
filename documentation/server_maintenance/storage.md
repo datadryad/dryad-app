@@ -12,7 +12,7 @@ Submissions to the storage system can be started and stopped from the
 [GUI Submission Queue page](https://datadryad.org/submission_queue). However,
 actions on this page will only affect the single server that you are
 attached to, and not all servers in a load-balanced system. (Note
-the long_jobs.dryad script will also do this,
+the long_jobs.dryad script will also do this,
 also, on the current server). 
 
 
@@ -76,14 +76,8 @@ requested.
 Submission status
 =================
 
-The submission status checker runs from a daemon on our 01 servers, as something that
-can be started manually from a rake task like:
-```
-RAILS_ENV=<environment> bundle exec rails merritt_status:update
-```
-
-However, it will start automatically from systemd startup and
-can be managed through it.
+The submission status checker is another Sidekiq background job `Submission::CheckStatusJob`
+and is triggered automatically once all the files are moved to permanent storage.
 
 
 Technical processes
@@ -110,18 +104,25 @@ Submission process
    3. Adds the resource to the queue `stash_engine_repo_queue_states`
    4. Submits the job for asynchronous completion
    5. Handles success or failure of the job
+4. `Submission::CopyFileJob` is another background job which
+   1. Copies subscription files to permanent storage
+   2. Is enqueued by `Submission::SubmissionJob` for each of the files in the resource
+   3. Each job copies just one file
+   4. Multiple files are copied in parallel to speed up the process
+   5. Last job in the chain calls `Submission::CheckStatusJob`
+5. `Submission::CheckStatusJob` is a background job which
+   1. Is called just once per submission
+   2. Is responsible for updating submission status and cleaning temporary files
 
 
 Checker process
 ----------------
-
-1. User or cron runs `merritt_status:update`
-2. Takes the latest unfinished jobs from `stash_engine_repo_queue_states` for each resource and checks them
-   1. `RepoQueueState.possibly_set_as_completed` checks whether resource is avaialable in storage, and if it is:
-      1. Calls `Repository.harvested` to update the resource state
-      2. Registers the job in the queue as completed
-      3. Deletes temporary files
-   2. If the job has been processing for a full day, mark it as errored and email the admins
+Submission status is checked by `Submission::CheckStatusJob` background job which
+1. Checks using `RepoQueueState.possibly_set_as_completed` resource is available in storage, and if it is:
+    1. Calls `Repository.harvested` to update the resource state
+    2. Registers the job in the queue as completed
+    3. Deletes temporary files
+2. If the job has been processing for a full day, mark it as errored and email the admins
 
 
 Download process
@@ -137,4 +138,3 @@ Download process
 Note: If the Resource has a Merritt location for `download_uri`, but the code
 isn't able to find it, the Resource might have the wrong Merritt version number,
 in which case you can update the `merritt_version` in the `stash_engine_versions` table.
-
