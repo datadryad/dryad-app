@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/?ids=valid_doi&tool=my_tool
+    uri: https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/?email=my.fun.submission.error.emails@example.com&format=json&ids=valid_doi&idtype=doi&tool=dryad
     body:
       encoding: US-ASCII
       string: ''
@@ -27,7 +27,7 @@ http_interactions:
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains; preload
       Content-Type:
-      - application/xml; charset=utf-8
+      - application/json
       Vary:
       - Accept,Accept-Encoding
       Allow:
@@ -57,9 +57,7 @@ http_interactions:
       Transfer-Encoding:
       - chunked
     body:
-      encoding: ASCII-8BIT
-      string: |-
-        <?xml version="1.0" encoding="utf-8"?>
-        <pmcids response-date="2025-09-24 04:57:28" status="ok"><request format="xml" ids="valid_doi" idtype="doi" showaiid="no" versions="no"><warnings><warning>query param `email` is missing.</warning></warnings><echo>ids=valid_doi&amp;tool=my_tool</echo></request><record doi="valid_doi" pmcid="PMC123456" pmid="123456" requested-id="valid_doi"></record></pmcids>
+      encoding: UTF-8
+      string: '{"status":"ok","response-date":"2025-09-24 04:57:28","request":{"warnings":[],"format":"json","idtype":"doi","ids":["valid_doi"],"email":"email@email.com","tool":"dryad","echo":"ids=valid_doi&idtype=doi&format=json&tool=dryad&email=email%40email.com","versions":"no","showaiid":"no"},"records":[{"doi":"valid_doi","pmcid":"PMC123456","pmid":123456,"requested-id":"valid_doi"}]}'
   recorded_at: Wed, 24 Sep 2025 08:57:28 GMT
 recorded_with: VCR 6.3.1

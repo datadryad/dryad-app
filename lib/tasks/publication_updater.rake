@@ -11,6 +11,8 @@ namespace :publication_updater do
         # Query PubMed
         search = Integrations::PubMed.new.esearch(term: id)
         pmid = search.dig('esearchresult', 'idlist', 0)
+        next unless pmid.present?
+
         doi = Integrations::PubMed.new.doi_by_pmid(pmid)
         # Hit Crossref for info
         cr = Integrations::Crossref.query_by_doi(doi: doi, resource: resource)

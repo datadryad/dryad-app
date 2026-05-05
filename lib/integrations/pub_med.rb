@@ -17,6 +17,7 @@ module Integrations
       get_json(url, query) if retmode == 'json'
     end
 
+    # Only works if record is in PMC
     # Example: https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/?tool=my_tool&ids=10.1007/s11249-025-02049-1
     def id_converter(id:, type:)
       url = 'https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/'
@@ -42,7 +43,7 @@ module Integrations
 
     def pmid_by_doi(doi)
       response = id_converter(id: doi, type: 'doi')
-      response.dig('records', 0, 'pmid')
+      response.dig('records', 0, 'pmid')&.to_s
     end
   end
 end
