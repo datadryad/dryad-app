@@ -20,6 +20,13 @@ module Integrations
       get_json(url, query) if retmode == 'json'
     end
 
+    def elink(id:, database:, dbfrom: 'pubmed')
+      url = 'https://www.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi'
+      query = { id: id, db: database, dbfrom: dbfrom, api_key: API_KEY }
+
+      get_xml(url, query)
+    end
+
     # Only works if record is in PMC (free full text)
     def id_converter(id:, type:)
       url = 'https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/'

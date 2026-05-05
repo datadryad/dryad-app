@@ -53,7 +53,6 @@ module Stash
         )
 
         stub_request(:get, %r{www.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?})
-          .with(headers: { 'Accept' => 'text/xml' })
           .to_return(status: 200, body: @response.to_s, headers: {})
 
         @svc = LinkOut::PubmedSequenceService.new
@@ -62,7 +61,6 @@ module Stash
       describe '#lookup_pubmed_id' do
         it 'returns a nil if the API did not find a Pubmed ID' do
           stub_request(:get, %r{www.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?})
-            .with(headers: { 'Accept' => 'text/xml' })
             .to_return(status: 200, body: @empty_response.to_s, headers: {})
 
           expect(@svc.lookup_genbank_sequences('21166729')).to eql({})
