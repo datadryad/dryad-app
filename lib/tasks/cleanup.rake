@@ -35,8 +35,11 @@ namespace :cleanup do
         p "ERROR querying Crossref for identifier: '#{resource.identifier.identifier}': #{e.message}"
         next
       end
+      next unless cr.present?
+
       p "Updating subjects for #{resource.identifier.identifier}"
-      Stash::Import::Crossref.new(resource: resource, json: cr).populate_subjects if cr.present?
+      Stash::Import::Crossref.new(resource: resource, json: cr).populate_subjects
+      PublicationJob.perform_async(resource.last_curation_activity_id) if resource.status_published?
     end
   end
 
