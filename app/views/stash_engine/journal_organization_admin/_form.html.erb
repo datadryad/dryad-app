@@ -10,7 +10,7 @@
 <h2>Parent org</h2>
 <div class="c-input">
   <%
-    options = StashEngine::JournalOrganization.where.not(id: @org&.id).collect { |o| [o.name, o.id] }
+    options = @publishers.collect { |o| [o.name, o.id] }
     options.unshift(['None', ''])
   %>
   <%= label_tag 'parent_org_id', 'Choose a sponsoring organization' %>
@@ -27,7 +27,7 @@
 <% if sponsor_id || has_children %>
 <div role="status" class="callout warn">
   <% if sponsor_id %><p>The payment plan must be selected for the top level organization.</p><% end %>
-  <% if has_children %><p>Payment limits must be set on the journal's parent organization.</p><% end %>
+  <% if has_children %><p>Payment limits must be set on each lowest level organization.</p><% end %>
 </div>
 <% end %>
 

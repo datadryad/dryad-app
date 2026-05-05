@@ -29,6 +29,7 @@ module StashEngine
     validates :id, presence: true, uniqueness: true
     validates :short_name, presence: true
     validates :long_name, presence: true
+    validates :sponsor_id, exclusion: { in: ->(tenant) { tenant.payers_sponsored&.map(&:id) }, message: 'Sponsored institution cannot be sponsor' }
     validate :email_array
 
     belongs_to :logo, class_name: 'StashEngine::Logo', dependent: :destroy, optional: true

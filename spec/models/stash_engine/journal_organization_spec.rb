@@ -66,16 +66,17 @@ module StashEngine
     end
 
     describe 'orgs_included' do
-      it 'returns blank when there are none' do
-        expect(@org.orgs_included).to be_blank
+      it 'returns self' do
+        expect(@org.orgs_included.size).to be(1)
+        expect(@org.orgs_included.first).to eq(@org)
       end
 
       it 'returns direct sub-orgs' do
         suborg = build(:journal_organization)
         suborg.update(parent_org: @org)
         found_suborgs = @org.orgs_included
-        expect(found_suborgs.size).to be(1)
-        expect(found_suborgs.first).to eq(suborg)
+        expect(found_suborgs.size).to be(2)
+        expect(found_suborgs.last).to eq(suborg)
       end
 
       it 'returns deeper sub-orgs' do
@@ -87,7 +88,8 @@ module StashEngine
         subsuborg.update(parent_org: suborg)
 
         found_suborgs = @org.orgs_included
-        expect(found_suborgs&.size).to be(3)
+        expect(found_suborgs&.size).to be(4)
+        expect(found_suborgs).to include(@org)
         expect(found_suborgs).to include(suborg)
         expect(found_suborgs).to include(suborg2)
         expect(found_suborgs).to include(subsuborg)
