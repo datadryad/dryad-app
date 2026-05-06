@@ -53,7 +53,7 @@ module Integrations
     # Use EFetch rather than IDConverter for more results
     def doi_by_pmid(pmid)
       response = efetch(id: pmid)
-      response.at_xpath("//ELocationID[@EIdType='doi']").text
+      response.at_xpath("//ELocationID[@EIdType='doi']")&.text
     end
   end
 end
