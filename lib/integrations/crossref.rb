@@ -13,7 +13,7 @@ module Integrations
         item = resp.first['message']
 
         if resource.present?
-          next nil if exclude_dois(resource).include?(item['DOI'])
+          return nil if exclude_dois(resource).include?(item['DOI'])
 
           return crossref_item_scoring(resource, item)&.last
         end
