@@ -14,7 +14,7 @@ namespace :publication_updater do
 
       doi = Integrations::PubMed.new.doi_by_pmid(pmid)
       next unless doi.present?
-      
+
       begin
         # Hit Crossref for info
         cr = Integrations::Crossref.query_by_doi(doi: doi, resource: resource)
