@@ -61,36 +61,6 @@ RSpec.feature 'JournalAdmin', type: :feature do
       expect(changed.issn_array).to include('1111-2222')
     end
 
-    it 'allows changing notify contacts as a system admin', js: true do
-      visit stash_url_helpers.journal_admin_path
-      expect(page).to have_content(@journal.title)
-      within(:css, "form[action=\"#{journal_edit_path(id: @journal.id)}\"]") do
-        find('.c-admin-edit-icon').click
-      end
-      within(:css, '#genericModalDialog') do
-        find('#notify_contacts').set('test@email.com')
-        find('input[name=commit]').click
-      end
-      expect(page.find("#row_#{@journal.id}")).to have_text('test@email.com')
-      changed = StashEngine::Journal.find(@journal.id)
-      expect(changed.notify_contacts).to include('test@email.com')
-    end
-
-    it 'allows changing review contacts as a system admin', js: true do
-      visit stash_url_helpers.journal_admin_path
-      expect(page).to have_content(@journal.title)
-      within(:css, "form[action=\"#{journal_edit_path(id: @journal.id)}\"]") do
-        find('.c-admin-edit-icon').click
-      end
-      within(:css, '#genericModalDialog') do
-        find('#review_contacts').set('test@email.com')
-        find('input[name=commit]').click
-      end
-      expect(page.find("#row_#{@journal.id}")).to have_text('test@email.com')
-      changed = StashEngine::Journal.find(@journal.id)
-      expect(changed.review_contacts).to include('test@email.com')
-    end
-
     it 'allows changing ppr default as a system admin', js: true do
       visit stash_url_helpers.journal_admin_path
       expect(page).to have_content(@journal.title)

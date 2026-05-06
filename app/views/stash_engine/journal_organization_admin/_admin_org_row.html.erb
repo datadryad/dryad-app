@@ -12,7 +12,20 @@
     <% end %>
   </div>
 </td>
-<td><%= o.contact&.join(', ') %></td>
 <td><%= o.children.map(&:name).join(', ') %></td>
 <td><%= o.journals_sponsored_deep.map(&:title).join(', ') %></td>
+<td>
+  <% if o.top_level_org.payment_configuration&.payment_plan&.present? %>
+    <b>Plan:</b> <%= o.top_level_org.payment_configuration&.payment_plan&.humanize %><br/>
+    <b>Covers LDF:</b> <%= o.payment_configuration&.covers_ldf ? "Yes" : "No" %>
+    <% if o.payment_configuration&.covers_ldf %>
+      <% if o.payment_configuration.ldf_limit.present? %>
+        (Up to <%= filesize(ESTIMATED_FILES_SIZE.find{|tier| tier[:tier] == o.payment_configuration.ldf_limit }[:range].max) %>)
+      <% end %>
+      <% if o.payment_configuration.yearly_ldf_limit.present? %>
+        <br/><b>Remaining LDF budget:</b> <%= o.payment_configuration.yearly_ldf_limit - SponsoredPaymentLog.for_current_year.where(payer: o.payers_sponsored).sum(:ldf) %>
+      <% end %>
+    <% end %>
+  <% end %>
+</td>
 <td><%= o.parent_org&.name %></td>

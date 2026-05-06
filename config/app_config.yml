@@ -76,6 +76,7 @@ test:
       ftp_username: username
       ftp_password: password
       ftp_provider_id: 9876
+      api_key: etetesatsa
   s3:
     region: us-west-2
     bucket: a-test-bucket

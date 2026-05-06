@@ -14,6 +14,9 @@ module StashEngine
   class JournalOrganization < ApplicationRecord
     self.table_name = 'stash_engine_journal_organizations'
     validates :name, presence: true
+    validates :parent_org_id, exclusion: { in: ->(org) {
+      org.orgs_included.map(&:id).reject(&:blank?)
+    }, message: 'Sponsored publisher cannot be sponsor' }
     validate :email_array
 
     has_many :children, class_name: 'JournalOrganization', primary_key: :id, foreign_key: :parent_org_id, inverse_of: :parent_org
@@ -51,15 +54,21 @@ module StashEngine
     # All organizations that are part of this organization,
     # at any level of hierarchy
     def orgs_included
-      return nil if children.blank?
-
-      all_orgs = []
-
-      children.each do |sub|
-        all_orgs << sub
-        all_orgs |= sub.orgs_included if sub.children.present?
+      s = [self]
+      children&.each do |suborg|
+        s |= suborg.orgs_included
       end
-      all_orgs
+      s
+    end
+
+    def top_level_org
+      o = self
+      o = o.parent_org while o.parent_org
+      o
+    end
+
+    def payers_sponsored
+      journals_sponsored
     end
   end
 end

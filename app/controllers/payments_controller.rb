@@ -49,13 +49,14 @@ class PaymentsController < ApplicationController
     #  - success page refresh
     return if payment.paid?
 
-    identifier.update(last_invoiced_file_size: [identifier.last_invoiced_file_size.to_i, @resource.total_file_size].max) unless payment.ppr_fee_paid?
-
     payment.update(
       status: :paid,
       payment_checkout_session_id: params[:session_id],
       paid_at: Time.current
     )
+
+    update_identifier_files_size
+
     if payment.checkout_session_id != params[:session_id]
       Rails.logger.warn("Resource #{params[:resource_id]} received a payment for wrong checkout session #{params[:checkout_session_id]}")
     end
@@ -93,6 +94,13 @@ class PaymentsController < ApplicationController
 
   def identifier
     @identifier ||= @resource.identifier
+  end
+
+  def update_identifier_files_size
+    return if @resource.payment.ppr_fee_paid?
+    return if SponsoredPaymentsService.new(@resource).loggable?
+
+    @identifier.update(last_invoiced_file_size: [identifier.last_invoiced_file_size.to_i, @resource.total_file_size].max)
   end
 
   def create_params

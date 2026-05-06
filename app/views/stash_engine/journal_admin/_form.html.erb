@@ -57,8 +57,6 @@
   <%= select_tag('sponsor_id', options_for_select(options, @journal.sponsor_id), class: 'c-input__select') %>  
 </div>
 
-<%= render '/stash_engine/payment_configuration/form', format: :html,
-  sponsor_id: @journal.sponsor_id,
-  payment_configuration: @payment_configuration,
-  plan_options: [ ['', 'None'] ] + StashEngine::Journal::PAYMENT_PLANS.map {|p| [p, p.capitalize]}
-%>
+<div id="payment_notice" role="status" class="callout warn">
+  <p>Payment information must be set at the publisher level.</p>
+</div>

@@ -18,8 +18,6 @@ module Stash
       attr_reader :links_file
 
       def initialize
-        @genbank_api = 'https://www.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi'
-
         @ftp = APP_CONFIG.link_out.pubmed
         @root_url = root_url_ssl
         @file_counter = 1
@@ -35,8 +33,8 @@ module Stash
 
         hash = {}
         StashEngine::ExternalReference.sources.each_key do |db|
-          query = "dbfrom=pubmed&db=#{db}&id=#{pmid}&api_key=#{@ftp.api_key}"
-          genbank_ids = extract_genbank_ids(get_xml_from_api(@genbank_api, query))
+          xml = Integrations::PubMed.new.elink(id: pmid, database: db)
+          genbank_ids = extract_genbank_ids(xml)
           hash[db] = genbank_ids unless genbank_ids.empty?
         end
         hash
@@ -158,10 +156,9 @@ module Stash
       #   </LinkSet>
       # </eLinkResult>
       def extract_genbank_ids(xml)
-        doc = Nokogiri::XML(xml)
-        return [] unless doc.xpath('eLinkResult//LinkSet//LinkSetDb').first.present?
+        return [] unless xml.xpath('eLinkResult//LinkSet//LinkSetDb').first.present?
 
-        doc.xpath('eLinkResult//LinkSet//LinkSetDb/Link/Id').map { |id| id&.text }.uniq.reject { |id| id == '0' }
+        xml.xpath('eLinkResult//LinkSet//LinkSetDb/Link/Id').map { |id| id&.text }.uniq.reject { |id| id == '0' }
       end
 
     end

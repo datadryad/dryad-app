@@ -42,7 +42,7 @@ module ApplicationHelper
     doc = Commonmarker.parse(
       content, options: {
         render: { unsafe: true, escaped_char_spans: false },
-        extension: { superscript: true, subscript: true }
+        extension: { superscript: true, subscript: true, shortcodes: false }
       }
     )
     doc.walk do |node|
