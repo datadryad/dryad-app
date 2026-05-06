@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=123456&retmode=xml
+    uri: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?api_key=etetesatsa&db=pubmed&id=123456&retmode=xml
     body:
       encoding: US-ASCII
       string: ''

@@ -1,13 +1,35 @@
 module Integrations
   class PubMed < Integrations::Base
-    # Example: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=40959162&retmode=xml
-    BASE_URL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi'.freeze
-    DB       = 'pubmed'.freeze
-    # Example: https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/?tool=my_tool&ids=10.1007/s11249-025-02049-1
-    PMC_BASE_URL = 'https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/'.freeze
+    # https://www.ncbi.nlm.nih.gov/home/develop/api/
+    # https://www.ncbi.nlm.nih.gov/books/NBK25499/
+    API_KEY = APP_CONFIG.link_out.pubmed.api_key
+
+    def esearch(term:, database: 'pubmed', retmode: 'json')
+      url = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi'
+      query = { term: term, db: database, retmode: retmode, api_key: API_KEY }
+      return get_json(url, query) if retmode == 'json'
+
+      get_xml(url, query) if retmode == 'xml'
+    end
+
+    def efetch(id:, database: 'pubmed', retmode: 'xml')
+      url = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi'
+      query = { id: id, db: database, retmode: retmode, api_key: API_KEY }
+      return get_xml(url, query) if retmode == 'xml'
+
+      get_json(url, query) if retmode == 'json'
+    end
+
+    # Only works if record is in PMC (free full text)
+    def id_converter(id:, type:)
+      url = 'https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/'
+      get_json(url, { ids: id, idtype: type, format: 'json', tool: 'dryad', email: APP_CONFIG['submission_error_email'] })
+    rescue StandardError
+      nil
+    end
 
     def fetch_awards_by_id(pubmed_id)
-      response = get_xml(BASE_URL, { id: pubmed_id, db: DB, retmode: 'xml' })
+      response = efetch(id: pubmed_id)
       grants = response.at_xpath('//PubmedArticleSet/PubmedArticle/MedlineCitation/Article/GrantList').children
       grants.map do |grant|
         grant.at_xpath('GrantID').text
@@ -16,11 +38,15 @@ module Integrations
       []
     end
 
-    def pmid_by_primary_article(article_id)
-      response = get_xml(PMC_BASE_URL, { ids: article_id, tool: 'my_tool' })
-      response.at_xpath('//pmcids/record')['pmid']
-    rescue StandardError
-      nil
+    def pmid_by_doi(doi)
+      response = id_converter(id: doi, type: 'doi')
+      response.dig('records', 0, 'pmid')&.to_s
+    end
+
+    # Use EFetch rather than IDConverter for more results
+    def doi_by_pmid(pmid)
+      response = efetch(id: pmid)
+      response.at_xpath("//ELocationID[@EIdType='doi']").text
     end
   end
 end

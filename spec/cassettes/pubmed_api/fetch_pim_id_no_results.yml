@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/?ids=not_found&tool=my_tool
+    uri: https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/?email=my.fun.submission.error.emails@example.com&format=json&ids=not_found&idtype=doi&tool=dryad
     body:
       encoding: US-ASCII
       string: ''
@@ -17,8 +17,8 @@ http_interactions:
       - pmc.ncbi.nlm.nih.gov
   response:
     status:
-      code: 400
-      message: Bad Request
+      code: 200
+      message: OK
     headers:
       Date:
       - Wed, 24 Sep 2025 08:55:24 GMT
@@ -27,7 +27,7 @@ http_interactions:
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains; preload
       Content-Type:
-      - application/xml
+      - application/json
       Vary:
       - Accept,Accept-Encoding
       Allow:
@@ -57,9 +57,7 @@ http_interactions:
       Transfer-Encoding:
       - chunked
     body:
-      encoding: ASCII-8BIT
-      string: |-
-        <?xml version="1.0" encoding="utf-8"?>
-        <pmcids http_status="400" http_status_reason="Bad Request" response-date="2025-09-24 04:55:24" status="error"><request ids="not_found"><warnings><warning>query param `email` is missing.</warning></warnings><echo>ids=not_found&amp;tool=my_tool</echo></request><errors><error code="parse_error">query param `ids` value is not matching known patterns, check your ids. If you provided an `idtype` query param check if it is valid and corresponds to the `ids` values, otherwise help API with passing `idtype` query param explicitly with one of the valid values: pmcid, pmid, mid, doi. </error></errors></pmcids>
+      encoding: UTF-8
+      string: '{"status":"ok","response-date":"2025-09-24 04:55:24","request":{"warnings":[],"format":"json","idtype":"doi","ids":["not_found"],"email":"email@email.com","tool":"dryad","echo":"ids=not_found&idtype=doi&format=json&tool=dryad&email=email%40email.com","versions":"no","showaiid":"no"},"records":[{"doi":"not_found","requested-id":"not_found","status":"error","errmsg":"Identifier not found in PMC"}]}'
   recorded_at: Wed, 24 Sep 2025 08:55:24 GMT
 recorded_with: VCR 6.3.1
