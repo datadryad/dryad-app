@@ -22,17 +22,6 @@ module Stash
         }
       end
 
-      # Retrieve the XML from the API (e.g. lookup Pubmed ID for a given DOI)
-      def get_xml_from_api(uri, query)
-        resp = HTTParty.get(uri, query: query, headers: request_headers)
-        # If we received anything but a 200 then log an error and return an empty array
-        raise "Unable to connect to connect to - #{@pubmed_api}?#{query}: status: #{resp.code}" if resp.code != 200
-        # Return an empty array if the response did not have any results
-        return nil if resp.code != 200 || resp.blank?
-
-        resp.body
-      end
-
       # Download the specified XML schema to the local TMP_DIR
       def download_schema!(uri)
         file_name = "#{TMP_DIR}/#{uri.split('/').last}"

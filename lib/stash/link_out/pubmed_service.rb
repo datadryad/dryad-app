@@ -18,11 +18,6 @@ module Stash
       def initialize
         @ftp = APP_CONFIG.link_out.pubmed
         @root_url = root_url_ssl
-
-        @pubmed_api = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi'
-        @pubmed_api_query_prefix = 'db=pubmed&term='
-        @pubmed_api_query_suffix = "[doi]&api_key=#{@ftp.api_key}"
-
         @schema = 'https://www.ncbi.nlm.nih.gov/projects/linkout/doc/LinkOut.dtd'
         @links_file = 'pubmedlinkout.xml'
         @provider_file = 'providerinfo.xml'
@@ -32,8 +27,7 @@ module Stash
       def lookup_pubmed_id(doi)
         return nil unless doi.present?
 
-        query = "#{@pubmed_api_query_prefix}#{doi}#{@pubmed_api_query_suffix}"
-        results = get_xml_from_api(@pubmed_api, query)
+        results = Integrations::PubMed.new.esearch(term: doi, retmode: 'xml')
         return nil if results.blank?
 
         extract_pubmed_id(results)
@@ -140,8 +134,7 @@ module Stash
       #   <QueryTranslation>10.1016/j.cub.2015.04.062[doi]</QueryTranslation>
       # </eSearchResult>
       def extract_pubmed_id(xml)
-        doc = Nokogiri::XML(xml)
-        doc.xpath('eSearchResult//IdList//Id').first&.text
+        xml.xpath('eSearchResult//IdList//Id').first&.text
       end
 
       # Nokogiri and other libraries encode ampersands `&amp;`
