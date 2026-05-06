@@ -9,7 +9,8 @@ namespace :publication_updater do
       id = resource.identifier.identifier
       # Query PubMed
       search = Integrations::PubMed.new.esearch(term: id)
-      next if (search.dig('esearchresult', 'errorlist', 'phrasesnotfound') & id.partition('/'))&.any?
+      array_check = (search.dig('esearchresult', 'errorlist', 'phrasesnotfound') & id.partition('/'))
+      next if array_check && array_check.any?
 
       pmid = search.dig('esearchresult', 'idlist', 0)
       next unless pmid.present?
