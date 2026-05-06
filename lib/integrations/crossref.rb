@@ -11,7 +11,12 @@ module Integrations
         return nil unless resp.first.present? && resp.first['message'].present?
 
         item = resp.first['message']
-        return crossref_item_scoring(resource, item)&.last if resource.present?
+
+        if resource.present?
+          next nil if exclude_dois(resource).include?(item['DOI'])
+
+          return crossref_item_scoring(resource, item)&.last
+        end
 
         item
       rescue Serrano::NotFound, Serrano::BadGateway, Serrano::Error, Serrano::GatewayTimeout, Serrano::InternalServerError,
