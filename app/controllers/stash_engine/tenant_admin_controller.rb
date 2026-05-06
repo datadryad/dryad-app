@@ -8,9 +8,22 @@ module StashEngine
       authorize %i[stash_engine tenant], :admin?
       setup_consortia
 
-      @tenants = StashEngine::Tenant
+      @tenants = StashEngine::Tenant.with_recursive(
+        top_sponsor: [
+          StashEngine::Tenant.all.select(:id, { id: :top_sponsor_id }, :sponsor_id),
+          StashEngine::Tenant.joins('JOIN top_sponsor ON stash_engine_tenants.id = top_sponsor.sponsor_id')
+            .select('top_sponsor.id', { id: :top_sponsor_id }, :sponsor_id)
+        ]
+      )
+        .joins('LEFT OUTER JOIN top_sponsor on stash_engine_tenants.sponsor_id = top_sponsor.top_sponsor_id')
+        .joins("LEFT OUTER JOIN payment_configurations pc
+          ON pc.partner_type = 'StashEngine::Tenant' AND pc.partner_id = ifnull(top_sponsor.top_sponsor_id, stash_engine_tenants.id)")
+        .select({ stash_engine_tenants: ['*'] }, { top_sponsor: [:top_sponsor_id] }, { pc: [:payment_plan] })
+        .where('top_sponsor.sponsor_id': nil).distinct
 
-      if params[:q]
+      if params[:id]
+        @tenants = @tenants.where(id: params[:id])
+      elsif params[:q]
         q = params[:q]
         # search the query in any searchable field
         @tenants = @tenants
@@ -18,8 +31,8 @@ module StashEngine
                  "%#{q}%", "%#{q}%", "%#{q}%")
       end
 
-      ord = helpers.sortable_table_order(whitelist: %w[id short_name long_name authentication covers_dpc partner_display enabled])
-      @tenants = @tenants.left_outer_joins(:payment_configuration).order(ord)
+      ord = helpers.sortable_table_order(whitelist: %w[id short_name long_name authentication payment_plan partner_display enabled])
+      @tenants = @tenants.order(ord)
 
       if params[:consortium].present?
         rors = StashEngine::Tenant.find(params[:consortium]).ror_ids
@@ -33,6 +46,7 @@ module StashEngine
     def edit
       @tenant = authorize StashEngine::Tenant.find(params[:id])
       @payment_configuration = @tenant.payment_configuration || @tenant.build_payment_configuration
+      @sponsor_options = StashEngine::Tenant.enabled.where.not(id: @tenant.payers_sponsored.map(&:id))
       respond_to(&:js)
     end
 
@@ -51,6 +65,7 @@ module StashEngine
     def new
       @tenant = authorize StashEngine::Tenant.new
       @payment_configuration = @tenant.build_payment_configuration
+      @sponsor_options = StashEngine::Tenant.enabled
       respond_to(&:js)
     end
 

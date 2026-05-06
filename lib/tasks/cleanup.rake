@@ -20,6 +20,29 @@ namespace :cleanup do
     Stash::Organization::ContributorRorMatcher.new(start_created_at: 2.months.ago).perform
   end
 
+  desc 'Import subject keywords for old datasets'
+  task missing_subjects: :environment do
+    # visible datasets with primary article DOIs, but no subject keywords
+    resources = StashEngine::Resource.latest_per_dataset
+      .joins(
+        "join dcs_related_identifiers pa on pa.resource_id = stash_engine_resources.id and pa.related_identifier_type = 'doi' and pa.work_type = 6"
+      ).left_outer_joins(:subjects)
+      .where(meta_view: true, subjects: { id: nil })
+    resources.each do |resource|
+      begin
+        cr = Integrations::Crossref.query_by_doi(resource: resource, doi: resource.identifier.published_article_doi)
+      rescue URI::InvalidURIError, MultiJson::ParseError => e
+        p "ERROR querying Crossref for identifier: '#{resource.identifier.identifier}': #{e.message}"
+        next
+      end
+      next unless cr.present?
+
+      p "Updating subjects for #{resource.identifier.identifier}"
+      Stash::Import::Crossref.new(resource: resource, json: cr).populate_subjects
+      PublicationJob.perform_async(resource.last_curation_activity_id) if resource.status_published?
+    end
+  end
+
   desc 'Delete orphan records'
   task delete_orphan_records: :environment do
     puts ''
@@ -44,6 +67,7 @@ namespace :cleanup do
     puts 'Done'
   end
 
+  desc 'Update metadata for file DOIs'
   task update_file_licenses: :environment do
     params = { 'client-id': APP_CONFIG.identifier_service.account, 'resource-type': 'DataFile', 'page[size]': 500, 'page[cursor]': 1 }
     query_result = Integrations::Datacite.new.query('/dois', params)

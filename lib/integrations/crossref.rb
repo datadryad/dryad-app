@@ -3,15 +3,17 @@ require 'serrano'
 module Integrations
   class Crossref
     class << self
-      def query_by_doi(doi:)
+      def query_by_doi(doi:, resource: nil)
         return nil unless doi.present?
 
         bare = bare_doi(doi_string: doi)
         resp = Serrano.works(ids: bare.gsub(/\s+/, ''))
         return nil unless resp.first.present? && resp.first['message'].present?
 
-        resp.first['message']
-        # Stash::Import::CrossRef.new(resource: resource, json: resp.first['message'])
+        item = resp.first['message']
+        return crossref_item_scoring(resource, item)&.last if resource.present?
+
+        item
       rescue Serrano::NotFound, Serrano::BadGateway, Serrano::Error, Serrano::GatewayTimeout, Serrano::InternalServerError,
              Serrano::ServiceUnavailable
         nil
@@ -28,8 +30,7 @@ module Integrations
         return nil unless id.present? && id['id-type'] == 'doi'
 
         b = bare_doi(doi_string: id['id'])
-        item = query_by_doi(doi: b)
-        crossref_item_scoring(resource, item)&.last
+        query_by_doi(doi: b, resource: resource)
       rescue Serrano::NotFound, Serrano::BadGateway, Serrano::Error, Serrano::GatewayTimeout, Serrano::InternalServerError,
              Serrano::ServiceUnavailable
         nil

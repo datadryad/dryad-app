@@ -102,6 +102,31 @@ module Stash
       end
       # rubocop:enable Metrics/AbcSize
 
+      def populate_subjects
+        return unless @sm['subject'].present?
+
+        json = @sm['subject']
+        return unless json.is_a?(Array) && json.any?
+
+        # produces hash with downcase keys and original values
+        subj_hsh = json.to_h { |h| [h.downcase, h] }
+        proposed_subjs = subj_hsh.keys
+        existing_subjs = @resource.subjects.non_fos.map { |i| i.subject&.downcase }
+
+        to_add = proposed_subjs - existing_subjs
+
+        to_add.each do |subj|
+          # puts items with scheme first because of sql ordering
+          subs = StashDatacite::Subject.where(subject: subj).non_fos.order(subject_scheme: :desc)
+          sub = if subs.blank?
+                  StashDatacite::Subject.create(subject: subj_hsh[subj]) # create with original case
+                else
+                  subs.first
+                end
+          @resource.subjects << sub
+        end
+      end
+
       private
 
       def resource_will_change?(proposed_change:)
@@ -206,31 +231,6 @@ module Stash
                                     hidden: false
                                   })
         related.save!
-      end
-
-      def populate_subjects
-        return unless @sm['subject'].present?
-
-        json = @sm['subject']
-        return unless json.is_a?(Array) && json.any?
-
-        # produces hash with downcase keys and original values
-        subj_hsh = json.to_h { |h| [h.downcase, h] }
-        proposed_subjs = subj_hsh.keys
-        existing_subjs = @resource.subjects.non_fos.map { |i| i.subject&.downcase }
-
-        to_add = proposed_subjs - existing_subjs
-
-        to_add.each do |subj|
-          # puts items with scheme first because of sql ordering
-          subs = StashDatacite::Subject.where(subject: subj).non_fos.order(subject_scheme: :desc)
-          sub = if subs.blank?
-                  StashDatacite::Subject.create(subject: subj_hsh[subj]) # create with original case
-                else
-                  subs.first
-                end
-          @resource.subjects << sub
-        end
       end
 
       def populate_funders

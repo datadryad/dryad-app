@@ -474,8 +474,9 @@ module StashEngine
       end
 
       context 'when journal will pay' do
-        let(:journal) { create(:journal, issn: @fake_issn) }
-        let!(:payment_configuration) { create(:payment_configuration, partner: journal, payment_plan: '2025', covers_dpc: true, covers_ldf: true) }
+        let(:org) { create(:journal_organization) }
+        let!(:journal) { create(:journal, issn: @fake_issn, sponsor: org) }
+        let!(:payment_configuration) { create(:payment_configuration, partner: org, payment_plan: '2025', covers_dpc: true, covers_ldf: true) }
         let!(:resource_publication) { create(:resource_publication, publication_issn: @fake_issn, resource: resource) }
 
         it { is_expected.to be_falsey }
@@ -541,15 +542,17 @@ module StashEngine
       end
 
       it 'records a journal payment' do
-        journal = create(:journal, issn: @fake_issn)
-        create(:payment_configuration, partner: journal, payment_plan: 'SUBSCRIPTION')
+        org = create(:journal_organization)
+        create(:journal, issn: @fake_issn, sponsor: org)
+        create(:payment_configuration, partner: org, payment_plan: 'SUBSCRIPTION')
         @identifier.record_payment
         expect(@identifier.payment_type).to match(/journal/)
       end
 
       it 'replaces a journal payment when the associated journal has changed' do
-        journal = create(:journal, issn: @fake_issn)
-        create(:payment_configuration, partner: journal, payment_plan: 'SUBSCRIPTION')
+        org = create(:journal_organization)
+        create(:journal, issn: @fake_issn, sponsor: org)
+        create(:payment_configuration, partner: org, payment_plan: 'SUBSCRIPTION')
         @identifier.record_payment
         expect(@identifier.payment_type).to match(/journal/)
         @pub.update(publication_issn: '0000-0000')
@@ -579,8 +582,9 @@ module StashEngine
       end
 
       it 'removes old_payment_system flag when payment type is changed' do
-        journal = create(:journal, issn: @fake_issn)
-        create(:payment_configuration, partner: journal, payment_plan: 'SUBSCRIPTION')
+        org = create(:journal_organization)
+        create(:journal, issn: @fake_issn, sponsor: org)
+        create(:payment_configuration, partner: org, payment_plan: 'SUBSCRIPTION')
         @identifier.update(old_payment_system: true)
 
         @identifier.record_payment

@@ -311,6 +311,14 @@ module StashEngine
       joins('INNER JOIN stash_engine_identifiers ON stash_engine_resources.id = stash_engine_identifiers.latest_resource_id')
     end
 
+    scope :needs_article, -> do
+      latest_per_dataset.joins(:last_curation_activity)
+        .joins("left outer join dcs_related_identifiers pa
+          on pa.resource_id = stash_engine_resources.id and pa.work_type = 6 and pa.related_identifier like 'http%'")
+        .where("pa.id is null and stash_engine_identifiers.pub_state != 'withdrawn'")
+        .where.not(last_curation_activity: { status: %w[withdrawn in_progress retracted] })
+    end
+
     def set_identifier
       self.identifier = StashEngine::Identifier.find_by(id: identifier_id) if identifier.blank?
     end

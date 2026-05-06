@@ -11,6 +11,8 @@ find /home/ec2-user/deploy/shared/tmp/cache -empty -type d -delete
 
 bundle exec rails subscriptions:saved_searches >> /home/ec2-user/deploy/shared/log/subscriptions_saved_searches.log 2>&1
 
+bundle exec rails publication_updater:query_pubmed >> /home/ec2-user/deploy/shared/log/publication_updater_pubmed.log 2>&1
+
 bundle exec rails publication_updater:query_preprints >> /home/ec2-user/deploy/shared/log/publication_updater_preprints.log 2>&1
 
 bundle exec rails publication_updater:crossref >> /home/ec2-user/deploy/shared/log/publication_updater_crossref.log 2>&1

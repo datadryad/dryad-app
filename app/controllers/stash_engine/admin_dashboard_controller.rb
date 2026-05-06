@@ -117,10 +117,7 @@ module StashEngine
         tenant_limit = StashEngine::Tenant.enabled.joins(:tenant_ror_orgs).where(tenant_ror_orgs: { ror_id: @role_object.ror_ids }).distinct
       end
       @tenant_limit = tenant_limit || StashEngine::Tenant.enabled
-      if @role_object.is_a?(StashEngine::JournalOrganization)
-        sponsor_limit = [@role_object]
-        sponsor_limit += @role_object.orgs_included if @role_object.orgs_included
-      end
+      sponsor_limit = @role_object.orgs_included if @role_object.is_a?(StashEngine::JournalOrganization)
       @sponsor_limit = sponsor_limit || []
       journal_limit = @role_object.journals_sponsored_deep if @sponsor_limit.present?
       journal_limit = [@role_object] if @role_object.is_a?(StashEngine::Journal)
