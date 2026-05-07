@@ -45,16 +45,8 @@ module StashEngine
     private
 
     def process_file
-      # Download to temp
-      temp = "/tmp/#{File.basename(@key)}"
       puts "Downloading #{@key}"
-      File.open(temp, 'wb') do |file|
-        @s3.get_object(bucket: @bucket, key: @key) do |chunk|
-          file.write(chunk)
-        end
-      end
-
-      sums = Stash::Checksums.get_checksums([file.digest_type], File.open(temp))
+      sums = Stash::Checksums.get_checksums([file.digest_type], file.s3_permanent_presigned_url)
       checksum = sums.get_checksum(file.digest_type)
       size = sums.input_size
       if size == file.upload_file_size && checksum == file.digest
