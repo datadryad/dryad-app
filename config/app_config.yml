@@ -127,8 +127,8 @@ test:
     prefix: "10.5072"
     account: my.account
     password: "my.password"
-  solr_url: <%= ENV['SOLR_URL'] || "http://someserver.org:8983/solr/dryad" %>
-  ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://someserver.org:8983/solr/rors" %>
+  solr_url: <%= ENV['SOLR_URL'] || "http://localhost:8984/solr/dryad" %>
+  ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://localhost:8984/solr/rors" %>
   stripe_payment_url: https://dashboard.stripe.com/acc_123456/test
 
 <% else %>
