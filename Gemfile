@@ -8,7 +8,7 @@ gem 'mail', '~> 2.8'
 gem 'mysql2', '~> 0.5.7'
 gem 'rails', '~> 8.0.5'
 gem 'react-rails', '~> 2.6.2'
-gem 'shakapacker', '9.7.0'
+gem 'shakapacker', '10.0.0'
 gem 'sprockets', '~> 4.2.2'
 
 # ############################################################
