@@ -311,6 +311,7 @@ module Stash
       def date_parts_to_date(parts_array)
         return nil unless parts_array.present? && parts_array.is_a?(Array)
 
+        parts_array.push(1) while parts_array.length < 3
         Date.parse(parts_array.join('-'))
       rescue StandardError
         nil
