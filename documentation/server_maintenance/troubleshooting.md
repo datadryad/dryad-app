@@ -25,6 +25,15 @@ In an emergency, you can make this edit on the production servers and restart
 puma on each server, to avoid doing a full redeploy.
 
 
+Heavy database loads
+====================
+
+To diagnose database loads:
+- In RDS, go to Performance Insights
+- Look for “Top SQL” — this will tell you which queries are taking the most time
+
+
+
 Restoring metadata from a database backup
 =========================================
 
