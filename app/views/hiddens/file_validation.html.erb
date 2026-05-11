@@ -1,0 +1,59 @@
+<style>
+    pre {
+        font-size: 12px;
+        border: 1px solid #ccc;
+        font-style: italic;
+        padding: 10px;
+    }
+</style>
+
+<p>
+  Files found for ids: <%= @files.ids.join(', ') %>
+</p>
+<% @files.each do |file| %>
+  <div style="border: 1px solid #222; padding: 10px;">
+    <%
+      error = nil
+      begin
+        sums = Stash::Checksums.get_checksums([file.digest_type], file.s3_permanent_presigned_url)
+      rescue StandardError => e
+        error = e.message
+      end
+      info = { checksum: sums&.get_checksum(file.digest_type), size: sums&.input_size }
+    %>
+    <p>File ID: <strong><%= file.id %></strong></p>
+    <ul>
+      <% if info[:checksum] == file.digest %>
+        <li>File digest matches</li>
+      <% else %>
+        <li style="color: red"><strong>File digest does not match</strong></li>
+      <% end %>
+      <% if info[:size] == file.upload_file_size %>
+        <li>File size matches</li>
+      <% else %>
+        <li style="color: red"><strong>File size does not match</strong></li>
+      <% end %>
+    </ul>
+    <p> S3 permanent path: <i><%= file.s3_permanent_path %></i></p>
+    <p> S3 bucket: <i><%= APP_CONFIG.s3.bucket %></i></p>
+    <pre><%= JSON.pretty_generate(file.slice(*%i[type id resource_id original_filename download_filename file_state updated_at validated_at digest_type digest upload_file_size])) %></pre>
+
+    <% if error %>
+      <p style="color: red"><strong><%= error %></strong></p>
+    <% end %>
+    <pre><%= JSON.pretty_generate(info) %></pre>
+
+    <br />
+    <strong>Next steps:</strong>
+    <ol>
+      <li>Try manual validation:
+        <pre>StashEngine::FileValidationService.new(file: <%= "#{file.type}.find(#{file.id})" %>).validate_file</pre>
+      </li>
+      <li>If filesize is wrong, download the file and check the file size</li>
+      <li>If digest is wrong, try regenerating it
+        <pre>StashEngine::FileValidationService.new(file: <%= "#{file.type}.find(#{file.id})" %>).recreate_digests</pre>
+      </li>
+      <li>Download the file and check file integrity</li>
+    </ol>
+  </div>
+<% end %>
