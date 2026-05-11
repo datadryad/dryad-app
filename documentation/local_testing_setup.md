@@ -68,6 +68,16 @@ RAILS_ENV=test bundle exec rspec spec/features/stash_engine/my_test_spec.rb
 RAILS_ENV=test bundle exec rspec spec/features/stash_engine/my_test_spec.rb:36
 ```
 
+
+## Setting up SOLR for testing
+
+Some tests need a SOLR server running.
+[Here](docker_test_solr.md) are the details on installation and usage.
+
+This instance is running on port `8984` and is used only on test environment so that it doesn't interfere with the 
+development instance. 
+
+
 ## Various testing commands
 
 ```
