@@ -648,7 +648,7 @@ GEM
       multi_json (~> 1.19, >= 1.19.1)
       rexml (~> 3.4, >= 3.4.4)
       thor (~> 1.5)
-    shakapacker (9.7.0)
+    shakapacker (10.0.0)
       activesupport (>= 5.2)
       package_json
       rack-proxy (>= 0.6.1)
@@ -873,7 +873,7 @@ DEPENDENCIES
   sassc-rails (~> 2.1.2)
   selenium-webdriver (~> 4.11)
   serrano (~> 1.7)
-  shakapacker (= 9.7.0)
+  shakapacker (= 10.0.0)
   shoulda (~> 4.0.0)
   sidekiq (~> 8.0.7)
   sidekiq-limit_fetch

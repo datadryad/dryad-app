@@ -676,9 +676,9 @@
     "@babel/helper-plugin-utils" "^7.28.6"
 
 "@babel/plugin-transform-modules-systemjs@^7.29.0":
-  version "7.29.0"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-modules-systemjs/-/plugin-transform-modules-systemjs-7.29.0.tgz#e458a95a17807c415924106a3ff188a3b8dee964"
-  integrity sha512-PrujnVFbOdUpw4UHiVwKvKRLMMic8+eC0CuNlxjsyZUiBjhFdPsewdXCkveh2KqBA9/waD0W1b4hXSOBQJezpQ==
+  version "7.29.4"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-modules-systemjs/-/plugin-transform-modules-systemjs-7.29.4.tgz#f621105da99919c15cf4bde6fcc7346ef95e7b20"
+  integrity sha512-N7QmZ0xRZfjHOfZeQLJjwgX2zS9pdGHSVl/cjSGlo4dXMqvurfxXDMKY4RqEKzPozV78VMcd0lxyG13mlbKc4w==
   dependencies:
     "@babel/helper-module-transforms" "^7.28.6"
     "@babel/helper-plugin-utils" "^7.28.6"
@@ -6254,9 +6254,9 @@ fast-levenshtein@^2.0.6:
   integrity sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==
 
 fast-uri@^3.0.1:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/fast-uri/-/fast-uri-3.1.0.tgz#66eecff6c764c0df9b762e62ca7edcfb53b4edfa"
-  integrity sha512-iPeeDKJSWf4IEOasVVrknXpaBV0IApz/gp7S2bb7Z4Lljbl2MGJRqInZiUrQwV16cpzw/D3S5j5Julj/gT52AA==
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/fast-uri/-/fast-uri-3.1.2.tgz#8af3d4fc9d3e71b11572cc2673b514a7d1a8c8ec"
+  integrity sha512-rVjf7ArG3LTk+FS6Yw81V1DLuZl1bRbNrev6Tmd/9RaroeeRRJhAt7jg/6YFxbvAQXUCavSoZhPPj6oOx+5KjQ==
 
 fastest-levenshtein@^1.0.12, fastest-levenshtein@^1.0.16:
   version "1.0.16"
@@ -9131,6 +9131,13 @@ pac-resolver@^7.0.1:
     degenerator "^5.0.0"
     netmask "^2.0.2"
 
+pack-config-diff@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/pack-config-diff/-/pack-config-diff-0.1.0.tgz#c15025e196ff85009806890cca0841e96aaa6a1b"
+  integrity sha512-gx60G4pnT4GFQ7WECdf7SCq9vdsvBhodLXXzwisy37/t0zkAZ3hMgLCdOGivudF1l0gcLZhIWVYreS89be15QA==
+  dependencies:
+    js-yaml "^4.1.0"
+
 package-json-from-dist@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/package-json-from-dist/-/package-json-from-dist-1.0.1.tgz#4f1471a010827a86f94cfd9b0727e36d267de505"
@@ -10492,12 +10499,13 @@ setprototypeof@1.2.0, setprototypeof@~1.2.0:
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.2.0.tgz#66c9a24a73f9fc28cbe66b09fed3d33dcaf1b424"
   integrity sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==
 
-shakapacker@9.7.0:
-  version "9.7.0"
-  resolved "https://registry.yarnpkg.com/shakapacker/-/shakapacker-9.7.0.tgz#e8e1b2cb58e54678942698d9071b14aff58b517e"
-  integrity sha512-/6Y/hioWAchUYDcH8pbIQdSLS63QI+Tb26mDGDR6wLO+QFFcxiv906/hqJTTUcW9Xrp5sFV5LwfdctQSSII5ig==
+shakapacker@10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/shakapacker/-/shakapacker-10.0.0.tgz#870f823531c7362836975ab9bb16732234a580a0"
+  integrity sha512-bLKU/xGxIpC/oXvTBRLnpH6bjVK/wyYeWiwE35zd3xxbcg6WfbbQxls0L/AmO8p560RR2PgfR3QtHb7klBmu0A==
   dependencies:
     js-yaml "^4.1.0"
+    pack-config-diff "^0.1.0"
     path-complete-extname "^1.0.0"
     webpack-merge "^5.8.0"
     yargs "^17.7.2"
