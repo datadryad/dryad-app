@@ -7,11 +7,13 @@ module StashEngine
       PER_PAGE = 1000
 
       def sitemap_index
-        service = StashApi::SolrSearchService.new(query: '*', filters: { sort: 'date desc' })
-        result = service.search(fields: 'dc_identifier_s updated_at_dt')
-        results = result['response']
-        @count = results['numFound']
+        results = Rails.cache.fetch('sitemap_index', expires_in: 1.day) do
+          service = StashApi::SolrSearchService.new(query: '*', filters: { sort: 'date desc' })
+          result = service.search(fields: 'dc_identifier_s updated_at_dt')
+          result['response']
+        end
 
+        @count = results['numFound']
         builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
           xml.sitemapindex('xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9') do
             1.upto(pages) do |i|
@@ -32,9 +34,12 @@ module StashEngine
       end
 
       def sitemap_page(page)
-        service = StashApi::SolrSearchService.new(query: '*', filters: { sort: 'date asc' })
-        result = service.search(page: page, per_page: PER_PAGE, fields: 'dc_identifier_s updated_at_dt')
-        results = result['response']['docs']
+        results = Rails.cache.fetch("sitemap_page_#{page}", expires_in: 1.day) do
+          service = StashApi::SolrSearchService.new(query: '*', filters: { sort: 'date asc' })
+          result = service.search(page: page, per_page: PER_PAGE, fields: 'dc_identifier_s updated_at_dt')
+          result['response']['docs']
+        end
+
         builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
           xml.urlset('xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9') do
             results.each do |id|

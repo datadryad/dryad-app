@@ -11,8 +11,6 @@ module StashEngine
       @hostname = request.host
     end
 
-    # produces a sitemap for the domain name/tenant listing the released datasets
-    # TODO: change page to display all that are embargoed or published, not repo status and cache the doc so it's not too heavy
     def sitemap
       respond_to do |format|
         format.xml do
