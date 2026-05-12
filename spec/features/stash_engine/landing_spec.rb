@@ -179,7 +179,7 @@ RSpec.feature 'Landing', type: :feature, js: true do
       end
 
       it 'does not display the embargoed files' do
-        visit stash_url_helpers.landing_show_path(id: identifier.to_s)
+        visit stash_url_helpers.landing_show_path(id: identifier.to_s, public: true)
         expect(all('details.c-file-group').count).to eq(0)
         expect(page).to have_content('This dataset is embargoed')
       end

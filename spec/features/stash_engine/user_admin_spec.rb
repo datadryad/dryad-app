@@ -123,6 +123,7 @@ RSpec.feature 'UserAdmin', type: :feature do
           expect(page).to have_text('Journal role')
           find('#searchselect-stash_engine_user_roles_attributes__6__role_object_id___input').send_keys(@journal.title[0..4])
           expect(page).not_to have_css('li.fa-circle-notch')
+          expect(page).to have_text(@journal.title)
           find("li[data-value='#{@journal.id}']").click
           find('#stash_engine_user_roles_attributes_6_role_admin').set(true)
           find('input[name=commit]').click

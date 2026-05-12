@@ -67,7 +67,7 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
       end
 
       it 'changes the file name' do
-        fname = Faker::Hipster.word
+        fname = Faker::Creature::Animal.name
         click_button 'Files'
         click_button "Rename file #{file.download_filename}"
         fill_in "Rename file #{file.download_filename}", with: fname
