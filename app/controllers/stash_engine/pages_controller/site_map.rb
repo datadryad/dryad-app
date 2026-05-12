@@ -8,7 +8,7 @@ module StashEngine
 
       def sitemap_index
         results = Rails.cache.fetch('sitemap_index', expires_in: 1.day) do
-          service = StashApi::SolrSearchService.new(query: '*', filters: { sort: 'date desc' })
+          service = StashApi::SolrSearchService.new(query: '*', filters: { sort: 'updated_at_dt desc' })
           result = service.search(fields: 'dc_identifier_s updated_at_dt')
           result['response']
         end
@@ -19,12 +19,16 @@ module StashEngine
             1.upto(pages) do |i|
               xml.sitemap do
                 xml.loc sitemap_url(format: 'xml', page: i)
-                xml.lastmod results.dig('docs', 0, 'updated_at_dt')
+                xml.lastmod i == pages ? results.dig('docs', 0, 'updated_at_dt') : deploy_date
               end
             end
           end
         end
         builder.to_xml
+      end
+
+      def deploy_date
+        DateTime.parse(Rails.application.config.assets.version).iso8601
       end
 
       def pages
@@ -35,7 +39,7 @@ module StashEngine
 
       def sitemap_page(page)
         results = Rails.cache.fetch("sitemap_page_#{page}", expires_in: 1.day) do
-          service = StashApi::SolrSearchService.new(query: '*', filters: { sort: 'date asc' })
+          service = StashApi::SolrSearchService.new(query: '*', filters: { sort: 'updated_at_dt asc' })
           result = service.search(page: page, per_page: PER_PAGE, fields: 'dc_identifier_s updated_at_dt')
           result['response']['docs']
         end
