@@ -317,9 +317,9 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     expect(page).to have_text('All progress saved')
     click_button 'Preview changes'
     click_button 'Related works'
-    doi = Faker::Internet.url
+    doi = Faker::Pid.doi
     mock_good_doi_resolution(doi: doi)
-    fill_in 'DOI or other URL', with: Faker::Pid.doi
+    fill_in 'DOI or other URL', with: doi
     page.send_keys(:tab)
     expect(page).to have_text('All progress saved')
     click_button 'Preview changes'
