@@ -34,8 +34,7 @@ module StashDatacite
         if errors || (not_paid && !invoicer.invoice_created?)
           flash[:notice] = 'Please pay the remaining DPC to submit for curation and publication' if not_paid
           flash[:alert] = 'Unable to submit dataset for curation. Please correct submission errors' if errors
-          new_res = DuplicateResourceService.new(@resource, current_user).call
-          redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: new_res.id)
+          redirect_to metadata_entry_pages_new_version_path(resource_id: @resource.id)
         else
           redirect_to dashboard_path, notice: 'Dataset cannot be queued for curation until invoice is paid'
         end
