@@ -213,7 +213,6 @@ Rails.application.routes.draw do
     
     post 'helpdesk', to: 'pages#helpdesk', as: 'contact_helpdesk'
     
-    get 'close_page', to: 'pages#close_page'
     get 'contact', to: 'pages#contact'
     get 'mission', to: 'pages#what_we_do'
     get 'join_us', to: 'pages#join_us'
@@ -221,8 +220,6 @@ Rails.application.routes.draw do
     get 'code_of_conduct', to: 'pages#code_of_conduct'
     get 'ethics', to: 'pages#ethics'
     get 'pb_tombstone', to: 'pages#pb_tombstone'
-    get 'why_use', to: 'pages#why_use'
-    get 'dda', to: 'pages#dda' # data deposit agreement
     get 'terms', to: 'pages#terms'
     get 'partner_terms', to: 'pages#terms_partner'
     get 'about', to: 'pages#who_we_are'

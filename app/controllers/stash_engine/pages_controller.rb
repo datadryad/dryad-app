@@ -17,6 +17,8 @@ module StashEngine
           sm = SiteMap.new
           if params[:page].nil?
             render xml: sm.sitemap_index, layout: false
+          elsif params[:page].to_i.zero?
+            render xml: sm.sitemap_static, layout: false
           else
             render xml: sm.sitemap_page(params[:page]), layout: false
           end
