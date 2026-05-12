@@ -310,15 +310,18 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     page.send_keys(:tab)
     find('.use-text-entered').set(true) if page.has_css?('.use-text-entered')
     page.send_keys(:tab)
+    expect(page).to have_text('All progress saved')
     click_button 'Preview changes'
     click_button 'Subjects'
     fill_in_keywords
+    expect(page).to have_text('All progress saved')
     click_button 'Preview changes'
     click_button 'Related works'
     doi = Faker::Internet.url
     mock_good_doi_resolution(doi: doi)
-    fill_in 'DOI or other URL', with: doi
+    fill_in 'DOI or other URL', with: Faker::Pid.doi
     page.send_keys(:tab)
+    expect(page).to have_text('All progress saved')
     click_button 'Preview changes'
     # Submit the changes
     fill_in('Describe edits made', with: Faker::Lorem.sentence) if curator
