@@ -44,9 +44,11 @@ module StashEngine
             sitemapindex = doc.at_xpath('//sitemapindex')
             expect(sitemapindex.to_s).to include('</sitemapindex>') # it has the element and closes it
             sitemaps = sitemapindex.xpath('//sitemap')
-            expect(sitemaps[0].to_s).to include('sitemap.xml?page=1')
-            expect(sitemaps[1].to_s).to include('sitemap.xml?page=2')
-            expect(sitemaps[2].to_s).to include('sitemap.xml?page=3')
+            expect(sitemaps.length).to eq(4)
+            expect(sitemaps[0].to_s).to include('sitemap.xml?page=0')
+            expect(sitemaps[1].to_s).to include('sitemap.xml?page=1')
+            expect(sitemaps[2].to_s).to include('sitemap.xml?page=2')
+            expect(sitemaps[3].to_s).to include('sitemap.xml?page=3')
           end
         end
 
