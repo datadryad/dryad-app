@@ -99,6 +99,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
     before(:each) do
       mock_salesforce!
       mock_solr!
+      mock_rors_solr!
       mock_stripe!
       mock_datacite_gen!
       neuter_curation_callbacks!
@@ -248,6 +249,8 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
           find('input[name="commit"]').click
         end
         within(:css, '#funders_list') { expect(page).to have_text(new_funder) }
+        click_button 'Close dialog', match: :first
+        expect(page).to have_text(new_funder)
       end
 
       it 'sets a fee waiver and shows a log' do
