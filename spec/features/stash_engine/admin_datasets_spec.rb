@@ -244,6 +244,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
         within(:css, 'form[action="/stash_datacite/contributors/create.js"]') do
           fill_in 'Funder:', with: new_funder
           expect(page).to have_field('Funder:', with: new_funder)
+          page.send_keys(:tab)
           find('input[name="commit"]').click
         end
         within(:css, '#funders_list') { expect(page).to have_text(new_funder) }
