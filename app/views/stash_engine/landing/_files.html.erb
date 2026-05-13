@@ -69,6 +69,8 @@
     <%= render partial: 'stash_engine/downloads/download', locals: { dataset_identifier: dataset_identifier, resource: dl_resource, share: share.present? ? share[:code] : nil } %>
   <% elsif dataset_identifier.retracted? %>
     <p>This dataset has been retracted. Please see the notice above for more information.</p>
+  <% elsif dataset_identifier.pub_state == 'embargoed' %>
+    <%= render partial: 'stash_engine/landing/files_embargoed', locals: {resource: dataset_identifier.latest_resource_with_public_metadata } %>  
   <% else %>
     <p>No data files are available for display.</p>
   <% end %>

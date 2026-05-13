@@ -26,6 +26,7 @@ RSpec.feature 'UserAccount', type: :feature, js: true do
 
         fill_in 'First name', with: fn
         fill_in 'Last name', with: ln
+        page.send_keys(:tab)
 
         click_button 'Save changes'
         find_button 'Save changes', disabled: true
