@@ -20,12 +20,13 @@ docker exec -it --user solr dryad_solr bin/solr create_core -c dryad
 ```
 Copy all configuration files
 ```
-docker cp ~/dryad-app/config/solr_config/resources/protwords.txt dryad_solr:/var/solr/data/dryad/conf/
-docker cp ~/dryad-app/config/solr_config/resources/README.md dryad_solr:/var/solr/data/dryad/conf/
-docker cp ~/dryad-app/config/solr_config/resources/schema.xml dryad_solr:/var/solr/data/dryad/conf/
-docker cp ~/dryad-app/config/solr_config/resources/solrconfig.xml dryad_solr:/var/solr/data/dryad/conf/
-docker cp ~/dryad-app/config/solr_config/resources/stopwords_en.txt dryad_solr:/var/solr/data/dryad/conf/
-docker cp ~/dryad-app/config/solr_config/resources/synonyms.txt dryad_solr:/var/solr/data/dryad/conf/
+cd ~/dryad-app/config/solr_config/resources 
+docker cp protwords.txt dryad_solr:/var/solr/data/dryad/conf/protwords.txt
+docker cp README.md dryad_solr:/var/solr/data/dryad/conf/README.md
+docker cp schema.xml dryad_solr:/var/solr/data/dryad/conf/schema.xml
+docker cp solrconfig.xml dryad_solr:/var/solr/data/dryad/conf/solrconfig.xml
+docker cp stopwords_en.txt dryad_solr:/var/solr/data/dryad/conf/stopwords_en.txt
+docker cp synonyms.txt dryad_solr:/var/solr/data/dryad/conf/synonyms.txt
 ```
 
 Restart container for new config to apply
@@ -46,12 +47,13 @@ docker exec -it --user solr dryad_solr bin/solr create_core -c rors
 ```
 Copy all configuration files
 ```
-docker cp ~/dryad-app/config/solr_config/rors/protwords.txt dryad_solr:/var/solr/data/rors/conf/
-docker cp ~/dryad-app/config/solr_config/rors/README.md dryad_solr:/var/solr/data/rors/conf/
-docker cp ~/dryad-app/config/solr_config/rors/schema.xml dryad_solr:/var/solr/data/rors/conf/
-docker cp ~/dryad-app/config/solr_config/rors/solrconfig.xml dryad_solr:/var/solr/data/rors/conf/
-docker cp ~/dryad-app/config/solr_config/rors/stopwords_en.txt dryad_solr:/var/solr/data/rors/conf/
-docker cp ~/dryad-app/config/solr_config/rors/synonyms.txt dryad_solr:/var/solr/data/rors/conf/
+cd ~/dryad-app/config/solr_config/rors 
+docker cp protwords.txt dryad_solr:/var/solr/data/rors/conf/protwords.txt
+docker cp README.md dryad_solr:/var/solr/data/rors/conf/README.md
+docker cp schema.xml dryad_solr:/var/solr/data/rors/conf/schema.xml
+docker cp solrconfig.xml dryad_solr:/var/solr/data/rors/conf/solrconfig.xml
+docker cp stopwords_en.txt dryad_solr:/var/solr/data/rors/conf/stopwords_en.txt
+docker cp synonyms.txt dryad_solr:/var/solr/data/rors/conf/synonyms.txt
 ```
 
 Restart container for new config to apply
@@ -65,3 +67,8 @@ Data indexing
 rails console
 >> StashEngine::RorOrg.reindex_all
 ```
+
+Test ENV SOLR Setup
+===========
+
+See [here](docker_test_solr.md) more details on installation and usage.

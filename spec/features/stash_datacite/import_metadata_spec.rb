@@ -51,6 +51,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       doi = '10.1098/rsif.2017.0030'
       mock_good_doi_resolution(doi: "https://doi.org/#{doi}")
       fill_crossref_info(doi: doi)
+      expect(page).to have_text('All progress saved')
       click_button 'Next'
       expect(page).to have_button('Import metadata')
       click_button('Import metadata')
@@ -70,6 +71,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       doi = '10.48550/arxiv.2601.20261'
       mock_good_doi_resolution(doi: "https://doi.org/#{doi}")
       fill_crossref_info(doi: doi)
+      expect(page).to have_text('All progress saved')
       click_button 'Next'
       expect(page).to have_button('Import metadata')
       click_button('Import metadata')

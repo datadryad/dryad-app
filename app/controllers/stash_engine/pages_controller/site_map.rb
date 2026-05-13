@@ -4,16 +4,26 @@ module StashEngine
     class SiteMap
       include Rails.application.routes.url_helpers
 
-      PER_PAGE = 1000
+      attr_accessor :per_page, :count, :latest_update
 
-      def sitemap_index
+      def initialize
+        @per_page = 1000
         results = Rails.cache.fetch('sitemap_index', expires_in: 1.day) do
           service = StashApi::SolrSearchService.new(query: '*', filters: { sort: 'updated_at_dt desc' })
           result = service.search(fields: 'dc_identifier_s updated_at_dt')
           result['response']
         end
-
+        @latest_update = results.dig('docs', 0, 'updated_at_dt')
         @count = results['numFound']
+      end
+
+      def pages
+        return 0 if count == 0
+
+        ((count - 1) / per_page) + 1
+      end
+
+      def sitemap_index
         builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
           xml.sitemapindex('xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9') do
             xml.sitemap do
@@ -23,7 +33,7 @@ module StashEngine
             1.upto(pages) do |i|
               xml.sitemap do
                 xml.loc sitemap_url(format: 'xml', page: i)
-                xml.lastmod i == pages ? results.dig('docs', 0, 'updated_at_dt') : deploy_date
+                xml.lastmod i == pages ? latest_update : deploy_date
               end
             end
           end
@@ -31,20 +41,10 @@ module StashEngine
         builder.to_xml
       end
 
-      def deploy_date
-        DateTime.parse(Rails.application.config.assets.version).iso8601
-      end
-
-      def pages
-        return 0 if @count == 0
-
-        ((@count - 1) / PER_PAGE) + 1
-      end
-
       def sitemap_page(page)
         results = Rails.cache.fetch("sitemap_page_#{page}", expires_in: 1.day) do
           service = StashApi::SolrSearchService.new(query: '*', filters: { sort: 'updated_at_dt asc' })
-          result = service.search(page: page, per_page: PER_PAGE, fields: 'dc_identifier_s updated_at_dt')
+          result = service.search(page: page, per_page: @per_page, fields: 'dc_identifier_s updated_at_dt')
           result['response']['docs']
         end
 
@@ -84,6 +84,12 @@ module StashEngine
           end
         end
         builder.to_xml
+      end
+
+      private
+
+      def deploy_date
+        DateTime.parse(Rails.application.config.assets.version).iso8601
       end
     end
   end

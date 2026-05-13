@@ -6,6 +6,7 @@ jobs:
   rspec-features:
     name: RSpec Feature Tests 3
     runs-on: ubuntu-22.04
+    timeout-minutes: 20
 
     env:
       DB_ADAPTER: mysql2

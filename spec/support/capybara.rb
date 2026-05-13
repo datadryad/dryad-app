@@ -46,19 +46,20 @@ Capybara.disable_animation = true
 
 Capybara.register_driver :selenium_chrome_headless do |app|
   # Capybara::Selenium::Driver.load_selenium
-  browser_options = Selenium::WebDriver::Chrome::Options.new.tap do |opts|
-    opts.args << '--window-size=1920,2080'
-    opts.args << '--force-device-scale-factor=0.95'
-    opts.args << '--headless'
-    opts.args << '--incognito'
-    opts.args << '--disable-gpu'
-    opts.args << '--disable-site-isolation-trials'
-    opts.args << '--no-sandbox'
-    opts.args << '--disable-extensions'
-    opts.args << '--disable-popup-blocking'
-    opts.args << '--disable-search-engine-choice-screen'
-  end
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: Selenium::WebDriver::Chrome::Options.new(
+    args: [
+      '--window-size=1920,2080',
+      '--headless=new',
+      '--incognito',
+      '--disable-gpu',
+      '--disable-extensions',
+      '--disable-popup-blocking',
+      '--disable-site-isolation-trials',
+      '--disable-search-engine-choice-screen',
+      '--disable-features=OptimizationGuideModelDownloading,OptimizationHintsFetching,OptimizationTargetPrediction,OptimizationHints',
+      '--no-sandbox'
+    ]
+  ))
 end
 
 RSpec.configure do |config|

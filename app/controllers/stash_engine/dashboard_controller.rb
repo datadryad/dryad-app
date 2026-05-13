@@ -7,7 +7,7 @@ module StashEngine
     def choose
       return redirect_to admin_dashboard_path if current_user&.min_admin?
 
-      redirect_to dashboard_path
+      redirect_to dashboard_path(doi: params[:doi])
     end
 
     def show

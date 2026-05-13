@@ -78,6 +78,11 @@
   <p><em>Data Curator</em><br/>Kathiyayini holds an M.Sc. in Biochemistry. She has three years of experience as a curator of life science literature and has previously worked for two different companies as a research analyst and scientific analyst. In her role as a scientific analyst, Kathiyayini coordinated interviews, served as a trainer, and oversaw quality control. In her free time, she enjoys pencil drawing, painting, and listening to music.</p>
 </div>
 <div class="bio">
+  <img src="/images/rose.jpg" alt="Headshot of Rose Jeffries">
+  <h5>Rose Jeffries</h5><br/>
+  <p><em>Data Curator</em><br/>Rose holds a B.A. and M.S. in Psychology. She started her career as a research assistant at the University of Oregon, where she discovered her enthusiasm for data management and stewardship. She has worked with data types ranging from brain imaging and blood samples to observational coding, survey responses, and government records. Rose is a vocal advocate of open science and community-centered research, and she enjoys crochet, exploring the Pacific Northwest, gardening, gaming, and spending time with her partner and their cats.</p>
+</div>
+<div class="bio">
   <img src="/images/kailasha.jpg" alt="Headshot of Kailasha Purushothaman">
   <h5>Kailasha Purushothaman</h5><br/>
   <p><em>Data Curator</em><br/>

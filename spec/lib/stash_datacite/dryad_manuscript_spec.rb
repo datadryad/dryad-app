@@ -21,7 +21,7 @@ module Stash
         it 'extracts the title' do
           @dm.populate_title
           @resource.reload
-          expect(@resource.title).to eql(@manuscript.metadata['ms title'])
+          expect(CGI.unescape_html(@resource.title)).to eql(@manuscript.metadata['ms title'])
         end
       end
 
