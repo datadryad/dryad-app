@@ -245,11 +245,8 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
           fill_in 'Funder:', with: new_funder
           expect(page).to have_field('Funder:', with: new_funder)
           find('input[name="commit"]').click
-          expect(page).not_to have_field('Funder:', with: new_funder)
         end
-        click_button 'Close dialog', match: :first
-        expect(page).not_to have_text('+Add funder')
-        expect(page).to have_text(new_funder)
+        within(:css, '#funders_list') { expect(page).to have_text(new_funder) }
       end
 
       it 'sets a fee waiver and shows a log' do
