@@ -7,7 +7,7 @@ module StashEngine
       attr_accessor :per_page, :count, :latest_update
 
       def initialize
-        @per_page = 2
+        @per_page = 1000
         results = Rails.cache.fetch('sitemap_index', expires_in: 1.day) do
           service = StashApi::SolrSearchService.new(query: '*', filters: { sort: 'updated_at_dt desc' })
           result = service.search(fields: 'dc_identifier_s updated_at_dt')
