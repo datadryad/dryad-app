@@ -131,6 +131,8 @@ module Stash
                               filenames: @files.map(&:download_filename),
                               filesizes: @files.map(&:upload_file_size))
 
+          @resource.reload
+
           expect do
             FileCollection.check_uploaded_list(resource: @resource,
                                                resource_method: :software_files,
