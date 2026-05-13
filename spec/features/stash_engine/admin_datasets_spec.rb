@@ -243,7 +243,9 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
         expect(page).to have_text('+Add funder')
         within(:css, 'form[action="/stash_datacite/contributors/create.js"]') do
           fill_in 'Funder:', with: new_funder
+          expect(page).to have_field('Funder:', with: new_funder)
           find('input[name="commit"]').click
+          expect(page).not_to have_field('Funder:', with: new_funder)
         end
         click_button 'Close dialog', match: :first
         expect(page).not_to have_text('+Add funder')
@@ -258,7 +260,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
         expect(page).to have_text('Please provide a reason')
         find("#select_div option[value='no_funds']").select_option
         click_button('Submit')
-        sleep 1
+        expect(page).not_to have_text('Add fee discount')
         click_button('View payment history')
         expect(page).to have_text('Payment history')
         expect(page).to have_text('Added waiver')
@@ -267,6 +269,12 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       it 'adds a github issue' do
         expect(page).to have_text('Github issues')
         click_link 'Add github issue'
+        window = page.driver.browser.window_handles
+        if window.size > 1
+          page.driver.browser.switch_to.window(window.last)
+          page.driver.browser.close
+          page.driver.browser.switch_to.window(window.first)
+        end
         fill_in 'Enter the issue number', with: '1235'
         click_button 'Submit'
         expect(page).to have_link('Another test github issue', href: 'https://github.com/datadryad/dryad-product-roadmap/issues/1235')

@@ -374,14 +374,14 @@ module Stash
               @zc.update(state: 'finished')
               @zc2 = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier, copy_type: 'software_publish',
                                           deposition_id: @zc.deposition_id, state: 'finished', software_doi: "10.meow/zenodo.#{@zc.deposition_id}")
-
+              @zc2.reload
               @resource2 = create(:resource, identifier: @resource.identifier)
               @zc3 = create(:zenodo_copy, resource: @resource2, identifier: @resource2.identifier, copy_type: 'software',
                                           deposition_id: @zc2.deposition_id + 1, state: 'finished',
-                                          software_doi: "10.meow/zenodo.#{@zc.deposition_id + 1}")
+                                          software_doi: "10.meow/zenodo.#{@zc2.deposition_id + 1}")
               @zc4 = create(:zenodo_copy, resource: @resource2, identifier: @resource2.identifier, copy_type: 'software_publish',
                                           deposition_id: @zc2.deposition_id + 1, state: 'finished',
-                                          software_doi: "10.meow/zenodo.#{@zc.deposition_id + 1}")
+                                          software_doi: "10.meow/zenodo.#{@zc2.deposition_id + 1}")
               @zsc = Stash::ZenodoSoftware::Copier.new(copy_id: @zc4.id)
 
               @stub = stub_delete_existing_ds(deposition_id: @zc2.deposition_id + 1)

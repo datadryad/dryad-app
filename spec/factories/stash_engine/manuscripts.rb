@@ -27,7 +27,7 @@ FactoryBot.define do
     metadata do
       { 'ms title' => Faker::Hipster.sentence,
         'abstract' => Faker::Hipster.paragraph,
-        'keywords' => [Faker::Hipster.word, Faker::Hipster.word] }
+        'keywords' => 3.times.map { Faker::Creature::Animal.unique.name } }
     end
   end
 
