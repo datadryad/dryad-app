@@ -2,8 +2,6 @@
 require 'byebug'
 require 'nokogiri'
 
-# RSpec.configure(&:infer_spec_type_from_file_location!)
-
 module StashEngine
   class PagesController
     RSpec.describe SiteMap, type: :model do
@@ -33,7 +31,7 @@ module StashEngine
         before { subject.per_page = 3 }
 
         describe '#pages' do
-          it 'has three pages for 14 records with page size of 5' do
+          it 'has three pages for 8 records with page size of 3' do
             expect(subject.pages).to eq(3)
           end
         end
