@@ -253,7 +253,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       first(:button, 'Remove file').click
       first(:button, 'Remove file').click
 
-      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/empty_file.txt", make_visible: { opacity: 1 })
+      attach_file('data', "#{Rails.root}/spec/data/stash_engine/empty_file.txt", make_visible: { opacity: 1 })
       expect(page.has_css?('progress[value]')).to be true
       expect(find('progress')['value']).to eq('0')
     end
@@ -261,7 +261,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     it 'does not allow to select new FILE already in the table and of the same upload type' do
       attach_file(
         'data',
-        "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { opacity: 1 }
+        "#{Rails.root}/spec/data/stash_engine/file_10.ods", make_visible: { opacity: 1 }
       )
       expect(page).to have_content('file_10.ods', count: 1)
       expect(page).to have_content('A file of the same name is already in the table. The new file was not added.')
@@ -270,12 +270,12 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     it 'does not allow to select new FILES already in the table and of the same upload type' do
       attach_file(
         'data',
-        "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt", make_visible: { opacity: 1 }
+        "#{Rails.root}/spec/data/stash_engine/funbar.txt", make_visible: { opacity: 1 }
       )
       attach_file(
         'data',
-        %W[#{Rails.root}/spec/fixtures/stash_engine/funbar.txt
-           #{Rails.root}/spec/fixtures/stash_engine/file_10.ods],
+        %W[#{Rails.root}/spec/data/stash_engine/funbar.txt
+           #{Rails.root}/spec/data/stash_engine/file_10.ods],
         make_visible: { opacity: 1 }
       )
       expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
@@ -286,7 +286,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     it 'allows to select new files already in the table and are not of the same upload type' do
       attach_file(
         'software',
-        "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { opacity: 1 }
+        "#{Rails.root}/spec/data/stash_engine/file_10.ods", make_visible: { opacity: 1 }
       )
       expect(page).to have_content('file_10.ods', count: 2)
     end
@@ -298,7 +298,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       navigate_to_upload
       attach_file(
         'data',
-        "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { opacity: 1 }
+        "#{Rails.root}/spec/data/stash_engine/file_10.ods", make_visible: { opacity: 1 }
       )
       expect(page).to have_content('file_10.ods')
 
@@ -310,7 +310,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'does not allow to select new FILE from file system with the same name of manifest FILE' do
-      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt", make_visible: { opacity: 1 })
+      attach_file('data', "#{Rails.root}/spec/data/stash_engine/funbar.txt", make_visible: { opacity: 1 })
       expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
       expect(page).to have_content('A file of the same name is already in the table. The new file was not added.')
     end
@@ -328,8 +328,8 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
       attach_file(
         'data',
-        %W[#{Rails.root}/spec/fixtures/stash_engine/funbar.txt
-           #{Rails.root}/spec/fixtures/stash_engine/file_10.ods], make_visible: { opacity: 1 }
+        %W[#{Rails.root}/spec/data/stash_engine/funbar.txt
+           #{Rails.root}/spec/data/stash_engine/file_10.ods], make_visible: { opacity: 1 }
       )
 
       expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
@@ -350,7 +350,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     it 'does not allow to add manifest FILEs with the same name of FILES selected from file system' do
       attach_file(
         'data',
-        "#{Rails.root}/spec/fixtures/stash_engine/file_100.ods", make_visible: { opacity: 1 }
+        "#{Rails.root}/spec/data/stash_engine/file_100.ods", make_visible: { opacity: 1 }
       )
 
       build_valid_stub_request('http://example.org/file_10.ods')
@@ -365,18 +365,18 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'removes warning message when adding new file from file system' do
-      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt", make_visible: { opacity: 1 })
+      attach_file('data', "#{Rails.root}/spec/data/stash_engine/funbar.txt", make_visible: { opacity: 1 })
       expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
 
       attach_file(
         'data',
-        "#{Rails.root}/spec/fixtures/stash_engine/file_100.ods", make_visible: { opacity: 1 }
+        "#{Rails.root}/spec/data/stash_engine/file_100.ods", make_visible: { opacity: 1 }
       )
       expect(page).not_to have_content('A file of the same name is already in the table. The new file was not added.')
     end
 
     it 'removes warning message when adding new manifest file' do
-      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt", make_visible: { opacity: 1 })
+      attach_file('data', "#{Rails.root}/spec/data/stash_engine/funbar.txt", make_visible: { opacity: 1 })
       expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
 
       build_valid_stub_request('http://example.org/funbar_2.txt')

@@ -8,7 +8,7 @@ describe 'checksums:validate_files', type: :task do
     url = 'https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark:/99999/fkv3zfjd28%7C1%7Cproducer/valid.csv'
     allow_any_instance_of(StashEngine::DataFile).to receive(:s3_permanent_presigned_url).and_return(url)
     stub_request(:any, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.}).to_return(
-      body: File.open("#{Rails.root}/spec/fixtures/stash_engine/valid.csv"), status: 200
+      body: File.open("#{Rails.root}/spec/data/stash_engine/valid.csv"), status: 200
     )
   end
 

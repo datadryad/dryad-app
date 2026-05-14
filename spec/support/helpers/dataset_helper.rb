@@ -90,7 +90,7 @@ module DatasetHelper
 
   def add_required_data_files
     click_button 'Enter URLs'
-    url = 'https://github.com/datadryad/dryad-app/raw/refs/heads/main/spec/fixtures/stash_engine/valid.csv'
+    url = 'https://github.com/datadryad/dryad-app/raw/refs/heads/main/spec/data/stash_engine/valid.csv'
     validate_url_manifest(url)
     build_valid_stub_request(url, 'text/csv', 501)
     expect(page).to have_content('valid.csv')
@@ -210,15 +210,15 @@ module DatasetHelper
   def attach_files
     attach_file(
       'data',
-      "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { opacity: 1 }
+      "#{Rails.root}/spec/data/stash_engine/file_10.ods", make_visible: { opacity: 1 }
     )
     attach_file(
       'software',
-      "#{Rails.root}/spec/fixtures/stash_engine/file_100.ods", make_visible: { opacity: 1 }
+      "#{Rails.root}/spec/data/stash_engine/file_100.ods", make_visible: { opacity: 1 }
     )
     attach_file(
       'supp',
-      "#{Rails.root}/spec/fixtures/stash_engine/file_1000.ods", make_visible: { opacity: 1 }
+      "#{Rails.root}/spec/data/stash_engine/file_1000.ods", make_visible: { opacity: 1 }
     )
   end
 

@@ -18,7 +18,7 @@ RSpec.describe SubmittedReports do
     it 'returns a list of reports' do
       stub_request(:get, "https://api.datacite.org/reports?client-id=#{APP_CONFIG[:counter][:account]}&page%5Bsize%5D=500")
         .with(headers: { 'Host' => 'api.datacite.org' })
-        .to_return(status: 200, body: File.read(File.join(__dir__, '../fixtures/http_responses/datacite_reports.json')),
+        .to_return(status: 200, body: File.read(File.join(__dir__, '../data/http_responses/datacite_reports.json')),
                    headers: { 'content-type' => 'application/json; charset=utf-8' })
       result = @sr.list_reports
       rpt = result['2013-10']
@@ -38,7 +38,7 @@ RSpec.describe SubmittedReports do
     before(:each) do
       stub_request(:get, "https://api.datacite.org/reports?client-id=#{APP_CONFIG[:counter][:account]}&page%5Bsize%5D=500")
         .with(headers: { 'Host' => 'api.datacite.org' })
-        .to_return(status: 200, body: File.read(File.join(__dir__, '../fixtures/http_responses/datacite_reports.json')),
+        .to_return(status: 200, body: File.read(File.join(__dir__, '../data/http_responses/datacite_reports.json')),
                    headers: { 'content-type' => 'application/json; charset=utf-8' })
 
       stub_request(:get, %r{api\.datacite\.org/events\?source-id=datacite-usage&subj-id=https://api\.datacite\.org/reports/.+})
@@ -67,7 +67,7 @@ RSpec.describe Uploader do
   end
 
   before(:each) do
-    @up = Uploader.new(report_id: nil, file_name: File.expand_path(File.join(__dir__, '../fixtures/2010-11.json')))
+    @up = Uploader.new(report_id: nil, file_name: File.expand_path(File.join(__dir__, '../data/2010-11.json')))
   end
 
   describe '#modify_headers' do

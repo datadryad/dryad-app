@@ -63,9 +63,9 @@ describe Reports::Payments::Journal2025Fees do
 
           described_class.new.call(args).count
 
-          expect(File).to have_received(:open).with('spec/fixtures/reports/2025_2025_fees_summary.csv', 'w', anything).once
+          expect(File).to have_received(:open).with('spec/data/reports/2025_2025_fees_summary.csv', 'w', anything).once
           expect(File).to have_received(:open).with(
-            "spec/fixtures/reports/2025_submissions_#{StashEngine::GenericFile.sanitize_file_name(journal_org.name)}_2025.pdf", 'wb'
+            "spec/data/reports/2025_submissions_#{StashEngine::GenericFile.sanitize_file_name(journal_org.name)}_2025.pdf", 'wb'
           ).once
         end
       end

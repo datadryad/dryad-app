@@ -15,8 +15,8 @@ module StashApi
     'digestType' => 'md5',
     'path' => 'favicon.ico',
     'mimeType' => 'image/vnd.microsoft.icon',
-    'size' => ::File.size(Rails.root.join('spec/fixtures/http_responses/favicon.ico')),
-    'digest' => Digest::MD5.hexdigest(::File.read(Rails.root.join('spec/fixtures/http_responses/favicon.ico'))),
+    'size' => ::File.size(Rails.root.join('spec/data/http_responses/favicon.ico')),
+    'digest' => Digest::MD5.hexdigest(::File.read(Rails.root.join('spec/data/http_responses/favicon.ico'))),
     'description' => 'Super fun comment from old Dryad'
   }.freeze
 
