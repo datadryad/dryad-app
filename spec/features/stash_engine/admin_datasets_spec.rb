@@ -99,6 +99,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
     before(:each) do
       mock_salesforce!
       mock_solr!
+      mock_rors_solr!
       mock_stripe!
       mock_datacite_gen!
       neuter_curation_callbacks!
@@ -244,11 +245,11 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
         within(:css, 'form[action="/stash_datacite/contributors/create.js"]') do
           fill_in 'Funder:', with: new_funder
           expect(page).to have_field('Funder:', with: new_funder)
+          page.send_keys(:tab)
           find('input[name="commit"]').click
-          expect(page).not_to have_field('Funder:', with: new_funder)
         end
+        within(:css, '#funders_list') { expect(page).to have_text(new_funder) }
         click_button 'Close dialog', match: :first
-        expect(page).not_to have_text('+Add funder')
         expect(page).to have_text(new_funder)
       end
 

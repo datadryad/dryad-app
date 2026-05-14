@@ -17,11 +17,7 @@
   </div>
 <% end %>
 
-<% if @id.may_download?(user: current_user) %>
-  <%= render partial: 'stash_engine/landing/files', locals: {dataset_identifier: @id, share: nil} %>
-<% else %>
-  <%= render partial: 'stash_engine/landing/files_embargoed', locals: {resource: @resource} %>
-<% end %>
+<%= render partial: 'stash_engine/landing/files', locals: {dataset_identifier: @id, share: nil} %>
 
 <%= render partial: "stash_datacite/descriptions/show",
      locals: { abstract: review.abstract, methods: '', other: '', changelog: '' } %>
