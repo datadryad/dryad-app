@@ -104,7 +104,7 @@ If you would like your funder, institution or publisher to sponsor your <span ro
 
    4. *Citation*. It is hoped and expected that <span role="emphasis" aria-describedby="term-desc">Users</span> will follow accepted scholarly norms for citing data and giving credit to fellow scholars. The desired format for links to <span role="emphasis" aria-describedby="term-desc">Datasets</span> is the fully resolvable <span role="emphasis" aria-describedby="term-desc">Identifier</span>.
 
-5. **Intellectual Property Rights**.
+5. <span id="copyright">**Intellectual Property Rights**</span>.
 
    1. *Dryad Intellectual Property*. End Users acknowledge that, as between itself and Dryad, Dryad has all right, title, and interest in and to the Dryad <span role="emphasis" aria-describedby="term-desc">Infrastructure and Services</span>, including all copyrights, database compilation rights, trademarks, trade names, and other intellectual property rights, currently in existence or later developed. End Users shall not delete or modify any of Dryad’s logos or notice of intellectual property rights on documents, online text or interfaces made available by Dryad. Dryad owns the service marks Dryad, Dryad Digital Repository, and the Dryad logos appearing on the Dryad <span role="emphasis" aria-describedby="term-desc">Website</span>.
 
