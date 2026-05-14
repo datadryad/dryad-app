@@ -76,7 +76,7 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
         click_button 'README'
         expect(page).to have_content('a README file must be included')
         expect(page).to have_text(resource.title)
-        expect(page).to have_text(fname)
+        expect(page).to have_text(StashEngine::FilenameSanitizer.new(fname).process)
         expect(page).not_to have_text(file.download_filename)
       end
     end
