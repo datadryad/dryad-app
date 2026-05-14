@@ -7,7 +7,7 @@ module RorHelper
           'Content-Type' => 'application/json'
         }
       )
-      .to_return(status: 200, body:  File.new(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', file)),
+      .to_return(status: 200, body:  File.new(File.join(Rails.root, 'spec', 'data', 'http_responses', file)),
                  headers: {})
   end
 end

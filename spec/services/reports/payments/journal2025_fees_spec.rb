@@ -1,6 +1,6 @@
 describe Reports::Payments::Journal2025Fees do
 
-  let(:args) { OpenStruct.new(sc_report: File.join('spec', 'fixtures', 'reports', 'shopping_cart_report_2025.csv')) }
+  let(:args) { OpenStruct.new(sc_report: File.join('spec', 'data', 'reports', 'shopping_cart_report_2025.csv')) }
   let(:journal_org) { create(:journal_organization) }
   let!(:journal1) { create(:journal, sponsor: journal_org) }
   let!(:journal_issn1) { create(:journal_issn, journal: journal1, id: '1111-2222') }
@@ -32,7 +32,7 @@ describe Reports::Payments::Journal2025Fees do
     end
 
     context 'generated report file' do
-      let(:report_path) { File.join('spec', 'fixtures', 'reports', '2025_2025_fees_summary.csv') }
+      let(:report_path) { File.join('spec', 'data', 'reports', '2025_2025_fees_summary.csv') }
       let(:report_headers) { %w[SponsorName JournalName Count] }
 
       context 'csv contents' do
