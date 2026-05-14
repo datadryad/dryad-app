@@ -60,7 +60,7 @@ end
 RSpec.configure do |config|
   # config.raise_errors_for_deprecations!
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_paths = "#{Rails.root}/spec/fixtures"
+  # config.fixture_paths = "#{Rails.root}/spec/fixtures"
   config.bisect_runner = :shell
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your

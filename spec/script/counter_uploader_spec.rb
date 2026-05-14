@@ -122,7 +122,7 @@ RSpec.describe UtilityMethods do
   describe 'needs_submission?(month_year:, report_directory:, report_info:, force_list:)' do
     before(:each) do
       @month_year = '2010-11'
-      @report_dir =  File.expand_path(File.join(__dir__, '../fixtures'))
+      @report_dir =  File.expand_path(File.join(__dir__, '../data'))
       @report_info = OpenStruct.new(year_month: '2020-11', id: '3875xxe', pages: 1)
       @force_list = []
     end

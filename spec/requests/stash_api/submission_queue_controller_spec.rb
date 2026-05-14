@@ -1,6 +1,5 @@
 require 'rails_helper'
 require_relative 'helpers'
-require 'fixtures/stash_api/metadata'
 
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
 module StashApi

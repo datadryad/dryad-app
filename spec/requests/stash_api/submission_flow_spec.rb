@@ -1,5 +1,4 @@
 require_relative 'helpers'
-require 'fixtures/stash_api/metadata'
 
 RSpec.describe 'SubmissionFlow', type: :request do
   include DatasetHelper
@@ -19,7 +18,7 @@ RSpec.describe 'SubmissionFlow', type: :request do
   let(:access_token) { get_access_token(doorkeeper_application: doorkeeper_application) }
   let(:headers) { default_authenticated_headers(access_token) }
 
-  let(:metadata_builder) { Fixtures::StashApi::Metadata.new }
+  let(:metadata_builder) { StashApi::Metadata.new }
   let(:title) { 'Title for dataset full submission flow test through API' }
 
   before do
