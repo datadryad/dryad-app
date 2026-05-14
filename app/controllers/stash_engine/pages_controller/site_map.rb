@@ -63,7 +63,7 @@ module StashEngine
 
       def sitemap_static
         public_pages = [
-          about_url, mission_url, join_us_url, publishers_url, institutions_url, support_us_url, code_of_conduct_url,
+          ROOT_URL, about_url, mission_url, join_us_url, publishers_url, institutions_url, support_us_url, code_of_conduct_url,
           ethics_url, terms_url, partner_terms_url, definitions_url, publication_policy_url, privacy_url, accessibility_url,
           choose_login_url, contact_url, journals_url, api_url, help_url
         ]
