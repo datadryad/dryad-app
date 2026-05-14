@@ -50,7 +50,7 @@ require 'cgi'
 
 module StashEngine
   class Resource < ApplicationRecord # rubocop:disable Metrics/ClassLength
-    include StashEngine::Support::Statuses
+    include StashEngine::Statuses
 
     self.table_name = 'stash_engine_resources'
     acts_as_paranoid
