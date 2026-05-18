@@ -238,7 +238,7 @@ GEM
       railties (>= 5.0.0)
     faker (3.5.1)
       i18n (>= 1.8.11, < 2)
-    faraday (2.14.1)
+    faraday (2.14.2)
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
@@ -334,7 +334,7 @@ GEM
     jquery-turbolinks (2.1.0)
       railties (>= 3.1.0)
       turbolinks
-    json (2.19.3)
+    json (2.19.5)
     jwt (2.3.0)
     kaminari (1.2.2)
       activesupport (>= 4.1.0)
@@ -809,7 +809,7 @@ DEPENDENCIES
   ezid-client (~> 1.9.2)
   factory_bot_rails
   faker
-  faraday (~> 2.14.1)
+  faraday (~> 2.14.2)
   faraday-retry
   filesize (~> 0.2.0)
   font-awesome-sass (~> 6.7.2)
