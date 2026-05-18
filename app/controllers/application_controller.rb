@@ -27,6 +27,10 @@ class ApplicationController < ActionController::Base
   def protect_from_host_header_attack
     pp request.host == Rails.application.default_url_options[:host]
     pp request.host, Rails.application.default_url_options[:host]
-    raise ActionController::Forbidden, 'Invalid host' if request.host != Rails.application.default_url_options[:host]
+
+    return if controller_name == 'help'
+    return if request.host == Rails.application.default_url_options[:host]
+
+    render plain: 'Forbidden', status: 403
   end
 end

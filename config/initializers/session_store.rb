@@ -2,5 +2,4 @@
 
 Rails.application.config.session_store :cookie_store,
                                        key: '_dash2_session',
-                                       same_site: :strict,
                                        secure: !Rails.env.development? && !Rails.env.test?
