@@ -221,8 +221,6 @@ Rails.application.routes.draw do
     get 'code_of_conduct', to: 'pages#code_of_conduct'
     get 'ethics', to: 'pages#ethics'
     get 'pb_tombstone', to: 'pages#pb_tombstone'
-    get 'why_use', to: 'pages#why_use'
-    get 'dda', to: 'pages#dda' # data deposit agreement
     get 'terms', to: 'pages#terms'
     get 'partner_terms', to: 'pages#terms_partner'
     get 'about', to: 'pages#who_we_are'

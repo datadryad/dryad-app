@@ -26,6 +26,10 @@ module StashEngine
       def sitemap_index
         builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
           xml.sitemapindex('xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9') do
+            xml.sitemap do
+              xml.loc sitemap_url(format: 'xml', page: 0)
+              xml.lastmod deploy_date
+            end
             1.upto(pages) do |i|
               xml.sitemap do
                 xml.loc sitemap_url(format: 'xml', page: i)
@@ -50,6 +54,31 @@ module StashEngine
               xml.url do
                 xml.loc Rails.application.routes.url_helpers.show_url(id['dc_identifier_s'])
                 xml.lastmod id['updated_at_dt']
+              end
+            end
+          end
+        end
+        builder.to_xml
+      end
+
+      def sitemap_static
+        public_pages = [
+          ROOT_URL, about_url, mission_url, join_us_url, publishers_url, institutions_url, support_us_url, code_of_conduct_url,
+          ethics_url, terms_url, partner_terms_url, definitions_url, publication_policy_url, privacy_url, accessibility_url,
+          choose_login_url, contact_url, journals_url, api_url, help_url
+        ]
+        builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
+          xml.urlset('xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9') do
+            public_pages.each do |url|
+              xml.url do
+                xml.loc url
+                xml.lastmod deploy_date
+              end
+            end
+            HELP_PAGES.each do |page|
+              xml.url do
+                xml.loc "#{ROOT_URL}#{page[:path]}"
+                xml.lastmod deploy_date
               end
             end
           end
