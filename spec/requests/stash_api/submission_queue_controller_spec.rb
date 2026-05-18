@@ -6,7 +6,7 @@ module StashApi
   RSpec.describe SubmissionQueueController, type: :request do
 
     before(:each) do
-      host! 'my.example.org'
+      host! 'localhost'
       @user = create(:user, role: 'superuser')
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                 owner_id: @user.id, owner_type: 'StashEngine::User')

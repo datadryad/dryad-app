@@ -27,8 +27,6 @@ class ApplicationController < ActionController::Base
   def protect_from_host_header_attack
     pp request.host == Rails.application.default_url_options[:host]
     pp request.host, Rails.application.default_url_options[:host]
-    if request.host != Rails.application.default_url_options[:host]
-      raise ActionController::Forbidden, 'Invalid host'
-    end
+    raise ActionController::Forbidden, 'Invalid host' if request.host != Rails.application.default_url_options[:host]
   end
 end
