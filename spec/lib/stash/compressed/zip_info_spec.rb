@@ -47,7 +47,7 @@ module Stash
 
       describe '#eocd_record32' do
         it 'obtains the EOCD record' do
-          file_string = File.binread('spec/fixtures/zipfiles/test_zip.zip') # small zip file to test
+          file_string = File.binread('spec/data/zipfiles/test_zip.zip') # small zip file to test
           stub_range_request(url: 'https://example.com/zipfile.zip', r_start: 0, r_end: 0, body: '', file_size: file_string.size)
 
           stub_range_request(url: 'https://example.com/zipfile.zip', r_start: 69_305, r_end: 134_840,
@@ -60,7 +60,7 @@ module Stash
         end
 
         it 'raises an error if the EOCD record is not found' do
-          file_string = File.binread('spec/fixtures/zipfiles/test_zip.zip') # small zip file to test
+          file_string = File.binread('spec/data/zipfiles/test_zip.zip') # small zip file to test
           stub_range_request(url: 'https://example.com/zipfile.zip', r_start: 0, r_end: 0, body: '', file_size: file_string.size)
 
           # this will not include the EOCD record
@@ -75,8 +75,8 @@ module Stash
       describe '#eocd_record64' do
         it 'obtains the EOCD64 record' do
           file_size = 5_723_622_354
-          eocd32 = File.binread('spec/fixtures/zipfiles/zip64_eocd32_request.bin')
-          eocd64 = File.binread('spec/fixtures/zipfiles/zip64_eocd64_request.bin')
+          eocd32 = File.binread('spec/data/zipfiles/zip64_eocd32_request.bin')
+          eocd64 = File.binread('spec/data/zipfiles/zip64_eocd64_request.bin')
 
           stub_range_request(url: 'https://example.com/zipfile.zip', r_start: 0, r_end: 0, body: '', file_size: file_size)
 
@@ -95,8 +95,8 @@ module Stash
 
         it 'raises an error if EOCD64 record not found' do
           file_size = 5_723_622_354
-          eocd32 = File.binread('spec/fixtures/zipfiles/zip64_eocd32_request.bin')
-          eocd64 = File.binread('spec/fixtures/zipfiles/zip64_eocd64_request.bin')
+          eocd32 = File.binread('spec/data/zipfiles/zip64_eocd32_request.bin')
+          eocd64 = File.binread('spec/data/zipfiles/zip64_eocd64_request.bin')
 
           stub_range_request(url: 'https://example.com/zipfile.zip', r_start: 0, r_end: 0, body: '', file_size: file_size)
 
@@ -114,7 +114,7 @@ module Stash
 
       describe '#zip64?' do
         it 'returns false if the zip file is zip32' do
-          file_string = File.binread('spec/fixtures/zipfiles/test_zip.zip') # small zip file to test
+          file_string = File.binread('spec/data/zipfiles/test_zip.zip') # small zip file to test
           stub_range_request(url: 'https://example.com/zipfile.zip', r_start: 0, r_end: 0, body: '', file_size: file_string.size)
 
           stub_range_request(url: 'https://example.com/zipfile.zip', r_start: 69_305, r_end: 134_840,
@@ -126,8 +126,8 @@ module Stash
 
         it 'returns true if the zip file is zip64' do
           file_size = 5_723_622_354
-          eocd32 = File.binread('spec/fixtures/zipfiles/zip64_eocd32_request.bin')
-          # eocd64 = File.open('spec/fixtures/zipfiles/zip64_eocd64_request.bin', 'rb').read
+          eocd32 = File.binread('spec/data/zipfiles/zip64_eocd32_request.bin')
+          # eocd64 = File.open('spec/data/zipfiles/zip64_eocd64_request.bin', 'rb').read
 
           stub_range_request(url: 'https://example.com/zipfile.zip', r_start: 0, r_end: 0, body: '', file_size: file_size)
 
@@ -141,7 +141,7 @@ module Stash
 
       describe '#central_directory' do
         it 'returns the zip32 central directory' do
-          file_string = File.binread('spec/fixtures/zipfiles/test_zip.zip') # small zip file to test
+          file_string = File.binread('spec/data/zipfiles/test_zip.zip') # small zip file to test
           stub_range_request(url: 'https://example.com/zipfile.zip', r_start: 0, r_end: 0, body: '', file_size: file_string.size)
 
           stub_range_request(url: 'https://example.com/zipfile.zip', r_start: 69_305, r_end: 134_840,
@@ -158,9 +158,9 @@ module Stash
 
         it 'returns the zip64 central directory' do
           file_size = 5_723_622_354
-          eocd32 = File.binread('spec/fixtures/zipfiles/zip64_eocd32_request.bin')
-          eocd64 = File.binread('spec/fixtures/zipfiles/zip64_eocd64_request.bin')
-          central_dir = File.binread('spec/fixtures/zipfiles/zip64_cd_request.bin')
+          eocd32 = File.binread('spec/data/zipfiles/zip64_eocd32_request.bin')
+          eocd64 = File.binread('spec/data/zipfiles/zip64_eocd64_request.bin')
+          central_dir = File.binread('spec/data/zipfiles/zip64_cd_request.bin')
 
           stub_range_request(url: 'https://example.com/zipfile.zip', r_start: 0, r_end: 0, body: '', file_size: file_size)
 
@@ -182,7 +182,7 @@ module Stash
 
       describe '#file_entries' do
         it 'gives correct file entries for zip32' do
-          file_string = File.binread('spec/fixtures/zipfiles/test_zip.zip') # small zip file to test
+          file_string = File.binread('spec/data/zipfiles/test_zip.zip') # small zip file to test
           stub_range_request(url: 'https://example.com/zipfile.zip', r_start: 0, r_end: 0, body: '', file_size: file_string.size)
 
           stub_range_request(url: 'https://example.com/zipfile.zip', r_start: 69_305, r_end: 134_840,
@@ -204,9 +204,9 @@ module Stash
 
         it 'gives correct file entries for zip64' do
           file_size = 5_723_622_354
-          eocd32 = File.binread('spec/fixtures/zipfiles/zip64_eocd32_request.bin')
-          eocd64 = File.binread('spec/fixtures/zipfiles/zip64_eocd64_request.bin')
-          central_dir = File.binread('spec/fixtures/zipfiles/zip64_cd_request.bin')
+          eocd32 = File.binread('spec/data/zipfiles/zip64_eocd32_request.bin')
+          eocd64 = File.binread('spec/data/zipfiles/zip64_eocd64_request.bin')
+          central_dir = File.binread('spec/data/zipfiles/zip64_cd_request.bin')
 
           stub_range_request(url: 'https://example.com/zipfile.zip', r_start: 0, r_end: 0, body: '', file_size: file_size)
 
@@ -233,7 +233,7 @@ module Stash
 
       describe '#fallback_file_entries1' do
         it 'gives correct file entries for zip32' do
-          file_string = File.binread('spec/fixtures/zipfiles/test_zip.zip')
+          file_string = File.binread('spec/data/zipfiles/test_zip.zip')
           stub_request(:get, 'https://example.com/zipfile.zip')
             .with(headers: { 'Host' => 'example.com' })
             .to_return(status: 200, body: file_string,
@@ -250,7 +250,7 @@ module Stash
         # there isn't a good way to mock this since it's outside of rails network libraries w/ curl
         # but tested manually
         xit 'gives correct file entries for zip32' do
-          file_string = File.binread('spec/fixtures/zipfiles/test_zip.zip')
+          file_string = File.binread('spec/data/zipfiles/test_zip.zip')
           stub_request(:get, 'https://example.com/zipfile.zip')
             .with(headers: { 'Host' => 'example.com' })
             .to_return(status: 200, body: file_string,

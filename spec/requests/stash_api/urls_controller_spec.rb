@@ -1,8 +1,6 @@
 require 'rails_helper'
 require 'uri'
 require_relative 'helpers'
-require 'fixtures/stash_api/metadata'
-require 'fixtures/stash_api/curation_metadata'
 require 'cgi'
 require 'digest'
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
@@ -15,8 +13,8 @@ module StashApi
     'digestType' => 'md5',
     'path' => 'favicon.ico',
     'mimeType' => 'image/vnd.microsoft.icon',
-    'size' => ::File.size(Rails.root.join('spec/fixtures/http_responses/favicon.ico')),
-    'digest' => Digest::MD5.hexdigest(::File.read(Rails.root.join('spec/fixtures/http_responses/favicon.ico'))),
+    'size' => ::File.size(Rails.root.join('spec/data/http_responses/favicon.ico')),
+    'digest' => Digest::MD5.hexdigest(::File.read(Rails.root.join('spec/data/http_responses/favicon.ico'))),
     'description' => 'Super fun comment from old Dryad'
   }.freeze
 

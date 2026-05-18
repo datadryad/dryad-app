@@ -12,12 +12,12 @@ describe RelatedIdentifierService do
     mock_datacite!
     stub_request(:get, 'https://api.crossref.org/works/10.1098%2Frsif.2017.0030')
       .to_return(status: 200,
-                 body: File.new(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'crossref_response.json')),
+                 body: File.new(File.join(Rails.root, 'spec', 'data', 'http_responses', 'crossref_response.json')),
                  headers: {})
 
     stub_request(:get, 'https://api.crossref.org/works/10.1098%2Frsif.2017.0031')
       .to_return(status: 200,
-                 body: File.new(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'crossref_response_retracted.json')),
+                 body: File.new(File.join(Rails.root, 'spec', 'data', 'http_responses', 'crossref_response_retracted.json')),
                  headers: {})
 
   end

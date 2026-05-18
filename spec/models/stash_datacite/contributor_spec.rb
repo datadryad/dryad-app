@@ -178,7 +178,7 @@ module StashDatacite
         before do
           create(:contributor_grouping,
                  name_identifier_id: NIH_ROR,
-                 json_contains: JSON.parse(File.read(File.join(Rails.root, 'spec/fixtures/nih_group.json'))))
+                 json_contains: JSON.parse(File.read(File.join(Rails.root, 'spec/data/nih_group.json'))))
         end
 
         it 'returns "NIH"' do
