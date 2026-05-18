@@ -7,7 +7,6 @@ require Rails.root.join('spec/support/faker.rb')
 user = StashEngine::User.find(ARGV[0])
 ident = create(:identifier, import_info: 0)
 resource = create(:resource, identifier_id: ident.id, current_editor_id: user.id, tenant_id: user.tenant_id, user: user, accepted_agreement: true)
-
 create(:description, resource: resource, description_type: 'technicalinfo', description: 'Created by script')
 create(:description, resource: resource, description_type: 'hsi_statement', description: nil)
 create(:description, resource: resource, description_type: 'abstract', description: 'Abstract')
