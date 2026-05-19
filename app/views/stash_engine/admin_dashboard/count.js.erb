@@ -1,3 +1,12 @@
+if (<%= @count.to_json %> <= 1) {
+  document.getElementById('charts_open').disabled = true
+  document.getElementById('search_charts').setAttribute('hidden', true);
+} else if (document.getElementById('charts_open').getAttribute('aria-expanded') === 'true') {
+  document.getElementById('charts_open').disabled = false
+  document.getElementById('search_charts').removeAttribute('hidden');
+} else {
+  document.getElementById('charts_open').disabled = false
+}
 document.getElementById('count_and_export').innerHTML = `<span><b><%= number_with_delimiter(@count) %></b> results</span><%= link_to "Export results as CSV", stash_url_helpers.admin_dashboard_results_path(format: :csv, search: params[:search], share: params[:share]), class: 'o-link__buttonlink' %>`;
 document.getElementById('count_and_export').setAttribute('aria-busy', false)
 document.getElementById('admin-pagination').innerHTML = "<%= escape_javascript(render(partial: 'pagination', locals: {count: @count, page: params[:page], page_size: params[:page_size], sort: params[:sort], direction: params[:direction], search: params[:search], share: params[:share]})) %>";
