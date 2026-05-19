@@ -63,7 +63,7 @@ gem 'httpclient', '~> 2.9.0'
 gem 'jbuilder' # is this used?
 gem 'jquery-turbolinks', '~> 2.1.0'
 gem 'jquery-ui-rails', '~> 7.0', git: 'https://github.com/jquery-ui-rails/jquery-ui-rails.git', tag: 'v7.0.0'
-gem 'jwt', '~> 2.3.0'
+gem 'jwt', '~> 3.2.0'
 gem 'kaminari', '~> 1.2.2'
 gem 'leaflet-rails', '~> 1.7.0'
 gem 'loofah', '~> 2.24.0'
