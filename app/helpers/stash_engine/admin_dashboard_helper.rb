@@ -23,6 +23,7 @@ module StashEngine
       head << 'Journal sponsor' if @fields.include?('sponsor')
       head << 'Publication IDs' if @fields.include?('identifiers')
       head << 'Curator' if @fields.include?('curator')
+      head << 'Editor' if @fields.include?('editor')
       head << 'DPC paid by' if @fields.include?('dpc')
       head << 'Last modified' if @fields.include?('updated_at')
       head << 'Submitted' if @fields.include?('submit_date')
@@ -87,6 +88,7 @@ module StashEngine
         row << (mn + related_ids).reject(&:blank?).first(6).join(', ')
       end
       row << dataset.curator_name if @fields.include?('curator')
+      row << dataset.editor_name if @fields.include?('editor')
       if @fields.include?('dpc')
         dpc = ''
         dpc = dataset.tenant&.short_name if dataset.identifier.payment_id == dataset.tenant_id

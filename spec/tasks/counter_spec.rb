@@ -4,7 +4,7 @@ require 'cgi'
 
 describe 'counter:cop_manual', type: :task do
   before(:each) do
-    @path = Rails.root.join('spec/fixtures/counter_processor')
+    @path = Rails.root.join('spec/data/counter_processor')
     ENV['JSON_DIRECTORY'] = @path.to_s
 
     # some items to spot check

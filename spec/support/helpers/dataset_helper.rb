@@ -90,7 +90,7 @@ module DatasetHelper
 
   def add_required_data_files
     click_button 'Enter URLs'
-    url = 'https://github.com/datadryad/dryad-app/raw/refs/heads/main/spec/fixtures/stash_engine/valid.csv'
+    url = 'https://github.com/datadryad/dryad-app/raw/refs/heads/main/spec/data/stash_engine/valid.csv'
     validate_url_manifest(url)
     build_valid_stub_request(url, 'text/csv', 501)
     expect(page).to have_content('valid.csv')
@@ -149,7 +149,7 @@ module DatasetHelper
     Faker::Creature::Animal.unique.clear
   end
 
-  def fill_in_author(first_name: Faker::Name.unique.first_name, last_name: Faker::Name.unique.last_name, email: Faker::Internet.email,
+  def fill_in_author(first_name: Faker::Name.unique.first_name, last_name: Faker::Name.unique.last_name, email: Faker::Internet.unique.email,
                      has_orcid: false)
     fill_in 'author_first_name', with: first_name
     page.send_keys(:tab)
@@ -157,7 +157,7 @@ module DatasetHelper
     fill_in 'author_last_name', with: last_name
     page.send_keys(:tab)
     expect(page.document).to have_content('All progress saved')
-    fill_in 'author_email', with: email
+    fill_in('author_email', with: email, fill_options: { clear: :backspace })
     page.send_keys(:tab)
     click_button 'Add email' if has_orcid
     expect(page.document).to have_content('All progress saved')
@@ -210,15 +210,15 @@ module DatasetHelper
   def attach_files
     attach_file(
       'data',
-      "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { opacity: 1 }
+      "#{Rails.root}/spec/data/stash_engine/file_10.ods", make_visible: { opacity: 1 }
     )
     attach_file(
       'software',
-      "#{Rails.root}/spec/fixtures/stash_engine/file_100.ods", make_visible: { opacity: 1 }
+      "#{Rails.root}/spec/data/stash_engine/file_100.ods", make_visible: { opacity: 1 }
     )
     attach_file(
       'supp',
-      "#{Rails.root}/spec/fixtures/stash_engine/file_1000.ods", make_visible: { opacity: 1 }
+      "#{Rails.root}/spec/data/stash_engine/file_1000.ods", make_visible: { opacity: 1 }
     )
   end
 

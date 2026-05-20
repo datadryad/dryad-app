@@ -4,56 +4,36 @@ module StashEngine
     class SiteMap
       include Rails.application.routes.url_helpers
 
-      attr_accessor :page_size
+      attr_accessor :per_page, :count, :latest_update
 
       def initialize
-        # really all we need to select is identifier_id, identifier, resource_id and resource.updated_at for sitemap
-
-        # @identifiers = StashEngine::Identifier.where(pub_state: %w[embargoed published])
-        #                   .order('stash_engine_identifiers.id')
-
-        subquery = <<-SQL
-          SELECT max(stash_engine_resources.id) as res_id, identifier_id
-		      FROM stash_engine_resources
-          WHERE identifier_id IS NOT NULL AND meta_view = 1
-          GROUP BY identifier_id
-        SQL
-
-        # the select part of the query is deferred to specific query because count causes badness when it
-        # tries to count a series of fields
-        @datasets = StashEngine::Identifier
-          .joins("INNER JOIN (#{subquery}) as res2 ON stash_engine_identifiers.id = res2.identifier_id")
-          .joins('INNER JOIN stash_engine_resources res ON res.id = res2.res_id')
-          .where("stash_engine_identifiers.pub_state IN ('embargoed', 'published')")
-          .order('stash_engine_identifiers.id')
-
-        @page_size = 1000
-      end
-
-      def count
-        @datasets.select('stash_engine_identifiers.id').count
+        @per_page = 1000
+        results = Rails.cache.fetch('sitemap_index', expires_in: 1.day) do
+          service = StashApi::SolrSearchService.new(query: '*', filters: { sort: 'updated_at_dt desc' })
+          result = service.search(fields: 'dc_identifier_s updated_at_dt')
+          result['response']
+        end
+        @latest_update = results.dig('docs', 0, 'updated_at_dt')
+        @count = results['numFound']
       end
 
       def pages
         return 0 if count == 0
 
-        ((count - 1) / @page_size) + 1
-      end
-
-      def page(number)
-        number = number.to_i
-        number = 1 if number < 1
-        @datasets.select('stash_engine_identifiers.id as identifier_id, stash_engine_identifiers.identifier, ' \
-                         'res.id as resource_id, res.updated_at').limit(@page_size).offset(@page_size * (number - 1))
+        ((count - 1) / per_page) + 1
       end
 
       def sitemap_index
         builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
           xml.sitemapindex('xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9') do
+            xml.sitemap do
+              xml.loc sitemap_url(format: 'xml', page: 0)
+              xml.lastmod deploy_date
+            end
             1.upto(pages) do |i|
               xml.sitemap do
                 xml.loc sitemap_url(format: 'xml', page: i)
-                xml.lastmod Time.now.utc.iso8601
+                xml.lastmod i == pages ? latest_update : deploy_date
               end
             end
           end
@@ -61,22 +41,56 @@ module StashEngine
         builder.to_xml
       end
 
-      def sitemap_page(page_number)
-        datasets = page(page_number)
+      def sitemap_page(page)
+        results = Rails.cache.fetch("sitemap_page_#{page}", expires_in: 1.day) do
+          service = StashApi::SolrSearchService.new(query: '*', filters: { sort: 'updated_at_dt asc' })
+          result = service.search(page: page, per_page: @per_page, fields: 'dc_identifier_s updated_at_dt')
+          result['response']['docs']
+        end
+
         builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
           xml.urlset('xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9') do
-            datasets.each do |i|
+            results.each do |id|
               xml.url do
-                xml.loc Rails.application.routes.url_helpers.show_url("doi:#{i.identifier}")
-                xml.lastmod i.updated_at.utc.iso8601
-                # changefreq and crawling priority are not really known
+                xml.loc Rails.application.routes.url_helpers.show_url(id['dc_identifier_s'])
+                xml.lastmod id['updated_at_dt']
               end
             end
           end
         end
         builder.to_xml
       end
-      # stash_identifier.resources.where(meta_view: true).order('id DESC').first
+
+      def sitemap_static
+        public_pages = [
+          ROOT_URL, about_url, mission_url, join_us_url, publishers_url, institutions_url, support_us_url, code_of_conduct_url,
+          ethics_url, terms_url, partner_terms_url, definitions_url, publication_policy_url, privacy_url, accessibility_url,
+          choose_login_url, contact_url, journals_url, api_url, help_url
+        ]
+        builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
+          xml.urlset('xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9') do
+            public_pages.each do |url|
+              xml.url do
+                xml.loc url
+                xml.lastmod deploy_date
+              end
+            end
+            HELP_PAGES.each do |page|
+              xml.url do
+                xml.loc "#{ROOT_URL}#{page[:path]}"
+                xml.lastmod deploy_date
+              end
+            end
+          end
+        end
+        builder.to_xml
+      end
+
+      private
+
+      def deploy_date
+        DateTime.parse(Rails.application.config.assets.version).iso8601
+      end
     end
   end
 end

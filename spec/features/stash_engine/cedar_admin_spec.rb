@@ -43,7 +43,7 @@ RSpec.feature 'CedarAdmin', type: :feature, js: true do
         click_button 'Add new'
         expect(page).to have_content('New CEDAR template')
         within(:css, '#genericModalDialog') do
-          attach_file('file-select', "#{Rails.root}/spec/fixtures/stash_engine/cedar.json")
+          attach_file('file-select', "#{Rails.root}/spec/data/stash_engine/cedar.json")
           expect(page).to have_text('This is just a test')
           first('#word_bank_id option:nth-of-type(2)').select_option
           find('input[name=commit]').click
@@ -57,7 +57,7 @@ RSpec.feature 'CedarAdmin', type: :feature, js: true do
         click_button 'Add new'
         expect(page).to have_content('New CEDAR template')
         within(:css, '#genericModalDialog') do
-          attach_file('file-select', "#{Rails.root}/spec/fixtures/stash_engine/valid.json")
+          attach_file('file-select', "#{Rails.root}/spec/data/stash_engine/valid.json")
           expect(page).to have_text('Not a CEDAR template file.')
           find('input[name=commit]').click
         end

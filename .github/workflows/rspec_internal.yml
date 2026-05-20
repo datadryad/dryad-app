@@ -7,10 +7,18 @@ jobs:
     name: RSpec Internal Tests
     runs-on: ubuntu-22.04
 
+    services:
+      solr:
+        image: solr:9.7.0
+        ports:
+          - 8983:8983
+
     env:
       DB_ADAPTER: mysql2
       MYSQL_PWD: root
       RAILS_ENV: test
+      SOLR_URL: http://localhost:8983/solr/dryad
+      ROR_SOLR_URL: http://localhost:8983/solr/rors
 
     steps:
     - name: 'Checkout the repo'
@@ -49,6 +57,31 @@ jobs:
         mysql -u root -e 'GRANT ALL ON dashv2_test.* TO travis@localhost'
         mysql -u root -e 'set global log_bin_trust_function_creators=1'
         bin/rails db:migrate:reset RAILS_ENV=test
+
+    - name: 'Setup Solr'
+      run: |
+        docker exec --user solr "${{ job.services.solr.id }}" bin/solr create_core -c dryad
+        docker exec --user solr "${{ job.services.solr.id }}" bin/solr create_core -c rors
+
+        docker cp config/solr_config/resources/protwords.txt "${{ job.services.solr.id }}:/var/solr/data/dryad/conf/"
+        docker cp config/solr_config/resources/README.md "${{ job.services.solr.id }}:/var/solr/data/dryad/conf/"
+        docker cp config/solr_config/resources/schema.xml "${{ job.services.solr.id }}:/var/solr/data/dryad/conf/"
+        docker cp config/solr_config/resources/solrconfig.xml "${{ job.services.solr.id }}:/var/solr/data/dryad/conf/"
+        docker cp config/solr_config/resources/stopwords_en.txt "${{ job.services.solr.id }}:/var/solr/data/dryad/conf/"
+        docker cp config/solr_config/resources/synonyms.txt "${{ job.services.solr.id }}:/var/solr/data/dryad/conf/"
+
+        docker cp config/solr_config/rors/protwords.txt "${{ job.services.solr.id }}:/var/solr/data/rors/conf/"
+        docker cp config/solr_config/rors/README.md "${{ job.services.solr.id }}:/var/solr/data/rors/conf/"
+        docker cp config/solr_config/rors/schema.xml "${{ job.services.solr.id }}:/var/solr/data/rors/conf/"
+        docker cp config/solr_config/rors/solrconfig.xml "${{ job.services.solr.id }}:/var/solr/data/rors/conf/"
+        docker cp config/solr_config/rors/stopwords_en.txt "${{ job.services.solr.id }}:/var/solr/data/rors/conf/"
+        docker cp config/solr_config/rors/synonyms.txt "${{ job.services.solr.id }}:/var/solr/data/rors/conf/"
+
+        docker restart "${{ job.services.solr.id }}"
+
+        until curl --fail http://localhost:8983/solr/admin/cores?action=STATUS; do
+          sleep 2
+        done
 
     - name: 'RSpec Job Tests'
       run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --format progress --tag ~skip spec/jobs

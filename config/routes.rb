@@ -221,8 +221,6 @@ Rails.application.routes.draw do
     get 'code_of_conduct', to: 'pages#code_of_conduct'
     get 'ethics', to: 'pages#ethics'
     get 'pb_tombstone', to: 'pages#pb_tombstone'
-    get 'why_use', to: 'pages#why_use'
-    get 'dda', to: 'pages#dda' # data deposit agreement
     get 'terms', to: 'pages#terms'
     get 'partner_terms', to: 'pages#terms_partner'
     get 'about', to: 'pages#who_we_are'
@@ -600,4 +598,10 @@ Rails.application.routes.draw do
   get '/resource/:doi_prefix/:doi_suffix*file',
       constraints: { doi_prefix: /doi:10.\d{4,9}/i, doi_suffix: /[A-Z0-9]+\.[A-Z0-9]+/i },
       to: redirect{ |p, req| "/dataset/#{p[:doi_prefix]}/#{p[:doi_suffix]}" }
+
+  resource :hidden do
+    collection do
+      get :file_validation
+    end
+  end
 end
