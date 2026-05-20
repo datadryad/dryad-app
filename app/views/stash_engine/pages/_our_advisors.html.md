@@ -5,7 +5,6 @@ Dryad committees, advisory groups and task forces are appointed by the Board to 
 ### Executive Committee
 
 * **Andrew Beckerman,** University of Sheffield  
-* **Rebekah Darksmith,** PLOS  
 * **Barbara Ebert**, German Federation for Biological Data e.V. (GFBio)  
 * **Ian Mulvany**, BMJ
 
@@ -14,7 +13,6 @@ Dryad committees, advisory groups and task forces are appointed by the Board to 
 
 * **Karl Benedict**, Retired, University of New Mexico Libraries  
 * **Jake Carlson**, University at Buffalo  
-* **Rebekah Darksmith,** PLOS  
 * **Scott Edmunds**, Independent  
 * **Brooks Hanson**, Retired, American Geophysical Union (AGU)   
 * **Matt Wascavage**, Alliance of Crop, Soil, and Environmental Science Societies (ACSESS)
