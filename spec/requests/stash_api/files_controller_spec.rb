@@ -1,8 +1,6 @@
 require 'rails_helper'
 require 'uri'
 require_relative 'helpers'
-require 'fixtures/stash_api/metadata'
-require 'fixtures/stash_api/curation_metadata'
 require 'cgi'
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
 module StashApi
@@ -46,7 +44,7 @@ module StashApi
       # be sure versions are set correctly, because creating them manually like this doesn't ensure it
       @resources[0].stash_version.update(version: 1)
       @resources[1].stash_version.update(version: 2)
-      @file_path = Rails.root.join('spec/fixtures/http_responses/favicon.ico')
+      @file_path = Rails.root.join('spec/data/http_responses/favicon.ico')
       @mime_type = 'image/vnd.microsoft.icon'
     end
 

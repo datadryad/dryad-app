@@ -20,6 +20,6 @@ FactoryBot.define do
     contributor_name    { 'National Institutes of Health' }
     identifier_type     { 'crossref_funder_id' }
     name_identifier_id  { 'http://dx.doi.org/10.13039/100000002' }
-    json_contains       { JSON.parse(File.read(File.join(Rails.root, 'spec/fixtures/nih_group.json'))) }
+    json_contains       { JSON.parse(File.read(File.join(Rails.root, 'spec/data/nih_group.json'))) }
   end
 end

@@ -18,10 +18,6 @@
   <h5>Andrea Chiarelli (2025-2028)</h5><p> is an Associate Director at Research Consulting Limited, a mission-driven consultancy dedicated to improving the effectiveness and impact of research and scholarly communication across the global academic landscape. Andrea serves as a trusted advisor to a diverse portfolio of clients spanning research organizations, non-profits, research funders, infrastructure providers, and academic publishers. His work focuses on helping organizations develop sustainable strategies in the context of the transition to open science. He holds a PhD in Civil Engineering from the University of Nottingham, an MSc in Nuclear and Energy Engineering from the Polytechnic University of Turin, Italy, and an Executive Master of Business Administration (EMBA) from Nottingham Trent University. Andrea is a Fellow of the Chartered Management Institute (CMgr FCMI).</p>
 </div>
 <div class="bio">
-  <img src="/images/darksmith.jpg" alt="Headshot of Bekah Darksmith">
-  <h5>Bekah Darksmith (2023-2026)</h5><p> joined PLOS as its Chief Marketing & Communications Officer in February 2018 to lead strategic development and management of outreach, marketing, and communications. Over the past 20 years, she has worked across academic, not‐for‐profit, and commercial publishing markets, with the bulk of her career spent at the University of California Press in progressively senior roles. Bekah most recently served UC Press in a dual capacity. As its Deputy Director, she developed strategy and oversaw operations for all revenue-generating functions within the organization — marketing, sales, rights and licensing as well as fundraising. As the Executive Director of the UC Press Foundation, she was responsible for driving philanthropic support for UC Press through engagement with its Board of Trustees and administration of the organization’s endowment.</p>
-</div>
-<div class="bio">
   <img src="/images/ebert.jpg" alt="Headshot of Barbara Ebert">
   <h5>Barbara Ebert (2022-2028)</h5><p> is Executive Secretary, German Federation for Biological Data e.V. (GFBio). GFBio e.V. is a non-profit association founded in 2016 as the legal entity for the sustainable operation of data services in Biodiversity research. It is active in the recently founded National Research Data Infrastructure (NFDI) in Germany. Starting October 2020 we are building a coordination team for the NFDI4BioDiversity consortium, and a pool of IT developers to mobilise data available at the partner organisations and feed them into a common data infrastructure.</p>  
 </div>
@@ -113,9 +109,9 @@
 #### Past board members
 
 <p>
-  We’d like to thank all the talented individuals who have dedicated their time and expertise to the Dryad board of directors for at least one term from 2012 to 2024:
+  We’d like to thank all the talented individuals who have dedicated their time and expertise to the Dryad board of directors for at least one term from 2012 to 2025:
 </p>
 
-Lynn Baird, Theo Bloom,\* Emilio Bruna, Ingrid Dillo, Lee Dirks, Alf Eaton, Martin Fenner, Liz Ferguson,\* Chuck Fox, Simon Hodson,\* Brian Hole, Kristi Holmes, Marcel Holyoak,\* Wolfram Horstmann, Brian Lavoie,\* Jennifer Lin, Catriona MacCallum, Paolo Mangiafico, Bill Michener, Allen Moore,\* Fiona Murphy, Johan Nilsson, Naomi Penfold, Iratxe Puebla, Allen Rodrigo, Judy Ruttenberg, Susanna Assunta Sansone,\* Eefke Smit,\* Kevin Smith, Carly Strasser, Caroline Sutton, Carol Tenopir, Paul Uhlir, Günter Waibel, Mike Whitlock,\* and Todd Vision\* (Dryad’s founding PI and long-serving Board member).
+Lynn Baird, Theo Bloom,\* Emilio Bruna, Rebekah Darksmith, Ingrid Dillo, Lee Dirks, Alf Eaton, Martin Fenner, Liz Ferguson,\* Chuck Fox, Simon Hodson,\* Brian Hole, Kristi Holmes, Marcel Holyoak,\* Wolfram Horstmann, Brian Lavoie,\* Jennifer Lin, Catriona MacCallum, Paolo Mangiafico, Bill Michener, Allen Moore,\* Fiona Murphy, Johan Nilsson, Naomi Penfold, Iratxe Puebla, Allen Rodrigo, Judy Ruttenberg, Susanna Assunta Sansone,\* Eefke Smit,\* Kevin Smith, Carly Strasser, Caroline Sutton, Carol Tenopir, Paul Uhlir, Günter Waibel, Mike Whitlock,\* and Todd Vision\* (Dryad’s founding PI and long-serving Board member).
 
 <p>* Founding Board members, 2012.</p>

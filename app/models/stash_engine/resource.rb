@@ -50,7 +50,7 @@ require 'cgi'
 
 module StashEngine
   class Resource < ApplicationRecord # rubocop:disable Metrics/ClassLength
-    include StashEngine::Support::Statuses
+    include StashEngine::Statuses
 
     self.table_name = 'stash_engine_resources'
     acts_as_paranoid
@@ -912,13 +912,13 @@ module StashEngine
       solr_indexer = Stash::Indexer::SolrIndexer.new(solr_url: APP_CONFIG.solr_url)
       ir = Stash::Indexer::IndexingResource.new(resource: self)
       result = solr_indexer.index_document(solr_hash: ir.to_index_document) # returns true/false for success of operation
-      update(solr_indexed: true) if result
+      update_columns(solr_indexed: true) if result
     end
 
     def delete_from_solr
       solr_indexer = Stash::Indexer::SolrIndexer.new(solr_url: APP_CONFIG.solr_url)
       result = solr_indexer.delete_document(doi: identifier.to_s) # returns true/false for success of operation
-      update(solr_indexed: false) if result
+      update_columns(solr_indexed: false) if result
     end
 
     # this just sends a **COPY** job to zenodo (ie duplication), not for replication which could be sfw or supp

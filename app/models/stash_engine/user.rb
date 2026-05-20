@@ -27,7 +27,7 @@
 #
 module StashEngine
   class User < ApplicationRecord
-    include StashEngine::Support::UserRoles
+    include StashEngine::UserRoles
 
     self.table_name = 'stash_engine_users'
     has_many :roles, dependent: :destroy

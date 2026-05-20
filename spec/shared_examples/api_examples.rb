@@ -64,7 +64,7 @@ RSpec.shared_examples('API submission flow') do |can_submit, submit_response|
     expect(json_response[:methods]).to eq(update_params[:methods])
 
     ### UPLOAD file
-    file = fixture_file_upload('spec/fixtures/zipfiles/test_zip.zip')
+    file = fixture_file_upload('spec/data/zipfiles/test_zip.zip')
     response_code = put "/api/v2/datasets/#{CGI.escape(doi)}/files/test_zip.zip", params: { file: file }, headers: headers
     json_response = response_body_hash
     expect(response_code).to eq(201)
@@ -73,7 +73,7 @@ RSpec.shared_examples('API submission flow') do |can_submit, submit_response|
     expect(json_response[:status]).to eq('created')
 
     ### UPLOAD README file
-    file = fixture_file_upload('spec/fixtures/README.md')
+    file = fixture_file_upload('spec/data/README.md')
     response_code = put "/api/v2/datasets/#{CGI.escape(doi)}/files/README.md", params: { file: file }, headers: headers
     json_response = response_body_hash
     expect(response_code).to eq(201)

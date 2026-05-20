@@ -25,7 +25,7 @@ module StashDatacite
             'Content-Type' => 'application/json'
           }
         )
-        .to_return(status: 200, body: File.open(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'fundref_response1.json')),
+        .to_return(status: 200, body: File.open(File.join(Rails.root, 'spec', 'data', 'http_responses', 'fundref_response1.json')),
                    headers: { 'content-type' => 'application/json' })
 
       stub_request(:get, 'https://api.crossref.org/funders?query=crap')
@@ -35,7 +35,7 @@ module StashDatacite
             'Content-Type' => 'application/json'
           }
         )
-        .to_return(status: 200, body: File.open(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'fundref_response1.json')),
+        .to_return(status: 200, body: File.open(File.join(Rails.root, 'spec', 'data', 'http_responses', 'fundref_response1.json')),
                    headers: { 'content-type' => 'application/json' })
     end
 

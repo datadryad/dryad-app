@@ -55,7 +55,7 @@ module StashEngine
               'Host' => 'doi.org',
               'User-Agent' => /.*/
             }
-          ).to_return(status: 200, body: File.read(Rails.root.join('spec', 'fixtures', 'http_responses', 'datacite_response.json')), headers: {})
+          ).to_return(status: 200, body: File.read(Rails.root.join('spec', 'data', 'http_responses', 'datacite_response.json')), headers: {})
         doi = '10.1111/mec.13594'
         @citation = CounterCitation.citation_metadata(doi: doi, stash_identifier: @identifier)
       end

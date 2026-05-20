@@ -45,12 +45,13 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
     it 'works for successful dataset request to crossref', js: true do
       stub_request(:get, 'https://api.crossref.org/works/10.1098%2Frsif.2017.0030')
         .to_return(status: 200,
-                   body: File.new(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'crossref_response.json')),
+                   body: File.new(File.join(Rails.root, 'spec', 'data', 'http_responses', 'crossref_response.json')),
                    headers: {})
 
       doi = '10.1098/rsif.2017.0030'
       mock_good_doi_resolution(doi: "https://doi.org/#{doi}")
       fill_crossref_info(doi: doi)
+      expect(page).to have_text('All progress saved')
       click_button 'Next'
       expect(page).to have_button('Import metadata')
       click_button('Import metadata')
@@ -64,12 +65,13 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
                    headers: {})
       stub_request(:get, 'https://api.test.datacite.org/dois/10.48550/arxiv.2601.20261')
         .to_return(status: 200,
-                   body: File.new(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'datacite_doi_response.json')),
+                   body: File.new(File.join(Rails.root, 'spec', 'data', 'http_responses', 'datacite_doi_response.json')),
                    headers: {})
 
       doi = '10.48550/arxiv.2601.20261'
       mock_good_doi_resolution(doi: "https://doi.org/#{doi}")
       fill_crossref_info(doi: doi)
+      expect(page).to have_text('All progress saved')
       click_button 'Next'
       expect(page).to have_button('Import metadata')
       click_button('Import metadata')

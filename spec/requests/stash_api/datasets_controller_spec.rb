@@ -1,8 +1,5 @@
 require 'uri'
 require_relative 'helpers'
-require 'fixtures/stash_api/metadata'
-require 'fixtures/stash_api/curation_metadata'
-require 'fixtures/stash_api/em_metadata'
 require 'cgi'
 
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
@@ -35,7 +32,7 @@ module StashApi
     # test creation of a new dataset
     describe '#create' do
       before(:each) do
-        @meta = Fixtures::StashApi::Metadata.new
+        @meta = StashApi::Metadata.new
         @meta.make_minimal
       end
 
@@ -203,7 +200,7 @@ module StashApi
         @resource = @stash_id.resources.last
         expect(@resource.curation_activities.size).to eq(2) # one for default creation, one for the API
 
-        @curation_activity = Fixtures::StashApi::CurationMetadata.new
+        @curation_activity = StashApi::CurationMetadata.new
         dataset_id = CGI.escape(output[:identifier])
         response_code = post "/api/v2/datasets/#{dataset_id}/curation_activity",
                              params: @curation_activity.json,
@@ -227,7 +224,7 @@ module StashApi
         publish_date = Time.now - 10.days
         @resource.update!(publication_date: publish_date)
 
-        @curation_activity = Fixtures::StashApi::CurationMetadata.new
+        @curation_activity = StashApi::CurationMetadata.new
         dataset_id = CGI.escape(output[:identifier])
         response_code = post "/api/v2/datasets/#{dataset_id}/curation_activity",
                              params: @curation_activity.json,
@@ -293,7 +290,7 @@ module StashApi
     # test creation of a new dataset
     describe '#create Editorial Manager' do
       before(:each) do
-        @meta = Fixtures::StashApi::EmMetadata.new
+        @meta = StashApi::EmMetadata.new
         @meta.make_deposit_metadata
       end
 
@@ -841,7 +838,7 @@ module StashApi
         # create a basic dataset to do updates to
         neuter_curation_callbacks!
         mock_aws!
-        @meta = Fixtures::StashApi::Metadata.new
+        @meta = StashApi::Metadata.new
         @meta.make_minimal
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
         @ds_info = response_body_hash
@@ -972,7 +969,7 @@ module StashApi
 
       describe 'PUT to upsert a new dataset with a desired DOI' do
         it 'inserts a new dataset with the DOI I love' do
-          @meta2 = Fixtures::StashApi::Metadata.new
+          @meta2 = StashApi::Metadata.new
           @meta2.make_minimal
           desired_doi = 'doi:10.3072/sasquatch.3711'
           response_code = put "/api/v2/datasets/#{CGI.escape(desired_doi)}",
@@ -985,7 +982,7 @@ module StashApi
         end
 
         it 'requires a logged in user for upserting new' do
-          @meta2 = Fixtures::StashApi::Metadata.new
+          @meta2 = StashApi::Metadata.new
           @meta2.make_minimal
           desired_doi = 'doi:10.3072/sasquatch.3711'
           response_code = put "/api/v2/datasets/#{CGI.escape(desired_doi)}",

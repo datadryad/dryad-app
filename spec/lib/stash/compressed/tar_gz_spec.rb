@@ -28,7 +28,7 @@ module Stash
             .with(
               headers: { 'Host' => 'example.com' }
             )
-            .to_return(status: 200, body: File.binread('spec/fixtures/tar_gz/sample.tar.gz'),
+            .to_return(status: 200, body: File.binread('spec/data/tar_gz/sample.tar.gz'),
                        headers: { 'Content-Type' => 'application/gzip' })
 
           tgz = Stash::Compressed::TarGz.new(presigned_url: 'https://example.com/sample.tar.gz')
@@ -54,7 +54,7 @@ module Stash
             headers: { 'Host' => 'example.com' }
           )
           .to_return({ status: 500, body: 'fim', headers: { 'Content-Type' => 'application/gzip' } },
-                     { status: 200, body: File.binread('spec/fixtures/tar_gz/sample.tar.gz'),
+                     { status: 200, body: File.binread('spec/data/tar_gz/sample.tar.gz'),
                        headers: { 'Content-Type' => 'application/gzip' } })
 
         tgz = Stash::Compressed::TarGz.new(presigned_url: 'https://example.com/sample.tar.gz')
@@ -77,7 +77,7 @@ module Stash
             headers: { 'Host' => 'example.com' }
           )
           .to_return({ status: 500, body: 'fim', headers: { 'Content-Type' => 'application/gzip' } },
-                     { status: 200, body: File.binread('spec/fixtures/tar_gz/sample.tar.gz'),
+                     { status: 200, body: File.binread('spec/data/tar_gz/sample.tar.gz'),
                        headers: { 'Content-Type' => 'application/gzip' } })
 
         tgz = Stash::Compressed::TarGz.new(presigned_url: 'https://example.com/sample.tar.gz')

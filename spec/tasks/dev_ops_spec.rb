@@ -72,7 +72,7 @@ end
 
 describe 'dev_ops:download_uri', type: :task do
   it 'runs the rake task' do
-    test_path = File.join(Rails.root, 'spec', 'fixtures', 'merritt_ark_changing_test.txt')
+    test_path = File.join(Rails.root, 'spec', 'data', 'merritt_ark_changing_test.txt')
     argv = ['', test_path]
     stub_const('ARGV', argv)
     expect { task.execute }.to output(/Done/).to_stdout
@@ -80,7 +80,7 @@ describe 'dev_ops:download_uri', type: :task do
 
   describe 'testing updates from file' do
     before(:each) do
-      @test_path = File.join(Rails.root, 'spec', 'fixtures', 'merritt_ark_changing_test.txt')
+      @test_path = File.join(Rails.root, 'spec', 'data', 'merritt_ark_changing_test.txt')
     end
 
     it 'loads the file and calls updates' do

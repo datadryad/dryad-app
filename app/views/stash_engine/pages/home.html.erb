@@ -33,7 +33,7 @@
 <div class="o-home__group o-home__data_group">
   <h2 class="o-heading__level1-home top-row">Most recent datasets</h2>
   <%# Keep unless hostname below for rspec tests to pass %>
-  <div id="latest_tiles" <% unless @hostname == 'localhost' %>data-load="<%= main_app.latest_index_path(format: :js, q: '*:*') %>"<% end %> aria-busy="true" aria-live="polite">
+  <div id="latest_tiles" data-load="<%= main_app.latest_index_path(format: :js, q: '*:*') %>" aria-busy="true" aria-live="polite">
     <p><i class="fas fa-spin fa-spinner" aria-hidden="true"></i></p>
   </div>
   <%= render partial: 'why_share' %>
