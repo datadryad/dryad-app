@@ -4,7 +4,7 @@
 # For further information see the following documentation
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
 
-common = %w[development test].include?(Rails.env.to_s) ? %w[http://localhost:3000] : []
+common = %w[development test].include?(Rails.env.to_s) ? %w[http://localhost:3000] : %w[https://*.datadryad.org]
 
 Rails.application.config.content_security_policy do |policy|
   # policy.connect_src :self, :https, "http://localhost:3035", "ws://localhost:3035" if Rails.env.include?('dev') # ??????
@@ -40,6 +40,7 @@ Rails.application.config.content_security_policy do |policy|
   # Specify URI for violation reports
   policy.report_uri "/csp-violation-report-endpoint"
   policy.default_src *%w['self'] + common
+  policy.frame_src *%w[*]
   # policy.frame_ancestors :none
 end
 
