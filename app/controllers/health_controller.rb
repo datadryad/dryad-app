@@ -1,6 +1,7 @@
 class HealthController < ApplicationController
 
   skip_before_action :protect_from_host_header_attack
+
   def check
     @health_status = {}
     populate_statuses

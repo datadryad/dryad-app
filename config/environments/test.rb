@@ -83,5 +83,4 @@ Rails.application.configure do
     t = Time.now.utc
     Timecop.travel(t)
   end
-  config.hosts.clear
 end
