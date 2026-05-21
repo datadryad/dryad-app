@@ -71,6 +71,12 @@ GEM
       activemodel (= 8.0.5)
       activesupport (= 8.0.5)
       timeout (>= 0.4.0)
+    activerecord-session_store (2.2.0)
+      actionpack (>= 7.0)
+      activerecord (>= 7.0)
+      cgi (>= 0.3.6)
+      rack (>= 2.0.8, < 4)
+      railties (>= 7.0)
     activestorage (8.0.5)
       actionpack (= 8.0.5)
       activejob (= 8.0.5)
@@ -182,6 +188,7 @@ GEM
     capybara-screenshot (1.0.26)
       capybara (>= 1.0, < 4)
       launchy
+    cgi (0.5.1)
     charlock_holmes (0.7.9)
     childprocess (5.1.0)
       logger (~> 1.5)
@@ -772,6 +779,7 @@ PLATFORMS
 
 DEPENDENCIES
   actionpack-page_caching
+  activerecord-session_store
   acts_as_paranoid (~> 0.11.0)
   amatch (~> 0.6.0)
   amoeba (~> 3.3.0)
