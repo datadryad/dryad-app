@@ -32,5 +32,11 @@ module StashEngine
     def s3_lifetime_policy
       mail(to: 'devs@datadryad.org', subject: "#{rails_env}🚨 S3 Lifetime Policy not validated!")
     end
+
+    def csp_violation(report)
+      @report = report
+
+      mail(to: 'devs@datadryad.org', subject: "#{rails_env}🚨 CSP Violation!")
+    end
   end
 end

@@ -11,7 +11,7 @@ common = case Rails.env.to_sym
   else
     %w[https://*.datadryad.org]
   end
-
+Rails.application.config.content_security_policy_report_only = true
 Rails.application.config.content_security_policy do |policy|
   # policy.connect_src :self, :https, "http://localhost:3035", "ws://localhost:3035" if Rails.env.include?('dev') # ??????
   policy.connect_src *%w[
