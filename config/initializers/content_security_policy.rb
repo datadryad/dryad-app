@@ -3,8 +3,14 @@
 # Define an application-wide content security policy
 # For further information see the following documentation
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
-
-common = %w[development test].include?(Rails.env.to_s) ? %w[http://localhost:3000] : %w[https://*.datadryad.org]
+common = case Rails.env.to_sym
+  when :development
+    %w[http://localhost:3000]
+  when :test
+    %w[http://localhost:33000]
+  else
+    %w[https://*.datadryad.org]
+  end
 
 Rails.application.config.content_security_policy do |policy|
   # policy.connect_src :self, :https, "http://localhost:3035", "ws://localhost:3035" if Rails.env.include?('dev') # ??????
@@ -18,21 +24,27 @@ Rails.application.config.content_security_policy do |policy|
   ] + common
   policy.style_src *%w['self' 'strict-dynamic'] + common
   policy.style_src_attr *%w['self' 'unsafe-inline'] + common
-  policy.style_src_elem *%w['unsafe-inline'] + common
-  policy.font_src *%w['self'] + common
+  policy.style_src_elem *%w[
+    'unsafe-inline'
+    https://*.googleapis.com
+  ] + common
+  policy.font_src *%w[
+    'self'
+    https://fonts.gstatic.com
+  ] + common
   policy.img_src :self, :https, :data
   policy.object_src :none
   policy.script_src *%w[self 'unsafe-eval' ] + common
   policy.script_src_elem *%w[
-      'self'
-      'unsafe-inline'
-      https://www.googletagmanager.com
-      https://*.google-analytics.com
-      https://*.awswaf.com
-      https://cdn.jsdelivr.net
-      https://cdnjs.cloudflare.com
-      https://js.stripe.com
-    ] + common
+    'self'
+    'unsafe-inline'
+    https://www.googletagmanager.com
+    https://*.google-analytics.com
+    https://*.awswaf.com
+    https://cdn.jsdelivr.net
+    https://cdnjs.cloudflare.com
+    https://js.stripe.com
+  ] + common
 
   #   # If you are using webpack-dev-server then specify webpack-dev-server host
   #   policy.connect_src :self, :https, "http://localhost:3035", "ws://localhost:3035" if Rails.env.development?
