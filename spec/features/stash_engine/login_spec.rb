@@ -117,8 +117,7 @@ RSpec.feature 'Session', type: :feature do
   end
 
   describe :reauthentication, js: true do
-
-    before(:each) do
+    before do
       @tenant = create(:tenant_email)
       @user = create(:user, tenant_id: @tenant.id, tenant_auth_date: 2.months.ago)
       mock_orcid!(@user)
