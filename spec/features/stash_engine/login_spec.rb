@@ -62,8 +62,7 @@ RSpec.feature 'Session', type: :feature do
   end
 
   describe :other_authentication, js: true do
-
-    before(:each) do
+    before do
       create(:tenant_match)
       create(:tenant_email)
       @user = create(:user, tenant_id: nil)
