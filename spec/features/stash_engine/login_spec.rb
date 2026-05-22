@@ -33,11 +33,11 @@ RSpec.feature 'Session', type: :feature do
   end
 
   describe :test_login do
-    before(:each) do
+    before do
       ENV['TEST_LOGIN'] = 'true'
     end
 
-    after(:each) do
+    after do
       ENV.delete('TEST_LOGIN')
     end
 
@@ -133,27 +133,37 @@ RSpec.feature 'Session', type: :feature do
 
     it 'successfully reauthenticates' do
       expect(page).to have_text('Reconnect')
+
       click_button 'Login to verify'
       expect(page).to have_text('Enter confirmation code')
+
       # enter and erase email
       expect(page).to have_field('email')
+
       fill_in 'email', with: 'test@example.org'
-      expect(page).to have_button('Save email')
       click_button 'Save email'
+
       expect(page).to have_button('Enter a new email address')
+
       click_button 'Enter a new email address'
+
       expect(page).to have_field('email')
+
       fill_in 'email', with: 'test@example.org'
-      expect(page).to have_button('Save email')
       click_button 'Save email'
+
       expect(page).to have_text('Enter confirmation code')
+
       # refresh code
-      expect(page).to have_link('Send another code')
       click_link 'Send another code'
+
       expect(page).to have_text('Enter confirmation code')
-      # enter code
       expect(page).to have_field('email_code')
-      fill_in 'email_code', with: StashEngine::EmailToken.all.last.token
+
+      # enter code
+      token = StashEngine::EmailToken.order(created_at: :desc).first.token
+      fill_in 'email_code', with: token
+
       expect(page).to have_text('My datasets')
       expect(page).to have_text('email_auth')
     end
