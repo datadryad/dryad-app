@@ -140,14 +140,17 @@ RSpec.feature 'Session', type: :feature do
       # enter and erase email
       expect(page).to have_field('email')
       fill_in 'email', with: 'test@example.org'
+      expect(page).to have_button('Save email')
       click_button 'Save email'
       expect(page).to have_button('Enter a new email address')
       click_button 'Enter a new email address'
       expect(page).to have_field('email')
       fill_in 'email', with: 'test@example.org'
+      expect(page).to have_button('Save email')
       click_button 'Save email'
       expect(page).to have_text('Enter confirmation code')
       # refresh code
+      expect(page).to have_link('Send another code')
       click_link 'Send another code'
       expect(page).to have_text('Enter confirmation code')
       # enter code
