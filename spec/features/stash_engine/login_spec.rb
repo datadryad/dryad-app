@@ -3,14 +3,12 @@ require 'rails_helper'
 RSpec.feature 'Session', type: :feature do
 
   include Mocks::RSolr
-
   before do
     create(:tenant)
   end
 
   describe :orcid_login do
-
-    before(:each) do
+    before do
       mock_solr!
       @user = create(:user, tenant_id: nil, orcid: nil)
     end
