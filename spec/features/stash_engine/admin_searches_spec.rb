@@ -99,6 +99,7 @@ RSpec.feature 'AdminSearch', type: :feature do
         expect(page).to have_text('Display fields')
         check 'metrics'
         click_button('Apply')
+        expect(page).to have_button('Save search changes')
         click_button('Save search changes')
         visit stash_url_helpers.admin_dashboard_path(search: 1)
         expect(page).to have_text('Admin dashboard')
@@ -145,11 +146,11 @@ RSpec.feature 'AdminSearch', type: :feature do
       it 'edits search details', js: true do
         visit stash_url_helpers.saved_searches_path
         expect(find('#admin_searches_list')).to have_text('First saved search')
-        within(find('#admin_searches_list li:first-child')) do
+        within('#admin_searches_list li:first-child') do
           click_button 'Edit search description'
         end
         fill_in('title', with: 'Edited search')
-        within(find('#admin_searches_list li:first-child')) do
+        within('#admin_searches_list li:first-child') do
           click_button 'Save'
         end
         expect(find('#admin_searches_list')).to have_text('Edited search')
@@ -161,11 +162,11 @@ RSpec.feature 'AdminSearch', type: :feature do
         expect(find('#admin_searches_list')).to have_text('First saved search')
         expect(find('#admin_searches_list')).to have_text('First default search')
         expect(find('#admin_searches_list li:last-child')).to have_text('Default')
-        within(find('#admin_searches_list li:first-child')) do
+        within('#admin_searches_list li:first-child') do
           click_button 'Edit search description'
         end
         check 'default'
-        within(find('#admin_searches_list li:first-child')) do
+        within('#admin_searches_list li:first-child') do
           click_button 'Save'
         end
         expect(find('#admin_searches_list li:first-child')).to have_text('Default')

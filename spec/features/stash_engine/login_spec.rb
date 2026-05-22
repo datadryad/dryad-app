@@ -80,6 +80,7 @@ RSpec.feature 'Session', type: :feature do
       within('#searchselect-tenant__list') do
         find('li', text: 'Match Tenant').click
       end
+      expect(page).to have_button('Login to verify')
       click_button 'Login to verify'
       expect(page).to have_text('My datasets')
       expect(page).to have_text('match_tenant')
@@ -92,12 +93,16 @@ RSpec.feature 'Session', type: :feature do
       within('#searchselect-tenant__list') do
         find('li', text: 'Email Test').click
       end
+      expect(page).to have_button('Login to verify')
       click_button 'Login to verify'
       expect(page).to have_text('Enter confirmation code')
       # enter and erase email
+      expect(page).to have_field('email')
       fill_in 'email', with: 'test@example.org'
       click_button 'Save email'
+      expect(page).to have_button('Enter a new email address')
       click_button 'Enter a new email address'
+      expect(page).to have_field('email')
       fill_in 'email', with: 'test@example.org'
       click_button 'Save email'
       expect(page).to have_text('Enter confirmation code')
@@ -133,9 +138,12 @@ RSpec.feature 'Session', type: :feature do
       click_button 'Login to verify'
       expect(page).to have_text('Enter confirmation code')
       # enter and erase email
+      expect(page).to have_field('email')
       fill_in 'email', with: 'test@example.org'
       click_button 'Save email'
+      expect(page).to have_button('Enter a new email address')
       click_button 'Enter a new email address'
+      expect(page).to have_field('email')
       fill_in 'email', with: 'test@example.org'
       click_button 'Save email'
       expect(page).to have_text('Enter confirmation code')
@@ -143,6 +151,7 @@ RSpec.feature 'Session', type: :feature do
       click_link 'Send another code'
       expect(page).to have_text('Enter confirmation code')
       # enter code
+      expect(page).to have_field('email_code')
       fill_in 'email_code', with: StashEngine::EmailToken.all.last.token
       expect(page).to have_text('My datasets')
       expect(page).to have_text('email_auth')

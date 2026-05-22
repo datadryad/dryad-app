@@ -56,7 +56,7 @@ RSpec.feature 'Search', type: :feature, js: true do
       expect(page).to have_link('your saved searches')
       # edit
       click_link 'your saved searches'
-      within(find('#public_searches_list li:first-child')) do
+      within('#public_searches_list li:first-child') do
         expect(page).to have_link('Test search')
         click_button 'Edit search description'
         expect(page).to have_button('Save')
@@ -81,7 +81,7 @@ RSpec.feature 'Search', type: :feature, js: true do
       expect(page).to have_link('your saved searches')
       # edit
       click_link 'your saved searches'
-      within(find('#public_searches_list li:first-child')) do
+      within('#public_searches_list li:first-child') do
         expect(page).to have_link('Test saved search')
         expect(page).to have_link('Copy link to web feed')
       end
