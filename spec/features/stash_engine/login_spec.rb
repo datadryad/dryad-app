@@ -4,7 +4,7 @@ RSpec.feature 'Session', type: :feature do
 
   include Mocks::RSolr
 
-  before(:each) do
+  before do
     create(:tenant)
   end
 
