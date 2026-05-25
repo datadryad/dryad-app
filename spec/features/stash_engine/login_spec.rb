@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.feature 'Session', type: :feature do
-
   include Mocks::RSolr
+
   before do
     create(:tenant)
   end
