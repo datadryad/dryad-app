@@ -44,7 +44,6 @@ Capybara.disable_animation = true
 # This stupid capybara driver started breaking again and not setting chrome options correctly, so
 # based this on https://gist.github.com/mars/6957187 and it seemed to fix my problems.
 
-
 # Capybara.register_driver :selenium_chrome_headless do |app|
 #   # Capybara::Selenium::Driver.load_selenium
 #   Capybara::Selenium::Driver.new(app, browser: :chrome, options: Selenium::WebDriver::Chrome::Options.new(
@@ -78,7 +77,9 @@ Capybara.register_driver :selenium_chrome_headless do |app|
 
   options.add_argument('--disable-search-engine-choice-screen')
 
-  options.add_argument('--disable-features=OptimizationGuideModelDownloading,OptimizationHintsFetching,OptimizationTargetPrediction,OptimizationHints')
+  options.add_argument(
+    '--disable-features=OptimizationGuideModelDownloading,OptimizationHintsFetching,OptimizationTargetPrediction,OptimizationHints'
+  )
 
   Capybara::Selenium::Driver.new(
     app,
