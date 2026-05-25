@@ -272,15 +272,17 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
         'data',
         "#{Rails.root}/spec/data/stash_engine/funbar.txt", make_visible: { opacity: 1 }
       )
+      expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
+
       attach_file(
         'data',
         %W[#{Rails.root}/spec/data/stash_engine/funbar.txt
            #{Rails.root}/spec/data/stash_engine/file_10.ods],
         make_visible: { opacity: 1 }
       )
+      expect(page).to have_content('Files of the same name are already in the table. New files were not added.')
       expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
       expect(page).to have_content(/^\bfile_10.ods\b/, count: 1)
-      expect(page).to have_content('Files of the same name are already in the table. New files were not added.')
     end
 
     it 'allows to select new files already in the table and are not of the same upload type' do
