@@ -871,7 +871,7 @@ DEPENDENCIES
   rubocop (~> 1.86.1)
   rubyzip (~> 2.3, >= 2.3.2)
   sassc-rails (~> 2.1.2)
-  selenium-webdriver (~> 4.11)
+  selenium-webdriver (~> 4.44)
   serrano (~> 1.7)
   shakapacker (= 10.0.0)
   shoulda (~> 4.0.0)

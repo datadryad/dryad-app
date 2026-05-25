@@ -44,22 +44,47 @@ Capybara.disable_animation = true
 # This stupid capybara driver started breaking again and not setting chrome options correctly, so
 # based this on https://gist.github.com/mars/6957187 and it seemed to fix my problems.
 
+
+# Capybara.register_driver :selenium_chrome_headless do |app|
+#   # Capybara::Selenium::Driver.load_selenium
+#   Capybara::Selenium::Driver.new(app, browser: :chrome, options: Selenium::WebDriver::Chrome::Options.new(
+#     args: [
+#       '--window-size=1920,2080',
+#       '--headless=new',
+#       '--incognito',
+#       '--disable-gpu',
+#       '--disable-extensions',
+#       '--disable-popup-blocking',
+#       '--disable-site-isolation-trials',
+#       '--disable-search-engine-choice-screen',
+#       '--disable-features=OptimizationGuideModelDownloading,OptimizationHintsFetching,OptimizationTargetPrediction,OptimizationHints',
+#       '--no-sandbox'
+#     ]
+#   ))
+# end
+
 Capybara.register_driver :selenium_chrome_headless do |app|
-  # Capybara::Selenium::Driver.load_selenium
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: Selenium::WebDriver::Chrome::Options.new(
-    args: [
-      '--window-size=1920,2080',
-      '--headless=new',
-      '--incognito',
-      '--disable-gpu',
-      '--disable-extensions',
-      '--disable-popup-blocking',
-      '--disable-site-isolation-trials',
-      '--disable-search-engine-choice-screen',
-      '--disable-features=OptimizationGuideModelDownloading,OptimizationHintsFetching,OptimizationTargetPrediction,OptimizationHints',
-      '--no-sandbox'
-    ]
-  ))
+  options = Selenium::WebDriver::Chrome::Options.new
+
+  options.add_argument('--headless=new')
+  options.add_argument('--window-size=1920,2080')
+
+  options.add_argument('--no-sandbox')
+  options.add_argument('--disable-dev-shm-usage')
+
+  options.add_argument('--disable-gpu')
+  options.add_argument('--disable-extensions')
+  options.add_argument('--disable-popup-blocking')
+
+  options.add_argument('--disable-search-engine-choice-screen')
+
+  options.add_argument('--disable-features=OptimizationGuideModelDownloading,OptimizationHintsFetching,OptimizationTargetPrediction,OptimizationHints')
+
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome,
+    options: options
+  )
 end
 
 RSpec.configure do |config|

@@ -106,6 +106,7 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
         sign_in(user)
         start_new_dataset
         click_link 'My datasets'
+        expect(page).to have_css('#user_in-progress')
         within(:css, '#user_in-progress li:nth-of-type(2)') do
           click_button 'Delete'
         end
