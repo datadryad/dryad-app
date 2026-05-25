@@ -8,7 +8,7 @@ RSpec.feature 'AdminSearch', type: :feature do
   include Mocks::Stripe
   include Mocks::DataFile
 
-  before(:each) do
+  before do
     mock_aws!
     mock_solr!
     mock_salesforce!
@@ -41,7 +41,7 @@ RSpec.feature 'AdminSearch', type: :feature do
   end
 
   context :saved_search do
-    before(:each) do
+    before do
       # rubocop:disable Layout/LineLength
       @properties = '{"fields":["doi","authors","submitter"],"filters":{"member":"","status":"","curator":"","journal":{"value":"","label":""},"sponsor":"","funder":{"value":"","label":""},"affiliation":{"value":"","label":""},"updated_at":{"start_date":"","end_date":""},"submit_date":{"start_date":"","end_date":""},"publication_date":{"start_date":"","end_date":""},"identifiers":""},"search_string":""}'
       # rubocop:enable Layout/LineLength
@@ -62,7 +62,7 @@ RSpec.feature 'AdminSearch', type: :feature do
     end
 
     context :search_properties do
-      before(:each) do
+      before do
         sign_in(@superuser, false)
       end
       it 'does not show saved search', js: true do
@@ -134,7 +134,7 @@ RSpec.feature 'AdminSearch', type: :feature do
     end
 
     context :search_profile do
-      before(:each) do
+      before do
         sign_in(@superuser, false)
       end
       it 'has a search share code', js: true do
