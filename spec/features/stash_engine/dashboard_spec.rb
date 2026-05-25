@@ -6,7 +6,7 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
   include Mocks::Datacite
   include Mocks::Aws
 
-  before(:each) do
+  before do
     neuter_curation_callbacks!
     mock_salesforce!
     mock_datacite!
@@ -26,10 +26,10 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
       ]
     end
 
-    before(:each) { resources.each { |r| r.identifier.reload } }
+    before { resources.each { |r| r.identifier.reload } }
 
     context 'listing the datasets' do
-      before(:each) { sign_in(user) }
+      before { sign_in(user) }
 
       it 'shows 5 datasets' do
         expect(page).to have_css('#user_datasets li', count: 5)
