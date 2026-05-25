@@ -1,7 +1,7 @@
 RSpec.feature 'Search', type: :feature, js: true do
   include Mocks::RSolr
 
-  before(:each) do
+  before do
     mock_solr_frontend!
     create(:tenant)
   end
