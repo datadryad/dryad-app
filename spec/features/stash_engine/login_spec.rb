@@ -104,6 +104,7 @@ RSpec.feature 'Session', type: :feature do
       click_button 'Save email'
       expect(page).to have_text('Enter confirmation code')
       # refresh code
+      expect(page).to have_link('Send another code')
       click_link 'Send another code'
       expect(page).to have_text('Enter confirmation code')
       # enter code
