@@ -15,6 +15,7 @@ Rails.application.config.content_security_policy_report_only = true
 Rails.application.config.content_security_policy do |policy|
   # policy.connect_src :self, :https, "http://localhost:3035", "ws://localhost:3035" if Rails.env.include?('dev') # ??????
   policy.connect_src :self,
+                     :https,
                      'https://blog.datadryad.org',
                      'https://*.google-analytics.com',
                      'https://cdn.jsdelivr.net',
@@ -22,8 +23,8 @@ Rails.application.config.content_security_policy do |policy|
                      'https://*.datacite.org',
                      'https://*.amazonaws.com',
                      main_domain
-  policy.style_src :self, :strict_dynamic, main_domain
-  policy.style_src_attr :self, :unsafe_inline, main_domain
+  policy.style_src :self, :unsafe_inline, main_domain
+  policy.style_src_attr :unsafe_inline
   policy.style_src_elem :unsafe_inline,
                         'https://*.googleapis.com',
                         main_domain
@@ -33,8 +34,8 @@ Rails.application.config.content_security_policy do |policy|
 
   policy.img_src :self, :https, :data
   policy.object_src :none
-  policy.script_src :self, :unsafe_eval, main_domain
-  policy.script_src_attr :self, :unsafe_inline, main_domain
+  policy.script_src :self, :unsafe_eval, :unsafe_inline, main_domain
+  policy.script_src_attr :unsafe_inline
   policy.script_src_elem :self,
                          :unsafe_inline,
                          'https://www.googletagmanager.com',
@@ -56,7 +57,7 @@ Rails.application.config.content_security_policy do |policy|
   # Specify URI for violation reports
   policy.report_uri "/csp-violation-report-endpoint"
   policy.default_src :self, main_domain
-  policy.frame_src '*'
+  policy.frame_src :self, :https
   # policy.frame_ancestors :none
 end
 
