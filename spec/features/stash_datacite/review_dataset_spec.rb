@@ -9,7 +9,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
   include Mocks::Aws
 
   let(:user) { create(:user) }
-  before(:each) { sign_in(user) }
+  before { sign_in(user) }
 
   context :requirements_not_met do
     it 'should disable submit button', js: true do
@@ -22,7 +22,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
   end
 
   context :requirements_met, js: true do
-    before(:each) do
+    before do
       mock_solr!
       mock_salesforce!
       mock_file_content!
@@ -47,7 +47,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
   end
 
   context :payment, js: true do
-    before(:each) do
+    before do
       start_new_dataset
       navigate_to_metadata
     end
