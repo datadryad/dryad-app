@@ -181,7 +181,7 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
-    capybara-screenshot (1.0.26)
+    capybara-screenshot (1.0.27)
       capybara (>= 1.0, < 4)
       launchy
     charlock_holmes (0.7.9)
@@ -878,7 +878,7 @@ DEPENDENCIES
   rubocop (~> 1.86.1)
   rubyzip (~> 2.3, >= 2.3.2)
   sassc-rails (~> 2.1.2)
-  selenium-webdriver (~> 4.11)
+  selenium-webdriver (~> 4.44)
   serrano (~> 1.7)
   shakapacker (= 10.0.0)
   shoulda (~> 4.0.0)
