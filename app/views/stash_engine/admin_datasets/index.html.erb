@@ -63,7 +63,8 @@
   <%= render partial: 'activity_log' %>
 </div>
 
-<% if policy([:stash_engine, :admin_datasets]).create_salesforce_case? && Stash::Salesforce.sf_user %>
+<% if policy([:stash_engine, :admin_datasets]).create_salesforce_case? %>
+<% if Stash::Salesforce.sf_user %>
   <div class="activity-log-header">
     <h2 id="salesforce-cases">Salesforce cases</h2>
     <%= button_to "Create SF case",
@@ -98,6 +99,10 @@
   <% else %>
     <div style="background-color: #f2f2f2; padding: .5ch"><em>None</em></div>
   <% end %>
+<% else %>
+  <h2 id="salesforce-cases">Salesforce cases</h2>
+  <div style="background-color: #f2f2f2; padding: .5ch"><em>Salesforce API is temporarily inaccessible</em></div>
+<% end %>
 <% end %>
 
 <% if policy([:stash_engine, :admin_datasets]).create_issue?%>
