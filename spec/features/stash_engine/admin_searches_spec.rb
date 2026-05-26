@@ -166,24 +166,32 @@ RSpec.feature 'AdminSearch', type: :feature do
       it 'replaces search default', js: true do
         @superuser.admin_searches << StashEngine::AdminSearch.create(title: 'First default search', properties: @properties, default: true)
         visit stash_url_helpers.saved_searches_path
-        expect(find('#admin_searches_list'))
-        expect(find('#admin_searches_list')).to have_text('First saved search')
-        expect(find('#admin_searches_list')).to have_text('First default search')
-        expect(find('#admin_searches_list li:last-child')).to have_text('Default')
+        within('#admin_searches_list') do
+          expect(page).to have_text('First saved search')
+          expect(page).to have_text('First default search')
+        end
+        within('#admin_searches_list li:last-child') do
+          expect(page).to have_text('Default')
+        end
         within('#admin_searches_list li:first-child') do
           click_button 'Edit search description'
         end
+        expect(page).to have_field('default')
         check 'default'
         within('#admin_searches_list li:first-child') do
           click_button 'Save'
         end
-        expect(find('#admin_searches_list li:first-child')).to have_text('Default')
-        expect(find('#admin_searches_list li:last-child')).not_to have_text('Default')
+        within('#admin_searches_list li:first-child') do
+          expect(page).to have_text('Default')
+        end
+        within('#admin_searches_list li:last-child') do
+          expect(page).not_to have_text('Default')
+        end
       end
 
       it 'removes saved search', js: true do
         visit stash_url_helpers.saved_searches_path
-        expect(find('#admin_searches_list')).to have_text('First saved search')
+        expect('#admin_searches_list').to have_text('First saved search')
         expect(page).to have_button('Delete saved search: First saved search')
         click_button 'Delete saved search: First saved search'
         expect(page).to have_no_css('#admin_searches_list li')
