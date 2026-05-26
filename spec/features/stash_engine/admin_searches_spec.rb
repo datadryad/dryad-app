@@ -65,6 +65,7 @@ RSpec.feature 'AdminSearch', type: :feature do
       before do
         sign_in(@superuser, false)
       end
+
       it 'does not show saved search', js: true do
         visit stash_url_helpers.admin_dashboard_path
         expect(page).to have_text('Admin dashboard')
@@ -72,6 +73,7 @@ RSpec.feature 'AdminSearch', type: :feature do
         expect(find('#submitter')).not_to be_checked
         expect(find('thead')).not_to have_text('Submitter')
       end
+
       it 'shows saved search', js: true do
         visit stash_url_helpers.admin_dashboard_path(search: 1)
         expect(page).to have_text('Admin dashboard')
@@ -81,6 +83,7 @@ RSpec.feature 'AdminSearch', type: :feature do
         expect(find('#submitter')).to be_checked
         expect(find('thead')).to have_text('Submitter')
       end
+
       it 'shows default saved search', js: true do
         @superuser.admin_searches.first.update(default: true)
         visit stash_url_helpers.admin_dashboard_path
@@ -91,6 +94,7 @@ RSpec.feature 'AdminSearch', type: :feature do
         expect(find('#submitter')).to be_checked
         expect(find('thead')).to have_text('Submitter')
       end
+
       it 'edits saved search', js: true do
         visit stash_url_helpers.admin_dashboard_path(search: 1)
         expect(page).to have_text('Admin dashboard')
@@ -109,6 +113,7 @@ RSpec.feature 'AdminSearch', type: :feature do
         expect(find('#metrics')).to be_checked
         expect(find('thead')).to have_text('Metrics')
       end
+
       it 'replaces search default', js: true do
         @superuser.admin_searches.first.update(default: true)
         visit stash_url_helpers.admin_dashboard_path
@@ -137,12 +142,14 @@ RSpec.feature 'AdminSearch', type: :feature do
       before do
         sign_in(@superuser, false)
       end
+
       it 'has a search share code', js: true do
         visit stash_url_helpers.saved_searches_path
         expect(find('#admin_searches_list')).to have_text('First saved search')
         expect(@superuser.admin_searches.first.share_code).not_to eq(nil)
         expect(page).to have_link(nil, href: admin_dashboard_path(share: @superuser.admin_searches.first.share_code, clear: true))
       end
+
       it 'edits search details', js: true do
         visit stash_url_helpers.saved_searches_path
         expect(find('#admin_searches_list')).to have_text('First saved search')
@@ -155,6 +162,7 @@ RSpec.feature 'AdminSearch', type: :feature do
         end
         expect(find('#admin_searches_list')).to have_text('Edited search')
       end
+
       it 'replaces search default', js: true do
         @superuser.admin_searches << StashEngine::AdminSearch.create(title: 'First default search', properties: @properties, default: true)
         visit stash_url_helpers.saved_searches_path
@@ -172,6 +180,7 @@ RSpec.feature 'AdminSearch', type: :feature do
         expect(find('#admin_searches_list li:first-child')).to have_text('Default')
         expect(find('#admin_searches_list li:last-child')).not_to have_text('Default')
       end
+
       it 'removes saved search', js: true do
         visit stash_url_helpers.saved_searches_path
         expect(find('#admin_searches_list')).to have_text('First saved search')
