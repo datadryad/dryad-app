@@ -50,6 +50,7 @@
       <% end %>
       <% if t.sponsor_id %><br/><b>Inherited from:</b> <a href="?id=<%= t.sponsor_id %>"><%= t.sponsor_id %></a><% end %>
     <% end %>
+    <b>LDF emails:</b> <%= t.payment_sponsor&.payment_configuration&.ldf_limit_notification ? "Yes" : "No" %>
   <% else %>
     <span style="color: rgb(209, 44, 29)">Disabled</span>
   <% end %>
