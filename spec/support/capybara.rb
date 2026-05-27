@@ -19,11 +19,6 @@ else
   Capybara.javascript_driver = :selenium_chrome_headless
 end
 
-# uncomment following lines to see actions in browser
-
-# TODO: is it necessary :chrome if we already run with :selenium_chrome
-# Capybara.javascript_driver = :chrome
-
 # change all :selenium_chrome_headless to just :selenium_chrome in this file in order to see your tests and troubleshoot in browser.
 # also, comment out --headless option.  Also change default_driver from :rack_test to :selenium_chrome
 Capybara.asset_host = 'http://localhost:33000'
@@ -45,21 +40,29 @@ Capybara.disable_animation = true
 # based this on https://gist.github.com/mars/6957187 and it seemed to fix my problems.
 
 Capybara.register_driver :selenium_chrome_headless do |app|
-  # Capybara::Selenium::Driver.load_selenium
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: Selenium::WebDriver::Chrome::Options.new(
-    args: [
-      '--window-size=1920,2080',
-      '--headless=new',
-      '--incognito',
-      '--disable-gpu',
-      '--disable-extensions',
-      '--disable-popup-blocking',
-      '--disable-site-isolation-trials',
-      '--disable-search-engine-choice-screen',
-      '--disable-features=OptimizationGuideModelDownloading,OptimizationHintsFetching,OptimizationTargetPrediction,OptimizationHints',
-      '--no-sandbox'
-    ]
-  ))
+  options = Selenium::WebDriver::Chrome::Options.new
+
+  options.add_argument('--headless=new')
+  options.add_argument('--window-size=1920,1080')
+
+  options.add_argument('--no-sandbox')
+  options.add_argument('--disable-dev-shm-usage')
+
+  options.add_argument('--disable-gpu')
+  options.add_argument('--disable-extensions')
+  options.add_argument('--disable-popup-blocking')
+
+  options.add_argument('--disable-search-engine-choice-screen')
+
+  options.add_argument(
+    '--disable-features=OptimizationGuideModelDownloading,OptimizationHintsFetching,OptimizationTargetPrediction,OptimizationHints'
+  )
+
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome,
+    options: options
+  )
 end
 
 RSpec.configure do |config|
