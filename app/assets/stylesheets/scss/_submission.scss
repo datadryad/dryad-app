@@ -114,6 +114,10 @@ html.preview_submission {
           "area9"
           "label10"
           "area10"
+          "label11"
+          "area11"
+          "label12"
+          "area12"
           "submit"
       }
       @media (min-width: 1220px){
@@ -137,12 +141,12 @@ html.preview_submission {
 
       #submission-checklist, #submission-preview {
         display: grid;
-        grid-row: 2/span 11;
+        grid-row: 2/span 12;
         grid-template-rows: subgrid;
         max-width: 100%;
         box-sizing: border-box;
         @media (max-width: 811px) {
-          grid-row: 2/span 20;
+          grid-row: 2/span 24;
           grid-template-columns: subgrid;
           grid-column: 1;
         }
@@ -165,13 +169,13 @@ html.preview_submission {
           padding: 0;
           background-color: transparent;
           z-index: 2;
-          li {
+          & > li {
             width: 100%;
+            height: fit-content;
             padding: .5rem 1rem;
             background-color: $lightest-green;
             &:first-child {
               grid-area: label1;
-              margin-top: 0;
             }
             &:nth-child(2) {
               grid-area: label2;
@@ -199,6 +203,12 @@ html.preview_submission {
             }
             &:nth-child(10) {
               grid-area: label10;
+            }
+            &:nth-child(11) {
+              grid-area: label11;
+            }
+            &:nth-child(12) {
+              grid-area: label12;
             }
           }
         }
@@ -286,6 +296,12 @@ html.preview_submission {
             }
             &:nth-child(10) {
               grid-area: area10;
+            }
+            &:nth-child(11) {
+              grid-area: area11;
+            }
+            &:nth-child(12) {
+              grid-area: label12;
             }
           }
         }

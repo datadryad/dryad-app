@@ -29,6 +29,13 @@ module Mocks
     def mock_email_case!
       allow(Stash::Salesforce).to receive(:create_email_case).and_return({ case_num: Faker::Number })
     end
+
+    def mock_email_find!
+      # rubocop:disable Layout/LineLength
+      text = "Before we can proceed with the publication of your dataset, review and address the following:\n\nQuery 1: this is some text I want\n\nWhen you are prepared to resubmit your revised dataset, please follow these steps"
+      # rubocop:enable Layout/LineLength
+      allow(Stash::Salesforce).to receive(:case_email_text).and_return(text)
+    end
   end
 
 end

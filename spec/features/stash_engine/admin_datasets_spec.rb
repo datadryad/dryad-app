@@ -9,6 +9,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
 
     before(:each) do
       mock_salesforce!
+      mock_email_find!
       mock_github!
       mock_stripe!
       mock_datacite_gen!
@@ -64,6 +65,17 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       expect(page).to have_text('This is the dataset activity page.')
       expect(page).to have_text('Salesforce cases')
       expect(page).to have_link('SF 0003', href: 'https://dryad.lightning.force.com/lightning/r/Case/abc1/view')
+    end
+
+    it 'adds an AAR report and sets status' do
+      find('a[title="Activity log"]').click
+      expect(page).to have_text('Salesforce cases')
+      expect(page).to have_button('AAR report')
+      click_button 'AAR report'
+      expect(page).to have_text('Action required report')
+      expect(page).to have_field('report', with: 'Query 1: this is some text I want')
+      click_button 'Submit & set to Action required'
+      expect(page).to have_text('Curation status: Action required')
     end
 
     it 'renders github section' do
