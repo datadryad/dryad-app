@@ -25,7 +25,7 @@ function WorksList({identifiers, previous, curator}) {
     supplemental_information: 'far fa-file-lines',
     data_management_plan: 'fas fa-list-check',
   };
-  if (identifiers.length > 0 || previous.length > 0) {
+  if (identifiers.length > 0 || previous?.length > 0) {
     return (
       <>
         {identifiers.length > 0 && <h2 style={{marginBottom: '-1rem'}}>Related works</h2>}
