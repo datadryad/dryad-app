@@ -251,9 +251,9 @@ defaults: &DEFAULTS
     api_requests_auth: 240
     api_requests_v1: 30
   salesforce:
-    server: https://dryad--cloudparti.sandbox.lightning.force.com
+    server: https://dryad--dryadsb.sandbox.my.salesforce.com
     login_host: test.salesforce.com
-    username: admin@datadryad.org.cloudparti
+    username: admin@datadryad.org.dryadsb
     password: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_password] %>
     security_token: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_security_token] %>
     client_id: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_client_id] %>

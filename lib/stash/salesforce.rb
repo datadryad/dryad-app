@@ -183,6 +183,9 @@ module Stash
 
     def self.sf_user
       sf_client&.user_info
+    rescue StandardError => e
+      Rails.logger.error("Failed to acquire Salesforce user -- #{e}")
+      nil
     end
 
     def self.email_queue
