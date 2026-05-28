@@ -269,7 +269,9 @@ describe CostReportingService do
             include_examples 'sends ldf notification'
 
             context 'when payer has LDF notifications turned off' do
-              let!(:payment_conf) { create(:payment_configuration, partner: org, payment_plan: '2025', covers_ldf: true, ldf_limit_notification: false) }
+              let!(:payment_conf) do
+                create(:payment_configuration, partner: org, payment_plan: '2025', covers_ldf: true, ldf_limit_notification: false)
+              end
 
               include_examples 'does not send ldf notification'
             end
