@@ -10,7 +10,7 @@ module StashDatacite
 
     # PATCH /peer_review/toggle
     def toggle
-      @help_email = APP_CONFIG[:contact_email].last || 'help@datadryad.org'
+      @help_email = APP_CONFIG[:helpdesk_email]
       begin
         @resource.hold_for_peer_review = peer_review_params[:hold_for_peer_review]
         @resource.save

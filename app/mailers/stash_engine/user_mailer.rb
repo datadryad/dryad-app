@@ -72,7 +72,7 @@ module StashEngine
       path = Rails.application.routes.url_helpers.show_path(orcid_invite.identifier.to_s, invitation: orcid_invite.secret)
       @url = orcid_invite.landing(path)
       @resource = orcid_invite.resource
-      @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
+      @helpdesk_email = APP_CONFIG['helpdesk_email']
       @user_name = "#{orcid_invite.first_name} #{orcid_invite.last_name}"
       mail(to: orcid_invite.email,
            subject: "#{rails_env}Dryad Submission \"#{@resource.title.strip_tags}\"")
@@ -88,7 +88,7 @@ module StashEngine
     def check_email(email_token)
       return unless email_token.user&.email&.present?
 
-      @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
+      @helpdesk_email = APP_CONFIG['helpdesk_email']
       @user_name = user_name(email_token.user)
       @token = email_token.token
       mail(to: user_email(email_token.user), subject: "#{rails_env}Your Dryad account code")
@@ -98,7 +98,7 @@ module StashEngine
       return if email_token.tenant&.authentication&.email_domain.blank?
       return unless email_token.user&.email&.end_with?(email_token.tenant.authentication.email_domain)
 
-      @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
+      @helpdesk_email = APP_CONFIG['helpdesk_email']
       @user_name = user_name(email_token.user)
       @tenant_name = email_token.tenant&.long_name
       @token = email_token.token
@@ -108,7 +108,7 @@ module StashEngine
     def invite_author(edit_code)
       return unless edit_code.author.author_email.present? && edit_code&.edit_code&.present?
 
-      @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
+      @helpdesk_email = APP_CONFIG['helpdesk_email']
       @user_name = user_name(edit_code.author)
       @resource = edit_code.author.resource
       @role = edit_code.role
@@ -119,7 +119,7 @@ module StashEngine
     def invite_user(user, role)
       return unless user.email&.present? && role.role&.present?
 
-      @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
+      @helpdesk_email = APP_CONFIG['helpdesk_email']
       @user_name = user_name(user)
       @resource = role.role_object
       @role = role.role
@@ -139,7 +139,7 @@ module StashEngine
 
     def general_error(resource, error_text)
       logger.warn("Unable to report update error #{error_text}; nil resource") unless resource.present?
-      @zenodo_error_emails = APP_CONFIG['zenodo_error_email']
+      @zenodo_error_emails = APP_CONFIG['developer_email']
       return unless resource.present? && @zenodo_error_emails.present?
 
       @resource = resource
@@ -151,7 +151,7 @@ module StashEngine
 
     def integration_paused(journals)
       @journals = journals
-      email = APP_CONFIG['submission_error_email']
+      email = APP_CONFIG['developer_email']
       return unless @journals.present? && email.present?
 
       mail(to: email,
@@ -160,7 +160,7 @@ module StashEngine
 
     def file_validation_error(file)
       logger.warn('Unable to validate file checksum; nil file') unless file.present?
-      @zenodo_error_emails = APP_CONFIG['zenodo_error_email']
+      @zenodo_error_emails = APP_CONFIG['developer_email']
       return unless file.present? && @zenodo_error_emails.present?
 
       @file = file
@@ -170,7 +170,7 @@ module StashEngine
 
     def deep_archive_file_validation_error(file, bucket_name)
       logger.warn('Unable to validate file checksum; nil file') unless file.present?
-      @zenodo_error_emails = APP_CONFIG['zenodo_error_email']
+      @zenodo_error_emails = APP_CONFIG['developer_email']
       return unless file.present? && @zenodo_error_emails.present?
 
       @file = file
@@ -181,7 +181,7 @@ module StashEngine
 
     def feedback_signup(message)
       @message = message
-      @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
+      @submission_error_emails = APP_CONFIG['developer_email'] || [@helpdesk_email]
       mail(to: @submission_error_emails, subject: "#{rails_env}User testing signup")
     end
 
@@ -268,7 +268,7 @@ module StashEngine
     def merge_request(current_user, existing_user)
       @user = current_user
       @old = existing_user
-      @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
+      @helpdesk_email = APP_CONFIG['helpdesk_email']
       @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
       mail(to: @helpdesk_email, bcc: @submission_error_emails, subject: "#{rails_env}User account merge request", reply_to: @old.email)
     end
@@ -278,7 +278,7 @@ module StashEngine
 
       @dependency = dependency
       @url = status_dashboard_url
-      @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
+      @submission_error_emails = APP_CONFIG['developer_email'] || [@helpdesk_email]
       @message = message
       mail(to: @submission_error_emails, bcc: @bcc_emails,
            subject: "#{rails_env}dependency offline: #{dependency.name}")
@@ -289,7 +289,7 @@ module StashEngine
       logger.warn('Unable to report zenodo error, no zenodo copy object') unless @zen.present?
       return unless @zen.present?
 
-      @zenodo_error_emails = APP_CONFIG['zenodo_error_email'] || [@helpdesk_email]
+      @zenodo_error_emails = APP_CONFIG['developer_email'] || [@helpdesk_email]
 
       mail(to: @zenodo_error_emails,
            subject: "#{rails_env}Failed to update Zenodo for #{@zen.identifier} for event type #{@zen.copy_type}")
@@ -298,7 +298,7 @@ module StashEngine
     def voided_invoices(voided_identifier_list)
       return unless voided_identifier_list.present?
 
-      @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
+      @submission_error_emails = APP_CONFIG['developer_email'] || [@helpdesk_email]
       @identifiers = voided_identifier_list
       mail(to: @submission_error_emails,
            subject: "#{rails_env}Voided invoices need to be updated")
