@@ -21,6 +21,9 @@ class CostReportingService
   private
 
   def should_send_notification?
+    # NO - payer has LDF notifications turned off
+    return false unless PayersService.new(resource.identifier.payer).sponsored_limits&.ldf_limit_notification
+
     # NO - payer is not on 2025 payments plan
     return false unless resource.identifier.payer_2025?
 

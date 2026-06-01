@@ -18,7 +18,7 @@ describe CostReportingService do
   let(:identifier) { create(:identifier) }
   let(:org) { create(:journal_organization) }
   let!(:journal) { create(:journal, sponsor: org) }
-  let!(:payment_conf) { create(:payment_configuration, partner: org, payment_plan: '2025', covers_ldf: true) }
+  let!(:payment_conf) { create(:payment_configuration, partner: org, payment_plan: '2025', covers_ldf: true, ldf_limit_notification: true) }
   let(:prev_resource) do
     create(:resource,
            identifier: identifier,
@@ -267,6 +267,14 @@ describe CostReportingService do
             let(:resource_files_size) { 200_000_000_000 }
 
             include_examples 'sends ldf notification'
+
+            context 'when payer has LDF notifications turned off' do
+              let!(:payment_conf) do
+                create(:payment_configuration, partner: org, payment_plan: '2025', covers_ldf: true, ldf_limit_notification: false)
+              end
+
+              include_examples 'does not send ldf notification'
+            end
           end
         end
 
@@ -280,5 +288,6 @@ describe CostReportingService do
         end
       end
     end
+
   end
 end

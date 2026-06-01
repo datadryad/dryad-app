@@ -8,4 +8,9 @@ ldf.addEventListener('change', () => {
     limit.value = ''
     amount_limit.value = ''
   }
+  var limit_notification = document.getElementById('payment_configuration_attributes_ldf_limit_notification')
+  if(limit_notification) {
+    limit_notification.disabled = !ldf.checked
+    limit_notification.checked = false
+  }
 })
