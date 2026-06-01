@@ -23,6 +23,10 @@ class PaymentConfiguration < ApplicationRecord
   enum :payment_plan, { SUBSCRIPTION: 1, PREPAID: 2, DEFERRED: 3, TIERED: 4, '2025': 5 }
   before_save :reset_limit, :set_covers_dpc
 
+  def valid_payer?
+    covers_dpc? && payment_plan.present?
+  end
+
   private
 
   def reset_limit

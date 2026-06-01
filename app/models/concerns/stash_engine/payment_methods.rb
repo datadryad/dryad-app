@@ -85,7 +85,7 @@ module StashEngine
       return false if current_payer.blank?
       return false if payer_2025?(current_payer) || old_payment_system
 
-      current_payer.payment_configuration&.covers_dpc && current_payer.payment_configuration&.payment_plan.present?
+      current_payer.payment_configuration&.valid_payer?
     end
 
     # rubocop:disable Metrics/AbcSize
@@ -145,7 +145,7 @@ module StashEngine
 
       # do not remove recorded institution sponsor due to sponsorship change
       return true if payment_id.present? && payment_id == tenant&.id
-      return false unless PayersService.new(tenant).payment_sponsor&.payment_configuration&.covers_dpc
+      return false unless PayersService.new(tenant).payment_sponsor&.payment_configuration&.covers_dpc?
 
       if tenant&.authentication&.strategy == 'author_match'
         # get all unique ror_id associations for all authors
@@ -200,7 +200,7 @@ module StashEngine
         return unless payment_type.include?('journal') || journal_will_pay?
         return if payment_id == journal&.single_issn
       end
-      return if payments.paid.any?
+      return if payments.where.not(resource_id: latest_resource.id).paid.any?
 
       self.payment_type = nil
       self.payment_id = nil
