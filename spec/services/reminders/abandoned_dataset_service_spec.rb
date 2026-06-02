@@ -650,6 +650,39 @@ module Reminders
               end
             end
           end
+
+          context 'when a previous version already received this email' do
+            let!(:final_email_ca) {
+              CurationService.new(status: 'withdrawn', resource_id: resource.id, user_id: 0, note: 'final_withdrawn_email_notice - reminded submitter that this item is still `withdrawn`').process
+            }
+            let(:user_resource) { create(:resource, identifier_id: identifier.id, user_id: user.id) }
+            let(:system_resource) { create(:resource, identifier_id: identifier.id, user_id: 0) }
+
+            it 'sends the email again for the resource created by a user' do
+              Timecop.travel(3.minutes.from_now)
+              CurationService.new(status: 'withdrawn', resource_id: user_resource.id, user_id: 0).process
+              identifier.reload
+
+              Timecop.travel(9.months.from_now + 1.day)
+              expect(StashEngine::ResourceMailer).to receive_message_chain(:send_final_withdrawn_notification,
+                                                                           :deliver_now).with(user_resource).with(no_args)
+              expect(subject).to receive(:create_activity).with('final_withdrawn_email_notice', user_resource).once
+
+              subject.send_final_withdrawn_notification
+            end
+
+            it 'sends the email again for the resource created by the system user' do
+              Timecop.travel(3.minutes.from_now)
+              CurationService.new(status: 'withdrawn', resource_id: system_resource.id, user_id: 0).process
+              identifier.reload
+
+              Timecop.travel(9.months.from_now + 1.day)
+              expect(StashEngine::ResourceMailer).to receive(:send_final_withdrawn_notification).never
+              expect(subject).to receive(:create_activity).never
+
+              subject.send_final_withdrawn_notification
+            end
+          end
         end
       end
 
