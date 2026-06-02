@@ -652,9 +652,10 @@ module Reminders
           end
 
           context 'when a previous version already received this email' do
-            let!(:final_email_ca) {
-              CurationService.new(status: 'withdrawn', resource_id: resource.id, user_id: 0, note: 'final_withdrawn_email_notice - reminded submitter that this item is still `withdrawn`').process
-            }
+            let!(:final_email_ca) do
+              CurationService.new(status: 'withdrawn', resource_id: resource.id, user_id: 0,
+                                  note: 'final_withdrawn_email_notice - reminded submitter that this item is still `withdrawn`').process
+            end
             let(:user_resource) { create(:resource, identifier_id: identifier.id, user_id: user.id) }
             let(:system_resource) { create(:resource, identifier_id: identifier.id, user_id: 0) }
 

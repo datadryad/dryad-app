@@ -146,7 +146,7 @@ module Reminders
         next if last_reminder.present?
 
         status_updated = create_activity(reminder_flag, resource, status: 'withdrawn',
-                                         note: "#{reminder_flag} - notification that this item was set to `withdrawn`")
+                                                                  note: "#{reminder_flag} - notification that this item was set to `withdrawn`")
 
         if status_updated
           log("Mailing submitter about setting dataset to withdrawn. #{resource_log_text(resource)}")
