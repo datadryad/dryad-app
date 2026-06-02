@@ -216,6 +216,11 @@ module StashDatacite
         Stash::Import.import_publication(resource: @resource, doi: bare_doi, work_type: work_type)
       end
       @resource.reload
+      if params[:import_type] == 'preprint' && StashEngine::Journal.find_by_issn(@resource.resource_preprint.publication_issn)&.will_pay?
+        preprint = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id, pub_type: :primary_article)
+        preprint.update(publication_name: @resource.resource_preprint.publication_name,
+                        publication_issn: @resource.resource_preprint.publication_issn, manuscript_number: bare_doi)
+      end
     rescue Stash::Import::ImportError
       @error = "We couldn't find metadata to import for this DOI. Please fill in your title manually."
     end
