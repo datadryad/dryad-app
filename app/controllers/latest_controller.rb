@@ -11,7 +11,7 @@ class LatestController < ApplicationController
     set_cached_latest
 
     respond_to do |format|
-      format.html { store_preferred_view }
+      format.html
       format.js
     end
   end
