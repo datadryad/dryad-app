@@ -269,7 +269,7 @@ module StashEngine
       @user = current_user
       @old = existing_user
       @helpdesk_email = APP_CONFIG['helpdesk_email']
-      @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
+      @submission_error_emails = APP_CONFIG['developer_email'] || [@helpdesk_email]
       mail(to: @helpdesk_email, bcc: @submission_error_emails, subject: "#{rails_env}User account merge request", reply_to: @old.email)
     end
 
