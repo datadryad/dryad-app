@@ -18,6 +18,7 @@ export const labels = {
   code_block: 'Insert code block',
   table: 'Insert table',
   heading: 'Set heading',
+  image: 'Upload an image',
 };
 
 export const icons = {
@@ -37,4 +38,5 @@ export const icons = {
   blockquote: <i className="fas fa-quote-left" aria-hidden="true" />,
   code_block: <i className="fas fa-code" aria-hidden="true" />,
   table: <i className="fas fa-table" aria-hidden="true" />,
+  image: <i className="far fa-image" aria-hidden="true" />,
 };
