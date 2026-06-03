@@ -25,10 +25,10 @@ function WorksList({identifiers, previous, curator}) {
     supplemental_information: 'far fa-file-lines',
     data_management_plan: 'fas fa-list-check',
   };
-  if (identifiers.length > 0) {
+  if (identifiers.length > 0 || previous?.length > 0) {
     return (
       <>
-        <h2 style={{marginBottom: '-1rem'}}>Related works</h2>
+        {identifiers.length > 0 && <h2 style={{marginBottom: '-1rem'}}>Related works</h2>}
         {Object.keys(works).map((type) => (
           <Fragment key={type}>
             <h3>{nameit(type, works[type])}</h3>
@@ -56,7 +56,7 @@ function WorksList({identifiers, previous, curator}) {
         ))}
         {previous?.map((p) => {
           if (identifiers.some((w) => w.related_identifier === p.related_identifier)) return null;
-          return <del style={{display: 'block'}} key={p.id}>p.related_identifier</del>;
+          return <del style={{display: 'block'}} key={p.id}>{p.related_identifier}</del>;
         })}
       </>
     );

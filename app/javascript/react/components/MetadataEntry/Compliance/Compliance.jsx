@@ -113,7 +113,7 @@ export default function Compliance({resource, setResource, current}) {
         Authors are legally responsible for ensuring their dataset does not violate copyright claims over material generated or published by others.
       </p>
       <fieldset>
-        <legend>Do you understand and agree to the <a href="https://creativecommons.org/publicdomain/zero/1.0/legalcode.en" target="_blank" rel="noreferrer">license terms<ExitIcon /></a>?</legend>
+        <legend id="license-legend">Do you understand and agree to the <a href="https://creativecommons.org/publicdomain/zero/1.0/legalcode.en" target="_blank" rel="noreferrer">license terms<ExitIcon /></a>?</legend>
         <p className="radio_choice">
           <label>
             <input

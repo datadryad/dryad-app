@@ -116,7 +116,7 @@ module Datacite
 
         dcs_resource.descriptions << Description.new(
           value: concern,
-          type: StashDatacite::Description.description_type_mapping_obj('other')
+          type: StashDatacite::Description.description_type_mapping_obj('Other')
         )
       end
 

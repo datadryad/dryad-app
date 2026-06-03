@@ -19,7 +19,11 @@ if Rails.env.test?
   end
 else
   Sidekiq.configure_server do |config|
-    config.redis = { url: APP_CONFIG[:cache][:app_url], ssl: !Rails.env.development? }
+    config.redis = {
+      url: APP_CONFIG[:cache][:app_url],
+      ssl: !Rails.env.development?,
+      size: 30
+    }
     config.logger = sidekiq_logger
 
     config.client_middleware do |chain|
@@ -34,7 +38,11 @@ else
   end
 
   Sidekiq.configure_client do |config|
-    config.redis = { url: APP_CONFIG[:cache][:app_url], ssl: !Rails.env.development? }
+    config.redis = {
+      url: APP_CONFIG[:cache][:app_url],
+      ssl: !Rails.env.development?,
+      size: 30
+    }
     config.logger = sidekiq_logger
 
     config.client_middleware do |chain|
@@ -46,5 +54,5 @@ end
 SidekiqUniqueJobs.configure do |config|
   config.debug_lua = Rails.env.development? # Turn on when debugging
   config.lock_info = Rails.env.development? # Turn on when debugging
-  config.lock_timeout = nil # turn off lock timeout
+  config.lock_timeout = 10 # turn off lock timeout
 end

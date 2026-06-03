@@ -28,5 +28,9 @@
       <%= pf.label :yearly_ldf_limit, "Yearly Large Data Fee limit $" %>
       <%= pf.number_field :yearly_ldf_limit, value: payment_configuration.yearly_ldf_limit, class: 'c-input__text', disabled: !payment_configuration.covers_ldf %>
     </p>
+    <p>
+      <%= pf.check_box :ldf_limit_notification, {checked: payment_configuration.ldf_limit_notification, disabled: !payment_configuration.covers_ldf}, 1, 0 %>
+      <%= pf.label :ldf_limit_notification, "Receive LDF notification emails" %>
+    </p>
   <% end %>
 </div>
