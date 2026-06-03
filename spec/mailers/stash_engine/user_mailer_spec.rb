@@ -383,7 +383,7 @@ describe StashEngine::UserMailer, type: :mailer do
     let(:mail) { described_class.feedback_signup('Some message').deliver_now }
 
     it 'sends an error report email' do
-      expect(mail.to).to eq(APP_CONFIG['submission_error_email'])
+      expect(mail.to).to eq(APP_CONFIG['developer_email'])
       expect(mail.subject).to eq('[test] User testing signup')
       expect(mail.body.to_s).to include('A user has signed up to participate in testing')
     end
@@ -462,7 +462,7 @@ describe StashEngine::UserMailer, type: :mailer do
     let(:mail) { described_class.dependency_offline(dependency, 'Some message').deliver_now }
 
     it 'sends an error report email' do
-      expect(mail.to).to eq(APP_CONFIG['submission_error_email'])
+      expect(mail.to).to eq(APP_CONFIG['developer_email'])
       expect(mail.subject).to eq("[test] dependency offline: #{dependency.name}")
       expect(mail.body.to_s).to include('Its error message is: Some message')
     end
@@ -493,7 +493,7 @@ describe StashEngine::UserMailer, type: :mailer do
     let(:mail) { described_class.voided_invoices(list).deliver_now }
 
     it 'sends an error report email' do
-      expect(mail.to).to eq(APP_CONFIG['submission_error_email'])
+      expect(mail.to).to eq(APP_CONFIG['developer_email'])
       expect(mail.subject).to eq('[test] Voided invoices need to be updated')
       expect(mail.body.to_s).to include('There are invoices that have been voided in Stripe, but they are still active in Dryad.')
       expect(mail.body.to_s).to include(identifier.identifier.to_s)
