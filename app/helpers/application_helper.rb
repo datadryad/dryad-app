@@ -41,14 +41,13 @@ module ApplicationHelper
   def markdown_render(content:, header_offset: 0)
     doc = Commonmarker.parse(
       content, options: {
-        render: { unsafe: true, escaped_char_spans: false },
         extension: { superscript: true, subscript: true, shortcodes: false }
       }
     )
     doc.walk do |node|
       node.header_level = node.header_level + header_offset if node.type == :heading
     end
-    doc.to_html(plugins: { syntax_highlighter: { theme: '' } })
+    doc.to_html(options: { render: { unsafe: true, escaped_char_spans: false } }, plugins: { syntax_highlighter: { theme: '' } })
   end
 
   def readme_render(content)
