@@ -90,7 +90,9 @@ have access to the fields that are appropriate for your needs:
   dataset on behalf of another user. The value of the field may be
   either a Dryad user ID (obtained through the `/users` API), or an
   ORCID. If it is an ORCID, it should match the ORCID supplied with
-  one of the dataset authors.
+  one of the dataset authors. If there is no available ORCID for the submitting
+  author, the userId should be set to "0". In this case, the author will be
+  required to login to the ORCID system before taking control of the dataset.
 
 Rarely-used options
 -------------------
