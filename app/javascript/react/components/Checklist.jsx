@@ -11,20 +11,22 @@ export function Checklist({
             key={s.name}
             aria-current={step.name === s.name ? 'step' : null}
           >
-            <button
-              type="button"
-              className="checklist-link"
-              onClick={() => setStep(s)}
-              aria-controls="submission-step"
-              data-slug={s.name.split(/[^a-z]/i)[0].toLowerCase()}
-              aria-describedby={(s.fail && 'step-error') || (s.pass && 'step-complete') || 'step-todo'}
-            >
-              <span className="checklist-icon">
-                <i className="fas fa-square" aria-hidden="true" />
-                <i className="far fa-square" aria-hidden="true" />
-                {(s.pass || s.fail) && <i className={`fas fa-${s.fail ? 'xmark' : 'check'}`} aria-hidden="true" />}
-              </span>{s.name}
-            </button>
+            {s.name && (
+              <button
+                type="button"
+                className="checklist-link"
+                onClick={() => setStep(s)}
+                aria-controls="submission-step"
+                data-slug={s.name.split(/[^a-z]/i)[0].toLowerCase()}
+                aria-describedby={(s.fail && 'step-error') || (s.pass && 'step-complete') || 'step-todo'}
+              >
+                <span className="checklist-icon">
+                  <i className="fas fa-square" aria-hidden="true" />
+                  <i className="far fa-square" aria-hidden="true" />
+                  {(s.pass || s.fail) && <i className={`fas fa-${s.fail ? 'xmark' : 'check'}`} aria-hidden="true" />}
+                </span>{s.name}
+              </button>
+            )}
           </li>
         ))}
       </ul>

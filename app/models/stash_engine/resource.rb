@@ -122,6 +122,7 @@ module StashEngine
     has_many :manuscripts, ->(resource) { where(journal_id: resource.journal&.id) }, through: :resource_publication
     has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
     has_many :flags, ->(resource) { unscope(where: :resource_id).where(flaggable: [resource.journal, resource.tenant, resource.users]) }
+    has_many :action_reports, class_name: 'ActionRequiredReport'
     has_one :payment, class_name: 'ResourcePayment'
     has_one :sponsored_payment_log, dependent: :destroy
 
