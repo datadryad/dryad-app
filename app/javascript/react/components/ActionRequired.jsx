@@ -7,7 +7,7 @@ export default function ActionRequired({previous}) {
     return (
       <div className="callout warn">
         <p role="heading" aria-level="2"><i className="fa fa-triangle-exclamation" /> Action required</p>
-        <p style={{whiteSpace: 'pre', fontSize: '.98rem'}}>{report}</p>
+        <p style={{whiteSpace: 'pre-wrap', fontSize: '.98rem'}}>{report}</p>
       </div>
     );
   }
