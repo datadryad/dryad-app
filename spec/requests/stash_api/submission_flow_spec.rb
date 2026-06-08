@@ -22,7 +22,7 @@ RSpec.describe 'SubmissionFlow', type: :request do
   let(:title) { 'Title for dataset full submission flow test through API' }
 
   before do
-    host! 'my.example.org'
+    host! 'localhost'
     mock_aws!
     mock_solr!
     mock_salesforce!

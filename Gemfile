@@ -35,6 +35,7 @@ gem 'terser' # for JS and CSS minify
 # ############################################################
 # Misc
 gem 'actionpack-page_caching'
+gem 'activerecord-session_store'
 gem 'acts_as_paranoid', '~> 0.11.0'
 gem 'amatch', '~> 0.6.0'
 gem 'amoeba', '~> 3.3.0'

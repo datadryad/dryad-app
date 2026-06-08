@@ -606,4 +606,6 @@ Rails.application.routes.draw do
       get :file_validation
     end
   end
+
+  post '/csp-violation-report-endpoint', to: 'csp_violation_reports#create'
 end
