@@ -174,6 +174,16 @@ module Reminders
         last_reminder = resource.curation_activities.where('note LIKE ?', "%#{reminder_flag}%")&.last
         next if last_reminder.present?
 
+        # if email was already sent for a previous resource
+        # only send if another resource was created by a real user
+        last_ident_reminder = resource.identifier.curation_activities.where('note LIKE ?', "%#{reminder_flag}%")&.last
+        if last_ident_reminder
+          user_created = resource.identifier.curation_activities
+            .where("resource_id > #{last_ident_reminder.resource_id}", status: 'in_progress')
+            .where.not(user_id: 0).any?
+          next unless user_created
+        end
+
         log("Mailing submitter as final withdrawn notification. #{resource_log_text(resource)}")
         StashEngine::ResourceMailer.send_final_withdrawn_notification(resource).deliver_now
         create_activity(reminder_flag, resource)

@@ -188,6 +188,21 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         @resource.reload
       end
 
+      it 'has AAR report text', js: true do
+        report = 'Query 1: Make this change'
+        ActionRequiredReport.create(report: report, user_id: @curator.id, resource_id: @resource.id)
+        CurationService.new(user_id: @curator.id, resource_id: @resource.id, status: 'action_required').process
+        @resource.reload
+
+        sign_in(@author)
+        click_link 'My datasets'
+        within(:css, '#user_in-progress') do
+          find('button[name="update"]').click
+        end
+        expect(page).to have_text('Action required')
+        expect(page).to have_text(report)
+      end
+
       it 'has an assigned curator when prior version was :action_required', js: true do
         CurationService.new(user_id: @curator.id, resource_id: @resource.id, status: 'action_required').process
         @resource.reload

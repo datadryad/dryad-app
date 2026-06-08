@@ -306,6 +306,7 @@ Rails.application.routes.draw do
     get 'ds_admin/:id/change_log', to: 'admin_datasets#change_log', as: 'change_log'
     get 'ds_admin/:id/file_log', to: 'admin_datasets#file_log', as: 'file_log'
     get 'ds_admin/:id/payment_log', to: 'admin_datasets#payment_log', as: 'payment_log'
+    get 'ds_admin/:id/require_action', to: 'admin_datasets#require_action', as: 'require_action'
     get 'ds_admin/:id/create_salesforce_case', to: 'admin_datasets#create_salesforce_case', as: 'create_salesforce_case'
     get 'ds_admin/:id/edit/:field', to: 'admin_datasets#popup', as: 'ds_admin_popup'
     get 'ds_admin/:id/add_concern', to: 'admin_datasets#add_concern', as: 'add_concern'
@@ -314,6 +315,7 @@ Rails.application.routes.draw do
     post 'ds_admin/:id/flag', to: 'admin_datasets#flag', as: 'ds_admin_flag'
     post 'ds_admin/:id/edit_submitter', to: 'admin_datasets#edit_submitter', as: 'ds_admin_edit_submitter'
     post 'ds_admin/:id/pub_dates', to: 'admin_datasets#pub_dates', as: 'ds_admin_pub_dates'
+    post 'ds_admin/:id/make_report', to: 'admin_datasets#make_report', as: 'make_report'
     post 'ds_admin/:id/issue', to: 'admin_datasets#create_issue', as: 'ds_admin_issue'
     delete 'ds_admin/:id', to: 'admin_datasets#destroy', as: 'ds_admin_destroy'
     
@@ -604,4 +606,6 @@ Rails.application.routes.draw do
       get :file_validation
     end
   end
+
+  post '/csp-violation-report-endpoint', to: 'csp_violation_reports#create'
 end

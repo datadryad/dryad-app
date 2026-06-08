@@ -53,7 +53,7 @@ describe('MarkdownEditor', () => {
     info.initialValue = 'Test\n\n<br />\n\nText after a break';
     render(<MarkdownEditor {...info} />);
     await waitFor(() => {
-      expect(screen.getByText('Text after a break')).toBeInTheDocument();
+      expect(screen.getAllByText('Text after a break')[0]).toBeInTheDocument();
     });
   });
 

@@ -24,7 +24,6 @@ module StashEngine
 
       add_fields
       add_filters
-
       @sql = @datasets.to_sql
 
       if params[:sort].present? || @search_string.present?
@@ -146,7 +145,7 @@ module StashEngine
       @stop_reload = @search_string == session[:admin_search_string] && @fields == session[:admin_search_fields] && @filters == session[:admin_search_filters]
       @filters = JSON.parse(@filters.to_json, symbolize_names: true) unless @filters.blank?
 
-      session[:admin_search_filters] = params[:filters] if params[:filters].present?
+      session[:admin_search_filters] = params[:filters].to_unsafe_h if params[:filters].present?
       session[:admin_search_fields] = params[:fields] if params[:fields].present?
       session[:admin_search_string] = params[:q] if params.key?(:q)
       return unless @fields.blank?

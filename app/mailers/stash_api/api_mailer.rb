@@ -10,7 +10,7 @@ module StashApi
       return unless @user.present? && user_email(@user).present?
 
       @user_name = user_name(@user)
-      @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
+      @helpdesk_email = APP_CONFIG['helpdesk_email']
       @edit_url = "#{Rails.application.routes.url_helpers.root_url.chomp('/')}#{metadata[:editLink]}"
 
       mail(to: user_email(@user),

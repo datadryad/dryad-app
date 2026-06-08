@@ -31,7 +31,7 @@ module StashApi
       mock_salesforce!
       @user = create(:user, role: 'superuser')
       @user1 = create(:user)
-      host! 'my.example.org'
+      host! 'localhost'
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                 owner_id: @user.id, owner_type: 'StashEngine::User')
       setup_access_token(doorkeeper_application: @doorkeeper_application)

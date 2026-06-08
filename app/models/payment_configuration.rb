@@ -2,16 +2,17 @@
 #
 # Table name: payment_configurations
 #
-#  id               :bigint           not null, primary key
-#  covers_dpc       :boolean
-#  covers_ldf       :boolean
-#  ldf_limit        :integer
-#  partner_type     :string(191)
-#  payment_plan     :integer
-#  yearly_ldf_limit :integer
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  partner_id       :string(191)
+#  id                     :bigint           not null, primary key
+#  covers_dpc             :boolean
+#  covers_ldf             :boolean
+#  ldf_limit              :integer
+#  ldf_limit_notification :boolean          default(FALSE)
+#  partner_type           :string(191)
+#  payment_plan           :integer
+#  yearly_ldf_limit       :integer
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  partner_id             :string(191)
 #
 
 # NOTE: ldf_limit stores the tier number and not an actual limit size
@@ -22,6 +23,10 @@ class PaymentConfiguration < ApplicationRecord
 
   enum :payment_plan, { SUBSCRIPTION: 1, PREPAID: 2, DEFERRED: 3, TIERED: 4, '2025': 5 }
   before_save :reset_limit, :set_covers_dpc
+
+  def valid_payer?
+    covers_dpc? && payment_plan.present?
+  end
 
   private
 
