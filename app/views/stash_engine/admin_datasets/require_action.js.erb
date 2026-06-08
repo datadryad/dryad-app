@@ -1,0 +1,8 @@
+document.getElementById('genericModalContent').innerHTML = '';
+document.getElementById('genericModalContent').append(document.createRange().createContextualFragment("<%= escape_javascript(render partial: 'require_action') %>"));
+document.getElementById('genericModalDialog').showModal();
+document.getElementById('cancel_dialog').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('genericModalDialog').close();
+});
+document.getElementById('sf_popup').innerHTML = 'Create SF case'

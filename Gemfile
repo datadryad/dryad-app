@@ -64,7 +64,7 @@ gem 'httpclient', '~> 2.9.0'
 gem 'jbuilder' # is this used?
 gem 'jquery-turbolinks', '~> 2.1.0'
 gem 'jquery-ui-rails', '~> 7.0', git: 'https://github.com/jquery-ui-rails/jquery-ui-rails.git', tag: 'v7.0.0'
-gem 'jwt', '~> 2.3.0'
+gem 'jwt', '~> 3.2.0'
 gem 'kaminari', '~> 1.2.2'
 gem 'leaflet-rails', '~> 1.7.0'
 gem 'loofah', '~> 2.24.0'
@@ -136,7 +136,7 @@ group :test do
   gem 'rspec-html'
 
   # The next generation developer focused tool for automated testing of webapps (https://github.com/SeleniumHQ/selenium)
-  gem 'selenium-webdriver', '~> 4.11'
+  gem 'selenium-webdriver', '~> 4.44'
   # Making tests easy on the fingers and eyes (https://github.com/thoughtbot/shoulda)
   gem 'shoulda', '~> 4.0.0'
   # Code coverage for Ruby 1.9+ with a powerful configuration library and automatic merging of coverage across test suites (http://github.com/colszowka/simplecov)

@@ -18,7 +18,7 @@ module StashDatacite
             identifier: { methods: %i[new_upload_size_limit user_must_pay? display_payer], include: %i[process_date software_license] },
             previous_curated_resource: {
               include: [
-                :subjects, :descriptions, :cedar_json, :resource_publication, :related_identifiers, :contributors,
+                :subjects, :descriptions, :cedar_json, :resource_publication, :related_identifiers, :contributors, :action_reports,
                 {
                   authors: { include: [:affiliations] },
                   tenant: { include: %i[payment_configuration] },

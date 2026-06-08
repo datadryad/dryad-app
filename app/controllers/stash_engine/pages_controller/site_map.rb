@@ -9,7 +9,7 @@ module StashEngine
       def initialize
         @per_page = 1000
         results = Rails.cache.fetch('sitemap_index', expires_in: 1.day) do
-          service = StashApi::SolrSearchService.new(query: '*', filters: { sort: 'updated_at_dt desc' })
+          service = StashApi::SolrSearchService.new(query: '*', filters: { 'sort' => 'updated_at_dt desc' })
           result = service.search(fields: 'dc_identifier_s updated_at_dt')
           result['response']
         end
@@ -43,7 +43,7 @@ module StashEngine
 
       def sitemap_page(page)
         results = Rails.cache.fetch("sitemap_page_#{page}", expires_in: 1.day) do
-          service = StashApi::SolrSearchService.new(query: '*', filters: { sort: 'updated_at_dt asc' })
+          service = StashApi::SolrSearchService.new(query: '*', filters: { 'sort' => 'updated_at_dt asc' })
           result = service.search(page: page, per_page: @per_page, fields: 'dc_identifier_s updated_at_dt')
           result['response']['docs']
         end

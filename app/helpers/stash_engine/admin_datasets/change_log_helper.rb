@@ -194,7 +194,7 @@ module StashEngine
 
       def contributor_changes(c, _first)
         if %w[update create].include?(c.event)
-          str = "<span>Set #{c.object['contributor_type']}:</span><dl><div><dt>Name:</dt><dd>#{c.object['contributor_name']}</dd></div>"
+          str = "<span>Set #{c.object['contributor_type'].sub('sponsor', 'research facility')}:</span><dl><div><dt>Name:</dt><dd>#{c.object['contributor_name']}</dd></div>"
           if c.object['name_identifier_id'].present?
             str += "<div><dt>ROR ID:</dt><dd><a href=\"#{c.object['name_identifier_id']}\" target=\"_blank\" rel=\"noreferrer\">#{c.object['name_identifier_id']}</a></dd></div>"
           end
@@ -204,7 +204,7 @@ module StashEngine
           str += '</dl>'
           str.html_safe
         else
-          "Deleted #{c.object_changes['contributor_type'][0]} (#{c.object_changes['contributor_name'][0].presence || '<em>empty</em>'})".html_safe
+          "Deleted #{c.object_changes['contributor_type'][0].sub('sponsor', 'research facility')} (#{c.object_changes['contributor_name'][0].presence || '<em>empty</em>'})".html_safe
         end
       end
 
