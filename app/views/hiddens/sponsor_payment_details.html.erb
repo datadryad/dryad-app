@@ -1,0 +1,87 @@
+<div>
+  <p><b><%= @sponsor_details.name %> ( <%= @sponsor_details.id %> )</b></p>
+  <p><%= @sponsor_details.type %></p>
+  <p><%= @sponsor_details.enabled ? 'Enabled' : 'Disabled' %></p>
+  <p>Calculation year: <%= @calculation_year %></p>
+  <fieldset>
+    <legend>Payment configuration</legend>
+    <pre><%= JSON.pretty_generate(@service.payment_configuration&.attributes) %></pre>
+  </fieldset>
+  <br />
+
+  <fieldset>
+    <legend>Payment details</legend>
+    <p>Total DPC: <%= number_to_currency(@total_dpc) %></p>
+    <p>Total LDF: <%= number_to_currency(@total_ldf) %></p>
+    <table width="300">
+      <tr>
+        <td>LDF Limit</td>
+        <td class="align-end"><%= number_to_currency(@service.payment_configuration&.yearly_ldf_limit) %></td>
+      </tr>
+      <tr>
+        <td>Used LDF</td>
+        <td class="align-end"><%= number_to_currency(@total_ldf) %></td>
+      </tr>
+      <tr>
+        <td>Remaining LDF</td>
+        <td class="align-end"><%= number_to_currency(@service.payment_configuration&.yearly_ldf_limit.to_i - @total_ldf) %></td>
+      </tr>
+    </table>
+    <table width="300" style="margin-top: 10px">
+      <tr>
+        <td>Total DPC</td>
+        <td class="align-end"><%= number_to_currency(@total_dpc) %></td>
+      </tr>
+      <tr>
+        <td>Total LDF</td>
+        <td class="align-end"><%= number_to_currency(@total_ldf) %></td>
+      </tr>
+      <tr>
+        <td>Total</td>
+        <td class="align-end"><%= number_to_currency(@total_dpc + @total_ldf) %></td>
+      </tr>
+    </table>
+  </fieldset>
+  <p><%= number_with_delimiter(@identifiers.count) %> Identifiers: </p>
+  <table width="100%">
+    <tr>
+      <td>ID</td>
+      <td>DOI</td>
+      <td>#resource</td>
+      <td>title</td>
+      <td>status</td>
+      <td>sponsored-ldf</td>
+    </tr>
+    <% @identifiers.includes(latest_resource: [:last_curation_activity, :sponsored_payment_log]).each do |ident| %>
+      <% res = ident.latest_resource %>
+      <tr>
+        <td><%= link_to ident.id, identifier_payment_details_hidden_path(id: ident.id) %></td>
+        <td><%= ident.identifier %></td>
+        <td><%= ident.resources.count %></td>
+        <td><%= res.title %></td>
+        <td><%= res.last_curation_activity.status %></td>
+        <td class="align-end">
+          <%
+            sum = ident.sponsored_payment_logs.sum(:ldf)
+            if sum > 0
+          %>
+            <%= number_to_currency(sum) %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+</div>
+
+<style>
+    pre {
+        font-size: 12px;
+        border: 1px solid #ccc;
+        font-style: italic;
+        padding: 10px;
+    }
+
+    .align-end {
+        text-align: right;
+    }
+</style>

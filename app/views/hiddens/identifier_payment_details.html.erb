@@ -1,0 +1,53 @@
+<div>
+  <p><%= @identifier.latest_resource.title %></p>
+  <p>ID: <%= @identifier.id %></p>
+  <p>DOI: <%= @identifier %></p>
+  <fieldset>
+    <p><%= %></p>
+    <legend>Payment sponsor</legend>
+    <p><%= @payment_sponsor_details.name %> ( <%= @payment_sponsor.id %> )</p>
+    <pre><%= JSON.pretty_generate(@payment_sponsor.payment_configuration&.attributes) %></pre>
+  </fieldset>
+  <br />
+  <fieldset>
+    <legend>Payment limits</legend>
+    <p><%= @limits_sponsor_details.name %> ( <%= @limits_sponsor.id %> )</p>
+    <pre><%= JSON.pretty_generate(@limits_sponsor.payment_configuration&.attributes) %></pre>
+  </fieldset>
+
+  <p>Total LDF: <%= number_to_currency(@total_ldf) %></p>
+  <p><%= number_with_delimiter(@identifier.resources.count) %> Resources: </p>
+  <table width="100%">
+    <tr>
+      <td>version</td>
+      <td>ID</td>
+      <td>size</td>
+      <td>status</td>
+      <td class="align-end">sponsored LDF</td>
+    </tr>
+    <% @identifier.resources.includes(:last_curation_activity, :sponsored_payment_log).each do |res| %>
+      <tr>
+        <td><%= res.stash_version.version %></td>
+        <td><%= res.id %></td>
+        <td><%= filesize res.total_file_size %></td>
+        <td><%= res.last_curation_activity.status %></td>
+        <td class="align-end">
+          <%= number_to_currency(res.sponsored_payment_log&.ldf) %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+</div>
+
+<style>
+    pre {
+        font-size: 12px;
+        border: 1px solid #ccc;
+        font-style: italic;
+        padding: 10px;
+    }
+
+    .align-end {
+        text-align: right;
+    }
+</style>

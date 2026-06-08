@@ -197,6 +197,10 @@ module StashEngine
       )
     end
 
+    def sponsored_identifiers
+      StashEngine::Identifier.where("payment_type like 'journal-%'").where(payment_id: issn_ids).distinct
+    end
+
     def payment_sponsor
       # top level publisher
       top_level_org

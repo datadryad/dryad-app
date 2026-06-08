@@ -67,6 +67,11 @@ module StashEngine
       o
     end
 
+    def sponsored_identifiers
+      issn_ids = journals_sponsored.map{|a| a.issn_ids}.flatten.uniq
+      StashEngine::Identifier.where("payment_type like 'journal-%'").where(payment_id: issn_ids).distinct
+    end
+
     def payers_sponsored
       journals_sponsored
     end
