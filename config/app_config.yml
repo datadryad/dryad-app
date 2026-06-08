@@ -23,13 +23,10 @@ test:
     app_id: 000000
     client_id: sfsFVSDFDSF
     pem: aDHADSADSJAGF
-  submission_error_email: [my.fun.submission.error.emails@example.com]
-  submission_bc_emails: [""]
-  zenodo_error_email: [my.fun.zenodo.error.emails@example.com]
-  contact_email: ["contact1@example.edu", "contact2@example.edu"]
+  developer_email: [my.fun.submission.error.emails@example.com]
+  helpdesk_email: dryad.helpdesk@mailinator.com
   default_tenant: mock_tenant
   old_dryad_url: https://api.datadryad.example.org
-  helpdesk_email: dryad.helpdesk@mailinator.com
   send_journal_published_notices: false
   counter:
     account: CDL.DASH
@@ -157,10 +154,7 @@ defaults: &DEFAULTS
     app_id: <%= Rails.application.credentials[Rails.env.to_sym][:github_app_id] %>
     client_id: <%= Rails.application.credentials[Rails.env.to_sym][:github_client_id] %>
     pem: "<%= Rails.application.credentials[Rails.env.to_sym][:github_pem] %>"
-  submission_error_email: [dryad.submission.error.emails@mailinator.com]
-  zenodo_error_email: [dryad.submission.error.emails@mailinator.com]
-  submission_bc_emails: [""]
-  contact_email: help@datadryad.org
+  developer_email: [dryad.submission.error.emails@mailinator.com]
   helpdesk_email: dryad.helpdesk@mailinator.com
   send_journal_published_notices: false
   default_tenant: dryad
@@ -251,9 +245,9 @@ defaults: &DEFAULTS
     api_requests_auth: 240
     api_requests_v1: 30
   salesforce:
-    server: https://dryad--cloudparti.sandbox.lightning.force.com
+    server: https://dryad--dryadsb.sandbox.my.salesforce.com
     login_host: test.salesforce.com
-    username: admin@datadryad.org.cloudparti
+    username: admin@datadryad.org.dryadsb
     password: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_password] %>
     security_token: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_security_token] %>
     client_id: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_client_id] %>
@@ -283,8 +277,7 @@ defaults: &DEFAULTS
 
 dev: &DEV
   <<: *DEFAULTS
-  submission_error_email: [dryad.submission.error.emails@mailinator.com, devs@datadryad.org]
-  zenodo_error_email: [dryad.submission.error.emails@mailinator.com, devs@datadryad.org]
+  developer_email: [dryad.submission.error.emails@mailinator.com, devs@datadryad.org]
   zenodo:
     access_token: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_access_token] %>
     base_url: https://zenodo-rdm-qa.web.cern.ch
@@ -317,7 +310,7 @@ dev: &DEV
 
 development:
   <<: *DEV
-  submission_error_email: [dryad.submission.error.emails@mailinator.com]
+  developer_email: [dryad.submission.error.emails@mailinator.com]
   send_journal_published_notices: false
   maximums:
     merritt_size: 200_000_000
@@ -335,8 +328,7 @@ development:
 
 stage:
   <<: *DEFAULTS
-  submission_error_email: [dryad.submission.error.emails@mailinator.com, devs@datadryad.org]
-  zenodo_error_email: [dryad.submission.error.emails@mailinator.com, devs@datadryad.org]
+  developer_email: [devs@datadryad.org]
   shib_sp_host: sandbox.datadryad.org
   page_error_email: [devs@datadryad.org]
   feedback_email_from: no-reply-dryad-stg@datadryad.org
@@ -363,8 +355,7 @@ production:
   <<: *DEFAULTS
   shib_sp_host: datadryad.org
   page_error_email: [devs@datadryad.org]
-  submission_error_email: [devs@datadryad.org]
-  zenodo_error_email: [devs@datadryad.org]
+  developer_email: [devs@datadryad.org]
   helpdesk_email: help@datadryad.org
   feedback_email_from: no-reply-dryad@datadryad.org
   repository:
@@ -382,7 +373,6 @@ production:
     member: true
     sandbox: false
     api: https://api.orcid.org
-  submission_bc_emails: [""]
   send_journal_published_notices: true
   zenodo:
     base_url: https://zenodo.org

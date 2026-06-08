@@ -1,4 +1,4 @@
-<% url = CGI.escape(show_url("doi:#{identifier.identifier}")) %>
+<% url = ROOT_URL + CGI.escape(show_path("doi:#{identifier.identifier}")) %>
 <% citation = CGI.escape(citation(resource.authors, resource.title, resource.resource_type, identifier.identifier, (resource.publication_date.present? ? resource.publication_date.year : resource.updated_at.year)).to_s.strip_tags) %>
 <% title = CGI.escape("Dryad dataset: " + resource.title) %>
 <% abstract = CGI.escape("Abstract: " + (review&.abstract&.description).to_s.strip_tags) %>

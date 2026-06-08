@@ -36,7 +36,7 @@ module StashApi
     end
 
     def sort_query
-      filters['sort'].sub('date ', 'dct_issued_dt ')
+      filters['sort'].split.first(2).join(' ').sub('date ', 'dct_issued_dt ')
     end
 
     def solr_exact_map

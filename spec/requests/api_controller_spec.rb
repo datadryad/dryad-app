@@ -7,7 +7,7 @@ module StashApi
   RSpec.describe ApiController, type: :request do
     before(:each) do
       @user = create(:user, role: 'superuser')
-      host! 'my.example.org'
+      host! 'localhost'
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                 owner_id: @user.id, owner_type: 'StashEngine::User')
       setup_access_token(doorkeeper_application: @doorkeeper_application)

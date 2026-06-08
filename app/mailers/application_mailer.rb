@@ -1,6 +1,6 @@
 # Base class for mailers
 class ApplicationMailer < ActionMailer::Base
-  default from: APP_CONFIG['feedback_email_from'] || APP_CONFIG['contact_email'].last
+  default from: APP_CONFIG['feedback_email_from'] || APP_CONFIG['helpdesk_email']
   layout 'mailer'
 
   private
@@ -21,9 +21,9 @@ class ApplicationMailer < ActionMailer::Base
     @title = resource.title&.strip_tags
     @user = resource.submitter || resource.owner_author
     @user_name = user_name(@user)
-    @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
-    @bcc_emails = APP_CONFIG['submission_bc_emails'] || [@helpdesk_email]
-    @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
+    @helpdesk_email = APP_CONFIG['helpdesk_email']
+    @bcc_emails = APP_CONFIG['developer_email'] || [@helpdesk_email]
+    @submission_error_emails = APP_CONFIG['developer_email'] || [@helpdesk_email]
     @page_error_emails = APP_CONFIG['page_error_email'] || [@helpdesk_email]
   end
 

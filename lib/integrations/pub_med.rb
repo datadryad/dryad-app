@@ -30,7 +30,7 @@ module Integrations
     # Only works if record is in PMC (free full text)
     def id_converter(id:, type:)
       url = 'https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/'
-      get_json(url, { ids: id, idtype: type, format: 'json', tool: 'dryad', email: APP_CONFIG['submission_error_email'] })
+      get_json(url, { ids: id, idtype: type, format: 'json', tool: 'dryad', email: APP_CONFIG['developer_email'] })
     rescue StandardError
       nil
     end

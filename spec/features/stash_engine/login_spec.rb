@@ -1,16 +1,14 @@
 require 'rails_helper'
 
 RSpec.feature 'Session', type: :feature do
-
   include Mocks::RSolr
 
-  before(:each) do
+  before do
     create(:tenant)
   end
 
   describe :orcid_login do
-
-    before(:each) do
+    before do
       mock_solr!
       @user = create(:user, tenant_id: nil, orcid: nil)
     end
@@ -33,11 +31,11 @@ RSpec.feature 'Session', type: :feature do
   end
 
   describe :test_login do
-    before(:each) do
+    before do
       ENV['TEST_LOGIN'] = 'true'
     end
 
-    after(:each) do
+    after do
       ENV.delete('TEST_LOGIN')
     end
 
@@ -62,8 +60,7 @@ RSpec.feature 'Session', type: :feature do
   end
 
   describe :other_authentication, js: true do
-
-    before(:each) do
+    before do
       create(:tenant_match)
       create(:tenant_email)
       @user = create(:user, tenant_id: nil)
@@ -80,6 +77,7 @@ RSpec.feature 'Session', type: :feature do
       within('#searchselect-tenant__list') do
         find('li', text: 'Match Tenant').click
       end
+      expect(page).to have_button('Login to verify')
       click_button 'Login to verify'
       expect(page).to have_text('My datasets')
       expect(page).to have_text('match_tenant')
@@ -92,16 +90,21 @@ RSpec.feature 'Session', type: :feature do
       within('#searchselect-tenant__list') do
         find('li', text: 'Email Test').click
       end
+      expect(page).to have_button('Login to verify')
       click_button 'Login to verify'
       expect(page).to have_text('Enter confirmation code')
       # enter and erase email
+      expect(page).to have_field('email')
       fill_in 'email', with: 'test@example.org'
       click_button 'Save email'
+      expect(page).to have_button('Enter a new email address')
       click_button 'Enter a new email address'
+      expect(page).to have_field('email')
       fill_in 'email', with: 'test@example.org'
       click_button 'Save email'
       expect(page).to have_text('Enter confirmation code')
       # refresh code
+      expect(page).to have_link('Send another code')
       click_link 'Send another code'
       expect(page).to have_text('Enter confirmation code')
       # enter code
@@ -112,8 +115,7 @@ RSpec.feature 'Session', type: :feature do
   end
 
   describe :reauthentication, js: true do
-
-    before(:each) do
+    before do
       @tenant = create(:tenant_email)
       @user = create(:user, tenant_id: @tenant.id, tenant_auth_date: 2.months.ago)
       mock_orcid!(@user)
@@ -130,20 +132,37 @@ RSpec.feature 'Session', type: :feature do
 
     it 'successfully reauthenticates' do
       expect(page).to have_text('Reconnect')
+
       click_button 'Login to verify'
       expect(page).to have_text('Enter confirmation code')
+
       # enter and erase email
+      expect(page).to have_field('email')
+
       fill_in 'email', with: 'test@example.org'
       click_button 'Save email'
+
+      expect(page).to have_button('Enter a new email address')
+
       click_button 'Enter a new email address'
+
+      expect(page).to have_field('email')
+
       fill_in 'email', with: 'test@example.org'
       click_button 'Save email'
+
       expect(page).to have_text('Enter confirmation code')
+
       # refresh code
       click_link 'Send another code'
+
       expect(page).to have_text('Enter confirmation code')
+      expect(page).to have_field('email_code')
+
       # enter code
-      fill_in 'email_code', with: StashEngine::EmailToken.all.last.token
+      token = StashEngine::EmailToken.order(created_at: :desc).first.token
+      fill_in 'email_code', with: token
+
       expect(page).to have_text('My datasets')
       expect(page).to have_text('email_auth')
     end
