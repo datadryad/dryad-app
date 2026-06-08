@@ -54,6 +54,7 @@ end
 
 after :deploy, 'puma:restart_if_exists'
 after :deploy, 'sidekiq:restart_if_exists'
+after :deploy, :index_help_center
 
 namespace :git do
   desc "Add the version file so that we can display the git version in the footer"
@@ -103,7 +104,6 @@ namespace :sidekiq do
       if test("[ -f /etc/systemd/system/#{service}.service ]") ||
         test("systemctl list-unit-files | grep -q #{service}.service")
         execute :sudo, :systemctl, :restart, "#{service}.service"
-        after :deploy, :index_help_center
       else
         info "Sidekiq service #{service} not found, skipping restart"
       end
