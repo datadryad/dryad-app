@@ -40,6 +40,12 @@ module Stash
         result.first['Id']
       end
 
+      def case_num(case_id:)
+        return unless case_id
+
+        sf_client.select('Case', case_id, ['CaseNumber'])&.CaseNumber
+      end
+
       def case_view_url(case_id: nil, case_num: nil)
         return unless case_id.present? || case_num.present?
 

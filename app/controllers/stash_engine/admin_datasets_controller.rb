@@ -124,6 +124,7 @@ module StashEngine
         text = Stash::Salesforce.case_email_text(case_id: sf_case)
         m = text&.match(/review and address the following:(.*)When you are prepared to resubmit/m)
         @text = m[1].strip if m.present?
+        @note = "SF #{Stash::Salesforce.case_num(case_id: sf_case)}" if sf_case.present?
       end
       respond_to(&:js)
     end
@@ -135,7 +136,8 @@ module StashEngine
       return unless CurationActivity.allowed_states(@last_state, current_user).include?('action_required')
 
       @resource.action_reports << ActionRequiredReport.create(report: params[:report], user: current_user)
-      CurationService.new(resource: @resource, user: current_user, status: 'action_required', note: 'Action required report created').process
+      CurationService.new(resource: @resource, user: current_user, status: 'action_required',
+                          note: params[:note] || 'Action required report edited').process
       render js: 'window.location.reload();'
     end
 
