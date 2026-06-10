@@ -46,3 +46,5 @@ bundle exec rails identifiers:remove_abandoned_datasets DRY_RUN=false >> /home/e
 bundle exec rails checksums:validate_files >> /home/ec2-user/deploy/shared/log/validate_files.log 2>&1
 # Generate checksum for files without digests
 bundle exec rails checksums:generate_digests >> /home/ec2-user/deploy/shared/log/generate_file_digests.log 2>&1
+
+bundle exec rails internal:csp_reports >> /home/ec2-user/deploy/shared/log/csp_reports.log 2>&1
