@@ -164,7 +164,8 @@
     button.addEventListener('click', preventClicks);
   });
   const sf_popup = document.getElementById('sf_popup')
-  if (sf_popup) sf_popup.addEventListener('click', () => {
+  if (sf_popup) sf_popup.addEventListener('click', (e) => {
+    e.preventDefault();
     sf_popup.innerHTML = "<i class=\"fas fa-circle-notch fa-spin\"></i> Create SF case"
     const sf = window.open(sf_popup.href, "SFpopup")
     const timer = setInterval(() => { 
