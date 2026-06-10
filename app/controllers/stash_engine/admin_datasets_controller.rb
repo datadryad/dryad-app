@@ -230,7 +230,7 @@ module StashEngine
     end
 
     def sf_case
-      @sf_case ||= Stash::Salesforce.find_cases_by_doi(@identifier.identifier)&.last&.id
+      @sf_case ||= Stash::Salesforce.find_cases_by_doi(@identifier.identifier)&.first&.id
     end
 
     def setup_publications

@@ -61,8 +61,9 @@ module Stash
       end
 
       def find_cases_by_doi(doi)
-        result = db_query("SELECT Id, Status, OwnerId, Case_Reasons__c, Reason, Case_Reason_Other__c FROM Case Where Subject like '%#{doi}%' " \
-                          "or DOI__c like '%#{doi}%' ")
+        result = db_query('SELECT Id, Status, OwnerId, CaseNumber, Case_Reasons__c, Reason, Case_Reason_Other__c ' \
+                          "FROM Case Where Subject like '%#{doi}%' " \
+                          "or DOI__c like '%#{doi}%' Order By CaseNumber DESC")
         return unless result && result.size > 0
 
         cases_found = []
