@@ -6,9 +6,11 @@ class PayerDetailsService
   end
 
   def details
+    return empty_details if payer.nil?
+
     info = {
       id: payer.id,
-      type: payer.class.name
+      type: payer.class&.name
     }.merge(adapter.mappings)
 
     OpenStruct.new(info)
@@ -29,5 +31,13 @@ class PayerDetailsService
     }
 
     @type ||= type_mappings[payer.class.name]
+  end
+
+  def empty_details
+    OpenStruct.new({
+                     id: nil,
+                     type: nil,
+                     name: nil
+                   })
   end
 end

@@ -17,11 +17,11 @@ module StashEngine
       end
     end
 
-    def payer_payment_details_debugger(payer)
+    def payer_payment_details_debugger(payer, text = 'Details')
       return unless current_user.superuser?
 
       content_tag :div do
-        link_to 'Details', sponsor_payment_details_hidden_path(id: payer.id, type: payer.class.name)
+        link_to text, sponsor_payment_details_hidden_path(id: payer.id, type: payer.class.name)
       end
     end
   end

@@ -9,6 +9,8 @@ module Payments
     end
 
     def total_ldf
+      return if payment_sponsor.nil?
+
       SponsoredPaymentLog
         .where(sponsor_id: payment_sponsor.id)
         .where(resource_id: identifier.resource_ids)

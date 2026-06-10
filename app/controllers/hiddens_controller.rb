@@ -11,17 +11,17 @@ class HiddensController < StashEngine::ApplicationController
 
     @calculation_year = params[:year] || Date.today.year
     @sponsor = case params[:type]
-    when 'StashEngine::Tenant'
-      StashEngine::Tenant.find(params[:id])
-    when 'StashEngine::Journal'
-      StashEngine::Journal.find(params[:id])
-    when 'StashEngine::JournalOrganization'
-      StashEngine::JournalOrganization.find(params[:id])
-    when 'StashEngine::Funder'
-      StashEngine::Funder.find(params[:id])
-    else
-      raise "Unknown sponsor type: #{params[:type]}"
-    end
+               when 'StashEngine::Tenant'
+                 StashEngine::Tenant.find(params[:id])
+               when 'StashEngine::Journal'
+                 StashEngine::Journal.find(params[:id])
+               when 'StashEngine::JournalOrganization'
+                 StashEngine::JournalOrganization.find(params[:id])
+               when 'StashEngine::Funder'
+                 StashEngine::Funder.find(params[:id])
+               else
+                 raise "Unknown sponsor type: #{params[:type]}"
+               end
     @service = Payments::Sponsor.new(@sponsor, year: @calculation_year)
 
     @sponsor_details = PayerDetailsService.new(@sponsor).details

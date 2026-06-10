@@ -1,19 +1,36 @@
+<%= stylesheet_link_tag 'hidden_pages' %>
 <div>
   <p><%= @identifier.latest_resource.title %></p>
   <p>ID: <%= @identifier.id %></p>
   <p>DOI: <%= @identifier %></p>
-  <fieldset>
-    <p><%= %></p>
-    <legend>Payment sponsor</legend>
-    <p><%= @payment_sponsor_details.name %> ( <%= @payment_sponsor.id %> )</p>
-    <pre><%= JSON.pretty_generate(@payment_sponsor.payment_configuration&.attributes) %></pre>
-  </fieldset>
+  <p><%= link_to 'Activity log', activity_log_path(@identifier) %></p>
+  <div class="details-box">
+    <h3>Payment sponsor</h3>
+    <% if @payment_sponsor %>
+      <% if @payment_sponsor.payment_configuration&.payment_plan != '2025' %>
+        <p class="c-alert--error">Not 2025 payer!!!</p>
+      <% end %>
+
+      <p><%= payer_payment_details_debugger(@payment_sponsor, "#{@payment_sponsor_details.name} ( #{@payment_sponsor.id} )") %></p>
+      <pre><%= JSON.pretty_generate(@payment_sponsor.payment_configuration&.attributes) %></pre>
+    <% else %>
+      <p>No payment sponsor</p>
+    <% end %>
+  </div>
   <br />
-  <fieldset>
-    <legend>Payment limits</legend>
-    <p><%= @limits_sponsor_details.name %> ( <%= @limits_sponsor.id %> )</p>
-    <pre><%= JSON.pretty_generate(@limits_sponsor.payment_configuration&.attributes) %></pre>
-  </fieldset>
+  <div class="details-box">
+    <h3>Payment limits</h3>
+    <% if @limits_sponsor.payment_configuration&.payment_plan != '2025' %>
+      <p class="c-alert--error">Not 2025 payer!!!</p>
+    <% end %>
+
+    <% if @limits_sponsor %>
+      <p><%= payer_payment_details_debugger(@limits_sponsor, "#{@limits_sponsor_details.name} ( #{@limits_sponsor.id} )") %></p>
+      <pre><%= JSON.pretty_generate(@limits_sponsor.payment_configuration&.attributes) %></pre>
+    <% else %>
+      <p>No limits sponsor</p>
+    <% end %>
+  </div>
 
   <p>Total LDF: <%= number_to_currency(@total_ldf) %></p>
   <p><%= number_with_delimiter(@identifier.resources.count) %> Resources: </p>
@@ -21,33 +38,26 @@
     <tr>
       <td>version</td>
       <td>ID</td>
-      <td>size</td>
-      <td>status</td>
-      <td class="align-end">sponsored LDF</td>
+      <td>Status</td>
+      <td>Status date</td>
+      <td>Size</td>
+      <td class="align-end">Sponsored LDF</td>
+      <td class="align-end">User paid</td>
     </tr>
-    <% @identifier.resources.includes(:last_curation_activity, :sponsored_payment_log).each do |res| %>
+    <% @identifier.resources.includes(:last_curation_activity, :sponsored_payment_log, :payment, :stash_version).each do |res| %>
       <tr>
         <td><%= res.stash_version.version %></td>
         <td><%= res.id %></td>
-        <td><%= filesize res.total_file_size %></td>
         <td><%= res.last_curation_activity.status %></td>
+        <td><%= res.last_curation_activity.created_at %></td>
+        <td><%= filesize res.total_file_size %></td>
         <td class="align-end">
           <%= number_to_currency(res.sponsored_payment_log&.ldf) %>
+        </td>
+        <td class="align-end">
+          <%= number_to_currency(res.payment&.amount) %>
         </td>
       </tr>
     <% end %>
   </table>
 </div>
-
-<style>
-    pre {
-        font-size: 12px;
-        border: 1px solid #ccc;
-        font-style: italic;
-        padding: 10px;
-    }
-
-    .align-end {
-        text-align: right;
-    }
-</style>

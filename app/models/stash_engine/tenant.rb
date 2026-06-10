@@ -133,7 +133,7 @@ module StashEngine
       [self] + sponsored_deep
     end
 
-    def identifiers
+    def sponsored_identifiers
       StashEngine::Identifier.joins(:resources).where(resources: { tenant_id: id }).distinct
     end
 
