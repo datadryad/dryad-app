@@ -5,7 +5,7 @@
 
 On the DASH system:
 
-1. Ensure you have created an API account for the DSpace system to use, as described in [Adding a New API Account for Submission](apis/adding_api_accounts.md).
+1. Ensure you have created an API account for the DSpace system to use, as described in [Adding a New API Account for Submission](technical_notes/adding_api_accounts.md).
 
 On the DSpace system:
 

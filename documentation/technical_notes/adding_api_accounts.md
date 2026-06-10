@@ -1,6 +1,10 @@
 Adding a New API Account
 ========================
 
+Users can now create their own [API accounts](../apis/api_account.md), and userless accounts can be created through the web interface for journal APIs. This historic documentation outlines the old process.
+
+---
+
 Each API account must be associated with a user account. In most
 cases, the user requesting the account will have previously logged in to
 Dryad so they have a user record and you will want to find their user
@@ -33,7 +37,7 @@ To create an API account:
 
 To set permissions for the API account:
 - Determine which role the account should have. For details on the available
-  roles, see the [Permissions](../technical_notes/permissions.md) document.
+  roles, see the [Permissions](permissions.md) document.
 - The user can be given an appropriate role in the user management UI, or using the rails console:
   ```ruby
   StashEngine::Role.new(user: <User>, role: 'admin', role_object: <Tenant, Journal, etc.>).save
