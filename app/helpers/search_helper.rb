@@ -3,7 +3,7 @@ module SearchHelper
   def filter_to_term
     {
       research_organizations: :org,
-      journals: :journalISSN,
+      journals: :publicationISSN,
       publication_years: :year,
       file_extensions: :fileExt,
       subject_keywords: :subject,
@@ -113,7 +113,7 @@ module SearchHelper
     str += "(#{c.dig('issued', 'date-parts').first.first}) " if c.dig('issued', 'date-parts').present?
     str += " <a href=\"https://doi.org/#{c['DOI']}\" target=\"_blank\" rel=\"noreferrer\">#{c['title']}"
     str += '<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>. '
-    str += "<a href=\"#{new_search_path(journalIssn: issn)}\">" if issn.present?
+    str += "<a href=\"#{new_search_path(publicationISSN: issn)}\">" if issn.present?
     str += "<em>#{c['container-title']}</em>"
     str += '</a>' if issn.present?
     str.html_safe

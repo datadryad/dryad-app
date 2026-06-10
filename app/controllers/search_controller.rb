@@ -100,7 +100,7 @@ class SearchController < ApplicationController
     f += ' funding_sm' if params.key?(:funder) || params.key?(:award)
     f += ' dryad_dataset_file_ext_sm' if params.key?(:fileExt)
     f += ' dryad_author_affiliation_name_sm' if params.key?(:affiliation)
-    f += ' dryad_related_publication_name_s' if params.key?(:journalISSN)
+    f += ' dryad_related_publication_name_s' if params.key?(:publicationISSN) || params.key?(:journalISSN)
     f
   end
 

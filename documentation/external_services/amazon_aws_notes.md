@@ -160,7 +160,7 @@ INPUT json example:
   - `database.yml`
   - `tenants/*.yml` (You may only need to add your special environment to a few tenants you intend to use,
     but I haven't tested this yet.)
-- Add an API account with permission to write information. (see `documentation/apis/adding_api_accounts.md`
+- Add an API account with permission to write information. (see `documentation/technical_notes/adding_api_accounts.md`
   and `documentation/apis/choosing_authentication_type.md` and the grant type will be Client Credentials
   Grant in this case and based on a user with appropriate permissions to write for all datasets.)
 - In the table `stash_engine_api_tokens` add a row and add the `app_id` and `secret` for the user account above.

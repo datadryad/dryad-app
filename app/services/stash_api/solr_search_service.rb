@@ -45,6 +45,7 @@ module StashApi
         license: 'dc_rights_s',
         fileExt: 'dryad_dataset_file_ext_sm',
         journalISSN: 'dryad_related_publication_issn_s',
+        publicationISSN: 'dryad_related_publication_issn_s',
         funder: 'funder_ror_ids_sm',
         award: 'funder_awd_ids_sm',
         facility: 'sponsor_ror_ids_sm',
