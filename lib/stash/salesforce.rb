@@ -40,6 +40,12 @@ module Stash
         result.first['Id']
       end
 
+      def case_num(case_id:)
+        return unless case_id
+
+        sf_client.select('Case', case_id, ['CaseNumber'])&.CaseNumber
+      end
+
       def case_view_url(case_id: nil, case_num: nil)
         return unless case_id.present? || case_num.present?
 
@@ -55,8 +61,9 @@ module Stash
       end
 
       def find_cases_by_doi(doi)
-        result = db_query("SELECT Id, Status, OwnerId, Case_Reasons__c, Reason, Case_Reason_Other__c FROM Case Where Subject like '%#{doi}%' " \
-                          "or DOI__c like '%#{doi}%' ")
+        result = db_query('SELECT Id, Status, OwnerId, CaseNumber, Case_Reasons__c, Reason, Case_Reason_Other__c ' \
+                          "FROM Case Where Subject like '%#{doi}%' " \
+                          "or DOI__c like '%#{doi}%' Order By CaseNumber DESC")
         return unless result && result.size > 0
 
         cases_found = []

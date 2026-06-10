@@ -420,7 +420,7 @@ GEM
       time
     net-http (0.9.1)
       uri (>= 0.11.1)
-    net-imap (0.5.14)
+    net-imap (0.5.15)
       date
       net-protocol
     net-pop (0.1.2)
@@ -435,7 +435,7 @@ GEM
       net-protocol
     net-ssh (7.3.0)
     netrc (0.11.0)
-    nio4r (2.7.4)
+    nio4r (2.7.5)
     noid (0.9.0)
     nokogiri (1.19.3-arm64-darwin)
       racc (~> 1.4)
@@ -492,7 +492,7 @@ GEM
     pry-rails (0.3.11)
       pry (>= 0.13.0)
     public_suffix (7.0.5)
-    puma (6.6.0)
+    puma (7.2.1)
       nio4r (~> 2.0)
     pundit (2.5.2)
       activesupport (>= 3.0.0)
@@ -863,7 +863,7 @@ DEPENDENCIES
   paper_trail (~> 17.0)
   pry
   pry-rails
-  puma (= 6.6.0)
+  puma (= 7.2.1)
   pundit (~> 2.5.2)
   rack-attack
   rack-mini-profiler
