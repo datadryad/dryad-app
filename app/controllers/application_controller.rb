@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   include Pundit::Authorization
 
   before_action :set_paper_trail_whodunnit
+  before_action :protect_from_host_header_attack
 
   def process_action(*args)
     super
@@ -21,5 +22,12 @@ class ApplicationController < ActionController::Base
   def allow_iframe_requests
     response.headers.delete('X-Frame-Options') # remove default
     response.headers['X-Frame-Options'] = 'ALLOWALL' # or 'SAMEORIGIN'
+  end
+
+  def protect_from_host_header_attack
+    return if controller_name == 'help'
+    return if request.host == Rails.application.default_url_options[:host]
+
+    render plain: 'Forbidden', status: 403
   end
 end

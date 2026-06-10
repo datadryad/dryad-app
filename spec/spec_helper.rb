@@ -69,7 +69,7 @@ RSpec.configure do |config|
 
   # because otherwise it uses www.example.com which triggers our redirect from www to not
   config.before(:each, type: :request) do
-    host! 'my.example.org'
+    host! 'localhost'
   end
 
   config.around(:each, type: :task) do |ex|

@@ -8,6 +8,7 @@ import ChecklistNav, {Checklist} from '../components/Checklist';
 import SubmissionForm from '../components/SubmissionForm';
 import ExitButton from '../components/ExitButton';
 import Payments from '../components/Payments';
+import ActionRequired from '../components/ActionRequired';
 import Publication, {PubPreview, publicationPass, publicationFail} from '../components/MetadataEntry/Connect';
 import TitleImport, {TitlePreview, titleFail} from '../components/MetadataEntry/Title';
 import Authors, {AuthPreview, authorCheck} from '../components/MetadataEntry/Authors';
@@ -162,6 +163,7 @@ function Submission({
       />,
     }];
     if (resource.resource_type.resource_type === 'collection') stepArray.splice(6, 3);
+    if (previous?.action_reports?.slice(-1)) stepArray.unshift({name: '', pass: true, preview: <ActionRequired previous={previous} />});
     return stepArray.map((s, i) => {
       s.index = i;
       return s;

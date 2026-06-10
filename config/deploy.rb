@@ -88,6 +88,7 @@ namespace :puma do
       if test("[ -f /etc/systemd/system/#{service}.service ]") ||
         test("systemctl list-unit-files | grep -q #{service}.service")
         execute :sudo, :systemctl, :restart, "#{service}.service"
+        after :deploy, :index_help_center
       else
         info "Puma service #{service} not found, skipping restart"
       end
@@ -103,7 +104,6 @@ namespace :sidekiq do
       if test("[ -f /etc/systemd/system/#{service}.service ]") ||
         test("systemctl list-unit-files | grep -q #{service}.service")
         execute :sudo, :systemctl, :restart, "#{service}.service"
-        after :deploy, :index_help_center
       else
         info "Sidekiq service #{service} not found, skipping restart"
       end

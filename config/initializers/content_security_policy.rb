@@ -3,20 +3,122 @@
 # Define an application-wide content security policy
 # For further information see the following documentation
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
+env_domain_mapping= {
+  development: 'http://localhost:3000',
+  test: 'http://localhost:33000',
+  dev: 'https://*.datadryad.org',
+  stage: 'https://*.datadryad.org',
+  production: 'https://datadryad.org'
+}
+main_domain = env_domain_mapping[Rails.env.to_sym] || 'https://datadryad.org'
 
+Rails.application.config.content_security_policy_report_only = true
 Rails.application.config.content_security_policy do |policy|
-  policy.connect_src :self, :https, "http://localhost:3035", "ws://localhost:3035" if Rails.env.include?('dev') # ??????
-#   policy.default_src :self, :https
-#   policy.font_src    :self, :https, :data
-#   policy.img_src     :self, :https, :data
-#   policy.object_src  :none
-#   policy.script_src  :self, :https
-#   policy.style_src   :self, :https
-#   # If you are using webpack-dev-server then specify webpack-dev-server host
-#   policy.connect_src :self, :https, "http://localhost:3035", "ws://localhost:3035" if Rails.env.development?
+  policy.default_src :self, main_domain
 
-#   # Specify URI for violation reports
-#   # policy.report_uri "/csp-violation-report-endpoint"
+  # --------------------
+  # CONNECT (XHR, fetch, websockets)
+  # --------------------
+  policy.connect_src :self,
+                     :https,
+                     'https://blog.datadryad.org',
+                     'https://*.google-analytics.com',
+                     'https://cdn.jsdelivr.net',
+                     'https://*.awswaf.com',
+                     'https://*.datacite.org',
+                     'https://*.amazonaws.com',
+                     'https://doi.org',
+                     main_domain
+
+  # --------------------
+  # SCRIPTS
+  # --------------------
+  policy.script_src :self,
+                    :unsafe_inline,
+                    :unsafe_eval,
+                    'https://www.googletagmanager.com',
+                    'https://*.google-analytics.com',
+                    'https://cdnjs.cloudflare.com',
+                    'https://www.google.com',
+                    'https://www.recaptcha.net',
+                    'https://www.gstatic.com',
+                    main_domain
+
+  policy.script_src_elem :self,
+                         :unsafe_inline,
+                         'https://www.googletagmanager.com',
+                         'https://*.google-analytics.com',
+                         'https://*.awswaf.com',
+                         'https://*.proxy.hfzk.net.cn',
+                         'https://cdn.jsdelivr.net',
+                         'https://cdnjs.cloudflare.com',
+                         'https://js.stripe.com',
+                         'https://www.google.com',
+                         'https://www.recaptcha.net',
+                         'https://www.gstatic.com',
+                         main_domain
+
+  policy.script_src_attr :unsafe_inline
+
+  # --------------------
+  # STYLES
+  # --------------------
+  policy.style_src :self,
+                   :unsafe_inline,
+                   'https://fonts.googleapis.com',
+                   'https://*.googleapis.com',
+                   main_domain
+
+  policy.style_src_elem :self,
+                        :unsafe_inline,
+                        'https://fonts.googleapis.com',
+                        'https://*.googleapis.com',
+                        main_domain
+
+  policy.style_src_attr :unsafe_inline
+
+  # --------------------
+  # FONTS
+  # --------------------
+  policy.font_src :self,
+                  :data,
+                  'https://fonts.gstatic.com',
+                  'https://fonts.gstatic.cn',
+                  'https://*.googleapis.com',
+                  'chrome-extension:',
+                  'moz-extension:',
+                  'safari-web-extension:',
+                  'https://*.proxy.hfzk.net.cn',
+                  'https://cdn.scite.ai',
+                  main_domain
+
+  # --------------------
+  # IMAGES
+  # --------------------
+  policy.img_src :self, :https, :data
+
+  # --------------------
+  # MEDIA
+  # --------------------
+  policy.media_src :self, :data, main_domain
+
+  # --------------------
+  # WORKERS / FRAMES
+  # --------------------
+  policy.worker_src :self, :blob, 'https://cdnjs.cloudflare.com', main_domain
+  policy.child_src :blob
+  policy.frame_src :self, :https
+  # policy.frame_ancestors :none
+
+  # --------------------
+  # SECURITY
+  # --------------------
+  policy.object_src :none
+
+  # --------------------
+  # REPORTING
+  # --------------------
+  policy.report_uri "/csp-violation-report-endpoint"
 end
 
 # If you are using UJS then enable automatic nonce generation

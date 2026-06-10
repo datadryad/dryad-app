@@ -1,0 +1,17 @@
+<%= form_with(url: make_report_path(id: @identifier&.id), method: :post, local: false) do %>
+  <div>
+    <h1>Action required report</h1>
+    <p>List errors for the author to review. Queries may be copied from Salesforce email. This will appear at the top of the submission preview when the author revises their dataset.</p>
+    <%= text_area_tag :report, @report || @text, class: 'c-input__textarea', style: 'width: 100%', rows: 10, "aria-label": "Edits needed" %>
+    <div class="c-input">
+    <% unless @report.present? %>
+      <label class="c-input__label" for="note">Curation note</label>
+      <%= text_area_tag :note, @note, class: 'c-input__textarea', style: 'width: 100%' %>
+    <% end %>
+  </div>
+  </div>
+  <p class="c-modal__buttons-right">
+    <%= submit_tag 'Submit & set to Action required', class: 'o-button__plain-text2', id: 'popup_submit' %>
+    <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog', class: 'o-button__plain-text7' %>
+  </p>
+<% end %>

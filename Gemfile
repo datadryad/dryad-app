@@ -23,7 +23,7 @@ gem 'ed25519', '>= 1.2', '< 2.0'
 gem 'rdoc', '~> 6.1.1' # for some reason needs to be installed for capistrano to work right
 gem 'rubocop', '~> 1.86.1', require: false
 # Use Puma as the app server
-gem 'puma', '6.6.0', group: :puma, require: false
+gem 'puma', '7.2.1', group: :puma, require: false
 
 # ############################################################
 # UI
@@ -35,6 +35,7 @@ gem 'terser' # for JS and CSS minify
 # ############################################################
 # Misc
 gem 'actionpack-page_caching'
+gem 'activerecord-session_store'
 gem 'acts_as_paranoid', '~> 0.11.0'
 gem 'amatch', '~> 0.6.0'
 gem 'amoeba', '~> 3.3.0'

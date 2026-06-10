@@ -1,6 +1,7 @@
 require 'stash/salesforce'
 
 module StashEngine
+  # rubocop:disable Metrics/ClassLength
   class AdminDatasetsController < ApplicationController
     helper SortableTableHelper
     before_action :require_user_login
@@ -117,6 +118,30 @@ module StashEngine
       respond_to(&:js)
     end
 
+    def require_action
+      @identifier = Identifier.find(params[:id])
+      @report = @identifier.latest_resource.action_reports.last&.report
+      unless @report.present?
+        text = Stash::Salesforce.case_email_text(case_id: sf_case)
+        m = text&.match(/review and address the following:(.*)When you are prepared to resubmit/m)
+        @text = m[1].strip if m.present?
+        @note = "SF #{Stash::Salesforce.case_num(case_id: sf_case)}" if sf_case.present?
+      end
+      respond_to(&:js)
+    end
+
+    def make_report
+      @resource = Identifier.find(params[:id]).latest_resource
+      @last_state = @resource.last_curation_activity.status
+
+      return unless CurationActivity.allowed_states(@last_state, current_user).include?('action_required')
+
+      @resource.action_reports << ActionRequiredReport.create(report: params[:report], user: current_user)
+      CurationService.new(resource: @resource, user: current_user, status: 'action_required',
+                          note: params[:note] || 'Action required report edited').process
+      render js: 'window.location.reload();'
+    end
+
     def notification_date
       authorize %i[stash_engine admin_datasets]
       notification_date = params[:identifier][:notification_date].to_datetime
@@ -172,12 +197,10 @@ module StashEngine
 
     def create_salesforce_case
       authorize %i[stash_engine admin_datasets]
-      # create the case
+      # create the case and redirect to it
       @identifier = Identifier.find(params[:id])
-      sf_case_id = Stash::Salesforce.create_case(identifier: @identifier, owner: current_user)
-
-      # redirect to it
-      sf_url = Stash::Salesforce.case_view_url(case_id: sf_case_id)
+      @sf_case = Stash::Salesforce.create_case(identifier: @identifier, owner: current_user)
+      sf_url = Stash::Salesforce.case_view_url(case_id: @sf_case)
       redirect_to(sf_url, allow_other_host: true)
     end
 
@@ -205,6 +228,10 @@ module StashEngine
       @identifier = Identifier.find(params[:id])
       @resource = @identifier.latest_resource
       @field = params[:field]
+    end
+
+    def sf_case
+      @sf_case ||= Stash::Salesforce.find_cases_by_doi(@identifier.identifier)&.first&.id
     end
 
     def setup_publications
@@ -242,5 +269,5 @@ module StashEngine
     end
     # :nocov:
   end
-
+  # rubocop:enable Metrics/ClassLength
 end

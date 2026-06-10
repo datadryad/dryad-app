@@ -32,5 +32,13 @@ module StashEngine
     def s3_lifetime_policy
       mail(to: 'devs@datadryad.org', subject: "#{rails_env}🚨 S3 Lifetime Policy not validated!")
     end
+
+    def csp_violations
+      day = 1.day.ago
+      reports = CspReport.where(created_at: [day.beginning_of_day..day.end_of_day]).count
+      puts @text = "There were #{reports} CSP violations reports for #{day.to_date}"
+
+      mail(to: 'devs@datadryad.org', subject: "#{rails_env}🚨 #{reports} CSP Violations for #{day.to_date}!")
+    end
   end
 end

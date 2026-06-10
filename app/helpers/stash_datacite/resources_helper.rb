@@ -17,10 +17,10 @@ module StashDatacite
         end.join
         str += af unless af.blank?
         if author.corresp && author.author_email.present?
-          str += "<a href=\"mailto:#{author.author_email}\" class=\"o-metadata__link\" aria-label=\"Email #{author.author_standard_name}\" target=\"_blank\" title=\"#{author.author_email}\"><i class=\"fas fa-envelope\" aria-hidden=\"true\"></i></a>"
+          str += "<a href=\"mailto:#{author.author_email}\" class=\"o-metadata__link\" aria-label=\"Email #{author.author_standard_name}\" target=\"_blank\" title=\"#{author.author_email}\" rel=\"noreferrer\"><i class=\"fas fa-envelope\" aria-hidden=\"true\"></i></a>"
         end
         if author.author_orcid.present?
-          str += "<a href=\"#{author_orcid_link(author)}\" class=\"o-metadata__link\" target=\"_blank\" aria-label=\"#{author.author_standard_name} ORCID profile (opens in new window)\" title=\"ORCID: #{author.author_orcid}\"><i class=\"fab fa-orcid\" aria-hidden=\"true\"></i></a>"
+          str += "<a href=\"#{author_orcid_link(author)}\" class=\"o-metadata__link\" target=\"_blank\" aria-label=\"#{author.author_standard_name} ORCID profile (opens in new window)\" title=\"ORCID: #{author.author_orcid}\" rel=\"noreferrer\"><i class=\"fab fa-orcid\" aria-hidden=\"true\"></i></a>"
         end
         str
       end.reject(&:blank?).join('; ')
