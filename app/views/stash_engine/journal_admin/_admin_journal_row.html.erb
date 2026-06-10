@@ -10,7 +10,6 @@
         <button class="c-admin-edit-icon" aria-label="Edit journal" aria-haspopup="dialog" id="edit_button_<%= j.id %>">
           <i class="fa fa-pencil" aria-hidden="true"></i>
         </button>
-        <%= payer_payment_details_debugger(j) %>
     <% end %>
     </div>
   <% end %>
@@ -35,6 +34,7 @@
       <% end %>
     <% end %>
   <% end %>
+  <%= payer_payment_details_debugger(j) %>
 </td>
 <td>
   <% if j.sponsor_id.present? %>

@@ -1,14 +1,15 @@
 class HiddensController < StashEngine::ApplicationController
-  before_action :require_superuser
-
   def file_validation
+    authorize current_user, policy_class: HiddenPagesPolicy
+
     ids = params[:ids].split(',')
     @files = StashEngine::GenericFile.where(id: ids)
   end
 
   def sponsor_payment_details
-    @calculation_year = params[:year] || Date.today.year
+    authorize current_user, policy_class: HiddenPagesPolicy
 
+    @calculation_year = params[:year] || Date.today.year
     @sponsor = case params[:type]
     when 'StashEngine::Tenant'
       StashEngine::Tenant.find(params[:id])
@@ -31,8 +32,9 @@ class HiddensController < StashEngine::ApplicationController
   end
 
   def identifier_payment_details
-    @service = Payments::Identifier.new(params[:id])
+    authorize current_user, policy_class: HiddenPagesPolicy
 
+    @service = Payments::Identifier.new(params[:id])
     @identifier = @service.identifier
     @payment_sponsor = @service.payment_sponsor
     @limits_sponsor = @service.limits_sponsor

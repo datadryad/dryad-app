@@ -7,7 +7,6 @@
         <button class="c-admin-edit-icon" aria-label="Edit publisher" aria-haspopup="dialog" id="edit_button_<%= o.id %>">
           <i class="fa fa-pencil" aria-hidden="true"></i>
         </button>
-        <%= payer_payment_details_debugger(o) %>
       <% end %>
     </div>
     <% end %>
@@ -28,5 +27,6 @@
       <% end %>
     <% end %>
   <% end %>
+  <%= payer_payment_details_debugger(o) %>
 </td>
 <td><%= o.parent_org&.name %></td>

@@ -20,8 +20,8 @@ module StashEngine
     def payer_payment_details_debugger(payer)
       return unless current_user.superuser?
 
-      link_to sponsor_payment_details_hidden_path(id: payer.id, type: payer.class.name), style: 'margin-left: 5px' do
-        content_tag :i, nil, class: 'fa-solid fa-file-invoice-dollar'
+      content_tag :div do
+        link_to 'Details', sponsor_payment_details_hidden_path(id: payer.id, type: payer.class.name)
       end
     end
   end
