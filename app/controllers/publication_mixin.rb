@@ -12,13 +12,13 @@ module PublicationMixin
       CurationService.new(resource: resource, status: 'awaiting_payment', note: 'Full DPC payment required').process
       StashEngine::UserMailer.peer_review_payment_needed(resource).deliver_now
     else
+      resource.update(user_id: nil) unless resource.curator&.curator?
       CurationService.new(
         resource: resource,
         user_id: 0, # system user
         status: 'queued',
         note: 'Release from peer review through publication information'
       ).process
-      resource.update(user_id: nil) unless resource.curator&.curator?
       StashEngine::UserMailer.peer_review_pub_linked(resource).deliver_now
     end
   end
