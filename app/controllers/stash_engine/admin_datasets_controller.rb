@@ -77,7 +77,6 @@ module StashEngine
     end
 
     def index
-      pp session[:admin_search_filters]
       authorize %i[stash_engine admin_datasets]
       @identifier = Identifier.includes(
         latest_resource: %i[last_curation_activity editor], resources: %i[stash_version last_curation_activity editor]
