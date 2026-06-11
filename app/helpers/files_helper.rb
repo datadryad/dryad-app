@@ -14,7 +14,8 @@ module FilesHelper
       ssns: 'Social security numbers',
       addresses: 'Mailing addresses',
       emails: 'Email addresses',
-      urls: 'URLs'
+      urls: 'URLs',
+      endangered_species: 'Endangered species reference'
     }
   end
 end
