@@ -133,6 +133,10 @@ module StashEngine
       [self] + sponsored_deep
     end
 
+    def sponsored_identifiers
+      StashEngine::Identifier.joins(:resources).where(resources: { tenant_id: id }).distinct
+    end
+
     def payment_sponsor
       sponsor_obj = self
       sponsor_obj = sponsor_obj.sponsor while sponsor_obj.sponsor.present?

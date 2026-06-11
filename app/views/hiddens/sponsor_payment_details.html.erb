@@ -1,0 +1,94 @@
+<%= stylesheet_link_tag 'hidden_pages' %>
+<div>
+  <p><b><%= @sponsor_details.name %> ( <%= @sponsor_details.id %> )</b></p>
+  <p><%= @sponsor_details.type %></p>
+  <p><%= @sponsor_details.enabled ? 'Enabled' : 'Disabled' %></p>
+  <p>Calculation year: <%= @calculation_year %></p>
+  <div class="details-box">
+    <h3>Payment configuration</h3>
+    <% if @service.payment_configuration&.payment_plan != '2025' %>
+      <p class="c-alert--error">Not 2025 payer!!!</p>
+    <% end %>
+    <pre><%= JSON.pretty_generate(@service.payment_configuration&.attributes) %></pre>
+  </div>
+  <br />
+
+  <div class="details-box">
+    <h3>Payment details</h3>
+    <p>Total DPC: <%= number_to_currency(@total_dpc) %></p>
+    <p>Total LDF: <%= number_to_currency(@total_ldf) %></p>
+    <table width="300">
+      <tr>
+        <td>LDF Limit</td>
+        <td class="align-end"><%= number_to_currency(@service.payment_configuration&.yearly_ldf_limit) %></td>
+      </tr>
+      <tr>
+        <td>Used LDF</td>
+        <td class="align-end"><%= number_to_currency(@total_ldf) %></td>
+      </tr>
+      <tr>
+        <td>Remaining LDF</td>
+        <td class="align-end">
+          <% if @service.payment_configuration&.yearly_ldf_limit.present? %>
+            <%= number_to_currency(@service.payment_configuration&.yearly_ldf_limit.to_i - @total_ldf) %></td>
+          <% end %>
+      </tr>
+    </table>
+    <table width="300" style="margin-top: 10px">
+      <tr>
+        <td>Total DPC</td>
+        <td class="align-end"><%= number_to_currency(@total_dpc) %></td>
+      </tr>
+      <tr>
+        <td>Total LDF</td>
+        <td class="align-end"><%= number_to_currency(@total_ldf) %></td>
+      </tr>
+      <tr>
+        <td>Total</td>
+        <td class="align-end"><%= number_to_currency(@total_dpc + @total_ldf) %></td>
+      </tr>
+    </table>
+  </div>
+
+  <p><%= number_with_delimiter(@identifiers.count) %> Identifiers: </p>
+  <table width="100%">
+    <tr>
+      <td>ID</td>
+      <td>DOI</td>
+      <td>#resource</td>
+      <td>Title</td>
+      <td>Status</td>
+      <td>Status date</td>
+      <td>Sponsored LDF</td>
+      <td>User paid</td>
+    </tr>
+    <% @identifiers.includes(:payments, latest_resource: [:last_curation_activity]).each do |ident| %>
+      <% res = ident.latest_resource %>
+      <tr>
+        <td><%= link_to ident.id, identifier_payment_details_hidden_path(id: ident.id) %></td>
+        <td><%= ident.identifier %></td>
+        <td><%= ident.resources.count %></td>
+        <td><%= res.title %></td>
+        <td><%= res.last_curation_activity.status %></td>
+        <td><%= res.last_curation_activity.created_at %></td>
+        <td class="align-end">
+          <%
+            sum = ident.sponsored_payment_logs.sum(:ldf)
+            if sum > 0
+          %>
+            <%= number_to_currency(sum) %>
+          <% end %>
+        </td>
+
+        <td class="align-end">
+          <%
+            sum = ident.payments.sum(:amount)
+            if sum > 0
+          %>
+            <%= number_to_currency(sum) %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+</div>
