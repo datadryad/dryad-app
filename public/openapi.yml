@@ -15,11 +15,9 @@ info:
     - [List versions of a dataset](https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.j1fd7/versions)
     - [List files in a version](https://datadryad.org/api/v2/versions/26724/files)
 
-    Detailed documentation:
-
-    - For details on all of our REST API operations, click the links in the menu on this page.
-    - [Search API](https://github.com/datadryad/dryad-app/blob/main/documentation/apis/search.md)
-    - [Submission API](https://github.com/datadryad/dryad-app/blob/main/documentation/apis/submission.md)
+    For details on all of our REST API operations, click the links in the menu on this page. For example, see details on our:
+    - [Search API](https://datadryad.org/api#?route=get-/search)
+    - [Submission API](https://datadryad.org/api#?route=post-/datasets)
 
     ## API accounts 
 
@@ -155,6 +153,9 @@ paths:
 
 
         For a more full list of properties that can be sent, check the Model below and the <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/sample_dataset.json" target="_blank">sample dataset object</a>.
+
+
+        Further detailed instructions and examples can be found in <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/submission.md">additional submission API documentation</a>.
       security:
         - bearerAuth: []
       requestBody:
@@ -857,7 +858,7 @@ paths:
             type: string
           description: An award or grant number associated with the dataset.
         - in: query
-          name: journalISSN
+          name: publicationISSN
           schema:
             type: string
           description:

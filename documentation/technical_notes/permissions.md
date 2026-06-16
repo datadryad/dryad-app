@@ -29,4 +29,4 @@ For these associated organizations, the permissions levels are:
 
 All users are able to use the public API without authentication. However, some portions
 of the API require authentication. Once a user is authenticated through the API, their other
-permissions take effect. To allow a user access to the API, see [Adding API Accounts](../apis/adding_api_accounts.md).
+permissions take effect. To allow a user access to the API, see [API Accounts](../apis/api_accounts.md).
