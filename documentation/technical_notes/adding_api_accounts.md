@@ -1,7 +1,7 @@
 Adding a New API Account
 ========================
 
-Users can now create their own [API accounts](../apis/api_account.md), and userless accounts can be created through the web interface for journal APIs. This historic documentation outlines the old process.
+Users can now create their own [API accounts](../apis/api_account.md), and API accounts for users without ORCIDs (usually for journal APIs) can be created through the "Manage Accounts" web interface. This historic documentation outlines the old process.
 
 ---
 
