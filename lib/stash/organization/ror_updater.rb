@@ -46,7 +46,7 @@ module Stash
                 # Hopefully, parse the correct filename out...though ROR hasn't been consistent with their names
                 dl_array = download_file.split('/')
                 # Get v2 json file
-                json_file = dl_array[-2].gsub('.zip', '_schema_v2.json')
+                json_file = dl_array[-2].gsub('.zip', '.json')
 
                 # Process the ROR JSON
                 if process_ror_file(zip_file: zip_file, file: json_file)
