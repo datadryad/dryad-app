@@ -19,13 +19,13 @@ These Terms of Service (these "Terms") set forth the terms and conditions applic
 ## Background
 
 1. Dryad is a non-profit organization that makes it easy and affordable to <span role="emphasis" aria-describedby="term-desc">Curate</span>, <span role="emphasis" aria-describedby="term-desc">Preserve</span>, <span role="emphasis" aria-describedby="term-desc">Publish</span>, and <span role="emphasis" aria-describedby="term-desc">Reuse</span> <span role="emphasis" aria-describedby="term-desc">Research Data</span>; and to meet your organization’s needs for the public release of data and fulfilling funder mandates. Our vision is that the open availability and routine <span role="emphasis" aria-describedby="term-desc">Reuse</span> of all <span role="emphasis" aria-describedby="term-desc">Research Data</span> enables the acceleration of discovery across domains and the translation of research into benefits for society worldwide. To that end, Dryad:  
-  * enhances research by making data openly available and reusable;
-  * enables <span role="emphasis" aria-describedby="term-desc">Datasets</span> to be widely indexed and discoverable;
-  * assigns and registers <span role="emphasis" aria-describedby="term-desc">Identifiers</span> that point to or give context to <span role="emphasis" aria-describedby="term-desc">Datasets</span> on the Dryad <span role="emphasis" aria-describedby="term-desc">Website</span>;
-  * tracks the usage of <span role="emphasis" aria-describedby="term-desc">Datasets</span>, and promotes data citation and <span role="emphasis" aria-describedby="term-desc">Reuse</span> as a metric of scholarly credit;
-  * makes data both accessible today and <span role="emphasis" aria-describedby="term-desc">Preserved</span> for future use;
-  * respects and protects the privacy of its <span role="emphasis" aria-describedby="term-desc">Users</span>; and
-  * generally, meets the needs of its stakeholders for a trustworthy data <span role="emphasis" aria-describedby="term-desc">Curation</span> and <span role="emphasis" aria-describedby="term-desc">Publication</span> service.
+    * enhances research by making data openly available and reusable;
+    * enables <span role="emphasis" aria-describedby="term-desc">Datasets</span> to be widely indexed and discoverable;
+    * assigns and registers <span role="emphasis" aria-describedby="term-desc">Identifiers</span> that point to or give context to <span role="emphasis" aria-describedby="term-desc">Datasets</span> on the Dryad <span role="emphasis" aria-describedby="term-desc">Website</span>;
+    * tracks the usage of <span role="emphasis" aria-describedby="term-desc">Datasets</span>, and promotes data citation and <span role="emphasis" aria-describedby="term-desc">Reuse</span> as a metric of scholarly credit;
+    * makes data both accessible today and <span role="emphasis" aria-describedby="term-desc">Preserved</span> for future use;
+    * respects and protects the privacy of its <span role="emphasis" aria-describedby="term-desc">Users</span>; and
+    * generally, meets the needs of its stakeholders for a trustworthy data <span role="emphasis" aria-describedby="term-desc">Curation</span> and <span role="emphasis" aria-describedby="term-desc">Publication</span> service.
 
     All of the above functions and offerings, including associated systems, hardware, software, and know-how, are referred to in these Terms as the "Dryad <span role="emphasis" aria-describedby="term-desc">Infrastructure and Services</span>.""
 
