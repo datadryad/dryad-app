@@ -9,7 +9,7 @@
 #  report      :json
 #  status_code :string(191)
 #  url         :text(65535)
-#  user_agent  :string(191)
+#  user_agent  :text(65535)
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #

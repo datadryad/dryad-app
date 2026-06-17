@@ -604,6 +604,8 @@ Rails.application.routes.draw do
   resource :hidden do
     collection do
       get :file_validation
+      get :sponsor_payment_details
+      get :identifier_payment_details
     end
   end
 

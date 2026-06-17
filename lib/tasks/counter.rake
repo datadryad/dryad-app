@@ -4,46 +4,6 @@ require_relative 'counter/log_combiner'
 require_relative 'counter/json_stats'
 
 namespace :counter do
-  # example: RAILS_ENV=development bundle exec rake counter:combine_files -- --log_directory /user/me/dir --scp_hosts host1,host2
-  desc 'get and combine files from the other servers'
-  task :combine_files do
-    args = Tasks::ArgsParser.parse(:log_directory, :scp_hosts)
-    lc = Tasks::Counter::LogCombiner.new(log_directory: args.log_directory, scp_hosts: args.scp_hosts.to_s.split(','),
-                                         scp_path: args.log_directory)
-    lc.copy_missing_files
-    lc.combine_logs
-    exit
-  end
-
-  # example: RAILS_ENV=development bundle exec rake counter:remove_old_logs -- --log_directory /user/me/dir --scp_hosts host1,host2
-  desc 'remove log files we are not keeping because of our privacy policy'
-  task :remove_old_logs do
-    args = Tasks::ArgsParser.parse(:log_directory, :scp_hosts)
-    lc = Tasks::Counter::LogCombiner.new(log_directory: args.log_directory, scp_hosts: args.scp_hosts.to_s.split(','),
-                                         scp_path: args.log_directory)
-    lc.remove_old_logs(days_old: 60)
-    lc.remove_old_logs_remote(days_old: 60)
-    exit
-  end
-
-  # example: rails/rake counter:validate_logs -- --files file_name_1,file_name_2
-  desc 'validate counter logs format (filenames come after rake task)'
-  task :validate_logs do
-    args = Tasks::ArgsParser.parse(:files)
-    unless args.files
-      puts 'Please enter the filenames of files to validate, separated by comma'
-      exit
-    end
-
-    args.files.split(',').each do |filename|
-      puts "Validating #{filename}"
-      cv = Tasks::Counter::ValidateFile.new(filename: filename)
-      cv.validate_file
-      puts ''
-    end
-    exit # makes the arguments not be interpreted as other rake tasks
-  end
-
   # example: RAILS_ENV=production bundle exec rake counter:cop_manual -- --json_directory /user/me/json-reports
   desc 'manually populate CoP stats from json files'
   task cop_manual: :environment do

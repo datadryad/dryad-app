@@ -171,7 +171,8 @@ module StashEngine
         aff_tenant: aff_tenant,
         allow_review: @resource.identifier.allow_review?,
         automatic_ppr: @resource.identifier.automatic_ppr?,
-        man_decision_made: @resource.identifier.has_accepted_manuscript? || @resource.identifier.has_rejected_manuscript?
+        man_decision_made: @resource.identifier.has_accepted_manuscript? || @resource.identifier.has_rejected_manuscript?,
+        generated_files: @resource.generic_files.present_files.generated.validated.as_json(methods: %i[type])
       }
       dpc_checks[:can_pay_ppr_fee] = @resource.hold_for_peer_review &&
         !dpc_checks[:funder_will_pay] && !dpc_checks[:journal_will_pay] && !dpc_checks[:institution_will_pay] &&

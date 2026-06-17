@@ -45,7 +45,9 @@ function Editor({initial, log, setLog}) {
   );
 }
 
-export default function ChangeLog({resource, pubDates, setResource}) {
+export default function ChangeLog({
+  resource, pubDates, setResource, genFiles,
+}) {
   const [desc, setDesc] = useState('');
   const [log, setLog] = useState(resource.descriptions.find((d) => d.description_type === 'changelog'));
 
@@ -79,15 +81,19 @@ export default function ChangeLog({resource, pubDates, setResource}) {
         logStr += `**Changes after ${date}:**&nbsp;`;
       }
     });
+    genFiles?.forEach((f) => {
+      if (f.file_state === 'created') logStr += `Edited ${f.download_filename}. `;
+    });
     setDesc(logStr);
     const existing = resource.descriptions.find((d) => d.description_type === 'changelog');
     if (existing) setLog(existing);
+    else if (genFiles?.some((f) => f.file_state === 'created')) create(logStr);
     else create(null);
   }, []);
 
   return (
     <div style={{marginTop: '2em'}}>
-      <h4 id="log-label">Public change log</h4>
+      <h3 id="log-label">Public change log</h3>
       <p id="log-desc">
         Your dataset has been published, so a written statement describing file changes since the previous version is required.
         This change log will appear with the next published version of your dataset.
