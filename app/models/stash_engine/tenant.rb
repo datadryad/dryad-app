@@ -134,7 +134,7 @@ module StashEngine
     end
 
     def sponsored_identifiers
-      StashEngine::Identifier.joins(:resources).where(resources: { tenant_id: id }).distinct
+      StashEngine::Identifier.where("payment_type like 'institution%'").where(payment_id: id).distinct
     end
 
     def payment_sponsor

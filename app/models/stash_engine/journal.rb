@@ -198,7 +198,7 @@ module StashEngine
     end
 
     def sponsored_identifiers
-      StashEngine::Identifier.where("payment_type like 'journal-%'").where(payment_id: issn_ids).distinct
+      StashEngine::Identifier.where("payment_type like 'journal-%'").where(payment_id: issn_array).distinct
     end
 
     def payment_sponsor
