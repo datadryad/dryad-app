@@ -221,6 +221,7 @@ table.columned {
   align-items: flex-end;
   flex-direction: column;
   gap: $spacing-base;
+  white-space: nowrap;
 }
 
 .c-user-datasets-table {

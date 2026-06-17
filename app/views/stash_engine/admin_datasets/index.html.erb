@@ -62,6 +62,7 @@
 <div id="activity-log">
   <%= render partial: 'activity_log' %>
 </div>
+<%= identifier_payment_details_debugger(@identifier.id) %>
 
 <% if policy([:stash_engine, :admin_datasets]).create_salesforce_case? %>
 <% if Stash::Salesforce.sf_user %>
