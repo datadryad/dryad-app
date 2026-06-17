@@ -61,7 +61,7 @@ Dryad partner, you will be responsible for paying the DPC as well as any overage
       <td>
         <% if journal.integrated_at.present? %>
           <i class="fa fa-check-circle" aria-hidden="true" title="Data integrated" role="img" aria-label="Data integrated"></i>
-          <%= journal.manuscripts.present? ? 'Email' : 'API' %>
+          <%= journal.manuscripts.present? && journal.integrated_at == journal.manuscripts.first.created_at ? 'Email' : 'API' %>
         <% end %>
       </td>
       <td class="c-lined-table__digits">

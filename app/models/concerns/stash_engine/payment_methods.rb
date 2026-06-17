@@ -160,8 +160,6 @@ module StashEngine
 
     def journal_will_pay?
       return false unless journal
-      # do not remove recorded journal due to journal sponsorship change
-      return true if payment_id == publication_issn
 
       journal.will_pay?
     end

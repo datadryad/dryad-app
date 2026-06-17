@@ -2,6 +2,7 @@ require 'net/http'
 require 'json'
 require 'stash/salesforce'
 
+# rubocop:disable Metrics/ModuleLength
 module StashEngine
   module AdminDatasetsHelper
 
@@ -106,6 +107,15 @@ module StashEngine
       link_to id, href, target: '_blank'
     end
 
+    def aar_resource(identifier)
+      return identifier.latest_resource.id if %w[curation action_required].include?(identifier.latest_resource.current_curation_status)
+
+      aar = identifier.last_status_activity('action_required')
+      return aar.resource.id if aar.present? && aar.resource.current_curation_status == 'action_required'
+
+      nil
+    end
+
     def salesforce_links(doi)
       Stash::Salesforce.find_cases_by_doi(doi)
     end
@@ -125,3 +135,4 @@ module StashEngine
     end
   end
 end
+# rubocop:enable Metrics/ModuleLength

@@ -60,6 +60,10 @@ module Datacite
       params = { doi: @doi, 'relation-type-id': (UNIQUE_INVESTIGATIONS + UNIQUE_REQUESTS).join(','), 'page[size]': 500, 'page[cursor]': 1 }
       query_result = Integrations::Datacite.new.query('/events', params)
 
+      if query_result.blank?
+        puts "No results for doi: #{@doi}"
+        return results
+      end
       results.concat(query_result['data'])
 
       # if this doesn't contain full set of results, then keep going to the next page and adding them

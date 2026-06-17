@@ -20,11 +20,11 @@
   <br />
   <div class="details-box">
     <h3>Payment limits</h3>
-    <% if @limits_sponsor.payment_configuration&.payment_plan != '2025' %>
-      <p class="c-alert--error">Not 2025 payer!!!</p>
-    <% end %>
-
     <% if @limits_sponsor %>
+      <% if @limits_sponsor.payment_configuration&.payment_plan != '2025' %>
+        <p class="c-alert--error">Not 2025 payer!!!</p>
+      <% end %>
+
       <p><%= payer_payment_details_debugger(@limits_sponsor, "#{@limits_sponsor_details.name} ( #{@limits_sponsor.id} )") %></p>
       <pre><%= JSON.pretty_generate(@limits_sponsor.payment_configuration&.attributes) %></pre>
     <% else %>
