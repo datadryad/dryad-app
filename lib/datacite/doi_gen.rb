@@ -48,7 +48,7 @@ module Datacite
     end
 
     def ping(identifier)
-      get_doi(identifier, username: account, password: password, sandbox: sandbox)
+      get_doi(identifier)
     end
 
     def update_metadata(dc4_xml:, landing_page_url:)

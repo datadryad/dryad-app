@@ -62,18 +62,20 @@
 <div id="activity-log">
   <%= render partial: 'activity_log' %>
 </div>
+<%= identifier_payment_details_debugger(@identifier.id) %>
 
 <% if policy([:stash_engine, :admin_datasets]).create_salesforce_case? %>
 <% if Stash::Salesforce.sf_user %>
   <div class="activity-log-header">
     <h2 id="salesforce-cases">Salesforce cases</h2>
     <div class="activity-log-header">
-      <% if ['curation', 'action_required'].include?(r.last_curation_activity.status) %>
-        <%= form_with(url: require_action_path(id: @identifier.id), method: :get, local: false) do %>
+      <% aar_resource_id = aar_resource(@identifier) %>
+      <% if aar_resource_id.present? %>
+        <%= form_with(url: require_action_path(id: aar_resource_id), method: :get, local: false) do %>
           <button id="aar_popup" class="o-button__plain-text1" aria-haspopup="dialog">AAR report</button>
         <% end %>
       <% else %>
-        <em>AAR requires Curation status</em>
+        <em>AAR report unavailable</em>
       <% end %>
       <a href="<%= stash_url_helpers.create_salesforce_case_path(id: @identifier&.id)%>" target="SFpopup" id="sf_popup" class="o-button__plain-text2" style="color: black">Create SF case</a>
     </div>

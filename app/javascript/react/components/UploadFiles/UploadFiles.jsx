@@ -92,6 +92,8 @@ export default function UploadFiles({
 
   const {files: maxFiles, merritt_size, upload_size} = config_maximums;
   const maxSize = resource.identifier.new_upload_size_limit ? upload_size : merritt_size;
+  const {generated_files} = resource;
+
   const Messages = {
     fileReadme: 'Please prepare your README on the README page.',
     fileAlreadySelected: 'A file of the same name is already in the table. The new file was not added.',
@@ -140,6 +142,9 @@ export default function UploadFiles({
     setResource((r) => ({...r, total_file_size: generic_files.reduce((s, f) => s + f.upload_file_size, 0), generic_files}));
     if (previous) {
       if (chosenFiles.some((f) => f.uploadType === 'data' && f.status !== 'Pending' && f.file_state === 'created')) {
+        setChanges(true);
+      }
+      if (generated_files?.some((f) => f.file_state === 'created')) {
         setChanges(true);
       }
       if (initialLoad && previous.generic_files.some((p) => p.type === 'StashEngine::DataFile'
@@ -618,7 +623,12 @@ export default function UploadFiles({
           ) : <div className="callout"><p>No files have been selected.</p></div> }
         </div>
       )}
-      {pubChanges && <ChangeLog {...{resource, setResource, pubDates}} />}
+      {pubChanges && (
+        <ChangeLog {...{
+          resource, setResource, pubDates, genFiles: resource.generated_files,
+        }}
+        />
+      )}
       {changes && !pubChanges && <TrackChanges resource={resource} /> }
       <ModalUrl
         ref={modalRef}

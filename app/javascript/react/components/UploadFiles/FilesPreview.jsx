@@ -77,7 +77,7 @@ export default function FilesPreview({
     if (logRef.current) {
       getChanges();
     }
-  }, [logRef]);
+  }, [logRef, resource.descriptions]);
 
   if (resource.generic_files.length > 0) {
     return (

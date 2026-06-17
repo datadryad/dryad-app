@@ -118,8 +118,9 @@ module StashEngine
     end
 
     def require_action
-      @identifier = Identifier.find(params[:id])
-      @report = @identifier.latest_resource.action_reports.last&.report
+      @resource = Resource.find(params[:id])
+      @report = @resource.action_reports.last&.report
+      @identifier = @resource.identifier
       unless @report.present?
         text = Stash::Salesforce.case_email_text(case_id: sf_case)
         m = text&.match(/review and address the following:(.*)When you are prepared to resubmit/m)
@@ -130,7 +131,7 @@ module StashEngine
     end
 
     def make_report
-      @resource = Identifier.find(params[:id]).latest_resource
+      @resource = Resource.find(params[:id])
       @last_state = @resource.last_curation_activity.status
 
       return unless CurationActivity.allowed_states(@last_state, current_user).include?('action_required')
