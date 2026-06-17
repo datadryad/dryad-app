@@ -54,7 +54,7 @@
   <b role="heading" aria-level="2">Related publications</b>
   <div class="search-section">
     <div class="input-stack">
-      <input type="hidden" name="journalISSN">
+      <input type="hidden" name="publicationISSN">
       <%= render partial: 'stash_engine/shared/search_select', locals: {
         id: 'journal_search',
         label: 'Journal',
@@ -121,7 +121,7 @@
     e.preventDefault();
     var org = form.elements[`${form.elements['org_search'].value}`];
     org.value = document.getElementById('searchselect-ror__value').value;
-    form.elements['journalISSN'].value = document.getElementById('searchselect-journal_search__value').value;
+    form.elements['publicationISSN'].value = document.getElementById('searchselect-journal_search__value').value;
     for (let item of form.elements) {
       item.disabled = !item.value || item.id.startsWith('searchselect');
     }

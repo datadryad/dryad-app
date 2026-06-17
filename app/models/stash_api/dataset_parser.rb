@@ -129,6 +129,7 @@ module StashApi
     end
 
     def parse_publication
+      @hash['publicationISSN'] = @hash['journalISSN'] if @hash['journalISSN'].present?
       # Ensure we have the standardized journal title and ISSN
       journal = nil
       if @hash['publicationISSN'].present?

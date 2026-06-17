@@ -51,6 +51,7 @@ module StashDatacite
       files[:generic_files] = @resource.generic_files.validated_table.as_json(
         methods: %i[type uploaded frictionless_report]
       )
+      files[:generated_files] = @resource.generic_files.present_files.generated.validated.as_json(methods: %i[type])
       if @resource.previous_curated_resource.present?
         files[:previous_files] = @resource.previous_curated_resource.generic_files.validated_table.as_json(
           methods: %i[type]

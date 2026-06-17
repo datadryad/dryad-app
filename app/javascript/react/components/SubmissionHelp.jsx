@@ -68,7 +68,7 @@ export function DescHelp({type}) {
       {type !== 'collection' && (
         <>
           <p>If this dataset is associated with an article, abstract language can be similar, but it should focus on the information relevant to the data itself, rather than to the study. See <a href="https://doi.org/10.5061/dryad.5bk4c" target="_blank" rel="noreferrer">an example of a well-composed abstract<ExitIcon /></a>.</p>
-          <p>You may also add a methods section to describe how your data was collected and processed.</p>
+          <p><a href="/help/submission_steps/description#description" target="_blank" rel="noreferrer">You may also add<ExitIcon /></a> a methods section to describe how your data was collected and processed, and in some cases, discipline specific metadata.</p>
         </>
       )}
     </>

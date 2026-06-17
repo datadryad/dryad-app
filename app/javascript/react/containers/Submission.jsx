@@ -174,8 +174,9 @@ function Submission({
     if (!refreshDpcStatus) return;
 
     axios.get(`/resources/${resource.id}/dpc_status`).then((data) => {
-      updateStore({dpc: data.data, refreshDpcStatus: false, userMustPay: data.data.user_must_pay});
-      setResource((r) => ({...r, total_file_size: data.data.total_file_size}));
+      const {user_must_pay, generated_files} = data.data;
+      updateStore({dpc: data.data, refreshDpcStatus: false, userMustPay: user_must_pay});
+      setResource((r) => ({...r, generated_files, total_file_size: data.data.total_file_size}));
     });
   }, [refreshDpcStatus]);
 
@@ -212,7 +213,7 @@ function Submission({
 
   useEffect(() => {
     recheckPayer();
-  }, [resource.tenant, resource.authors, resource.journal, resource.contributors]);
+  }, [resource.tenant, resource.authors, resource.journal, resource.contributors, resource.cedar_json, resource.descriptions]);
 
   const markInvalid = (el) => {
     const et = el.querySelector('.error-text');
@@ -285,9 +286,11 @@ function Submission({
   useEffect(() => {
     async function getFileData() {
       axios.get(`/stash_datacite/metadata_entry_pages/${resource.id}/files`).then((data) => {
-        const {generic_files, previous_files} = data.data;
+        const {generic_files, generated_files, previous_files} = data.data;
         if (previous && previous_files) previous.generic_files = previous_files;
-        setResource((r) => ({...r, generic_files, previous_curated_resource: previous}));
+        setResource((r) => ({
+          ...r, generic_files, generated_files, previous_curated_resource: previous,
+        }));
       });
     }
     async function getPubDates() {

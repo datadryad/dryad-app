@@ -163,32 +163,35 @@ export default function Cedar({resource, setResource, templates}) {
       <p>Fill out a <a href="https://metadatacenter.org/" target="_blank" rel="noreferrer">standardized metadata form<ExitIcon /></a> for your discipline to make your data more useful to others.</p>
       <div>
         {metadata && template ? (
-          <div style={{display: 'flex', alignItems: 'center'}}>
-            <p style={{padding: '8px', border: 'thin solid #777', backgroundColor: '#fff'}}>
-              <strong>{template.title}</strong><br />
-              {resource.cedar_json.updated_at && `Last modified ${moment(resource.cedar_json.updated_at).local().format('H:mmA, MM/DD/YYYY')}`}
-            </p>
-            <button
-              aria-haspopup="dialog"
-              aria-controls="cedarDialog"
-              disabled={!template}
-              type="button"
-              onClick={() => openModal()}
-              className="o-button__plain-text2"
-              style={{margin: '0 1rem'}}
-            >
-              Edit form
-            </button>
-            <button
-              type="button"
-              className="o-button__remove"
-              aria-haspopup="dialog"
-              aria-controls="deleteCedarDialog"
-              onClick={() => del.current.showModal()}
-            >
-              Delete form
-            </button>
-          </div>
+          <>
+            <div style={{display: 'flex', alignItems: 'center'}}>
+              <p style={{padding: '8px', border: 'thin solid #777', backgroundColor: '#fff'}}>
+                <strong>{template.title}</strong><br />
+                {resource.cedar_json.updated_at && `Last modified ${moment(resource.cedar_json.updated_at).local().format('H:mmA, MM/DD/YYYY')}`}
+              </p>
+              <button
+                aria-haspopup="dialog"
+                aria-controls="cedarDialog"
+                disabled={!template}
+                type="button"
+                onClick={() => openModal()}
+                className="o-button__plain-text2"
+                style={{margin: '0 1rem'}}
+              >
+                Edit form
+              </button>
+              <button
+                type="button"
+                className="o-button__remove"
+                aria-haspopup="dialog"
+                aria-controls="deleteCedarDialog"
+                onClick={() => del.current.showModal()}
+              >
+                Delete form
+              </button>
+            </div>
+            <p>This metadata will be included in your dataset as a file named DisciplineSpecificMetadata.json</p>
+          </>
         ) : (
           templates.length === 1
             ? template && (
