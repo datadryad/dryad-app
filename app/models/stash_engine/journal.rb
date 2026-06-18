@@ -56,7 +56,7 @@ module StashEngine
     end
 
     def api_journal?
-      return false unless integrated_at >= 2.years.ago
+      return false unless integrated_at.present? && integrated_at >= 2.years.ago
       return false if manuscripts.first&.created_at == integrated_at
 
       true
