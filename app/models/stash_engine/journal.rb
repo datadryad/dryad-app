@@ -56,7 +56,10 @@ module StashEngine
     end
 
     def api_journal?
-      StashEngine::Journal.api_journals.map(&:id).include?(id)
+      return false unless integrated_at.present? && integrated_at >= 2.years.ago
+      return false if manuscripts.first&.created_at == integrated_at
+
+      true
     end
 
     def top_level_org
@@ -70,20 +73,12 @@ module StashEngine
     # Return the single ISSN that is representative of this journal,
     # even if the journal contains multiple ISSNs
     def single_issn
-      # return nil unless issn.present?
-      # return issn.first if issn.is_a?(Array)
-      # return JSON.parse(issn)&.first if issn.start_with?('[')
-
-      issns.map(&:id)&.first
+      issn_ids.first
     end
 
     # Return an array of ISSNs, even if the journal contains a single ISSN
     def issn_array
-      # return nil unless issn.present?
-      # return issn if issn.is_a?(Array)
-      # return JSON.parse(issn) if issn.start_with?('[')
-
-      issns.map(&:id)
+      issn_ids
     end
 
     def notify_contacts
@@ -130,9 +125,8 @@ module StashEngine
     end
 
     def self.api_journals
-      api_journals = StashEngine::Journal.joins(users: :api_application).distinct
-      api_journals2 = StashEngine::JournalOrganization.joins(users: :api_application).map(&:journals_sponsored_deep).flatten
-      api_journals | api_journals2
+      journals = StashEngine::Journal.where(integrated_at: 2.years.ago..)
+      journals.reject { |j| j.manuscripts.first&.created_at == j.integrated_at }
     end
 
     def self.with_sponsorship
