@@ -47,7 +47,7 @@ class ResourcePayment < ApplicationRecord
     rails 'Payment is not an invoice' unless pay_with_invoice
 
     Stripe.api_key     = APP_CONFIG.payments.key
-    Stripe.api_version = '2026-03-25.dahlia'
+    Stripe.api_version = '2026-05-27.dahlia'
     Stripe::Invoice.void_invoice(invoice_id)
   end
 

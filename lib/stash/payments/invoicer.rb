@@ -14,7 +14,7 @@ module Stash
 
       # Settings used by all Stripe services
       Stripe.api_key = APP_CONFIG.payments.key
-      Stripe.api_version = '2026-03-25.dahlia'
+      Stripe.api_version = '2026-05-27.dahlia'
 
       def self.find_recent_voids
         d = Date.today - 2.months
