@@ -82,7 +82,6 @@ We are also pleased to partner with the following organizations and initiatives,
 * **Standardized usage metrics for data:** [Make Data Count](https://makedatacount.org/)
 * **Data submission enhancements**: [Zenodo](https://zenodo.org/) (Concurrent submission of software and supplemental information); [Frictionless Data](https://frictionlessdata.io/) (Tabular data quality validation); [rSpace](https://www.researchspace.com/) (Electronic lab notebook integration) 
 * **Single sign-on integration**: [InCommon](https://incommon.org/)
-* **Identity verification**: [VeriMe](https://verime.coop/)
 * **Dataset visibility**: [NLM Dataset Catalog](https://datasetcatalog.nlm.nih.gov/), [NIAID Data Ecosystem](https://data.niaid.nih.gov/), [NCBI LinkOut](https://www.ncbi.nlm.nih.gov/projects/linkout/)
 * **Presenting research data alongside associated research articles**: [PubMed Central](https://www.ncbi.nlm.nih.gov/pmc/) ([National Library of Medicine](https://www.nlm.nih.gov/)), [Europe PMC](https://europepmc.org/)
 * **Community engagement and standards development**: [Data Curation Network](https://datacurationnetwork.org/), [Research Data Alliance (RDA)](https://www.rd-alliance.org/), [DataCite](https://datacite.org/), [Principles of Open Scholarly Infrastructure](https://openscholarlyinfrastructure.org/)
