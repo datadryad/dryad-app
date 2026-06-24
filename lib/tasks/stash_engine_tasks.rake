@@ -8,7 +8,8 @@ require_relative 'identifier_rake_functions'
 # rubocop:disable Metrics/BlockLength
 namespace :identifiers do
   desc 'Give resources missing a stash_engine_identifier one (run from main app, not engine)'
-  task fix_missing: :environment do # loads rails environment
+  task fix_missing: :environment do
+    # loads rails environment
     Tasks::IdentifierRakeFunctions.update_identifiers
   end
 
@@ -295,7 +296,7 @@ namespace :identifiers do
       if StashEngine::Resource.exists?(id: res_id)
         r = StashEngine::Resource.find(res_id)
         if r.submitted? &&
-           r.zenodo_copies.where("copy_type LIKE 'software%' OR copy_type like 'supp%'").where.not(state: 'finished').none?
+          r.zenodo_copies.where("copy_type LIKE 'software%' OR copy_type like 'supp%'").where.not(state: 'finished').none?
           # if the resource is state == submitted and all zenodo transfers have completed, delete the temporary data
           log "   resource is submitted -- DELETE s3 dir #{id_prefix}"
           Stash::Aws::S3.new.delete_dir(s3_key: id_prefix) unless dry_run
@@ -394,7 +395,7 @@ namespace :identifiers do
         # don't list old migrated content
         next unless ttc_end
         next unless i.approval_date
-        next unless time_in_curation >=	0
+        next unless time_in_curation >= 0
 
         # TimeToApproval = time from submission to approval
         time_to_approval = (i.approval_date - r.submitted_date).to_i / 1.day if i.approval_date && r.submitted_date
@@ -655,11 +656,11 @@ namespace :identifiers do
     log "Writing Shopping Cart Report for #{year_month} to file..."
     CSV.open("shopping_cart_report_#{year_month}.csv", 'w') do |csv|
       csv << %w[DOI ArticleDOI CreatedDate CurationStartDate ApprovalDate
-                Size PaymentType PaymentID WaiverBasis InstitutionName
-                JournalName JournalISSN SponsorName CurrentStatus]
+                Size PaymentType PaymentID WaiverBasis DpcDate TransactionId
+                InstitutionName JournalName JournalISSN SponsorName CurrentStatus]
 
       # Limit the query to datasets that existed at the time of the target report,
-      # and have been updated the within the month of the target.
+      # and have been updated within the month of the target.
       limit_date = Date.parse("#{year_month}-01")
       limit_date_filter = "updated_at > '#{limit_date - 1.day}' AND created_at < '#{limit_date + 1.month}' "
       StashEngine::Identifier.publicly_viewable.where(limit_date_filter).find_each do |i|
@@ -671,9 +672,24 @@ namespace :identifiers do
           break r.curation_start_date if r.curation_start_date.present?
         end
         curation_start_date_str = curation_start_date&.strftime('%Y-%m-%d')
-        csv << [i.identifier, i.publication_article_doi, created_date_str, curation_start_date_str, approval_date_str,
-                i.storage_size, i.payment_type, i.payment_id, i.waiver_basis, i.submitter_affiliation&.long_name,
-                i.publication_name, i.publication_issn, i.journal&.sponsor&.name, i&.resources&.last&.current_curation_status]
+        ppr_payment = i.payments.where(ppr_fee_paid: true).first
+
+        dpc_date = if i.payment_type && !i.payment_type.to_s.in?(%w[stripe waiver])
+                     i.publication_date&.strftime('%Y-%m-%d')
+                   elsif ppr_payment
+                     i.payments.where(ppr_fee_paid: false, id: [ppr_payment.id...]).first&.created_at&.strftime('%Y-%m-%d')
+                   else
+                     date = i.process_date.processing || i.process_date.queued
+                     date&.strftime('%Y-%m-%d')
+                   end
+        payment_transaction_id = Integrations::StripeIntegration.get_balance_transaction(i.payment_id)
+
+        csv << [
+          i.identifier, i.publication_article_doi, created_date_str, curation_start_date_str, approval_date_str,
+          i.storage_size, i.payment_type, i.payment_id, i.waiver_basis, dpc_date, payment_transaction_id,
+          i.submitter_affiliation&.long_name, i.publication_name, i.publication_issn, i.journal&.sponsor&.name,
+          i&.resources&.last&.current_curation_status
+        ]
       end
     end
     # Exit cleanly (don't let rake assume that an extra argument is another task to process)
@@ -1591,5 +1607,6 @@ def log(message)
 
   puts message
 end
+
 # rubocop:enable Metrics/BlockLength
 # :nocov:
