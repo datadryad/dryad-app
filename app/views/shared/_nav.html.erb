@@ -58,6 +58,7 @@
               <li><%= link_to 'Curation stats', curation_stats_path %>
               <li><%= link_to 'Journals', journals_path %>
               <% if current_user.min_curator? %>
+                <li><%= link_to 'Deleted datasets', deleted_data_path %></li>
                 <li><%= link_to 'Publication updater', publication_updater_path %></li>
               <% end %>
               <% if current_user.min_manager? %>

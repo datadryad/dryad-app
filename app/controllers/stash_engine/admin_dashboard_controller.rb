@@ -9,7 +9,7 @@ module StashEngine
     helper AdminChartsHelper
     before_action :require_admin
     protect_from_forgery except: :results
-    before_action :setup_paging, only: %i[results]
+    before_action :setup_paging, only: %i[results deleted]
     before_action :setup_limits, only: %i[index results]
     before_action :setup_search, only: %i[index results]
     before_action :load, only: %i[edit update]
@@ -67,6 +67,12 @@ module StashEngine
     def charts
       @charts = JSON.parse((helpers.size_chart + helpers.datasets_by_date).to_json, symbolize_names: true)
       respond_to(&:js)
+    end
+
+    def deleted
+      @datasets = StashEngine::Identifier.only_deleted
+      @datasets = @datasets.where('stash_engine_identifiers.identifier like ?', "%#{params[:q]}%") if params[:q]
+      @datasets = @datasets.page(@page).per(@page_size)
     end
 
     def new_search
