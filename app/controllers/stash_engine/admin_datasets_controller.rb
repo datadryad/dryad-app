@@ -145,7 +145,8 @@ module StashEngine
 
     def report_history
       @identifier = Identifier.find(params[:id])
-      @resources = @identifier.resources.joins(:action_reports).where.not(report: [nil, '']).distinct
+      @resources = @identifier.resources.joins(:action_reports).distinct
+      @resources.select { |r| r.action_reports.last.report.present? }
       respond_to(&:js)
     end
 
