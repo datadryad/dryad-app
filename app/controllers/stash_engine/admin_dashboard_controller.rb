@@ -7,6 +7,7 @@ module StashEngine
     helper AdminHelper
     helper AdminDashboardHelper
     helper AdminChartsHelper
+    before_action :require_user_login
     before_action :require_admin
     protect_from_forgery except: :results
     before_action :setup_paging, only: %i[results deleted]
@@ -70,6 +71,7 @@ module StashEngine
     end
 
     def deleted
+      authorize %i[stash_engine admin_datasets]
       @datasets = StashEngine::Identifier.only_deleted
       @datasets = @datasets.where('stash_engine_identifiers.identifier like ?', "%#{params[:q]}%") if params[:q]
       @datasets = @datasets.page(@page).per(@page_size)

@@ -162,6 +162,42 @@ RSpec.feature 'AdminPaths', type: :feature do
     end
   end
 
+  context :deleted_data_path do
+    it 'is not accessible by regular users' do
+      sign_in
+      visit stash_url_helpers.deleted_data_path
+      # User redirected
+      expect(page).to have_text('My datasets')
+    end
+
+    it 'is not accessible by tenant admins' do
+      tenant = create(:tenant_ucop)
+      sign_in(create(:user, role: 'admin', role_object: tenant, tenant_id: 'ucop'))
+      visit stash_url_helpers.deleted_data_path
+      expect(page).to have_text('Admin dashboard')
+    end
+
+    it 'is not accessible by tenant curators' do
+      tenant = create(:tenant_ucop)
+      sign_in(create(:user, role: 'curator', role_object: tenant, tenant_id: 'ucop'))
+      visit stash_url_helpers.deleted_data_path
+      expect(page).to have_text('Admin dashboard')
+    end
+
+    it 'is not accessible by dryad admins' do
+      sign_in(create(:user,  role: 'admin'))
+      visit stash_url_helpers.deleted_data_path
+      # User redirected
+      expect(page).to have_text('Admin dashboard')
+    end
+
+    it 'is accessible by curators' do
+      sign_in(create(:user, role: 'curator'))
+      visit stash_url_helpers.deleted_data_path
+      expect(page).to have_text('Deleted datasets')
+    end
+  end
+
   context :user_admin_path do
     it 'is not accessible by regular users' do
       sign_in
