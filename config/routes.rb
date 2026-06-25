@@ -326,7 +326,7 @@ Rails.application.routes.draw do
     get 'file_note/:resource_id', to: 'curation_activity#make_file_note'
 
     # routing for submission queue controller
-    get 'submission_queue', to: 'submission_queue#index'
+    get 'submission_queue', to: 'submission_queue#index', as: 'submission_queue'
     get 'submission_queue/refresh_table', to: 'submission_queue#refresh_table'
     get 'submission_queue/graceful_start', to: 'submission_queue#graceful_start', as: 'graceful_start'
 

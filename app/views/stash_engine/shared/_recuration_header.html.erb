@@ -1,0 +1,7 @@
+<nav aria-label="Recuration navigation" class="section-nav">
+  <h1 style="margin-bottom: 0;">Recuration</h1>
+  <ul class="c-header__nav-group">
+    <li class="c-second__nav-item"><a<% if current == 'publication' %> aria-current="page"<%end%> href="<%= publication_updater_path %>">Publication updater</a>
+    <li class="c-second__nav-item"><a<% if current == 'funding' %> aria-current="page"<%end%> href="<%= record_updaters_path('funder') %>">Funding updater</a>
+  </ul>
+</nav>
