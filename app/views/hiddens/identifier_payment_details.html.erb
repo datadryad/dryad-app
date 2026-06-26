@@ -4,32 +4,46 @@
   <p>ID: <%= @identifier.id %></p>
   <p>DOI: <%= @identifier %></p>
   <p><%= link_to 'Activity log', activity_log_path(@identifier) %></p>
-  <div class="details-box">
-    <h3>Payment sponsor</h3>
-    <% if @payment_sponsor %>
-      <% if @payment_sponsor.payment_configuration&.payment_plan != '2025' %>
-        <p class="c-alert--error">Not 2025 payer!!!</p>
-      <% end %>
+  <div class="columns-details-box">
+    <div class="details-box">
+      <h3>Payment sponsor</h3>
+      <% if @payment_sponsor %>
+        <% if @payment_sponsor.payment_configuration&.payment_plan != '2025' %>
+          <p class="c-alert--error">Not 2025 payer!!!</p>
+        <% end %>
 
-      <p><%= payer_payment_details_debugger(@payment_sponsor, "#{@payment_sponsor_details.name} ( #{@payment_sponsor.id} )") %></p>
-      <pre><%= JSON.pretty_generate(@payment_sponsor.payment_configuration&.attributes) %></pre>
-    <% else %>
-      <p>No payment sponsor</p>
-    <% end %>
+        <p><%= payer_payment_details_debugger(@payment_sponsor, "#{@payment_sponsor_details.name} ( #{@payment_sponsor.id} )") %></p>
+        <pre><%= JSON.pretty_generate(@payment_sponsor.payment_configuration&.attributes) %></pre>
+      <% else %>
+        <p>No payment sponsor</p>
+      <% end %>
+    </div>
+    <br />
+    <div class="details-box">
+      <h3>Payment limits</h3>
+      <% if @limits_sponsor %>
+        <% if @limits_sponsor.payment_configuration&.payment_plan != '2025' %>
+          <p class="c-alert--error">Not 2025 payer!!!</p>
+        <% end %>
+
+        <p><%= payer_payment_details_debugger(@limits_sponsor, "#{@limits_sponsor_details.name} ( #{@limits_sponsor.id} )") %></p>
+        <pre><%= JSON.pretty_generate(@limits_sponsor.payment_configuration&.attributes) %></pre>
+      <% else %>
+        <p>No limits sponsor</p>
+      <% end %>
+    </div>
   </div>
   <br />
   <div class="details-box">
-    <h3>Payment limits</h3>
-    <% if @limits_sponsor %>
-      <% if @limits_sponsor.payment_configuration&.payment_plan != '2025' %>
-        <p class="c-alert--error">Not 2025 payer!!!</p>
-      <% end %>
-
-      <p><%= payer_payment_details_debugger(@limits_sponsor, "#{@limits_sponsor_details.name} ( #{@limits_sponsor.id} )") %></p>
-      <pre><%= JSON.pretty_generate(@limits_sponsor.payment_configuration&.attributes) %></pre>
-    <% else %>
-      <p>No limits sponsor</p>
-    <% end %>
+    <h3>Identifier</h3>
+    <pre><%=
+      JSON.pretty_generate(
+        @identifier.attributes.slice('payment_type', 'payment_id', 'waiver_basis', 'pub_state', 'publication_date', 'old_payment_system')
+          .merge({
+                   last_invoiced_file_size: "#{@identifier.last_invoiced_file_size} (#{filesize(@identifier.last_invoiced_file_size)})",
+                 })
+      )
+    %></pre>
   </div>
 
   <p>Total LDF: <%= number_to_currency(@total_ldf) %></p>

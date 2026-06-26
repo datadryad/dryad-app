@@ -5,6 +5,7 @@ class SponsoredPaymentsService
     @resource = resource
     @identifier = resource.identifier
     @payer = @identifier.payer
+    @calculator_service = calculator_service
   end
 
   def loggable?
