@@ -56,16 +56,37 @@ function Payments({
             <p>By submitting the following form, you agree:</p>
             <p>
               I want to generate an invoice, due upon receipt, for payment by another entity.{' '}
-              <b>
-                I understand that this will incur an additional, nonrefundable{' '}
-                {fees?.invoice_fee?.toLocaleString('en-US', {style: 'currency', currency: 'USD', maximumFractionDigits: 0})} fee.
-              </b>
+              {!resource.identifier.display_payer?.id &&
+                <b>
+                  I understand that this will incur an additional, nonrefundable{' '}
+                  {fees?.invoice_fee?.toLocaleString('en-US', {style: 'currency', currency: 'USD', maximumFractionDigits: 0})} fee.
+                </b>
+              }
             </p>
           </>
         )}
         <InvoiceForm resource={resource} setResource={setResource} setPayment={setPayment} />
       </div>
     );
+  }
+
+  const InvoicingMessage = () => {
+    let additionalFeeMessage = null;
+
+    if (!resource.identifier.display_payer?.id) {
+      additionalFeeMessage = <>
+        {' '}
+        <b>An additional, nonrefundable administration fee will be charged for this service.</b>
+        {' '}
+      </>;
+    }
+
+    return (
+      <>
+        If your organization requires an invoice to be sent to a specific email address, one may be generated.
+        {additionalFeeMessage}
+      </>
+    )
   }
 
   return (
@@ -120,10 +141,9 @@ function Payments({
           <>
             <p style={{fontWeight: 'bold'}} role="heading" aria-level="2">Need an invoice?</p>
             <p>
-            If your organization requires an invoice to be sent to a specific email address, one may be generated.{' '}
-              <b>An additional, nonrefundable administration fee will be charged for this service.</b>{' '}
-              <button onClick={() => setInvoice(true)} type="button" className="o-button__plain-textlink" name="get_invoice">
-              Continue to the invoice generation form <i className="fas fa-circle-right" aria-hidden="true" />
+              <InvoicingMessage />
+              <button onClick={() => setInvoice(true)} type="button" className="o-button__plain-textlink" name="get_invoice" style={{paddingLeft: 0}}>
+                Continue to the invoice generation form <i className="fas fa-circle-right" aria-hidden="true" />
               </button>
             </p>
           </>

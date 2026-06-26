@@ -185,6 +185,19 @@ export default function Agreements({
     );
   }
 
+  const PaymentMessage = () => {
+    if(!fees.total) return null;
+    if (resource.identifier.display_payer?.id)
+      return <p>You will be asked to pay this fee upon submission.</p>;
+
+    return (
+      <p>
+        You will be asked to pay this fee upon submission.
+        If you require an invoice to be sent to another entity for payment, an additional administration fee will be charged.
+      </p>
+    );
+  }
+
   return (
     <>
       {preview && (
@@ -242,12 +255,10 @@ export default function Agreements({
               </>
             )
             : (
-              /* eslint-disable max-len */
               <>
                 <CalculateFees resource={resource} fees={fees} ppr={ppr} />
-                {fees.total ? <p>You will be asked to pay this fee upon submission. If you require an invoice to be sent to another entity for payment, an additional administration fee will be charged.</p> : null}
+                <PaymentMessage />
               </>
-              /* eslint-enable max-len */
             )}
         </>
       )}
