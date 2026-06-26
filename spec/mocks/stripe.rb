@@ -3,8 +3,14 @@ module Mocks
 
     def mock_stripe!
       id = Faker::Number.unique(10)
-      # Return an object that contains a unique id for Customer, Invoice or InvoiceItem
-      allow_any_instance_of(::Stripe::APIOperations::Create).to receive(:create).and_return(
+
+      allow(::Stripe::Invoice).to receive(:create).and_return(
+        OpenStruct.new(id: id, send_invoice: OpenStruct.new(id: id))
+      )
+      allow(::Stripe::InvoiceItem).to receive(:create).and_return(
+        OpenStruct.new(id: id, send_invoice: OpenStruct.new(id: id))
+      )
+      allow(::Stripe::Customer).to receive(:create).and_return(
         OpenStruct.new(id: id, send_invoice: OpenStruct.new(id: id))
       )
     end
