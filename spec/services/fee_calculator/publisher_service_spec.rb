@@ -331,9 +331,9 @@ module FeeCalculator
             context 'when files_size changes from free tier to another' do
               let(:new_files_size) { 100_000_000_000 }
 
-                it {
-                  is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 464, total: 464, storage_fee_label: 'Large data fee' })
-                }
+              it {
+                is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 464, total: 464, storage_fee_label: 'Large data fee' })
+              }
             end
 
             context 'when files_size changes from non free tier to another' do
@@ -368,7 +368,7 @@ module FeeCalculator
         let(:resource) { create(:resource, identifier: identifier, total_file_size: new_files_size) }
         let(:contributor) do
           create(:contributor, contributor_name: 'National Cancer Institute',
-                 contributor_type: 'funder', resource_id: resource.id)
+                               contributor_type: 'funder', resource_id: resource.id)
         end
         let!(:funder) { create(:funder, name: contributor.contributor_name, enabled: true) }
 
