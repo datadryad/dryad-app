@@ -123,6 +123,12 @@ class ApiApplicationController < StashEngine::ApplicationController
               doorkeeper_token.application.owner
             end
 
+    if doorkeeper_token.expired?
+      api_logger.error('require_api_user')
+      AuthFailureService.new(request, @user, params).create(:api_expired_token)
+      render json: { error: 'Token expired' }.to_json, status: 401 and return
+    end
+
     logger.info("User: #{@user&.id}")
   end
 
