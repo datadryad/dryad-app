@@ -45,7 +45,7 @@ gem 'aws-sdk-sns'
 gem 'bootsnap', require: false
 gem 'charlock_holmes', '~> 0.7.9'
 gem 'commonmarker', '~> 2.7.0'
-gem 'concurrent-ruby', '~> 1.3.6'
+gem 'concurrent-ruby', '~> 1.3.7'
 gem 'daemons', '~> 1.4.1'
 gem 'database_cleaner', '~> 2.1.0'
 gem 'datacite-mapping'
@@ -104,7 +104,7 @@ gem 'zaru', '~> 1.0.0' # for sanitizing file names
 # gem 'base64'
 # gem 'bigdecimal'
 # gem 'mutex_m'
-gem 'faraday', '~> 2.14.2'
+gem 'faraday', '~> 2.14.3'
 gem 'faraday-retry'
 
 # ############################################################
