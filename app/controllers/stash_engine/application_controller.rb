@@ -26,7 +26,7 @@ module StashEngine
     private
 
     def user_not_authorized
-      AuthFailureService.new(request, current_user, params).create(:unauthorized)
+      log_auth_failure
       flash[:alert] = 'You are not authorized to view this information.'
       redirect_back(fallback_location: choose_dashboard_path)
     end

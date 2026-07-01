@@ -49,6 +49,6 @@ module Dash2
     # ryan used this in some manuscript parsing and gem updates break it.  See
     # https://stackoverflow.com/questions/72970170/upgrading-to-rails-6-1-6-1-causes-psychdisallowedclass-tried-to-load-unspecif
     config.active_record.yaml_column_permitted_classes = [ActiveSupport::HashWithIndifferentAccess]
-    config.middleware.use OAuthFailureLogger
+    config.middleware.use Middleware::OauthFailureLogger
   end
 end
