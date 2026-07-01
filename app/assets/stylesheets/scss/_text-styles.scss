@@ -65,28 +65,6 @@ figure {
   }
 }
 
-.callout {
-  background-color: $lightest-blue;
-  padding: 0 .75rem;
-
-  & > *:first-child { padding-top: .75rem; }
-  & > *:last-child { padding-bottom: .75rem; }
-
-  kbd, samp, code {
-    background-color: white;
-  }
-
-  &.alt {
-    background-color: $lightest-green;
-  }
-  &.err {
-    background-color: $lightest-red;
-  }
-  &.warn {
-    background-color: $lightest-orange;
-  }
-}
-
 pre {
   white-space: pre-wrap;
   kbd, samp, code {
