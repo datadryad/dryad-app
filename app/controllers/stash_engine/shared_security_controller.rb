@@ -17,6 +17,7 @@ module StashEngine
     end
 
     # for access to pages related to dataset editing
+    # rubocop:disable Metrics/PerceivedComplexity,  Metrics/CyclomaticComplexity
     def require_login
       unless current_user.present?
         flash[:alert] = 'You must be logged in.'
@@ -38,8 +39,9 @@ module StashEngine
 
         unless current_user.validated?
           flash[:alert] = 'Please validate your email address'
-          refresh = !current_user.email_token || current_user.email_token.expired?
-          redirect_to stash_url_helpers.email_validate_path(refresh: refresh) and return
+          h = {}
+          h[:refresh] = true if current_user.email_token&.expired?
+          redirect_to stash_url_helpers.email_validate_path(h) and return
         end
       end
 
@@ -54,6 +56,8 @@ module StashEngine
 
       nil
     end
+
+    # rubocop:enable Metrics/PerceivedComplexity,  Metrics/CyclomaticComplexity
 
     def bust_cache
       response.headers['Cache-Control'] = 'no-cache, no-store'
