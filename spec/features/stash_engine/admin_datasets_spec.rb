@@ -75,6 +75,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       expect(page).to have_text('Action required report')
       expect(page).to have_field('report', with: 'Query 1: this is some text I want')
       click_button 'Submit & set to Action required'
+      expect(page).not_to have_text('Action required report')
       expect(page).to have_text("Curation status:\nAction required")
     end
 
