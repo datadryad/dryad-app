@@ -113,6 +113,8 @@ module StashEngine
         'Queued for curation'
       when 'peer_review'
         'Private for peer review'
+      when 'processing'
+        'Preparing data'
       else
         status.humanize
       end

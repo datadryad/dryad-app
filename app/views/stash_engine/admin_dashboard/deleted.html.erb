@@ -1,0 +1,45 @@
+<h1>Deleted datasets</h1>
+
+<%= form_with(url: deleted_data_path, method: 'get') do %>
+<div class="o-admin-form-inline">
+  <div class="o-admin-form-pair">
+    <label for="search-terms">DOI search:</label>
+    <%= search_field_tag(:q, params[:q], class: 'c-input__text', id: 'search-terms' ) %>
+  </div>
+  <%= submit_tag('Search', name: nil, class: 'o-button__plain-text2' ) %>
+</div>
+<% end %>
+
+<div class="table-wrapper c-lined-table-wrapper" role="region" tabindex="0" aria-labelledby="deleted-label">
+<table class="c-lined-table">
+  <thead>
+    <tr><th>DOI</th><th>Last title</th><th>Date deleted</th></tr>
+  </thead>
+  <tbody>
+  <% @datasets.each do |d| %>
+    <% r = StashEngine::Resource.only_deleted.find_by(id: d.latest_resource_id) %>
+    <tr>
+      <td style="white-space: nowrap;"><%= d.identifier %></td>
+      <td><%= r.title %></td>
+      <td class="c-lined-table__digits"><%= formatted_datetime(d.deleted_at) %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+</div>
+
+<div class="c-space-paginator">
+<%= paginate @datasets, params: { page_size: @page_size } %>
+    <div class="c-paginator-page_size">
+  Page size:
+  <%
+    current_ps = params[:page_size].to_i
+    current_ps = 10 if current_ps == 0
+    [10, 50, 100].each do |ps| %>
+    <% if ps == current_ps %>
+      <span class="page-current"><%= ps %></span>
+    <% else %>
+      <%= link_to(ps, stash_url_helpers.deleted_data_path(request.parameters.except(:action, :controller).merge(page_size: ps, page: 1)), 'aria-label': "#{ps} results per page") %>
+    <% end %>
+  <% end %>
+</div>

@@ -26,7 +26,7 @@ describe PaymentsService do
     let(:checkout_options) do
       {
         mode: 'payment',
-        ui_mode: 'embedded',
+        ui_mode: 'embedded_page',
         line_items: [{
           quantity: 1,
           price_data: {
@@ -57,7 +57,7 @@ describe PaymentsService do
         expect(subject.checkout_options).to eq(
           {
             mode: 'payment',
-            ui_mode: 'embedded',
+            ui_mode: 'embedded_page',
             line_items: [{
               quantity: 1,
               price_data: {
@@ -81,7 +81,7 @@ describe PaymentsService do
         expect(subject.checkout_options).to eq(
           {
             mode: 'payment',
-            ui_mode: 'embedded',
+            ui_mode: 'embedded_page',
             discounts: [{ coupon: 'FEE_WAIVER_2025' }],
             line_items: [{
               quantity: 1,
