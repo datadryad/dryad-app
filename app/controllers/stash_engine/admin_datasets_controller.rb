@@ -131,6 +131,7 @@ module StashEngine
     end
 
     def make_report
+      authorize %i[stash_engine admin_datasets]
       @resource = Resource.find(params[:id])
       @last_state = @resource.last_curation_activity.status
 
@@ -140,6 +141,13 @@ module StashEngine
       CurationService.new(resource: @resource, user: current_user, status: 'action_required',
                           note: params[:note] || 'Action required report edited').process
       render js: 'window.location.reload();'
+    end
+
+    def report_history
+      @identifier = Identifier.find(params[:id])
+      @resources = @identifier.resources.joins(:action_reports).distinct
+      @resources.select { |r| r.action_reports.last.report.present? }
+      respond_to(&:js)
     end
 
     def notification_date
