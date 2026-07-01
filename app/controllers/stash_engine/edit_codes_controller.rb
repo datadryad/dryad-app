@@ -27,6 +27,7 @@ module StashEngine
         @edit_code.update(applied: true)
         redirect_to stash_url_helpers.dashboard_path, notice: "You may now collaborate on #{@resource.title&.html_safe}"
       else
+        log_auth_failure
         flash[:alert] = 'You must log in to accept this invitation.'
         session[:target_page] = request.fullpath
         redirect_to stash_url_helpers.choose_login_path and return
