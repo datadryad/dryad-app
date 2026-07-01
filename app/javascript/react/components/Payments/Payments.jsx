@@ -35,6 +35,25 @@ function Payments({
     if (!invoice) setClientSecret(null);
   }, [invoice]);
 
+  const invoicingPageMessage = () => {
+    if (resource.identifier.display_payer?.id) {
+      return <p>Payment of this fee is due upon receipt of the invoice.</p>;
+    }
+
+    return (
+      <>
+        <p>By submitting the following form, you agree:</p>
+        <p>
+          I want to generate an invoice, due upon receipt, for payment by another entity.{' '}
+          <b>
+            I understand that this will incur an additional, nonrefundable{' '}
+            {fees?.invoice_fee?.toLocaleString('en-US', {style: 'currency', currency: 'USD', maximumFractionDigits: 0})} fee.
+          </b>
+        </p>
+      </>
+    );
+  };
+
   if (invoice) {
     return (
       <div id="submission-payment">
@@ -53,16 +72,7 @@ function Payments({
               </button>
             </p>
             <CalculateFees resource={resource} />
-            <p>By submitting the following form, you agree:</p>
-            <p>
-              I want to generate an invoice, due upon receipt, for payment by another entity.{' '}
-              {!resource.identifier.display_payer?.id && (
-                <b>
-                  I understand that this will incur an additional, nonrefundable{' '}
-                  {fees?.invoice_fee?.toLocaleString('en-US', {style: 'currency', currency: 'USD', maximumFractionDigits: 0})} fee.
-                </b>
-              )}
-            </p>
+            {invoicingPageMessage()}
           </>
         )}
         <InvoiceForm resource={resource} setResource={setResource} setPayment={setPayment} />
