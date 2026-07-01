@@ -5,6 +5,7 @@
     'Reporting an issue with someone else\'s dataset',
     'Duplicate accounts',
     'Action required',
+    'Withdraw my dataset',
     'Feature request',
     'API request',
     'Other'
@@ -18,7 +19,7 @@
     <% end %>
     <div class="c-input">
       <%= form.label :subject, 'Help needed with:', class: 'c-input__label' %>
-      <%= form.select :subject, options_for_select(subjects), {include_blank: true}, {class: 'c-input__select', required: true} %>
+      <%= form.select :subject, options_for_select(subjects, selected: local_assigns.key?(:subject) ? subject : nil), {include_blank: true}, {class: 'c-input__select', required: true} %>
     </div>
     <div class="c-input__inline">
       <div class="c-input">
@@ -33,7 +34,7 @@
     <div class="c-input">
       <label for="body" class="c-input__label--required">Describe your issue or question:</label>
       <% unless local_assigns.key?(:identifier) %><p style="margin: 0; font-size: .98rem;" id="body-desc">Include your dataset DOI (<code>10.5061/dryad...</code>), if you have one, for swift assistance</p><% end %>
-      <textarea class="c-input__textarea" style="width:100%" rows="8" required="required" name="body" id="body" <% unless local_assigns.key?(:identifier) %>aria-describedby="body-desc"<% end %>></textarea>
+      <textarea class="c-input__textarea" style="width:100%" rows="8" required="required" name="body" id="body" <% unless local_assigns.key?(:identifier) %>aria-describedby="body-desc"<% end %>><%= local_assigns.key?(:body) ? body : '' %></textarea>
     </div>
     <% if !current_user %>
       <%= recaptcha_tags %>
