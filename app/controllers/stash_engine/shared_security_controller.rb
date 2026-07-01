@@ -40,7 +40,7 @@ module StashEngine
         unless current_user.validated?
           flash[:alert] = 'Please validate your email address'
           h = {}
-          h[:refresh] = true if current_user.email_token&.expired?
+          h[:refresh] = true if !current_user.email_token || current_user.email_token&.expired?
           redirect_to stash_url_helpers.email_validate_path(h) and return
         end
       end
