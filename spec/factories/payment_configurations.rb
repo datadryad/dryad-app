@@ -6,7 +6,7 @@
 #  covers_dpc             :boolean
 #  covers_ldf             :boolean
 #  ldf_limit              :integer
-#  ldf_limit_notification :boolean          default(FALSE)
+#  ldf_limit_notification :text(65535)
 #  partner_type           :string(191)
 #  payment_plan           :integer
 #  yearly_ldf_limit       :integer
@@ -24,6 +24,7 @@ FactoryBot.define do
     covers_ldf { nil }
     ldf_limit { nil }
     yearly_ldf_limit { nil }
+    ldf_limit_notification { nil }
 
     to_create do |instance|
       record = PaymentConfiguration.find_or_initialize_by(partner: instance.partner)
