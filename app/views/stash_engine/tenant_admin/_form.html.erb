@@ -52,9 +52,11 @@
   <p>Payment information must be set at the sponsor level.</p>
 </div>
 
+<div id="payment_container" <%= @tenant.sponsor_id ? 'hidden' : ''  %>>
 <%= render '/stash_engine/payment_configuration/form', format: :html,
-  sponsor_id: @tenant.sponsor_id,
+  sponsor_id: nil,
   has_children: false,
   payment_configuration: @payment_configuration,
   plan_options: [ ['', 'None'] ] + StashEngine::Tenant::PAYMENT_PLANS.map {|p| [p, p.capitalize]}
 %>
+</div>
