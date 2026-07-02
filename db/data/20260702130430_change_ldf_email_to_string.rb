@@ -18,7 +18,7 @@ class ChangeLdfEmailToString < ActiveRecord::Migration[8.0]
 
   def down
     PaymentConfiguration.all.each do |pc|
-      pc.update_columns(ldf_limit_notification: pc.ldf_limit_notification.nil? ? '0' : '1')
+      pc.update_columns(ldf_limit_notification: pc.ldf_limit_notification.blank? ? '0' : '1')
     end
   end
 end
