@@ -28,7 +28,7 @@ class CostReportingService
     return false unless @status.in?(%w[queued published])
 
     # NO - payer has LDF notifications turned off/no LDF email
-    return false if PayersService.new(resource.identifier.payer).sponsored_limits&.ldf_limit_notification&.blank?
+    return false unless PayersService.new(resource.identifier.payer).sponsored_limits&.ldf_limit_notification&.present?
 
     # NO - previous notification was already sent for this resource
     return false if resource.curation_activities.where(note: @note).exists?
