@@ -10,7 +10,7 @@ module StashEngine
     before_action :require_user_login
     before_action :require_admin
     protect_from_forgery except: :results
-    before_action :setup_paging, only: %i[results deleted]
+    before_action :setup_paging, only: %i[results deleted auth_failures]
     before_action :setup_limits, only: %i[index results]
     before_action :setup_search, only: %i[index results]
     before_action :load, only: %i[edit update]
@@ -75,6 +75,18 @@ module StashEngine
       @datasets = StashEngine::Identifier.only_deleted
       @datasets = @datasets.where('stash_engine_identifiers.identifier like ?', "%#{params[:q]}%") if params[:q]
       @datasets = @datasets.page(@page).per(@page_size)
+    end
+
+    def auth_failures
+      authorize %i[stash_engine admin_datasets]
+      @records = AuthFailure.left_joins(:user)
+      if params[:q]
+        @records = @records.where(
+          'error_type like ? OR url like ? OR ip like ? OR params like ? OR CONCAT(first_name, " ", last_name) LIKE ?',
+          "%#{params[:q]}%", "%#{params[:q]}%", "%#{params[:q]}%", "%#{params[:q]}%", "%#{params[:q]}%"
+        )
+      end
+      @records = @records.includes(:user).order(created_at: :desc).page(@page).per(@page_size)
     end
 
     def new_search
@@ -298,6 +310,7 @@ module StashEngine
         "stash_engine_identifiers.publication_date #{date_string(@filters[:first_pub_date])}"
       ) if @filters[:first_pub_date]&.values&.any?(&:present?)
     end
+
     # rubocop:enable Style/MultilineIfModifier, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/AbcSize, Layout/LineLength
 
     def size_filter
@@ -512,5 +525,6 @@ module StashEngine
     HTML
     render :curation_activity_error
   end
+
   # rubocop:enable Metrics/ClassLength, Metrics/MethodLength
 end

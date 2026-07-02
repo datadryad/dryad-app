@@ -13,6 +13,7 @@
 #  user_id    :integer
 #
 class AuthFailure < ApplicationRecord
-
   enum :error_type, %w[unauthorized api_unauthorized api_expired_token].index_by(&:to_sym)
+
+  belongs_to :user, class_name: 'StashEngine::User', optional: true
 end
