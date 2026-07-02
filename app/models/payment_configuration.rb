@@ -31,7 +31,7 @@ class PaymentConfiguration < ApplicationRecord
   end
 
   def ldf_limit_notification
-    JSON.parse(super) unless super.nil?
+    JSON.parse(super) unless super.blank?
   rescue JSON::ParserError
     super
   end
@@ -45,7 +45,7 @@ class PaymentConfiguration < ApplicationRecord
   private
 
   def notification_json
-    self.ldf_limit_notification = ldf_limit_notification.to_s.split("\n").map(&:strip).to_json
+    self.ldf_limit_notification = ldf_limit_notification.to_s.split("\n").map(&:strip).to_json unless ldf_limit_notification.blank?
   end
 
   def reset_limit
