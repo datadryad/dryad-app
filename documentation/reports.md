@@ -23,15 +23,21 @@ RAILS_ENV=production bundle exec rake identifiers:shopping_cart_report -- --year
 
 Fields in the shopping cart report
 - DOI
+- Article DOI
 - Created Date
 - Curation Start Date
+- Approval Date
 - Size
 - Payment Type
 - Payment ID
 - Waiver Basis
+- DPC Date
+- transaction ID
 - Institution Name
 - Journal Name
+- Journal ISSN
 - Sponsor Name
+- Current Status
 
 To run the report and retrieve the files:
 ```
