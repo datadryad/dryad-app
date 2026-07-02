@@ -111,7 +111,7 @@
     "sass": "^1.97.0",
     "shakapacker": "10.0.0",
     "string-similarity": "^4.0.4",
-    "stripe": "^17.7.0",
+    "stripe": "^22.3.0",
     "style-loader": "^3.3.3",
     "terser-webpack-plugin": "5",
     "truncate-utf8-bytes": "^1.0.2",
@@ -159,7 +159,7 @@
     "stylelint": "^16.0.0",
     "stylelint-config-property-sort-order-smacss": "^10.0.0",
     "stylelint-config-recommended-scss": "^14.0.0",
-    "webpack-dev-server": "^5"
+    "webpack-dev-server": "^5.2.5"
   },
   "resolutions": {
     "nanoid": "<4.0.0",
