@@ -220,9 +220,9 @@ module StashEngine
       @datasets = @datasets.joins(
         "#{'LEFT OUTER ' unless filter_on}JOIN stash_engine_process_dates id_dates ON id_dates.processable_type = 'StashEngine::Identifier'
           AND id_dates.processable_id = stash_engine_identifiers.id
-        #{" AND COALESCE(id_dates.processing, id_dates.queued, id_dates.peer_review) #{date_string(@filters[:first_sub_date])}" if filter_on}"
+        #{" AND LEAST(id_dates.processing, id_dates.queued, id_dates.peer_review) #{date_string(@filters[:first_sub_date])}" if filter_on}"
       ).select(
-        'COALESCE(id_dates.processing, id_dates.queued, id_dates.peer_review) as first_sub_date, id_dates.queued as queue_date'
+        'LEAST(id_dates.processing, id_dates.queued, id_dates.peer_review) as first_sub_date, id_dates.queued as queue_date'
       ).select('stash_engine_identifiers.publication_date as first_pub_date')
 
       return unless @filters[:submit_date]&.values&.any?(&:present?) || %w[submit_date last_status_date].include?(@sort)
@@ -235,7 +235,7 @@ module StashEngine
 
       @datasets = @datasets.select(
         'stash_engine_process_dates.last_status_date,
-         COALESCE(stash_engine_process_dates.processing, stash_engine_process_dates.queued, stash_engine_process_dates.peer_review) as submit_date'
+         LEAST(stash_engine_process_dates.processing, stash_engine_process_dates.queued, stash_engine_process_dates.peer_review) as submit_date'
       )
     end
 
@@ -285,7 +285,7 @@ module StashEngine
       ) if @filters[:updated_at]&.values&.any?(&:present?)
 
       @datasets = @datasets.where(
-        "COALESCE(stash_engine_process_dates.processing, stash_engine_process_dates.queued, stash_engine_process_dates.peer_review) #{
+        "LEAST(stash_engine_process_dates.processing, stash_engine_process_dates.queued, stash_engine_process_dates.peer_review) #{
           date_string(@filters[:submit_date])
         }"
       ) if @filters[:submit_date]&.values&.any?(&:present?)
