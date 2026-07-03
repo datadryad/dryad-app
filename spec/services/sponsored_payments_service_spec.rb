@@ -96,7 +96,6 @@ describe SponsoredPaymentsService do
             end
           end
 
-
           context 'when tenant has a sponsor' do
             let!(:sponsor_tenant) { create(:tenant, id: 'sponsor') }
             let!(:tenant) { create(:tenant, id: 'payer', sponsor_id: sponsor_tenant.id) }

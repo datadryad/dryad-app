@@ -10,6 +10,7 @@ class SponsoredPaymentsService
   def loggable?
     # do not log payment if dataset is set for PPR
     return false if resource.hold_for_peer_review?
+
     # do not log for items with first submitted date older than 2026-01-01
     fss = resource.identifier.first_submitted_status
     return false if fss && fss.created_at < Date.new(2026, 1, 1)
