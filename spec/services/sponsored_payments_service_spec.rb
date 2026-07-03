@@ -88,7 +88,14 @@ describe SponsoredPaymentsService do
                 }.stringify_keys
               )
             end
+
+            context 'but the first submitted date was before 2026-01-01' do
+              let!(:curation_log) { create(:curation_activity, status: :queued, resource: resource, created_at: '2025-12-31'.to_datetime.end_of_day) }
+
+              include_examples('does not create sponsored payment log')
+            end
           end
+
 
           context 'when tenant has a sponsor' do
             let!(:sponsor_tenant) { create(:tenant, id: 'sponsor') }
