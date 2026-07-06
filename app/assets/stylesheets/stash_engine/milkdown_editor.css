@@ -209,6 +209,10 @@
   text-shadow: 0 0 .06rem #98cae2;
 }
 
+.markdown_editor .md_editor-buttons .headingButton:not(.active) {
+  font-size: .98rem;
+}
+
 .markdown_editor .md_editor-buttons .headingButton:focus,
 .markdown_editor .md_editor-buttons button:focus {
   background-color: #0071a8;
@@ -306,6 +310,7 @@
   margin: 0;
   padding: 3px 5px;
   border-top: thin solid #d0d0d0;
+  cursor: pointer;
 }
 
 .markdown_editor .md_editor-buttons .headingMenu li.selected {
@@ -313,7 +318,8 @@
   color: white;
 }
 
-.markdown_editor .md_editor-buttons .headingMenu li.highlighted {
+.markdown_editor .md_editor-buttons .headingMenu li:hover,
+.markdown_editor .md_editor-buttons .headingMenu li:focus {
   background-color: #0071a8;
   color: white;
 }
