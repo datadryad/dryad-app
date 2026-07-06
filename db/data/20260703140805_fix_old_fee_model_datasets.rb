@@ -7,7 +7,7 @@ class FixOldFeeModelDatasets < ActiveRecord::Migration[8.0]
       SponsoredPaymentLog.where(ldf: 0).destroy_all
 
       logs = StashEngine::Identifier.joins(:process_date, :sponsored_payment_logs)
-        .select('LEAST(processing, queued, peer_review) as first_sub_date, stash_engine_identifiers.id, ldf')
+        .select('COALESCE(processing, queued, peer_review) as first_sub_date, stash_engine_identifiers.id, ldf')
         .having('first_sub_date < ?', '2026-01-01'.to_datetime)
 
       puts 'Deleting logs with following info:'
