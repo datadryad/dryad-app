@@ -88,7 +88,7 @@ export default function Table({
 
   return (
     <>
-      <div role="menuitem" onBlur={leaveMenu}>
+      <div onBlur={leaveMenu}>
         <button
           type="button"
           className={active ? 'active' : undefined}
@@ -97,6 +97,7 @@ export default function Table({
           aria-expanded="false"
           aria-controls={`${editorId}tableMenu`}
           onClick={openMenu}
+          tabIndex="-1"
         >{icons.table}
         </button>
         <div className="tableMenu" id={`${editorId}tableMenu`} hidden>

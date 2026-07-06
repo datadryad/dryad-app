@@ -36,19 +36,19 @@ export default function Heading({
     },
   });
   return (
-    <div className="headingSelect" role="menuitem">
+    <div className="headingSelect">
       <div
         className={`headingButton${active ? ' active' : ''}`}
         role="button"
         aria-label={labels.heading}
         title={labels.heading}
         {...getToggleButtonProps({'aria-labelledby': null})}
-        tabIndex="0"
+        tabIndex="-1"
       >
         <span>{selectedItem ? ((selectedItem === 1 && 'Title') || `Heading ${selectedItem}`) : 'Heading'}</span>
         <i className={`fas ${isOpen ? 'fa-chevron-up' : 'fa-chevron-down'}`} />
       </div>
-      <ul hidden={!isOpen} {...getMenuProps()} className="headingMenu">
+      <ul hidden={!isOpen} {...getMenuProps({'aria-labelledby': null, 'aria-label': 'Heading levels'})} className="headingMenu">
         {isOpen
           && items.map((item, index) => (
             <li

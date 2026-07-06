@@ -128,7 +128,7 @@ export default function LinkMenu({editor, editorId, active}) {
   };
 
   return (
-    <div className="linkSelect" role="menuitem" onBlur={leaveMenu}>
+    <div className="linkSelect" onBlur={leaveMenu}>
       <button
         type="button"
         className={active ? 'active' : undefined}
@@ -137,6 +137,7 @@ export default function LinkMenu({editor, editorId, active}) {
         aria-expanded="false"
         aria-controls={`${editorId}linkMenu`}
         onClick={openMenu}
+        tabIndex="-1"
       >{icons.link}
       </button>
       <div className="linkMenu" id={`${editorId}linkMenu`} hidden>

@@ -78,6 +78,11 @@
   justify-content: flex-end;
 }
 
+.micro_editor .md_editor-buttons:focus-within {
+  border-color: #0071a8; 
+  background-color: rgb(233, 236, 239);
+}
+
 .markdown_editor .md_editor-buttons div[role="group"]:not(:last-of-type) {
   border-right: thin solid #d0d0d0;
   margin-right: .25ch;
@@ -188,6 +193,10 @@
   color: rgb(78, 80, 80);
 }
 
+.micro_editor .md_editor-buttons:focus-within button:not(:focus) {
+  background-color: rgb(233, 236, 239);
+}
+
 .markdown_editor .md_editor-buttons button:hover,
 .markdown_editor .md_editor-buttons .headingButton:hover {
   background-color: #0071a8;
@@ -215,7 +224,7 @@
   background-color: #fff;
 }
 
-.markdown_editor .md_editor-buttons button[disabled] {
+.markdown_editor .md_editor-buttons button[aria-disabled] {
   color: #aaa;
   background-color: rgb(233, 236, 239);
   text-shadow: none;
@@ -238,7 +247,7 @@
   white-space: nowrap;
 }
 
-.markdown_editor .md_editor-buttons .tableOptButton[disabled] i[class*='chevron'] {
+.markdown_editor .md_editor-buttons .tableOptButton[aria-disabled] i[class*='chevron'] {
   color: #aaa;
 }
 
@@ -248,8 +257,8 @@
 .markdown_editor .md_editor-buttons .headingButton:not(.active):focus i,
 .markdown_editor .md_editor-buttons .linkSelect > button:not(.active):focus i,
 .markdown_editor .md_editor-buttons .linkSelect > button:not(.active):hover i,
-.markdown_editor .md_editor-buttons .tableOptButton:not([disabled]):hover i[class*='chevron'],
-.markdown_editor .md_editor-buttons .tableOptButton:not([disabled]):focus i[class*='chevron'],
+.markdown_editor .md_editor-buttons .tableOptButton:not([aria-disabled]):hover i[class*='chevron'],
+.markdown_editor .md_editor-buttons .tableOptButton:not([aria-disabled]):focus i[class*='chevron'],
 .markdown_editor .md_editor-buttons .tableOptMenu button:hover i[class*='chevron'],
 .markdown_editor .md_editor-buttons .tableOptMenu button:focus i[class*='chevron'] {
   color: #f2f2f2;
