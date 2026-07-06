@@ -13,7 +13,7 @@ class SponsoredPaymentsService
 
     # do not log for items with first submitted date older than 2026-01-01
     fss = resource.identifier.process_date&.processing
-    return false if fss && fss.created_at < Date.new(2026, 1, 1)
+    return false if fss && fss < Date.new(2026, 1, 1)
     # there is no payer
     return false if payer.nil?
     # payer is not on 2025 plan
