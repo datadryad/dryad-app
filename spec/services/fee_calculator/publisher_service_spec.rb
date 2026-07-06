@@ -209,7 +209,7 @@ module FeeCalculator
               let(:new_files_size) { 100_000_000_000 }
 
               it {
-                is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 464, invoice_fee: 199, total: 663, storage_fee_label: 'Large data fee' })
+                is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 464, total: 464, storage_fee_label: 'Large data fee' })
               }
             end
 
@@ -332,7 +332,7 @@ module FeeCalculator
               let(:new_files_size) { 100_000_000_000 }
 
               it {
-                is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 464, invoice_fee: 199, total: 663, storage_fee_label: 'Large data fee' })
+                is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 464, total: 464, storage_fee_label: 'Large data fee' })
               }
             end
 
@@ -341,8 +341,7 @@ module FeeCalculator
               let(:new_files_size) { 900_000_000_000 }
 
               it {
-                is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 3_883, invoice_fee: 199, total: 4_082,
-                                    storage_fee_label: 'Large data fee' })
+                is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 3_883, total: 3_883, storage_fee_label: 'Large data fee' })
               }
             end
 

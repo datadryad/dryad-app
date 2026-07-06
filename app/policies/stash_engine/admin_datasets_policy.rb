@@ -25,6 +25,10 @@ module StashEngine
       @user.min_app_admin?
     end
 
+    def make_report?
+      create_salesforce_case?
+    end
+
     def waiver_add?
       @user.min_manager?
     end
@@ -35,6 +39,10 @@ module StashEngine
 
     def notification_date?
       @user.min_manager?
+    end
+
+    def deleted?
+      @user.system_user? && @user.min_curator?
     end
   end
 end

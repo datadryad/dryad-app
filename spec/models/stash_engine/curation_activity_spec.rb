@@ -61,9 +61,14 @@ module StashEngine
         expect(curation_activity.readable_status).to eql('Private for peer review')
       end
 
+      it 'returns a readable version of :processing' do
+        curation_activity.processing!
+        expect(curation_activity.readable_status).to eql('Preparing data')
+      end
+
       it 'returns a default readable version of the remaining statuses' do
         CurationActivity.statuses.each_key do |s|
-          unless %w[peer_review queued].include?(s)
+          unless %w[peer_review queued processing].include?(s)
             curation_activity.send("#{s}!")
             expect(curation_activity.readable_status).to eql(s.humanize)
           end

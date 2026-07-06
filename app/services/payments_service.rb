@@ -16,7 +16,7 @@ class PaymentsService
   def checkout_options
     res = {
       mode: 'payment',
-      ui_mode: 'embedded',
+      ui_mode: 'embedded_page',
       line_items: line_items
     }
     res[:discounts] = discounts if discounts.any?

@@ -65,6 +65,10 @@ a[role='button']:focus-visible, a[class*='button']:focus-visible {
 	display: none !important;
 }
 
+hr {
+	border-top: thin solid $medium-gray;
+}
+
 // ***** Objects ***** //
 
 @import 'scss/buttons';

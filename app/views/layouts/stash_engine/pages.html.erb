@@ -4,18 +4,28 @@
   <%= render 'shared/standard_head' %>
   <%= render 'shared/stash_head' %>
   <%= content_for :head %>
-  <link rel="canonical" href="<%= request.original_url %>"/>
   <script type="text/javascript" src="<%= asset_path 'dataload.js'%>" defer></script>
 </head>
 <body class='<%= "#{controller_name}_#{action_name}" %>'>
   <%= render partial: "shared/sandbox_message" %>
   <%= render partial: "shared/public_page_popup" %>
   <%= render 'shared/top_area' %>
-  <main id="maincontent" class="search-page">
+  <%= render partial: "stash_engine/shared/flash_messages" %>
+  <% if dupe_user_alert %>
+    <%= render partial: "stash_engine/user_account/duplicate_email" %>
+  <% end %>
+  <% if current_page?(api_path) %>
+    <div id="maincontent">
     <%= yield %>
-  </main>
+    </div>
+  <% else %>
+    <main id="maincontent">
+    <%= yield %>
+    </main>
+  <% end %>
   <%= render partial: "shared/footer" %>
   <script type="text/javascript" src="<%= asset_path 'interactions.js'%>"></script>
+  <%= render partial: "stash_engine/shared/dialog_confirm" %>
   <%= render partial: "stash_engine/shared/dialog_modal" %>
   <%= content_for :doc_end %>
 </body>

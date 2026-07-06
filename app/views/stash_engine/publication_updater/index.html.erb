@@ -1,6 +1,8 @@
 <% @page_title = "Publication updater" %>
+
+<%= render partial: 'stash_engine/shared/recuration_header', locals: {current: 'publication'} %>
 <div class="admin-dashboard-header">
-<h1 class="o-heading__level1" id="pubupdate-label">Publication updater</h1>
+<h2 id="pubupdate-label">Publication updater</h2>
 <a href="<%= publication_updater_log_path %>">Match history</a>
 </div>
 

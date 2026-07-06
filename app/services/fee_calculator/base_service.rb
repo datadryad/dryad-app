@@ -122,6 +122,7 @@ module FeeCalculator
 
     def add_invoice_fee
       return unless options[:generate_invoice]
+      return if resource&.identifier&.sponsored?
       return if @sum.zero?
 
       @sum += INVOICE_FEE

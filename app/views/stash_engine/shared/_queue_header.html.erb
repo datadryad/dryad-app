@@ -1,0 +1,9 @@
+<% if current_user.superuser? %>
+<nav aria-label="Queue navigation" class="section-nav">
+  <span>Submission queues:</span>
+  <ul class="c-header__nav-group">
+    <li class="c-second__nav-item"><a<% if current == 'submission' %> aria-current="page"<%end%> href="<%= submission_queue_path %>">Repository queue</a>
+    <li class="c-second__nav-item"><a<% if current == 'zenodo' %> aria-current="page"<%end%> href="<%= zenodo_queue_path %>">Zenodo queue</a>
+  </ul>
+</nav>
+<% end %>

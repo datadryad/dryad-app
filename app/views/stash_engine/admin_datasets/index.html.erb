@@ -42,7 +42,7 @@
   <h2>Activity log</h2>
   <div class="input-line" style="align-items: baseline;">
     <% if policy([:stash_engine, :admin_datasets]).note_popup? %>
-      <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'note'), method: :get, local: false) do %>
+      <%= form_with(url: ds_admin_popup_path(id: @identifier.id, field: 'note'), method: :get, local: false) do %>
         <button class="o-button__plain-text2" aria-haspopup="dialog">Add note</button>
       <% end %>
     <% end %>
@@ -71,13 +71,16 @@
     <div class="activity-log-header">
       <% aar_resource_id = aar_resource(@identifier) %>
       <% if aar_resource_id.present? %>
+        <%= form_with(url: report_history_path(id: @identifier.id), method: :get, local: false) do %>
+          <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="View report history" title="View report history"><i class="fas fa-clock-rotate-left" aria-hidden="true"></i></button>
+        <% end %>
         <%= form_with(url: require_action_path(id: aar_resource_id), method: :get, local: false) do %>
           <button id="aar_popup" class="o-button__plain-text1" aria-haspopup="dialog">AAR report</button>
         <% end %>
       <% else %>
         <em>AAR report unavailable</em>
       <% end %>
-      <a href="<%= stash_url_helpers.create_salesforce_case_path(id: @identifier&.id)%>" target="SFpopup" id="sf_popup" class="o-button__plain-text2" style="color: black">Create SF case</a>
+      <a href="<%= stash_url_helpers.create_salesforce_case_path(id: @identifier.id)%>" target="SFpopup" id="sf_popup" class="o-button__plain-text2" style="color: black">Create SF case</a>
     </div>
   </div>
   <% sf_links = salesforce_links(@identifier.identifier) %>

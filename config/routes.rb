@@ -295,6 +295,7 @@ Rails.application.routes.draw do
     match 'admin_dashboard/results', to: 'admin_dashboard#results', via: %i[get post], as: 'admin_dashboard_results'
     match 'admin_dashboard/count', to: 'admin_dashboard#count', via: %i[get post], as: 'admin_dashboard_count'
     match 'admin_dashboard/charts', to: 'admin_dashboard#charts', via: %i[get post], as: 'admin_dashboard_charts'
+    match 'admin_dashboard/deleted', to: 'admin_dashboard#deleted', via: %i[get post], as: 'deleted_data'
     get 'admin_dashboard/:id/edit/:field', to: 'admin_dashboard#edit', as: 'admin_dash_edit'
     post 'admin_dashboard/:id', to: 'admin_dashboard#update', as: 'admin_dash_update'
     get 'admin_search', to: 'admin_dashboard#new_search', as: 'new_admin_search'
@@ -307,6 +308,7 @@ Rails.application.routes.draw do
     get 'ds_admin/:id/file_log', to: 'admin_datasets#file_log', as: 'file_log'
     get 'ds_admin/:id/payment_log', to: 'admin_datasets#payment_log', as: 'payment_log'
     get 'ds_admin/:id/require_action', to: 'admin_datasets#require_action', as: 'require_action'
+    get 'ds_admin/:id/report_history', to: 'admin_datasets#report_history', as: 'report_history'
     get 'ds_admin/:id/create_salesforce_case', to: 'admin_datasets#create_salesforce_case', as: 'create_salesforce_case'
     get 'ds_admin/:id/edit/:field', to: 'admin_datasets#popup', as: 'ds_admin_popup'
     get 'ds_admin/:id/add_concern', to: 'admin_datasets#add_concern', as: 'add_concern'
@@ -326,7 +328,7 @@ Rails.application.routes.draw do
     get 'file_note/:resource_id', to: 'curation_activity#make_file_note'
 
     # routing for submission queue controller
-    get 'submission_queue', to: 'submission_queue#index'
+    get 'submission_queue', to: 'submission_queue#index', as: 'submission_queue'
     get 'submission_queue/refresh_table', to: 'submission_queue#refresh_table'
     get 'submission_queue/graceful_start', to: 'submission_queue#graceful_start', as: 'graceful_start'
 

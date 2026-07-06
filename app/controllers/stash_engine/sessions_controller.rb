@@ -122,6 +122,7 @@ module StashEngine
       return unless current_user.email&.end_with?(@tenant.authentication&.email_domain)
       return if current_user.email_token && !params.key?(:refresh)
 
+      params.delete(:refresh)
       current_user.create_email_token(tenant_id: @tenant.id)
       current_user.email_token.send_token
     end
@@ -168,6 +169,7 @@ module StashEngine
       return unless current_user&.email&.present?
       return if current_user.email_token && !params.key?(:refresh)
 
+      params.delete(:refresh)
       current_user.create_email_token
       current_user.email_token.send_token
     end

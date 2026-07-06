@@ -94,21 +94,44 @@
 	border: 2px solid $red;
 }
 
-#sandbox_banner {
-	@extend %pull-background;
-	margin-top: -10px;
-	margin-bottom: 15px;
-	background-color: $lightest-orange;
-	font-size: .98rem;
-	.modalClose {
-		margin-bottom: 0;
-		display: flex;
-		justify-content: space-between;
-		text-align: left;
-		button {
-			font-size: 22px;
-			line-height: 0;
-			height: 22px;
+.callout {
+  background-color: $lightest-blue;
+  padding-left: .75rem;
+  padding-right: .75rem;
+  border-radius: 2px;
+
+  & > *:first-child { padding-top: .75rem; }
+  & > *:last-child { padding-bottom: .75rem; }
+
+  kbd, samp, code {
+    background-color: white;
+  }
+
+  &.alt {
+    background-color: $lightest-green;
+  }
+  &.err {
+    background-color: $lightest-red;
+  }
+  &.warn {
+    background-color: $lightest-orange;
+  }
+
+  &.site_banner {
+		@extend %pull-background;
+		margin-top: -10px;
+		margin-bottom: 15px;
+		font-size: .98rem;
+		.modalClose {
+			margin-bottom: 0;
+			display: flex;
+			justify-content: space-between;
+			text-align: left;
+			button {
+				font-size: 22px;
+				line-height: 0;
+				height: 22px;
+			}
 		}
 	}
 }

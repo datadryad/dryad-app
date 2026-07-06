@@ -33,10 +33,22 @@
         <% end %>
       </p>
     </div>
-      <div>
+    <div>
       <div class="c-user-datasets-status">
         <span class="dataset-status <%= dashboard_class(dataset.sort_order) %>"><%= dataset.last_curation_activity&.readable_status %></span>
         <div class="c-user-datasets-actions">
+          <% if dataset.sort_order == 2 %>
+            <%= button_to stash_url_helpers.peer_review_release_path(id: dataset.id), method: :patch, name: 'release', data: { confirm: dataset.identifier.payment_type && dataset.identifier.payment_type.start_with?('journal') ? 'Please wait until your related manuscript has been accepted to proceed with curation. Has your related manuscript been accepted by the journal?' : 'Is this dataset ready for curation and publication?' }, form_class: 'o-button__inline-form', class: 'o-button__plain-text7', id: "d#{dataset.identifier.id}_release", 'aria-labelledby': "d#{dataset.identifier.id}_release d#{dataset.identifier.id}_title" do %>
+              <i class="fa fa-paper-plane" aria-hidden="true"></i>Release for curation
+            <% end %>
+          <% end %>
+          <% if policy(dataset).revise? %>
+            <% if ['queued', 'action_required', 'awaiting_payment'].include?(dataset.last_curation_activity&.status) || [2, 4, 5].include?(dataset.sort_order) %>
+              <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: dataset.id), method: :post, class: 'o-button__inline-form', id: "d#{dataset.identifier.id}_revise", 'aria-labelledby': "d#{dataset.identifier.id}_revise d#{dataset.identifier.id}_title") do %>
+                <button class="o-button__plain-text7 prevent-click" name="update"><i class="fas fa-pencil" aria-hidden="true"></i>Revise submission</button>
+              <% end %>
+            <% end %>
+          <% end %>
           <% if dataset.last_curation_activity&.status == 'in_progress' %>
             <% if dataset.current_editor_id.nil? || dataset.current_editor_id == current_user&.id %>
               <%= button_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: dataset.id), name: 'resume', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', id: "d#{dataset.identifier.id}_resume", 'aria-labelledby': "d#{dataset.identifier.id}_resume d#{dataset.identifier.id}_title", method: :post do %>
@@ -55,18 +67,12 @@
             <% elsif dataset.current_editor_id.present? %>
               <%= dataset.editor.name %> is editing
             <% end %>
-          <% end %>
-          <% if dataset.sort_order == 2 %>
-            <%= button_to stash_url_helpers.peer_review_release_path(id: dataset.id), method: :patch, name: 'release', data: { confirm: dataset.identifier.payment_type && dataset.identifier.payment_type.start_with?('journal') ? 'Please wait until your related manuscript has been accepted to proceed with curation. Has your related manuscript been accepted by the journal?' : 'Is this dataset ready for curation and publication?' }, form_class: 'o-button__inline-form', class: 'o-button__plain-text7', id: "d#{dataset.identifier.id}_release", 'aria-labelledby': "d#{dataset.identifier.id}_release d#{dataset.identifier.id}_title" do %>
-              <i class="fa fa-paper-plane" aria-hidden="true"></i>Release for curation
+          <% elsif dataset.identifier.pub_state == 'unpublished' %>
+            <% if policy(dataset).delete? %>        
+              <%= form_with(url: contact_helpdesk_form_path(id: dataset.identifier.id), method: :get, local: false, class: 'o-button__inline-form') do %>
+                <button class="o-button__plain-text7" id="d<%=dataset.identifier.id%>_delete" aria-labelledby="d<%=dataset.identifier.id%>_delete d<%=dataset.identifier.id%>_title"><i class="fas fa-trash-can" aria-hidden="true"></i>Withdraw</button>
+              <% end %>
             <% end %>
-          <% end %>
-          <% if policy(dataset).revise? %>
-          <% if ['queued', 'action_required', 'awaiting_payment'].include?(dataset.last_curation_activity&.status) || [2, 4, 5].include?(dataset.sort_order) %>
-            <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: dataset.id), method: :post, class: 'o-button__inline-form', id: "d#{dataset.identifier.id}_revise", 'aria-labelledby': "d#{dataset.identifier.id}_revise d#{dataset.identifier.id}_title") do %>
-              <button class="o-button__plain-text7 prevent-click" name="update"><i class="fas fa-pencil" aria-hidden="true"></i>Revise submission</button>
-            <% end %>
-          <% end %>
           <% end %>
           <% if dataset.sort_order == 4 && dataset.identifier.publication_article_doi.nil? %>
             <%= form_with(url: primary_article_path(resource_id: dataset.id), method: :get, local: false, class: 'o-button__inline-form', id: "#{dataset.id}_pub_form") do %>
