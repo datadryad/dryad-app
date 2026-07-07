@@ -91,7 +91,7 @@ function MilkdownCore({
         if (el && document.getElementById(el.getAttribute('aria-errormessage'))) {
           el.setAttribute('aria-invalid', true);
         }
-        onBlur();
+        if (typeof onBlur === 'function') onBlur();
       });
       const slistener = ctx.get(selectionCtx);
       slistener.selection((ctxx, selection, doc) => {

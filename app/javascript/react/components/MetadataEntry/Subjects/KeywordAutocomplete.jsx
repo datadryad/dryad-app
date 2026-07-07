@@ -31,7 +31,7 @@ export default function KeywordAutocomplete({
       }
       setPrevText(acText);
       setPrevID(acID);
-      onBlur();
+      if (typeof onBlur === 'function') onBlur();
       setAutoBlurred(false);
     }
   }, [autoBlurred]);
