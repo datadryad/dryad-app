@@ -70,7 +70,7 @@ class PaymentsController < ApplicationController
       )
       return unless identifier.old_system_valid_payer?
 
-      identifier.update(payment_type: 'stripe', payment_id: payment.payment_id)
+      identifier.update(payment_type: 'stripe', payment_id: payment.payment_id) if payment_type == 'stripe'
     rescue StandardError => e
       Rails.logger.warn("Could not fetch payment details for resource #{@resource.id}, error: #{e.message}")
     end
