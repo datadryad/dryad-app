@@ -69,8 +69,9 @@ class PaymentsController < ApplicationController
         payment_email: session[:customer_email] || session[:customer_details][:email]
       )
       return unless identifier.old_system_valid_payer?
+      return unless identifier.payment_type.to_s.in?('stripe', 'unknown', '')
 
-      identifier.update(payment_type: 'stripe', payment_id: payment.payment_id) if payment_type == 'stripe'
+      identifier.update(payment_type: 'stripe', payment_id: payment.payment_id)
     rescue StandardError => e
       Rails.logger.warn("Could not fetch payment details for resource #{@resource.id}, error: #{e.message}")
     end
