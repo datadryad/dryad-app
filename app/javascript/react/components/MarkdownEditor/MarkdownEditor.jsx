@@ -51,7 +51,7 @@ const joinListItems = (left, right, parent) => {
 /* eslint-enable consistent-return */
 
 function MilkdownCore({
-  onChange, attr, setActive, setLevel, htmlInput, micro,
+  onChange, attr, setActive, setLevel, htmlInput, micro, onBlur,
 }) {
   useEditor((root) => Editor
     .make()
@@ -91,6 +91,7 @@ function MilkdownCore({
         if (el && document.getElementById(el.getAttribute('aria-errormessage'))) {
           el.setAttribute('aria-invalid', true);
         }
+        onBlur();
       });
       const slistener = ctx.get(selectionCtx);
       slistener.selection((ctxx, selection, doc) => {
@@ -130,7 +131,7 @@ const defaultButtons = ['heading', 'strong', 'emphasis', 'superscript', 'subscri
   'list_menu', 'spacer', 'undo', 'redo'];
 
 function MilkdownEditor({
-  id, attr, initialValue, htmlInput, replaceValue, onChange, onReplace, micro, buttons = defaultButtons,
+  id, attr, initialValue, htmlInput, replaceValue, onChange, onReplace, onBlur, micro, buttons = defaultButtons,
 }) {
   const [loading, editor] = useInstance();
 
@@ -316,7 +317,13 @@ function MilkdownEditor({
             />
           </div>
         )}
-        <MilkdownCore onChange={setSaveVal} htmlInput={htmlInput} setActive={setActive} setLevel={setHeadingLevel} attr={attr} micro={micro} />
+        <MilkdownCore
+          onChange={setSaveVal}
+          setLevel={setHeadingLevel}
+          {...{
+            htmlInput, setActive, attr, micro, onBlur,
+          }}
+        />
         <CodeEditor
           attr={attr}
           content={initialCode}

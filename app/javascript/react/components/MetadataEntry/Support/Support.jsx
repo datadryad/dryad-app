@@ -2,7 +2,9 @@ import React from 'react';
 import FacilityForm from './FacilityForm';
 import Funders from './Funders';
 
-export default function Support({current, resource, setResource}) {
+export default function Support({
+  current, resource, setResource, error,
+}) {
   return (
     <>
       <FacilityForm resource={resource} setResource={setResource} />
@@ -11,6 +13,7 @@ export default function Support({current, resource, setResource}) {
         <p>Drag <i className="fa-solid fa-bars-staggered" role="img" aria-label="handle button" /> to reorder</p>
       </div>
       <Funders current={current} resource={resource} setResource={setResource} />
+      {error}
     </>
   );
 }

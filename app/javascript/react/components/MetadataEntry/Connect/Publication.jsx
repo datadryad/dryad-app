@@ -3,7 +3,9 @@ import axios from 'axios';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 import PublicationForm from './PublicationForm';
 
-export default function Publication({current, resource, setResource}) {
+export default function Publication({
+  current, resource, setResource, error,
+}) {
   const subType = resource.resource_type.resource_type;
   const [assoc, setAssoc] = useState(null);
   const [connections, setConnections] = useState([]);
@@ -139,6 +141,7 @@ export default function Publication({current, resource, setResource}) {
           </ul>
         </fieldset>
       )}
+      {error}
     </>
   );
 }

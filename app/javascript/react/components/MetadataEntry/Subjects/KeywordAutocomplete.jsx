@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Autocomplete from '../Autocomplete';
 
 export default function KeywordAutocomplete({
-  name, id, saveFunction, controlOptions,
+  name, id, saveFunction, controlOptions, onBlur,
 }) {
   // control options: htmlId, labelText, isRequired (t/f)
 
@@ -31,6 +31,7 @@ export default function KeywordAutocomplete({
       }
       setPrevText(acText);
       setPrevID(acID);
+      onBlur();
       setAutoBlurred(false);
     }
   }, [autoBlurred]);

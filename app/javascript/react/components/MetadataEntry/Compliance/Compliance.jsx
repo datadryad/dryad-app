@@ -4,7 +4,9 @@ import {debounce} from 'lodash';
 import {ExitIcon} from '../../ExitButton';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
-export default function Compliance({resource, setResource, current}) {
+export default function Compliance({
+  resource, setResource, current, error,
+}) {
   const [hsi, setHSI] = useState(null);
   const [desc, setDesc] = useState('');
   const [license, setLicense] = useState(resource.identifier.license_id);
@@ -178,6 +180,7 @@ export default function Compliance({resource, setResource, current}) {
           />
         </>
       )}
+      {error}
     </>
   );
 }

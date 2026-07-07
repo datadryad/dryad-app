@@ -48,14 +48,19 @@ function Submission({
       name: 'Connect',
       pass: publicationPass(resource),
       fail: (review || publicationPass(resource)) && publicationFail(resource, review),
-      component: <Publication current={step.name === 'Connect'} resource={resource} setResource={setResource} />,
+      component: <Publication
+        current={step.name === 'Connect'}
+        resource={resource}
+        setResource={setResource}
+        error={publicationFail(resource, review)}
+      />,
       help: <PublicationHelp type={resource.resource_type.resource_type} />,
       preview: <PubPreview resource={resource} previous={previous} curator={user.curator} />,
     }, {
       name: 'Title',
       pass: !titleFail(resource),
       fail: (review || step.index > 0) && titleFail(resource),
-      component: <TitleImport current={step.name === 'Title'} resource={resource} setResource={setResource} />,
+      component: <TitleImport current={step.name === 'Title'} resource={resource} setResource={setResource} error={titleFail(resource)} />,
       help: <TitleHelp />,
       preview: <TitlePreview resource={resource} previous={previous} />,
     },
@@ -63,7 +68,13 @@ function Submission({
       name: 'Authors',
       pass: resource.authors.length > 0 && !authorCheck(resource),
       fail: (review || step.index > 1) && authorCheck(resource),
-      component: <Authors current={step.name === 'Authors'} resource={resource} setResource={setResource} user={user} />,
+      component: <Authors
+        current={step.name === 'Authors'}
+        resource={resource}
+        setResource={setResource}
+        user={user}
+        error={authorCheck(resource)}
+      />,
       help: <AuthHelp />,
       preview: <AuthPreview resource={resource} previous={previous} curator={user.curator} />,
     },
@@ -76,6 +87,7 @@ function Submission({
         resource={resource}
         setResource={setResource}
         curator={user.curator}
+        error={abstractCheck(resource)}
       />,
       help: <DescHelp type={resource.resource_type.resource_type} />,
       preview: <DescPreview resource={resource} previous={previous} curator={user.curator} />,
@@ -84,15 +96,20 @@ function Submission({
       name: 'Subjects',
       pass: keywordPass(resource.subjects),
       fail: (review || step.index > 3) && keywordFail(resource),
-      component: <Subjects current={step.name === 'Subjects'} resource={resource} setResource={setResource} />,
+      component: <Subjects current={step.name === 'Subjects'} resource={resource} setResource={setResource} error={keywordFail(resource)} />,
       help: <SubjHelp />,
       preview: <SubjPreview resource={resource} previous={previous} />,
     },
     {
       name: 'Support',
       pass: !fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
-      fail: (review || step.index > 4) && fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
-      component: <Support current={step.name === 'Support'} resource={resource} setResource={setResource} />,
+      fail: (review || step.index > 4) && fundingCheck(resource.contributors),
+      component: <Support
+        current={step.name === 'Support'}
+        resource={resource}
+        setResource={setResource}
+        error={fundingCheck(resource.contributors)}
+      />,
       help: <SuppHelp type={resource.resource_type.resource_type} />,
       preview: <SuppPreview resource={resource} previous={previous} curator={user.curator} />,
     },
@@ -100,7 +117,7 @@ function Submission({
       name: 'Compliance',
       pass: !complianceCheck(resource),
       fail: (review || step.index > 5) && complianceCheck(resource),
-      component: <Compliance current={step.name === 'Compliance'} resource={resource} setResource={setResource} />,
+      component: <Compliance current={step.name === 'Compliance'} resource={resource} setResource={setResource} error={complianceCheck(resource)} />,
       help: <CompHelp />,
       preview: <CompPreview resource={resource} previous={previous} />,
     },
@@ -114,6 +131,7 @@ function Submission({
             resource, setResource, previous, s3_dir_name, config_s3, config_maximums, pubDates,
           }}
           current={step.name === 'Files'}
+          error={filesCheck(resource, pubDates, user.superuser, config_maximums)}
         />
       ),
       help: <FilesHelp date={resource.identifier.publication_date} maxFiles={config_maximums.files} />,
@@ -125,7 +143,7 @@ function Submission({
       name: 'README',
       pass: resource.descriptions.find((d) => d.description_type === 'technicalinfo')?.description,
       fail: (review || step.index > 7) && readmeCheck(resource),
-      component: <ReadMeWizard resource={resource} setResource={setResource} current={step.name === 'README'} />,
+      component: <ReadMeWizard resource={resource} setResource={setResource} current={step.name === 'README'} error={readmeCheck(resource)} />,
       help: <ReadMeHelp />,
       preview: <ReadMePreview resource={resource} previous={previous} curator={user.curator} />,
     },
@@ -133,7 +151,12 @@ function Submission({
       name: 'Related works',
       pass: resource.related_identifiers.some((ri) => !!ri.related_identifier && ri.work_type !== 'primary_article') || resource.accepted_agreement,
       fail: worksCheck(resource, (review || step.index > 8)),
-      component: <RelatedWorks current={step.name === 'Related works'} resource={resource} setResource={setResource} />,
+      component: <RelatedWorks
+        current={step.name === 'Related works'}
+        resource={resource}
+        setResource={setResource}
+        error={worksCheck(resource)}
+      />,
       help: <WorksHelp setTitleStep={() => setStep(steps().find((l) => l.name === 'Title'))} />,
       preview: <WorksPreview resource={resource} previous={previous} curator={user.curator} />,
     },
@@ -404,7 +427,6 @@ function Submission({
                   {steps().map((s, i) => (
                     <div hidden={step.name !== s.name || null} key={s.name} ref={(el) => { subRef.current[i] = el; }}>
                       {s.component}
-                      {steps().find((si) => si.name === s.name).fail}
                     </div>
                   ))}
                 </div>
@@ -452,9 +474,6 @@ function Submission({
               {steps().map((s, i) => (
                 <div hidden={step.name !== s.name || null} key={s.name} ref={(el) => { subRef.current[i] = el; }}>
                   {s.component}
-                  {s.name !== 'README' && (
-                    steps().find((si) => si.name === s.name).fail
-                  )}
                 </div>
               ))}
             </div>

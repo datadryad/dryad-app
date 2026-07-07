@@ -69,8 +69,9 @@ const changeStatusToProgressBar = (chosenFileId) => {
 };
 
 export default function UploadFiles({
-  resource, setResource, previous, config_maximums, config_s3, s3_dir_name, current, pubDates,
+  resource, setResource, previous, config_maximums, config_s3, s3_dir_name, current, pubDates, error,
 }) {
+  const [touched, setTouched] = useState(false);
   const [initialLoad, setInitialLoad] = useState(false);
   const [chosenFiles, setChosenFiles] = useState([]);
   const [validating, setValidating] = useState([]);
@@ -130,6 +131,7 @@ export default function UploadFiles({
   }, [changes]);
 
   useEffect(() => {
+    if (chosenFiles.length) setTouched(true);
     if (chosenFiles.some((f) => f.uploadType !== 'data')) setZenodo(true);
     chosenFiles.forEach((f) => {
       if (f.status === 'Uploaded' && f.tabularCheckStatus === TabularCheckStatus.checking) setValidating((v) => [...v, f]);
@@ -216,7 +218,7 @@ export default function UploadFiles({
         const transformed = transformData(response.data);
         const files = setTabularCheckStatus(transformed);
         updateAlreadyChosenById(files);
-      }).catch((error) => console.log(error));
+      }).catch((err) => console.log(err));
     }
   }, [pollingCount]);
 
@@ -344,7 +346,7 @@ export default function UploadFiles({
                 return c;
               }));
               displayAriaMsg(`${new_file.original_filename} finished uploading`);
-            }).catch((error) => console.log(error));
+            }).catch((err) => console.log(err));
           },
         };
         // Before start uploading, change file status cell to a progress bar
@@ -439,7 +441,7 @@ export default function UploadFiles({
         .then(() => {
           setChosenFiles((cf) => cf.filter((f) => f.id !== id));
         })
-        .catch((error) => console.log(error));
+        .catch((err) => console.log(err));
     } else {
       setChosenFiles((cf) => cf.filter((f) => f.id !== id));
     }
@@ -453,9 +455,9 @@ export default function UploadFiles({
     if (file.status !== 'Pending') {
       axios.patch(`/${file.uploadType}_files/${id}/rename`, {resource_id: resource.id, newfilename})
         .then((data) => {
-          const {error, file: renamed, descriptions} = data.data;
-          if (error) {
-            setWarning([error]);
+          const {error: err, file: renamed, descriptions} = data.data;
+          if (err) {
+            setWarning([err]);
           } else {
             if (descriptions) setResource((r) => ({...r, descriptions}));
             const transformed = transformData([renamed]);
@@ -514,7 +516,7 @@ export default function UploadFiles({
           updateManifestFiles(response.data);
           setLoading(false);
         })
-        .catch((error) => console.log(error));
+        .catch((err) => console.log(err));
     }
   };
 
@@ -620,7 +622,7 @@ export default function UploadFiles({
         <div>
           {loading ? (
             <p><i className="fas fa-spin fa-spinner" role="img" aria-label="Loading" /></p>
-          ) : <div className="callout"><p>No files have been selected.</p></div> }
+          ) : <div className="callout warn" role="alert"><p>No files have been selected.</p></div> }
         </div>
       )}
       {pubChanges && (
@@ -649,6 +651,7 @@ export default function UploadFiles({
           Wait for file uploads to complete before leaving this page
         </p>
       </div>
+      {touched && error}
     </div>
   );
 }
