@@ -115,7 +115,7 @@ export default function File({
           <div className="input-line" style={{alignItems: 'center', gap: 0, flexWrap: 'nowrap'}}>
             <textarea
               className="c-input__text filename-input"
-              aria-label={`Rename file ${file.sanitized_name}`}
+              aria-label={`Rename ${file.sanitized_name}`}
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
             />
@@ -145,7 +145,7 @@ export default function File({
           ><i className="fas fa-times" aria-hidden="true" />
           </button>
         </form>
-        {rename && <p className="error-text" id={`fname_${file.id}-error`} />}
+        <div role="alert">{rename && <p className="error-text" id={`fname_${file.id}-error`} />}</div>
         <span className="input-line" hidden={rename}>
           <span className="filename" tabIndex="-1">{file.sanitized_name}</span>
           {file.uploaded && (

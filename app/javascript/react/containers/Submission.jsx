@@ -370,7 +370,7 @@ function Submission({
             ) : <ExitButton resource={resource} />}
           </div>
         </div>
-        <nav aria-label="Submission editing" hidden={payment || null}>
+        <nav aria-label="Submission editing" hidden={step.name !== 'Create a submission' || payment || null}>
           <Checklist steps={steps} step={{}} setStep={setStep} open />
         </nav>
         {step.name === 'Create a submission' && (
