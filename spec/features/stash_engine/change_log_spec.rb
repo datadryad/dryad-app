@@ -77,7 +77,7 @@ RSpec.feature 'ChangeLog', type: :feature, js: true do
         click_button 'Files'
         add_required_data_files
         click_button 'Rename file valid.csv'
-        fill_in 'Rename file valid.csv', with: 'super-valid'
+        fill_in 'Rename valid.csv', with: 'super-valid'
         click_button 'Save new name for valid.csv'
         expect(page).to have_text('All progress saved')
         expect(page).to have_text('super-valid.csv')

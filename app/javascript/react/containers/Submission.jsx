@@ -243,7 +243,7 @@ function Submission({
     if (et) {
       const ind = et.dataset.index;
       const inv = ind
-        ? el.querySelectorAll(`*[aria-errormessage="${et.id}"]`)[ind]
+        ? el.querySelectorAll(`*[aria-errormessage*="${et.id}"]`)[ind]
         : el.querySelector(`*[aria-errormessage*="${et.id}"]`);
       if (inv) inv.setAttribute('aria-invalid', true);
     }
