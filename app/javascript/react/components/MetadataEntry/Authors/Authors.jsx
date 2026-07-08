@@ -148,7 +148,7 @@ export default function Authors({
           + Add group author
         </button>
       </div>
-      {error}
+      <div role="alert">{error}</div>
       {authors.length === 1 && (
         <div className="callout warn">
           <p>

@@ -125,7 +125,7 @@ export default function TitleImport({
       </p>
       <Title resource={resource} setResource={setResource} onBlur={() => setTouched(true)} />
 
-      {touched && error}
+      <div role="alert">{touched && error}</div>
 
       {caseWarning && (
         <div className="callout warn">

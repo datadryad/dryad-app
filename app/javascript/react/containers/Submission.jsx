@@ -374,7 +374,7 @@ function Submission({
           <>
             <div id="submission-preview" ref={previewRef} className={`${user.curator ? 'track-changes' : ''} ${payment ? 'screen-reader-only' : ''}`}>
               {steps().map((s) => (
-                <section key={s.name} aria-label={s.name}>
+                <section key={s.name} aria-label={s.name} aria-live="polite">
                   {s.preview}
                   {s.fail}
                 </section>

@@ -191,7 +191,7 @@ function ReadMe({
           onChange={checkDescription}
           onReplace={saveDescription}
         />
-        {error}
+        <div role="alert">{error}</div>
         <dialog
           id="restart-wizard-dialog"
           className="modalDialog"

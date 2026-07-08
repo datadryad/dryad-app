@@ -123,7 +123,7 @@ function RelatedWorks({
           + Add work
         </button>
       </div>
-      {error}
+      <div role="alert">{error}</div>
     </>
   );
 }

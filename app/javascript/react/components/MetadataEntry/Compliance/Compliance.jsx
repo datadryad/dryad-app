@@ -180,7 +180,7 @@ export default function Compliance({
           />
         </>
       )}
-      {error}
+      <div role="alert">{error}</div>
     </>
   );
 }

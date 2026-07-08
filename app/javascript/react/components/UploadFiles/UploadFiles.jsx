@@ -651,7 +651,7 @@ export default function UploadFiles({
           Wait for file uploads to complete before leaving this page
         </p>
       </div>
-      {touched && error}
+      <div role="alert">{touched && error}</div>
     </div>
   );
 }

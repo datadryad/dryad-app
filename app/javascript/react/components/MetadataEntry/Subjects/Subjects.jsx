@@ -10,7 +10,7 @@ export default function Subjects({
     <>
       <ResearchDomain current={current} resource={resource} setResource={setResource} onBlur={() => setTouched(true)} />
       <Keywords resource={resource} setResource={setResource} onBlur={() => setTouched(true)} />
-      {touched && error}
+      <div role="alert">{touched && error}</div>
     </>
   );
 }

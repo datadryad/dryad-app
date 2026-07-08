@@ -13,7 +13,7 @@ export default function Support({
         <p>Drag <i className="fa-solid fa-bars-staggered" role="img" aria-label="handle button" /> to reorder</p>
       </div>
       <Funders current={current} resource={resource} setResource={setResource} />
-      {error}
+      <div role="alert">{error}</div>
     </>
   );
 }

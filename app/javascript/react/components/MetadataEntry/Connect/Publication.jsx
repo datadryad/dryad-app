@@ -141,7 +141,7 @@ export default function Publication({
           </ul>
         </fieldset>
       )}
-      {error}
+      <div role="alert">{error}</div>
     </>
   );
 }
