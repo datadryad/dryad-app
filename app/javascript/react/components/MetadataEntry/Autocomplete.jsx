@@ -26,7 +26,7 @@ export default function Autocomplete(
   {
     acText, setAcText, acID, setAcID, setAutoBlurred, supplyLookupList, nameFunc, idFunc,
     controlOptions: {
-      htmlId, labelText, desBy, isRequired, errorId, saveOnEnter,
+      htmlId, labelText, desBy, isRequired, errorId, saveOnEnter, autoComplete,
     },
   },
 ) {
@@ -54,7 +54,7 @@ export default function Autocomplete(
     const {children} = document.getElementById(e.currentTarget.getAttribute('aria-controls'));
     const match = children.namedItem(acText);
     if (match) {
-      setAcID(match.id);
+      setAcID(match.dataset.value);
       clearErrors();
       setAutoBlurred(true);
     } else if (isRequired) {
@@ -77,7 +77,6 @@ export default function Autocomplete(
     getLabelProps,
     getMenuProps,
     getInputProps,
-    getComboboxProps,
     highlightedIndex,
     getItemProps,
   } = useCombobox({
@@ -94,7 +93,7 @@ export default function Autocomplete(
 
   return (
     <>
-      { labelText
+      {labelText
         ? (
           <label
             {...getLabelProps()}
@@ -104,19 +103,13 @@ export default function Autocomplete(
           >
             {labelText}
           </label>
-        ) : '' }
-      <div
-        {...getComboboxProps()}
-        aria-controls={`menu_${htmlId}`}
-        className="searchselect"
-        aria-errormessage={errorId || null}
-        aria-label={`${labelText ? `${labelText} s` : 'S'}earch + select`}
-        aria-describedby={desBy || null}
-      >
+        ) : ''}
+      <div className="searchselect" style={{minWidth: '180px'}}>
         <input
           className="c-input__select"
           {...getInputProps(
             {
+              autoComplete,
               onFocus: (e) => {
                 const {value} = e.target;
                 if (value?.length >= 3) {
@@ -168,7 +161,8 @@ export default function Autocomplete(
           aria-controls={`menu_${htmlId}`}
           aria-labelledby={`label_${htmlId}`}
           aria-invalid={showError && !textEnter ? 'true' : null}
-          aria-errormessage={`error_${htmlId}`}
+          aria-describedby={desBy || null}
+          aria-errormessage={`error_${htmlId} ${errorId}`}
           placeholder="Find as you type..."
         />
         <span className="screen-reader-only" id={`label_${htmlId}_list`}>{`${labelText ? `${labelText} a` : 'A'}utocomplete list`}</span>
@@ -178,6 +172,7 @@ export default function Autocomplete(
           aria-labelledby={`label_${htmlId}_list`}
           tabIndex={-1}
           hidden={!isOpen}
+          aria-busy={!inputItems.length}
         >
           {!inputItems.length && <li><i className="fas fa-circle-notch fa-spin" aria-hidden="true" /></li>}
           {inputItems.map((item, index) => {
@@ -187,10 +182,11 @@ export default function Autocomplete(
             return (
               <li
                 key={id}
+                data-value={id}
                 name={name}
                 className={`${highlightedIndex === index ? 'focussed' : ''} ${id === acID ? 'selected-option' : ''}`}
                 {...getItemProps({
-                  item, index, id, 'aria-selected': id === acID, onMouseDown: () => { completionClick.current = true; },
+                  item, index, 'aria-selected': id === acID, onMouseDown: () => { completionClick.current = true; },
                 })}
               >
                 {item.display ? <Display key={name} /> : name}
