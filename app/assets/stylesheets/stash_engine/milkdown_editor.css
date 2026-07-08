@@ -342,10 +342,9 @@
   background-color: rgb(233, 236, 239);
 }
 
-@container (width < 605px) and (width > 344px) {
-  .markdown_editor .md_editor-buttons .imageMenu,
-  .markdown_editor .md_editor-buttons .linkMenu {
-    left: auto; right: 0;
+@container (width < 766px) and (width > 556px){
+  .markdown_editor .md_editor-buttons .tableMenu > div{
+    margin-left: 170px;
   }
 }
 
@@ -355,20 +354,22 @@
   }
 }
 
-@container (width < 766px) and (width > 556px){
-  .markdown_editor .md_editor-buttons .tableMenu > div{
-    margin-left: 170px;
-  }
-}
 @container (width < 556px) {
   .markdown_editor .md_editor-buttons .tableMenu {
     justify-content: flex-end;
   }
 }
+
 @container (width < 455px) {
   .markdown_editor .md_editor-buttons .tableMenu {
     justify-content: flex-start;
     top: 5.1rem;
+  }
+}
+
+@container (width < 338px) and (width > 295.5px)  {
+  .markdown_editor .md_editor-buttons .listMenu {
+    left: auto; right: 0;
   }
 }
 
@@ -434,7 +435,7 @@
   width: 135px;
   max-height: none;
   overflow: visible;
-  font-size: .98rem;
+  font-size: .95rem;
 }
 
 .markdown_editor .md_editor-buttons .tableOptMenu ul {
@@ -497,22 +498,18 @@
   margin-left: auto;
 }
 
-@container (width < 760px) and (width > 505px) {
+@container ((width < 760px) and (width > 505px)) or ((width < 384px) and (width > 258px)){
   .markdown_editor .md_editor-buttons .tableOptMenu {
     left: auto; right: -3px;
   }
-  .markdown_editor .md_editor-buttons .tableOptMenu li button {
-    flex-direction: row-reverse;
-  }
-  .markdown_editor .md_editor-buttons .tableOptMenu i[class*='chevron'] {
-    margin-left: 0;
-    margin-right: auto;
-  }
-  .markdown_editor .md_editor-buttons .tableOptMenu i[class*='chevron']:before {
-    content: '\f053';
+}
+@container ((width < 760px) and (width > 505px)) or (width < 384px) {
+  .markdown_editor .md_editor-buttons .tableOptMenu {
+    font-size: .85rem;
   }
   .markdown_editor .md_editor-buttons .tableOptMenu ul {
-    left: auto; right: 137px;
+    top: 100%; left: auto; right: -15px;
+    width: 135px;
   }
 }
 
@@ -598,6 +595,35 @@
 .markdown_editor .md_editor-buttons .linkMenu .buttons button:focus {
   background-color: #0071a8;
   color: #fff;
+}
+
+@container (width < 708px) and (width > 412px) {
+  .markdown_editor .md_editor-buttons .imageMenu,
+  .markdown_editor .md_editor-buttons .linkMenu {
+    left: auto; right: 0;
+  }
+}
+
+@container (width < 365px) {
+  .markdown_editor .md_editor-buttons .imageSelect,
+  .markdown_editor .md_editor-buttons .linkSelect {
+    position: static;
+  }
+  .markdown_editor .md_editor-buttons .imageMenu,
+  .markdown_editor .md_editor-buttons .linkMenu {
+    height: auto;
+    left: 0; right: 0; top: 80px;
+  }
+  .markdown_editor .md_editor-buttons .linkMenu label {
+    flex-wrap: wrap;
+  }
+}
+
+@container (width < 224px) {
+  .markdown_editor .md_editor-buttons .imageMenu,
+  .markdown_editor .md_editor-buttons .linkMenu {
+    top: 100px;
+  }
 }
 
 .markdown_editor .milkdown {

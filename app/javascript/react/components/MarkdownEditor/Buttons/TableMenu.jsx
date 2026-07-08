@@ -93,7 +93,7 @@ export default function TableMenu({active, editor, editorId}) {
     document.querySelectorAll('.tableSubMenu').forEach((b) => subMenuExit(b));
     const menu = document.getElementById(e.target.getAttribute('aria-controls'));
     e.target.setAttribute('aria-expanded', true);
-    menu.removeAttribute('hidden');
+    if (menu) menu.removeAttribute('hidden');
   };
 
   const leaveMenu = (e) => {
