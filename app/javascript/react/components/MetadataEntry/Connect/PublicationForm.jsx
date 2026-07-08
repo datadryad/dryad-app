@@ -1,6 +1,9 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {
+  useEffect, useState, useRef, useCallback,
+} from 'react';
 import axios from 'axios';
-import {Field, Form, Formik} from 'formik';
+import {debounce} from 'lodash';
+import {Field, Formik} from 'formik';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 import Journal from './Journal';
 
@@ -56,6 +59,10 @@ function PublicationForm({
       }
     });
   };
+
+  const checkSubmit = useCallback(debounce(() => {
+    if (formRef.current) formRef.current.handleSubmit();
+  }, 600), []);
 
   useEffect(() => {
     if (jTitle !== undefined) {
@@ -145,14 +152,14 @@ function PublicationForm({
         }}
       >
         {(formik) => (
-          <Form style={{margin: '1em auto'}}>
+          <fieldset style={{margin: '1em auto', padding: '.75rem 0'}}>
             {importType === 'manuscript' ? (
               <>
                 <p style={{fontSize: '.98rem', marginTop: 0}}>
                 Are you currently submitting your manuscript?
                 Enter <code>NA</code> if you do not have a Manuscript number. This can be updated once a number is assigned by the journal.
                 </p>
-                <div className="input-line">
+                <div className="input-line" style={{flexWrap: 'wrap'}}>
                   {journalInput('ms')}
                   <div className="input-stack" style={{flex: 1}}>
                     <label className="input-label" htmlFor="msid">
@@ -174,16 +181,20 @@ function PublicationForm({
                 </div>
               </>
             ) : (
-              <div className="input-line">
+              <div className="input-line" style={{flexWrap: 'wrap'}}>
                 <div className="input-stack" style={{flex: 2}}>
-                  <label className="input-label required" htmlFor="primary_article_doi">
+                  <label className="input-label required" htmlFor={`primary_article_doi${importType}`}>
                     {mapping[importType]} DOI
                   </label>
                   <Field
                     className="c-input__text"
                     type="text"
                     name="primary_article_doi"
-                    id="primary_article_doi"
+                    id={`primary_article_doi${importType}`}
+                    onChange={(e) => {
+                      formik.handleChange(e);
+                      checkSubmit();
+                    }}
                     onBlur={() => formik.handleSubmit()}
                     aria-describedby="doi-ex"
                     aria-errormessage={`${importType}_doi_error`}
@@ -194,7 +205,7 @@ function PublicationForm({
                 {primary && !primary.verified && journalInput(importType)}
               </div>
             )}
-          </Form>
+          </fieldset>
         )}
       </Formik>
     </div>

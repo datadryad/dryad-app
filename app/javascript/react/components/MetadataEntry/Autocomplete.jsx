@@ -160,7 +160,6 @@ export default function Autocomplete(
           value={acText || ''}
           aria-controls={`menu_${htmlId}`}
           aria-labelledby={`label_${htmlId}`}
-          aria-invalid={showError && !textEnter ? 'true' : null}
           aria-describedby={desBy || null}
           aria-errormessage={`error_${htmlId} ${errorId}`}
           placeholder="Find as you type..."
@@ -197,11 +196,13 @@ export default function Autocomplete(
       </div>
       {showError && (
         <>
-          {!textEnter && (
-            <span className="c-ac__error_message" id={`error_${htmlId}`}>
-              Search and select from the dropdown list, or check the box below
-            </span>
-          )}
+          <span className="c-ac__error_message" role="alert">
+            {!textEnter && (
+              <span className="error-text" id={`error_${htmlId}`} role="alert">
+                Search and select from the dropdown list, or check the box below
+              </span>
+            )}
+          </span>
           <label className="c-input__label c-ac__checkbox">
             <input type="checkbox" className="use-text-entered" checked={textEnter} onChange={saveText} />
             {` I cannot find my ${labelText?.toLowerCase() || 'item'}, "${acText}", in the list`}

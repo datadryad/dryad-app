@@ -30,7 +30,7 @@ export default function SubmissionForm({
   };
 
   return (
-    <div id="submission-submit" role="status" className={payment ? 'screen-reader-only' : null}>
+    <div id="submission-submit" role="status" hidden={payment || null}>
       <div>
         {steps().some((s) => s.fail) && (
           <p>Edit sections and fix the errors above in order to complete your submission</p>
