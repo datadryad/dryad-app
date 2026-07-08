@@ -457,7 +457,9 @@ export default function UploadFiles({
         .then((data) => {
           const {error: err, file: renamed, descriptions} = data.data;
           if (err) {
-            setWarning([err]);
+            const input = document.getElementById(`fname_${file.id}`).querySelector('.filename-input');
+            document.getElementById(`fname_${file.id}-error`).innerText = err;
+            input.setAttribute('aria-errormessage', `fname_${file.id}-error`);
           } else {
             if (descriptions) setResource((r) => ({...r, descriptions}));
             const transformed = transformData([renamed]);
@@ -465,7 +467,6 @@ export default function UploadFiles({
           }
         });
     }
-    // displayAriaMsg(`${}`);
   };
 
   const hideModal = (event) => {
