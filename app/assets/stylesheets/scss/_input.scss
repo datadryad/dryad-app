@@ -10,7 +10,7 @@ input {
 	&[disabled], &:disabled, &[readonly] {
 		background-color: $lightest-gray;
 	}
-	&[readonly], &:read-only {
+	&[readonly] {
 		pointer-events: none;
 	}
 }
@@ -150,7 +150,7 @@ label.optional:after {
 	&[disabled], &:disabled, &[readonly] {
 		background-color: $lightest-gray;
 	}
-	&[readonly], &:read-only {
+	&[readonly] {
 		pointer-events: none;
 	}
 }
