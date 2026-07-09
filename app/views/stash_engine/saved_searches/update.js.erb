@@ -1,4 +1,4 @@
-document.getElementById('public_searches_list').innerHTML = "<% current_user.public_searches.each_with_index do |s,i| %><%= escape_javascript(render partial: 'saved_search', locals: { saved_search: s, index: i })%><% end %>"
+document.getElementById('<%= @type %>_list').innerHTML = "<% current_user.send(@type.to_sym).each_with_index do |s,i| %><%= escape_javascript(render partial: 'saved_search', locals: { saved_search: s, index: i + 1 })%><% end %>"
 document.getElementById('sub-status').innerHTML = ""
 if (<%= (@saved_search.present? && @subscription).to_json %>) {
   document.getElementById('subscribe<%= @saved_search&.id %>').querySelector('button').focus();
@@ -7,6 +7,6 @@ if (<%= (@saved_search.present? && @subscription).to_json %>) {
   document.getElementById('saved_search<%= @saved_search&.id %>').querySelector('a').focus();
   document.getElementById('sub-status').innerHTML = "<p>Update successful</p>"
 } else {
-  document.getElementById('public_searches_list').focus();
+  document.getElementById('<%= @type %>_list').focus();
   document.getElementById('sub-status').innerHTML = "<p>Deletion successful</p>"
 }

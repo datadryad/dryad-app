@@ -32,12 +32,14 @@ module StashEngine
     def update
       @saved_search = authorize StashEngine::SavedSearch.find_by(id: params[:id])
       @saved_search.update(update_params)
+      @type = @saved_search.is_a?(StashEngine::AdminSearch) ? 'admin_searches' : 'public_searches'
       @subscription = update_params.key?(:emailed_at)
       respond_to(&:js)
     end
 
     def destroy
       existing = authorize StashEngine::SavedSearch.find_by(id: params[:id])
+      @type = existing.is_a?(StashEngine::AdminSearch) ? 'admin_searches' : 'public_searches'
       existing.destroy!
       respond_to { |format| format.js { render template: 'stash_engine/saved_searches/update' } }
     end

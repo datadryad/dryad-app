@@ -194,8 +194,8 @@ RSpec.feature 'AdminSearch', type: :feature do
         within('#admin_searches_list') do
           expect(page).to have_text('First saved search')
         end
-        expect(page).to have_button('Delete saved search: First saved search')
-        click_button 'Delete saved search: First saved search'
+        expect(page).to have_button('Delete saved search: (1) First saved search')
+        click_button 'Delete saved search: (1) First saved search'
         expect(page).to have_no_css('#admin_searches_list li')
       end
     end
