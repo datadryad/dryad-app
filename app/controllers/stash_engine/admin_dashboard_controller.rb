@@ -425,7 +425,7 @@ module StashEngine
       return publishing_error if @resource.id != @identifier.last_submitted_resource&.id &&
         %w[embargoed published].include?(params.dig(:stash_engine_resource, :curation_activity, :status))
 
-      return state_error unless CurationActivity.allowed_states(@last_state, current_user).include?(@status)
+      return state_error unless CurationActivity.allowed_states(@last_state, @resource.identifier.pub_state, current_user).include?(@status)
 
       if @status == 'queued' && @last_state == 'peer_review'
         release_resource(@resource)

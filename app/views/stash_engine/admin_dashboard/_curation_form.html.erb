@@ -6,7 +6,7 @@
     <p>Edit curation status of <b><%= @resource.title&.html_safe || '[No title provided]' %></b></p>
     <%= hidden_field_tag :identifier_id, @resource.identifier_id %>
     <%# Users cannot change the status if the files have not been submitted %>
-    <% if policy(@resource).change_status? && filter_status_select(@resource.current_curation_status) %>
+    <% if policy(@resource).change_status? && filter_status_select(@resource.current_curation_status, @identifier.pub_state) %>
       <%= form.fields_for :curation_activity, @curation_activity do |ca| %>
         <div class="c-input">
           <%= ca.label :status, 'Status', class: 'input-label' %>
