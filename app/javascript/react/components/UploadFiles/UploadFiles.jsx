@@ -37,10 +37,10 @@ const AllowedUploadFileTypes = {
   supp: 'supp',
 };
 
-export const displayAriaMsg = (msg) => {
+export const displayAriaMsg = (msg, clear) => {
   const el = document.getElementById('aria-info');
+  if (clear) el.innerHTML = '';
   const content = document.createTextNode(msg);
-  el.innerHTML = '';
   el.appendChild(content);
 };
 
@@ -345,7 +345,10 @@ export default function UploadFiles({
                 }
                 return c;
               }));
-              displayAriaMsg(`${new_file.original_filename} finished uploading`);
+              displayAriaMsg(` ${new_file.original_filename} finished uploading.`);
+              if (new_file.download_filename !== new_file.original_filename) {
+                displayAriaMsg(` File name was changed to ${new_file.download_filename}.`);
+              }
             }).catch((err) => console.log(err));
           },
         };
@@ -365,7 +368,6 @@ export default function UploadFiles({
 
   const addFilesHandler = (event, uploadType) => {
     const timestamp = Date.now();
-    displayAriaMsg('Your files are being checked');
     setWarning([]);
     const files = discardFiles([...event.target.files], uploadType);
     const fileCount = chosenFiles.filter((f) => f.uploadType === uploadType).length + files.length;
@@ -375,7 +377,7 @@ export default function UploadFiles({
     if (fileCount > maxFiles) {
       setWarning([...warning, Messages.tooManyFiles]);
     } else {
-      displayAriaMsg('Your files were added and are being uploaded.');
+      displayAriaMsg('Your files were added and are being uploaded. File names may be changed to replace special and protected characters.');
       // TODO: make a function?; future: unify adding file attributes
       const newFiles = files.map((file, index) => {
         file.id = `pending${timestamp + index / 1000}`;
@@ -445,7 +447,7 @@ export default function UploadFiles({
     } else {
       setChosenFiles((cf) => cf.filter((f) => f.id !== id));
     }
-    displayAriaMsg(`${file.sanitized_name} removed`);
+    displayAriaMsg(`${file.sanitized_name} removed`, true);
   };
 
   const renameFileHandler = (id, newname) => {
@@ -464,6 +466,7 @@ export default function UploadFiles({
             if (descriptions) setResource((r) => ({...r, descriptions}));
             const transformed = transformData([renamed]);
             setChosenFiles((cf) => cf.map((f) => (f.id === id ? transformed[0] : f)));
+            if (newname !== newfilename) displayAriaMsg(`Special characters automatically replaced; file name changed to ${newfilename}`, true);
           }
         });
     }
