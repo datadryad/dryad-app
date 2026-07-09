@@ -377,7 +377,7 @@ export default function UploadFiles({
     if (fileCount > maxFiles) {
       setWarning([...warning, Messages.tooManyFiles]);
     } else {
-      displayAriaMsg('Your files were added and are being uploaded. File names may be changed to replace special and protected characters.');
+      displayAriaMsg('Your files were added and are being uploaded. File names may be changed to replace special and protected characters.', true);
       // TODO: make a function?; future: unify adding file attributes
       const newFiles = files.map((file, index) => {
         file.id = `pending${timestamp + index / 1000}`;
