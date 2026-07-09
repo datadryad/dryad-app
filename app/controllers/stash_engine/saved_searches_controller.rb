@@ -32,13 +32,14 @@ module StashEngine
     def update
       @saved_search = authorize StashEngine::SavedSearch.find_by(id: params[:id])
       @saved_search.update(update_params)
-      respond_to { |format| format.js { render inline: 'location.reload();' } }
+      @subscription = update_params.key?(:emailed_at)
+      respond_to(&:js)
     end
 
     def destroy
       existing = authorize StashEngine::SavedSearch.find_by(id: params[:id])
       existing.destroy!
-      respond_to { |format| format.js { render inline: 'location.reload();' } }
+      respond_to { |format| format.js { render template: 'stash_engine/saved_searches/update' } }
     end
 
     private
