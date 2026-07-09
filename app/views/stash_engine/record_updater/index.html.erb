@@ -60,7 +60,7 @@
 
   <script type="text/javascript">
     $('.c-lined-table').on('click', 'button[name="accept_changes"], button[name="reject_changes"]', function(){
-      $('#genericModalContent').html('<h1>Please wait . . .</h1>');
+      $('#genericModalContent').html('<h1 id="dialog-title">Please wait . . .</h1>');
       $('#genericModalDialog')[0].showModal();
     });
 

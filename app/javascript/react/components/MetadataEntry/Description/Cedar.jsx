@@ -221,7 +221,7 @@ export default function Cedar({resource, setResource, templates}) {
             )
         )}
       </div>
-      <dialog className="modalDialog" id="cedarDialog" aria-modal="true" ref={setRef}>
+      <dialog className="modalDialog" id="cedarDialog" aria-modal="true" ref={setRef} aria-label="CEDAR editor">
         <div className="modalClose">
           <button aria-label="Close" type="button" onClick={() => dialog.current.close()} />
         </div>

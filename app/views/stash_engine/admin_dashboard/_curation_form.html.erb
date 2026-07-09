@@ -1,4 +1,4 @@
-<h1><%= @desc %></h1>
+<h1 id="dialog-title"><%= @desc %></h1>
 <%= form_with(url: admin_dash_update_path(@identifier.id), method: :post, local: false, model: @resource) do |form| -%>
   <%= hidden_field_tag :field, @field %>
   <% case @field %>
