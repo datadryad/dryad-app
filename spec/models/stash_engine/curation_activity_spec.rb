@@ -103,8 +103,14 @@ module StashEngine
           expect(CurationActivity.allowed_states('curation', 'unpublished', user)).to \
             eq(%w[awaiting_payment peer_review curation action_required withdrawn embargoed published])
 
+          expect(CurationActivity.allowed_states('curation', 'published', user)).to \
+            eq(%w[awaiting_payment peer_review curation action_required embargoed published])
+
           expect(CurationActivity.allowed_states('withdrawn', 'unpublished', user)).to \
             eq(%w[withdrawn curation])
+
+          expect(CurationActivity.allowed_states('withdrawn', 'published', user)).to \
+            eq(%w[curation])
 
           expect(CurationActivity.allowed_states('retracted', 'unpublished', user)).to \
             eq(%w[retracted])
