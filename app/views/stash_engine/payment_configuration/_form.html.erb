@@ -18,16 +18,16 @@
     </p>
     <p>
       <%= pf.label :ldf_limit, "Covered Large Data Fee limit (GB)" %>
-      <%= pf.select :ldf_limit, ldf_pricing_tiers_options, { selected: payment_configuration.ldf_limit }, class: 'c-input__select', disabled: !payment_configuration.covers_ldf %>
+      <%= pf.select :ldf_limit, ldf_pricing_tiers_options, { selected: payment_configuration.ldf_limit }, class: 'c-input__select', readonly: !payment_configuration.covers_ldf %>
     </p>
     <p>
       <%= pf.label :yearly_ldf_limit, "Yearly Large Data Fee limit $" %>
-      <%= pf.number_field :yearly_ldf_limit, value: payment_configuration.yearly_ldf_limit, class: 'c-input__text', disabled: !payment_configuration.covers_ldf %>
+      <%= pf.number_field :yearly_ldf_limit, value: payment_configuration.yearly_ldf_limit, class: 'c-input__text', readonly: !payment_configuration.covers_ldf %>
     </p>
     <p>
       <div class="c-input">
         <%= pf.label :ldf_limit_notification, 'Email addresses to receive LDF notification emails (each on new line)' %>
-        <%= pf.text_area(:ldf_limit_notification, value: payment_configuration.ldf_limit_notification&.join("\n"), class: 'c-input__textarea', style: 'width:100%') %>
+        <%= pf.text_area(:ldf_limit_notification, value: payment_configuration.ldf_limit_notification&.join("\n"), class: 'c-input__textarea', style: 'width:100%', readonly: !payment_configuration.covers_ldf )%>
       </div>
     </p>
   </div>
