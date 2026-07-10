@@ -5,6 +5,7 @@
 #  id                     :bigint           not null, primary key
 #  covers_dpc             :boolean
 #  covers_ldf             :boolean
+#  deactivated_at         :datetime
 #  ldf_limit              :integer
 #  ldf_limit_notification :text(65535)
 #  partner_type           :string(191)
@@ -23,11 +24,15 @@ class PaymentConfiguration < ApplicationRecord
   belongs_to :partner, polymorphic: true, optional: true
 
   enum :payment_plan, { SUBSCRIPTION: 1, PREPAID: 2, DEFERRED: 3, TIERED: 4, '2025': 5 }
-  before_save :reset_limit, :set_covers_dpc
+  before_save :reset_limit, :set_covers_dpc, :set_deactivation_time
   before_validation :notification_json
 
   def valid_payer?
-    covers_dpc? && payment_plan.present?
+    covers_dpc? && payment_plan.present? && active?
+  end
+
+  def active?
+    deactivated_at.nil? || deactivated_at > Time.current
   end
 
   def ldf_limit_notification
@@ -59,5 +64,11 @@ class PaymentConfiguration < ApplicationRecord
     return unless covers_dpc.nil?
 
     self.covers_dpc = payment_plan.present?
+  end
+
+  def set_deactivation_time
+    return if deactivated_at.nil?
+
+    self.deactivated_at = deactivated_at.to_datetime.end_of_day
   end
 end

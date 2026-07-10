@@ -10,6 +10,10 @@
         <br />
       <% end %>
     </fieldset>
+    <p>
+      <%= pf.label :deactivated_at, "Deactivation date" %>
+      <%= pf.date_field :deactivated_at, value: payment_configuration.deactivated_at&.to_date, class: 'c-input__text'%>
+    </p>
   </div>
   <div id="payment_limits_container" <%= has_children ? 'hidden' : ''  %>>
     <p>
