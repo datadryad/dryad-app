@@ -1,16 +1,19 @@
 var ldf = document.getElementById('payment_configuration_attributes_covers_ldf')
 ldf.addEventListener('change', () => {
   var limit = document.getElementById('payment_configuration_attributes_ldf_limit')
-  limit.disabled = !ldf.checked
-  var amount_limit = document.getElementById('payment_configuration_attributes_yearly_ldf_limit')
-  amount_limit.disabled = !ldf.checked
+  var amount_limit = document.getElementById('payment_configuration_attributes_yearly_ldf_limit')  
+  var limit_notification = document.getElementById('payment_configuration_attributes_ldf_limit_notification')
   if (!ldf.checked) {
+    limit.setAttribute('readonly', true)
+    amount_limit.setAttribute('readonly', true)
+    limit_notification.setAttribute('readonly', true)
     limit.value = ''
     amount_limit.value = ''
-  }
-  var limit_notification = document.getElementById('payment_configuration_attributes_ldf_limit_notification')
-  if(limit_notification) {
-    limit_notification.disabled = !ldf.checked
-    limit_notification.checked = false
+    limit_notification.value = ''
+    limit_notification.innerText = ''
+  } else {
+    limit.removeAttribute('readonly')
+    amount_limit.removeAttribute('readonly')
+    limit_notification.removeAttribute('readonly')
   }
 })

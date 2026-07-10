@@ -1,12 +1,7 @@
-<h2>Partnership</h2>
-<div id="payment_notice" role="status" class="callout warn" <%= !sponsor_id ? 'hidden' : ''  %>>
-  <p>Payment information must be set at the sponsor level.</p>
-</div>
-
-<div id="payment_container" <%= sponsor_id ? 'hidden' : ''  %>>
-  <%= fields_for :payment_configuration_attributes do |pf| %>
-    <%= pf.hidden_field :id, value: payment_configuration.id %>
-    <%= pf.hidden_field :_destroy %>
+<%= fields_for :payment_configuration_attributes do |pf| %>
+  <%= pf.hidden_field :id, value: payment_configuration.id %>
+  <%= pf.hidden_field :_destroy %>
+  <div id="payment_plan_container" <%= sponsor_id ? 'hidden' : ''  %>>
     <fieldset class="c-fieldset">
       <legend>Payment plan type:</legend>
       <% plan_options.each do |plan| %>
@@ -15,22 +10,25 @@
         <br />
       <% end %>
     </fieldset>
-
+  </div>
+  <div id="payment_limits_container" <%= has_children ? 'hidden' : ''  %>>
     <p>
       <%= pf.check_box :covers_ldf, {checked: payment_configuration.covers_ldf}, 1, 0 %>
       <%= pf.label :covers_ldf, "When checked, sponsor covers Large Data Fees" %>
     </p>
     <p>
       <%= pf.label :ldf_limit, "Covered Large Data Fee limit (GB)" %>
-      <%= pf.select :ldf_limit, ldf_pricing_tiers_options, { selected: payment_configuration.ldf_limit }, class: 'c-input__select', disabled: !payment_configuration.covers_ldf %>
+      <%= pf.select :ldf_limit, ldf_pricing_tiers_options, { selected: payment_configuration.ldf_limit }, class: 'c-input__select', readonly: !payment_configuration.covers_ldf %>
     </p>
     <p>
       <%= pf.label :yearly_ldf_limit, "Yearly Large Data Fee limit $" %>
-      <%= pf.number_field :yearly_ldf_limit, value: payment_configuration.yearly_ldf_limit, class: 'c-input__text', disabled: !payment_configuration.covers_ldf %>
+      <%= pf.number_field :yearly_ldf_limit, value: payment_configuration.yearly_ldf_limit, class: 'c-input__text', readonly: !payment_configuration.covers_ldf %>
     </p>
     <p>
-      <%= pf.check_box :ldf_limit_notification, {checked: payment_configuration.ldf_limit_notification, disabled: !payment_configuration.covers_ldf}, 1, 0 %>
-      <%= pf.label :ldf_limit_notification, "Receive LDF notification emails" %>
+      <div class="c-input">
+        <%= pf.label :ldf_limit_notification, 'Email addresses to receive LDF notification emails (each on new line)' %>
+        <%= pf.text_area(:ldf_limit_notification, value: payment_configuration.ldf_limit_notification&.join("\n"), class: 'c-input__textarea', style: 'width:100%', readonly: !payment_configuration.covers_ldf )%>
+      </div>
     </p>
-  <% end %>
-</div>
+  </div>
+<% end %>
