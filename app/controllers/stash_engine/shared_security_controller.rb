@@ -12,6 +12,7 @@ module StashEngine
       return if current_user.present? && !current_user.proxy_user?
 
       clear_user
+      log_auth_failure
       flash[:alert] = 'You must be logged in.'
       redirect_to stash_url_helpers.choose_login_path and return
     end
@@ -20,6 +21,7 @@ module StashEngine
     # rubocop:disable Metrics/PerceivedComplexity,  Metrics/CyclomaticComplexity
     def require_login
       unless current_user.present?
+        log_auth_failure
         flash[:alert] = 'You must be logged in.'
         redirect_to stash_url_helpers.choose_login_path and return
       end
@@ -74,37 +76,41 @@ module StashEngine
     end
 
     def require_superuser
-      return if current_user && current_user.superuser?
+      return if current_user&.superuser?
 
+      log_auth_failure
       flash[:alert] = 'You must be a superuser to view this information.'
       redirect_to stash_url_helpers.choose_dashboard_path
     end
 
     def require_curator
-      return if current_user && current_user.min_curator?
+      return if current_user&.min_curator?
 
+      log_auth_failure
       flash[:alert] = 'You must be a curator to view this information.'
       redirect_to stash_url_helpers.choose_dashboard_path
     end
 
     def ajax_require_curator
-      false unless current_user && current_user.min_curator?
+      false unless current_user&.min_curator?
     end
 
     def require_min_app_admin
-      return if current_user && current_user.min_app_admin?
+      return if current_user&.min_app_admin?
 
+      log_auth_failure
       flash[:alert] = 'You must be a Dryad administrator to view this information.'
       redirect_to stash_url_helpers.choose_dashboard_path
     end
 
     def ajax_require_min_app_admin
-      false unless current_user && current_user.min_app_admin?
+      false unless current_user&.min_app_admin?
     end
 
     def require_admin
-      return if current_user && current_user.min_admin?
+      return if current_user&.min_admin?
 
+      log_auth_failure
       flash[:alert] = 'You must be an administrator to view this information.'
       redirect_to stash_url_helpers.choose_dashboard_path
     end
@@ -115,6 +121,7 @@ module StashEngine
       return if current_user.present? && resource.editor.present? && current_user == resource.editor
       return if current_user.present? && resource.editor.nil? && resource.permission_to_edit?(user: current_user)
 
+      log_auth_failure
       flash[:alert] = 'You do not have permission to modify this submission.'
       display_authorization_failure
     end
@@ -123,6 +130,7 @@ module StashEngine
       return if valid_edit_code?
       return if current_user.present? && resource.permission_to_edit?(user: current_user)
 
+      log_auth_failure
       flash[:alert] = 'You do not have permission to revise this submission.'
       display_authorization_failure
     end
@@ -133,6 +141,7 @@ module StashEngine
                 resource&.dataset_in_progress_editor&.id == current_user.id ||
                 current_user.min_curator?
 
+      log_auth_failure
       flash[:alert] = 'This submission is being edited by another user.'
       display_authorization_failure
     end
@@ -162,6 +171,7 @@ module StashEngine
     end
 
     def ajax_blocked
+      log_auth_failure
       render body: '', status: 403, content_type: request.content_type.to_s
       false
     end
@@ -177,6 +187,7 @@ module StashEngine
     end
 
     def display_authorization_failure
+      log_auth_failure
       Rails.logger.warn("Resource #{resource ? resource.id : 'nil'}: user IDs are #{resource.users&.map(&:id)&.join(', ')} but " \
                         "current user is #{current_user.id || 'nil'}")
       redirect_back(fallback_location: choose_dashboard_path)
