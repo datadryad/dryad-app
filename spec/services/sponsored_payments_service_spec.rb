@@ -88,6 +88,14 @@ describe SponsoredPaymentsService do
                 }.stringify_keys
               )
             end
+
+            context 'but the first submitted date was before 2026-01-01' do
+              before do
+                identifier.process_date.update(processing: '2025-12-31'.to_datetime.end_of_day)
+              end
+
+              include_examples('does not create sponsored payment log')
+            end
           end
 
           context 'when tenant has a sponsor' do

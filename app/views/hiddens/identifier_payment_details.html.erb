@@ -55,7 +55,9 @@
           <%= number_to_currency(res.sponsored_payment_log&.ldf) %>
         </td>
         <td class="align-end">
-          <%= number_to_currency(res.payment&.amount) %>
+          <% if res.payment&.paid? %>
+            <%= number_to_currency(res.payment&.amount) %>
+          <% end %>
         </td>
       </tr>
     <% end %>

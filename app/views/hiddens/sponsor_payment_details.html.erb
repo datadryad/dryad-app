@@ -82,7 +82,7 @@
 
         <td class="align-end">
           <%
-            sum = ident.payments.sum(:amount)
+            sum = ident.payments.paid.sum(:amount)
             if sum > 0
           %>
             <%= number_to_currency(sum) %>

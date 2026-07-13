@@ -21,6 +21,7 @@
 #
 class SponsoredPaymentLog < ApplicationRecord
   acts_as_paranoid
+  has_paper_trail
 
   belongs_to :payer, polymorphic: true
   belongs_to :resource, class_name: StashEngine::Resource.to_s
