@@ -316,7 +316,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
               click_link 'Activity log'
             end
             within(:css, '#activity_log_table tbody:last-child') do
-              find('button[aria-label="Curation activity"]').click
+              find("button[aria-label=\"Curation activity v#{@resource.stash_version.version}\"]").click
             end
             expect(page).to have_text('My cat says hi')
           end
