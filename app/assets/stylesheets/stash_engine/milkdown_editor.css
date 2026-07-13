@@ -78,6 +78,11 @@
   justify-content: flex-end;
 }
 
+.micro_editor .md_editor-buttons:focus-within {
+  border-color: #0071a8; 
+  background-color: rgb(233, 236, 239);
+}
+
 .markdown_editor .md_editor-buttons div[role="group"]:not(:last-of-type) {
   border-right: thin solid #d0d0d0;
   margin-right: .25ch;
@@ -188,6 +193,10 @@
   color: rgb(78, 80, 80);
 }
 
+.micro_editor .md_editor-buttons:focus-within button:not(:focus) {
+  background-color: rgb(233, 236, 239);
+}
+
 .markdown_editor .md_editor-buttons button:hover,
 .markdown_editor .md_editor-buttons .headingButton:hover {
   background-color: #0071a8;
@@ -198,6 +207,10 @@
 .markdown_editor .md_editor-buttons .headingButton.active {
   color: #0071a8;
   text-shadow: 0 0 .06rem #98cae2;
+}
+
+.markdown_editor .md_editor-buttons .headingButton:not(.active) {
+  font-size: .98rem;
 }
 
 .markdown_editor .md_editor-buttons .headingButton:focus,
@@ -215,7 +228,7 @@
   background-color: #fff;
 }
 
-.markdown_editor .md_editor-buttons button[disabled] {
+.markdown_editor .md_editor-buttons button[aria-disabled] {
   color: #aaa;
   background-color: rgb(233, 236, 239);
   text-shadow: none;
@@ -238,7 +251,7 @@
   white-space: nowrap;
 }
 
-.markdown_editor .md_editor-buttons .tableOptButton[disabled] i[class*='chevron'] {
+.markdown_editor .md_editor-buttons .tableOptButton[aria-disabled] i[class*='chevron'] {
   color: #aaa;
 }
 
@@ -248,8 +261,8 @@
 .markdown_editor .md_editor-buttons .headingButton:not(.active):focus i,
 .markdown_editor .md_editor-buttons .linkSelect > button:not(.active):focus i,
 .markdown_editor .md_editor-buttons .linkSelect > button:not(.active):hover i,
-.markdown_editor .md_editor-buttons .tableOptButton:not([disabled]):hover i[class*='chevron'],
-.markdown_editor .md_editor-buttons .tableOptButton:not([disabled]):focus i[class*='chevron'],
+.markdown_editor .md_editor-buttons .tableOptButton:not([aria-disabled]):hover i[class*='chevron'],
+.markdown_editor .md_editor-buttons .tableOptButton:not([aria-disabled]):focus i[class*='chevron'],
 .markdown_editor .md_editor-buttons .tableOptMenu button:hover i[class*='chevron'],
 .markdown_editor .md_editor-buttons .tableOptMenu button:focus i[class*='chevron'] {
   color: #f2f2f2;
@@ -297,6 +310,7 @@
   margin: 0;
   padding: 3px 5px;
   border-top: thin solid #d0d0d0;
+  cursor: pointer;
 }
 
 .markdown_editor .md_editor-buttons .headingMenu li.selected {
@@ -304,7 +318,8 @@
   color: white;
 }
 
-.markdown_editor .md_editor-buttons .headingMenu li.highlighted {
+.markdown_editor .md_editor-buttons .headingMenu li:hover,
+.markdown_editor .md_editor-buttons .headingMenu li:focus {
   background-color: #0071a8;
   color: white;
 }
@@ -327,10 +342,9 @@
   background-color: rgb(233, 236, 239);
 }
 
-@container (width < 605px) and (width > 344px) {
-  .markdown_editor .md_editor-buttons .imageMenu,
-  .markdown_editor .md_editor-buttons .linkMenu {
-    left: auto; right: 0;
+@container (width < 766px) and (width > 556px){
+  .markdown_editor .md_editor-buttons .tableMenu > div{
+    margin-left: 170px;
   }
 }
 
@@ -340,20 +354,22 @@
   }
 }
 
-@container (width < 766px) and (width > 556px){
-  .markdown_editor .md_editor-buttons .tableMenu > div{
-    margin-left: 170px;
-  }
-}
 @container (width < 556px) {
   .markdown_editor .md_editor-buttons .tableMenu {
     justify-content: flex-end;
   }
 }
+
 @container (width < 455px) {
   .markdown_editor .md_editor-buttons .tableMenu {
     justify-content: flex-start;
     top: 5.1rem;
+  }
+}
+
+@container (width < 338px) and (width > 295.5px)  {
+  .markdown_editor .md_editor-buttons .listMenu {
+    left: auto; right: 0;
   }
 }
 
@@ -419,7 +435,7 @@
   width: 135px;
   max-height: none;
   overflow: visible;
-  font-size: .98rem;
+  font-size: .95rem;
 }
 
 .markdown_editor .md_editor-buttons .tableOptMenu ul {
@@ -482,22 +498,18 @@
   margin-left: auto;
 }
 
-@container (width < 760px) and (width > 505px) {
+@container ((width < 760px) and (width > 505px)) or ((width < 384px) and (width > 258px)){
   .markdown_editor .md_editor-buttons .tableOptMenu {
     left: auto; right: -3px;
   }
-  .markdown_editor .md_editor-buttons .tableOptMenu li button {
-    flex-direction: row-reverse;
-  }
-  .markdown_editor .md_editor-buttons .tableOptMenu i[class*='chevron'] {
-    margin-left: 0;
-    margin-right: auto;
-  }
-  .markdown_editor .md_editor-buttons .tableOptMenu i[class*='chevron']:before {
-    content: '\f053';
+}
+@container ((width < 760px) and (width > 505px)) or (width < 384px) {
+  .markdown_editor .md_editor-buttons .tableOptMenu {
+    font-size: .85rem;
   }
   .markdown_editor .md_editor-buttons .tableOptMenu ul {
-    left: auto; right: 137px;
+    top: 100%; left: auto; right: -15px;
+    width: 135px;
   }
 }
 
@@ -583,6 +595,35 @@
 .markdown_editor .md_editor-buttons .linkMenu .buttons button:focus {
   background-color: #0071a8;
   color: #fff;
+}
+
+@container (width < 708px) and (width > 412px) {
+  .markdown_editor .md_editor-buttons .imageMenu,
+  .markdown_editor .md_editor-buttons .linkMenu {
+    left: auto; right: 0;
+  }
+}
+
+@container (width < 365px) {
+  .markdown_editor .md_editor-buttons .imageSelect,
+  .markdown_editor .md_editor-buttons .linkSelect {
+    position: static;
+  }
+  .markdown_editor .md_editor-buttons .imageMenu,
+  .markdown_editor .md_editor-buttons .linkMenu {
+    height: auto;
+    left: 0; right: 0; top: 80px;
+  }
+  .markdown_editor .md_editor-buttons .linkMenu label {
+    flex-wrap: wrap;
+  }
+}
+
+@container (width < 224px) {
+  .markdown_editor .md_editor-buttons .imageMenu,
+  .markdown_editor .md_editor-buttons .linkMenu {
+    top: 100px;
+  }
 }
 
 .markdown_editor .milkdown {
