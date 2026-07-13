@@ -21,19 +21,17 @@
 <%
   plan_options = [['', 'None']] + StashEngine::Journal::PAYMENT_PLANS.map { |p| [p, p.capitalize] }
   sponsor_id = @org.parent_org_id
-  has_children = @org.id && StashEngine::JournalOrganization.where(parent_org_id: @org.id).any?
 %>
 
-<% if sponsor_id || has_children %>
-<div role="status" class="callout warn">
-  <% if sponsor_id %><p>The payment plan must be selected for the top level organization.</p><% end %>
-  <% if has_children %><p>Payment limits must be set on each lowest level organization.</p><% end %>
+<div id="payment_plan_notice" role="status" class="callout warn" <%= !sponsor_id ? 'hidden' : ''  %>>
+  <p>The payment plan must be selected for the top level organization.</p>
 </div>
-<% end %>
+<div id="limits_notice" role="status" class="callout warn">
+  <p>Payment limits can also be set on each lowest level organization.</p>
+</div>
 
 <%= render '/stash_engine/payment_configuration/form', format: :html,
   sponsor_id: sponsor_id,
   payment_configuration: @payment_configuration,
-  plan_options: plan_options,
-  has_children: has_children
+  plan_options: plan_options
 %>
