@@ -262,7 +262,10 @@ module Stash
 
       def dataset_file_exts
         @resource.data_files.present_files.map do |df|
-          File.extname(df.upload_file_name.to_s).gsub(/^./, '').downcase
+          [File.extname(df.upload_file_name.to_s).gsub(/^./, '').downcase,
+           df.container_files.map do |cf|
+             File.extname(cf.path.to_s).gsub(/^./, '').downcase
+           end.flatten.reject(&:blank?).uniq]
         end.flatten.reject(&:blank?).uniq
       end
 

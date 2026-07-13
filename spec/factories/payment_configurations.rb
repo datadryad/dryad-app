@@ -6,7 +6,7 @@
 #  covers_dpc             :boolean
 #  covers_ldf             :boolean
 #  ldf_limit              :integer
-#  ldf_limit_notification :boolean          default(FALSE)
+#  ldf_limit_notification :text(65535)
 #  partner_type           :string(191)
 #  payment_plan           :integer
 #  yearly_ldf_limit       :integer

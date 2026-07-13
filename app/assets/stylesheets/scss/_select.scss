@@ -2,6 +2,12 @@
 
 select {
 	max-width: 100%;
+
+	&[disabled], &:disabled,
+	&[readonly] {
+		pointer-events: none;
+		background-color: $lightest-gray;
+	}
 }
 
 select:has(option[value='']:checked) {

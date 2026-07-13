@@ -135,7 +135,7 @@ module StashEngine
       @resource = Resource.find(params[:id])
       @last_state = @resource.last_curation_activity.status
 
-      return unless CurationActivity.allowed_states(@last_state, current_user).include?('action_required')
+      return unless CurationActivity.allowed_states(@last_state, @resource.identifier.pub_state, current_user).include?('action_required')
 
       @resource.action_reports << ActionRequiredReport.create(report: params[:report], user: current_user)
       CurationService.new(resource: @resource, user: current_user, status: 'action_required',

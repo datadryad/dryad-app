@@ -7,8 +7,11 @@
 input {
 	accent-color: $medium-green;
 
-	&[disabled], &:disabled {
+	&[disabled], &:disabled, &[readonly] {
 		background-color: $lightest-gray;
+	}
+	&[readonly] {
+		pointer-events: none;
 	}
 }
 
@@ -143,6 +146,13 @@ label.optional:after {
 	width: 300px;
 	max-width: 100%;
 	padding: 3px 5px;
+
+	&[disabled], &:disabled, &[readonly] {
+		background-color: $lightest-gray;
+	}
+	&[readonly] {
+		pointer-events: none;
+	}
 }
 
 .c-input__token {

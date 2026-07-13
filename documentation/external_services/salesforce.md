@@ -114,7 +114,21 @@ MFA Notes:
 Email ticket creation
 ======================
 
-When a Salesforce ticket must be handed off to the platform development team,
+Email requests to Salesforce cases
+----------------------------------
+
+Dryad has several email addresses that are directed to Salesforce cases. The process is:
+1. Email comes into a Google account (e.g., help@datadryad.org)
+2. The Google account is configured to forward to a special Salesforce address
+3. The Salesforce address is setup as an "Email-to-Case" configuration.
+4. Salesforce creates a case from the incoming message
+5. If applicable, and automated response is created, using a Case Auto-Response Rule
+
+
+Salesforce cases to GitHub tickets
+----------------------------------
+
+When a Salesforce case must be handed off to the platform development team,
 the Salesforce case can be forwarded to a special email address to facilitate
 ticket creation. See the protected [instructions for email ticket
 creation](https://docs.google.com/document/d/1umqBLtWc_q0JxHVC7YbyIw_JtJ7zDT8uryBLnuB_oCU/edit?usp=sharing).

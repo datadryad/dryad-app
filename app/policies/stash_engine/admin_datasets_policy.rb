@@ -44,5 +44,9 @@ module StashEngine
     def deleted?
       @user.system_user? && @user.min_curator?
     end
+
+    def auth_failures?
+      @user.superuser?
+    end
   end
 end

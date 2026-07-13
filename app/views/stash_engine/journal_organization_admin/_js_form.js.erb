@@ -10,8 +10,10 @@ var sponsor_id = document.getElementById('parent_org_id')
 sponsor_id.addEventListener('change', () => {
   if (sponsor_id.value === '') {
     document.getElementById('payment_plan_container').removeAttribute('hidden');
+    document.getElementById('payment_plan_notice').setAttribute('hidden', '');
   } else {
     document.getElementById('payment_plan_container').setAttribute('hidden', '');
+    document.getElementById('payment_plan_notice').removeAttribute('hidden');
   }
 });
 
