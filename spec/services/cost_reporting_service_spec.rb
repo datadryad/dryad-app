@@ -14,15 +14,15 @@ RSpec.shared_examples('sends ldf notification') do
 end
 
 describe CostReportingService do
-  let(:tenant) { create(:tenant, campus_contacts: ['some@email.com'].to_json) }
   let(:identifier) { create(:identifier) }
-  let(:org) { create(:journal_organization) }
-  let!(:journal) { create(:journal, sponsor: org) }
-  let!(:payment_conf) { create(:payment_configuration, partner: org, payment_plan: '2025', covers_ldf: true, ldf_limit_notification: true) }
+  let!(:tenant) { create(:tenant) }
+  let!(:payment_conf) do
+    create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true,
+                                   ldf_limit_notification: 'some@email.com')
+  end
   let(:prev_resource) do
     create(:resource,
            identifier: identifier,
-           journal_issns: [journal.issns.first],
            total_file_size: prev_files_size,
            created_at: 2.minutes.ago,
            tenant: tenant)
@@ -30,7 +30,6 @@ describe CostReportingService do
   let(:resource) do
     create(:resource,
            identifier: identifier,
-           journal_issns: [journal.issns.first],
            total_file_size: resource_files_size,
            tenant: tenant)
   end
@@ -40,10 +39,6 @@ describe CostReportingService do
   let(:mock_mailer) { double(deliver_now: true) }
 
   subject { CostReportingService.new(resource).notify_partner_of_large_data_submission }
-
-  before(:each) do
-    allow(identifier).to receive(:payer).and_return(double(id: 1))
-  end
 
   context :notify_partner_of_large_data_submission do
     context 'when user is the payer' do
@@ -74,20 +69,8 @@ describe CostReportingService do
         include_examples 'sends ldf notification'
 
         context 'when non 2025 plan institution is the payer' do
-          let!(:payment_conf) { create(:payment_configuration, partner: journal, payment_plan: 'TIERED') }
+          let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: 'TIERED') }
           let!(:resource) { create(:resource, identifier: identifier, total_file_size: resource_files_size) }
-
-          include_examples 'does not send ldf notification'
-        end
-
-        context 'where there is no tenant' do
-          let(:tenant) { nil }
-
-          include_examples 'does not send ldf notification'
-        end
-
-        context 'where the tenant campus_contacts is not set' do
-          let(:tenant) { create(:tenant, campus_contacts: [].to_json) }
 
           include_examples 'does not send ldf notification'
         end
@@ -191,7 +174,7 @@ describe CostReportingService do
         include_examples 'sends ldf notification'
 
         context 'when non 2025 plan institution is the payer' do
-          let!(:payment_conf) { create(:payment_configuration, partner: journal, payment_plan: 'TIERED') }
+          let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: 'TIERED') }
           let!(:resource) { create(:resource, identifier: identifier, total_file_size: resource_files_size) }
 
           include_examples 'does not send ldf notification'
@@ -270,7 +253,7 @@ describe CostReportingService do
 
             context 'when payer has LDF notifications turned off' do
               let!(:payment_conf) do
-                create(:payment_configuration, partner: org, payment_plan: '2025', covers_ldf: true, ldf_limit_notification: false)
+                create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: true, ldf_limit_notification: nil)
               end
 
               include_examples 'does not send ldf notification'

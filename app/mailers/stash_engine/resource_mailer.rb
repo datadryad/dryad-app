@@ -103,16 +103,18 @@ module StashEngine
 
     def ld_submission(resource)
       @resource = resource
-      if @resource.tenant&.campus_contacts&.blank?
-        logger.warn("No campus_contact to send ld_submission email for resource: #{@resource.id}")
+      contact = PayersService.new(resource.identifier.payer).limits_sponsor
+      email = contact.payment_configuration&.ldf_limit_notification
+      unless email.present?
+        logger.warn("No contact to send ld_submission email for resource: #{@resource.id}")
         return
       end
 
       assign_variables(resource)
-      @partner_name = resource.tenant.short_name
+      @partner_name = contact.has_attribute?(:name) ? contact.name : contact.long_name
 
       mail(
-        to: @resource.tenant&.campus_contacts,
+        to: email,
         bcc: 'partnerships@datadryad.org',
         subject: "#{rails_env}Notification of Large Data submission to Dryad"
       )
@@ -120,18 +122,20 @@ module StashEngine
 
     def ld_publication(resource)
       @resource = resource
-      if @resource.tenant&.campus_contacts&.blank?
-        logger.warn("No campus_contact to send ld_publication email for resource: #{@resource.id}")
+      contact = PayersService.new(resource.identifier.payer).limits_sponsor
+      email = contact.payment_configuration&.ldf_limit_notification
+      unless email.present?
+        logger.warn("No contact to send ld_publication email for resource: #{@resource.id}")
         return
       end
 
       assign_variables(resource)
       tier = ResourceFeeCalculatorService.new(resource).storage_fee_tier
       @storage_fee = tier[:price]
-      @partner_name = resource.tenant.short_name
+      @partner_name = contact.has_attribute?(:name) ? contact.name : contact.long_name
 
       mail(
-        to: @resource.tenant&.campus_contacts,
+        to: email,
         bcc: 'partnerships@datadryad.org',
         subject: "#{rails_env}Notification of Large Data publication to Dryad"
       )
