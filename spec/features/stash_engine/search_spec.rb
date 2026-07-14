@@ -65,7 +65,7 @@ RSpec.feature 'Search', type: :feature, js: true do
       end
       expect(page).to have_link('Edited search')
       # delete
-      click_button 'Delete saved search: Edited search'
+      click_button 'Delete saved search: (1) Edited search'
       expect(page).not_to have_css('#public_searches_list li')
     end
 
