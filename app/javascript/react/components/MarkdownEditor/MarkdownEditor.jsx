@@ -9,7 +9,7 @@ import {history} from '@milkdown/kit/plugin/history';
 import {listener as listen, listenerCtx} from '@milkdown/kit/plugin/listener';
 import {trailing} from '@milkdown/kit/plugin/trailing';
 import {commonmark} from '@milkdown/kit/preset/commonmark';
-import {gfm} from '@milkdown/kit/preset/gfm';
+import {gfm, tableKeymap} from '@milkdown/kit/preset/gfm';
 import {replaceAll} from '@milkdown/kit/utils';
 import {ParserState} from '@milkdown/kit/transformer';
 import CodeEditor from './CodeEditor';
@@ -83,6 +83,15 @@ function MilkdownCore({
       listener.markdownUpdated((_ctx, markdown, prevMarkdown) => {
         if (markdown !== prevMarkdown) onChange(markdown);
       });
+      listener.focus((ctxx) => {
+        ctxx.get(editorViewCtx).dom.removeAttribute('aria-invalid');
+      });
+      listener.blur((ctxx) => {
+        const el = ctxx.get(editorViewCtx).dom;
+        if (el && document.getElementById(el.getAttribute('aria-errormessage'))) {
+          el.setAttribute('aria-invalid', true);
+        }
+      });
       const slistener = ctx.get(selectionCtx);
       slistener.selection((ctxx, selection, doc) => {
         try {
@@ -100,6 +109,11 @@ function MilkdownCore({
         } catch (e) {
           // no schema for jest tests
         }
+      });
+      ctx.set(tableKeymap.key, {
+        NextCell: 'Mod-]',
+        PrevCell: 'Mod-[',
+        ExitTable: ['Mod-Enter', 'Enter'],
       });
     })
     .use(micro ? [noNewLines, exitKeymap] : [bulletWrapCommand, bulletWrapKeymap, orderWrapCommand, orderWrapKeymap])
@@ -162,6 +176,39 @@ function MilkdownEditor({
     }
   });
 
+  const toolBarHandler = (ev) => {
+    const toolbar = [...document.querySelectorAll(
+      `#${id}_menu > *[tabindex], #${id}_menu > div:not([role="group"]) > *[tabindex]:first-child, #${id}_menu > div[role="group"] > button`,
+    )];
+    const index = toolbar.findIndex((el) => el.title === ev.target.title);
+    const next = toolbar[index + 1] || toolbar[0];
+    const prev = toolbar[index - 1] || toolbar[toolbar.length - 1];
+    switch (ev.key) {
+    case 'ArrowRight':
+      ev.target.tabIndex = -1;
+      next.tabIndex = 0;
+      next.focus();
+      break;
+    case 'ArrowLeft':
+      ev.target.tabIndex = -1;
+      prev.tabIndex = 0;
+      prev.focus();
+      break;
+    case 'Home':
+      ev.target.tabIndex = -1;
+      toolbar[0].tabIndex = 0;
+      toolbar[0].focus();
+      break;
+    case 'End':
+      ev.target.tabIndex = -1;
+      toolbar[toolbar.length - 1].tabIndex = 0;
+      toolbar[toolbar.length - 1].focus();
+      break;
+    default:
+      break;
+    }
+  };
+
   useEffect(() => {
     setEditorVal(initialCode);
   }, [initialCode]);
@@ -189,6 +236,20 @@ function MilkdownEditor({
   }, [editType]);
 
   useEffect(() => {
+    if (!loading) {
+      const menu = document.getElementById(`${id}_menu`);
+      menu.querySelector('*[tabindex]').tabIndex = 0;
+      menu.addEventListener('keydown', toolBarHandler);
+    }
+    return () => {
+      const menu = document.getElementById(`${id}_menu`);
+      if (!loading && menu) {
+        menu.removeEventListener('keydown', toolBarHandler);
+      }
+    };
+  }, [loading]);
+
+  useEffect(() => {
     if (!loading && replaceValue) testMarkdown(replaceValue);
   }, [loading, replaceValue]);
 
@@ -199,7 +260,7 @@ function MilkdownEditor({
   return (
     <>
       {!loading && (
-        <div className="md_editor-buttons" role="menubar">
+        <div className="md_editor-buttons" id={`${id}_menu`} role="toolbar">
           {buttons.map((button, i) => (
             <Button
               activeDOM={active?.length ? active : []}
@@ -210,28 +271,33 @@ function MilkdownEditor({
               editor={editor}
               mdEditor={mdEditor}
               activeEditor={editType}
+              micro={micro}
             />
           ))}
-          <div className="md_editor-toggle" role="group" aria-label="Editor type">
-            <button
-              role="menuitem"
-              type="button"
-              onClick={() => setEditType('markdown')}
-              aria-current={editType === 'markdown'}
-              aria-disabled={editType === 'markdown' || null}
-            >
-              Markdown
-            </button>
-            <button
-              role="menuitem"
-              type="button"
-              onClick={() => setEditType('visual')}
-              aria-current={editType === 'visual'}
-              aria-disabled={editType === 'visual' || null}
-            >
-              Rich text
-            </button>
-          </div>
+          {!micro && (
+            <div className="md_editor-toggle" role="group" aria-label="Editor type">
+              <button
+                type="button"
+                onClick={() => setEditType('markdown')}
+                aria-current={editType === 'markdown'}
+                aria-disabled={editType === 'markdown' || null}
+                title="Toggle markdown"
+                tabIndex="-1"
+              >
+                Markdown
+              </button>
+              <button
+                type="button"
+                onClick={() => setEditType('visual')}
+                aria-current={editType === 'visual'}
+                aria-disabled={editType === 'visual' || null}
+                title="Toggle rich text"
+                tabIndex="-1"
+              >
+                Rich text
+              </button>
+            </div>
+          )}
         </div>
       )}
       <div className="md_editor_textarea">
