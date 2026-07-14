@@ -4,7 +4,9 @@ import {debounce} from 'lodash';
 import MarkdownEditor from '../../MarkdownEditor';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
-export default function Description({setResource, dcsDescription, mceLabel}) {
+export default function Description({
+  setResource, dcsDescription, mceLabel, onBlur,
+}) {
   const [desc, setDesc] = useState(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
@@ -67,6 +69,7 @@ export default function Description({setResource, dcsDescription, mceLabel}) {
           htmlInput={desc}
           key={desc?.innerHTML}
           onChange={checkSubmit}
+          onBlur={onBlur}
         />
       )}
     </>

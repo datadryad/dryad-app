@@ -5,7 +5,8 @@ import {orderedItems} from '../DragonDropList';
 export {default} from './Support';
 export {default as SuppPreview} from './SuppPreview';
 
-export const fundingCheck = (orgs) => {
+export const fundingCheck = (contributors) => {
+  const orgs = contributors.filter((f) => f.contributor_type === 'funder');
   if (orgs.length < 1) return true;
   const funders = orderedItems({items: orgs, typeName: 'funder'});
   const orgError = funders.findIndex((f) => !f.contributor_name);
