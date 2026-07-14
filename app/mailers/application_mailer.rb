@@ -1,5 +1,7 @@
 # Base class for mailers
 class ApplicationMailer < ActionMailer::Base
+  include StashEngine::SharedController
+
   default from: APP_CONFIG['feedback_email_from'] || APP_CONFIG['helpdesk_email']
   layout 'mailer'
 
