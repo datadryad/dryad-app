@@ -45,6 +45,12 @@ class PaymentsController < ApplicationController
   def callback
     payment = @resource.payment || @resource.build_payment
 
+    if payment.checkout_session_id != params[:session_id]
+      message = "Resource #{params[:resource_id]} received a payment for wrong checkout session #{params[:session_id]}"
+      Rails.logger.warn(message)
+      CurationService.new(status: @resource.last_curation_activity&.status, resource: @resource, user: current_user, note: message).process
+    end
+
     # do not update if a resource is already paid
     #  - success page refresh
     return if payment.paid?
@@ -54,12 +60,7 @@ class PaymentsController < ApplicationController
       payment_checkout_session_id: params[:session_id],
       paid_at: Time.current
     )
-
     update_identifier_files_size
-
-    if payment.checkout_session_id != params[:session_id]
-      Rails.logger.warn("Resource #{params[:resource_id]} received a payment for wrong checkout session #{params[:checkout_session_id]}")
-    end
 
     begin
       session = Stripe::Checkout::Session.retrieve(params[:session_id])
