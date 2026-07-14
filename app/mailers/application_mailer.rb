@@ -18,6 +18,7 @@ class ApplicationMailer < ActionMailer::Base
 
   def assign_variables(resource)
     @resource = resource
+    @delete_date = formatted_date(resource.process_date.delete_date)
     @title = resource.title&.strip_tags
     @user = resource.submitter || resource.owner_author
     @user_name = user_name(@user)
