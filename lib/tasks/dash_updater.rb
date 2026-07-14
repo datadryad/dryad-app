@@ -4,13 +4,13 @@ module Tasks
     def self.dash_items_to_update
       # I was going to limit this to items created before transition to the new system, but we may want to update others
       # in order to get thier ROR information updated
-      StashEngine::Identifier.joins(:resources).where(pub_state: %w[embargoed published])
+      StashEngine::Identifier.publicly_viewable.joins(:resources)
         .where("stash_engine_resources.tenant_id <> 'dryad'").distinct
     end
 
     def self.dryad_items_to_update
       # always order ID
-      StashEngine::Identifier.joins(:resources).where(pub_state: %w[embargoed published])
+      StashEngine::Identifier.publicly_viewable.joins(:resources)
         .where("stash_engine_resources.tenant_id = 'dryad'").order('stash_engine_identifiers.id').distinct
     end
 
@@ -21,7 +21,7 @@ module Tasks
 
     def self.all_items_to_update
       # always order ID
-      StashEngine::Identifier.joins(:resources).where(pub_state: %w[embargoed published])
+      StashEngine::Identifier.publicly_viewable.joins(:resources)
         .order('stash_engine_identifiers.id').distinct
     end
 
