@@ -8,10 +8,11 @@ const ModalValidationReport = React.forwardRef(({file, clickedClose}, ref) => {
     <dialog
       className="modalDialog extra-wide"
       aria-modal="true"
+      aria-labelledby="dialog-title"
       ref={ref}
     >
       <div className="c-uploadmodal__header">
-        <h1 className="c-datasets-heading__heading o-heading__level1">
+        <h1 className="c-datasets-heading__heading o-heading__level1" id="dialog-title">
           Formatting report: {file?.sanitized_name}
         </h1>
         <button

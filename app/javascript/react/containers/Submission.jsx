@@ -363,7 +363,7 @@ function Submission({
             />
           </>
         )}
-        <dialog id="submission-step" open={step.name !== 'Create a submission' || payment || null}>
+        <dialog id="submission-step" open={step.name !== 'Create a submission' || payment || null} aria-label="Edit submission">
           {payment && (
             <div className="submission-edit">
               <Payments

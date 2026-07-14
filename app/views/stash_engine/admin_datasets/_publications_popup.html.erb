@@ -1,4 +1,4 @@
-<h1>Edit related works</h1>
+<h1 id="dialog-title">Edit related works</h1>
 <h2>Publication information</h2>
 <% [@publication, @preprint].each do |pub| %>
   <%= render partial: 'stash_engine/admin_datasets/publication', locals: {publication: pub} %>

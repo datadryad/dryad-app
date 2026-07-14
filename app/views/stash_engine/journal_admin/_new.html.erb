@@ -1,4 +1,4 @@
-<h1>Enter a new journal</h1>
+<h1 id="dialog-title">Enter a new journal</h1>
 <%= form_with(url: journal_create_path, method: :post, local: false) do |form| -%>
   <%= render partial: 'form', locals: {form: form} %>
   <div class="c-modal__buttons-right">
