@@ -31,8 +31,11 @@ const capitals = (t) => {
   return false;
 };
 
-export default function TitleImport({current, resource, setResource}) {
+export default function TitleImport({
+  current, resource, setResource, error,
+}) {
   const dupeRef = useRef(null);
+  const [touched, setTouched] = useState(false);
   const [connections, setConnections] = useState([]);
   const [apiJournals, setAPIJournals] = useState(null);
   const [importError, setImportError] = useState(null);
@@ -120,7 +123,9 @@ export default function TitleImport({current, resource, setResource}) {
       <p id="population-warnings" role="status" className="o-metadata__autopopulate-message">
         {importError}
       </p>
-      <Title resource={resource} setResource={setResource} />
+      <Title resource={resource} setResource={setResource} onBlur={() => setTouched(true)} />
+
+      <div role="alert">{touched && error}</div>
 
       {caseWarning && (
         <div className="callout warn">

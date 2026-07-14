@@ -5,7 +5,7 @@ import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 import SubjectSelect from './SubjectSelect';
 import KeywordAutocomplete from './KeywordAutocomplete';
 
-function Keywords({resource, setResource}) {
+function Keywords({resource, setResource, onBlur}) {
   const subjects = resource.subjects.filter((s) => !['fos', 'bad_fos'].includes(s.subject_scheme));
   const [subjs, setSubjs] = useState(subjects);
 
@@ -66,6 +66,7 @@ function Keywords({resource, setResource}) {
         id=""
         name=""
         saveFunction={saveKeyword}
+        onBlur={onBlur}
         controlOptions={
           {
             htmlId: 'keyword_ac',
