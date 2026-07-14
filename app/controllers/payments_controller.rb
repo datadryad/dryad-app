@@ -42,6 +42,7 @@ class PaymentsController < ApplicationController
     render json: { clientSecret: session.client_secret }
   end
 
+  # rubocop:disable Metrics/AbcSize
   def callback
     payment = @resource.payment || @resource.build_payment
 
@@ -77,6 +78,7 @@ class PaymentsController < ApplicationController
       Rails.logger.warn("Could not fetch payment details for resource #{@resource.id}, error: #{e.message}")
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   def reset_payment
     identifier = StashEngine::Identifier.find(params[:identifier_id])
