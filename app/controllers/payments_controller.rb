@@ -42,8 +42,15 @@ class PaymentsController < ApplicationController
     render json: { clientSecret: session.client_secret }
   end
 
+  # rubocop:disable Metrics/AbcSize
   def callback
     payment = @resource.payment || @resource.build_payment
+
+    if payment.checkout_session_id != params[:session_id]
+      message = "Resource #{params[:resource_id]} received a payment for wrong checkout session #{params[:session_id]}"
+      Rails.logger.warn(message)
+      CurationService.new(status: @resource.last_curation_activity&.status, resource: @resource, user: current_user, note: message).process
+    end
 
     # do not update if a resource is already paid
     #  - success page refresh
@@ -54,12 +61,7 @@ class PaymentsController < ApplicationController
       payment_checkout_session_id: params[:session_id],
       paid_at: Time.current
     )
-
     update_identifier_files_size
-
-    if payment.checkout_session_id != params[:session_id]
-      Rails.logger.warn("Resource #{params[:resource_id]} received a payment for wrong checkout session #{params[:checkout_session_id]}")
-    end
 
     begin
       session = Stripe::Checkout::Session.retrieve(params[:session_id])
@@ -69,12 +71,14 @@ class PaymentsController < ApplicationController
         payment_email: session[:customer_email] || session[:customer_details][:email]
       )
       return unless identifier.old_system_valid_payer?
+      return unless identifier.payment_type.to_s.in?('stripe', 'unknown', '')
 
       identifier.update(payment_type: 'stripe', payment_id: payment.payment_id)
     rescue StandardError => e
       Rails.logger.warn("Could not fetch payment details for resource #{@resource.id}, error: #{e.message}")
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   def reset_payment
     identifier = StashEngine::Identifier.find(params[:identifier_id])

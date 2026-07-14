@@ -126,7 +126,7 @@ export default function ImageMenu({editor, editorId, active}) {
   };
 
   return (
-    <div className="imageSelect" role="menuitem">
+    <div className="imageSelect">
       <button
         type="button"
         className={active ? 'active' : undefined}
@@ -135,6 +135,7 @@ export default function ImageMenu({editor, editorId, active}) {
         aria-expanded="false"
         aria-controls={`${editorId}imageMenu`}
         onClick={openMenu}
+        tabIndex="-1"
       >{icons.image}
       </button>
       <div className="imageMenu" id={`${editorId}imageMenu`} hidden>
