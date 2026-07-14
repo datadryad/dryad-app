@@ -48,6 +48,14 @@ class SponsoredPaymentsService
     end
   end
 
+  def remove_logs
+    logs_to_delete = identifier.sponsored_payment_logs
+    published_activity = identifier.last_published_status
+    logs_to_delete = logs_to_delete.where(created_at: [published_activity.created_at..]) if published_activity.present?
+
+    logs_to_delete.map(&:destroy)
+  end
+
   private
 
   def update_identifier_files_size
