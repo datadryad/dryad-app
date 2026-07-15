@@ -14,6 +14,6 @@
     <%= label_tag(:description, 'Description', for: "description#{saved_search.id}", style: "font-size: .98rem") %>
     <%= text_area_tag(:description, saved_search.description, id: "description#{saved_search.id}", class: 'c-input__textarea', style: 'width: 100%; min-height: 2rem;') %>
   </div>
-  <button type="submit" aria-label="Save" class="c-admin-edit-icon" title="Save"><i class="fa fa-floppy-disk" aria-hidden="true"></i></button>
-  <button type="button" aria-label="Cancel" title="Cancel" id="cancel_save<%= saved_search.id %>" class="c-admin-edit-icon"><i class="fa fa-times" aria-hidden="true"></i></button>
+  <button type="submit" aria-label="Save edits for: <%= saved_search.title %>" class="c-admin-edit-icon" title="Save"><i class="fa fa-floppy-disk" aria-hidden="true"></i></button>
+  <button type="button" aria-label="Cancel edits to: <%= saved_search.title %>" title="Cancel" id="cancel_save<%= saved_search.id %>" class="c-admin-edit-icon"><i class="fa fa-times" aria-hidden="true"></i></button>
 <% end %>

@@ -1,4 +1,4 @@
-<h1><% if @bank.id.present? %>Update <%= @bank.label %><% else %>Create a new word bank<% end %></h1>
+<h1 id="dialog-title"><% if @bank.id.present? %>Update <%= @bank.label %><% else %>Create a new word bank<% end %></h1>
 <%= form_with(url: @bank.id.present? ? cedar_word_bank_update_path : cedar_word_bank_create_path, method: :post, local: false) do |form| -%>
   <div class="c-input">
     <%= form.label :label, "Word bank label", class: 'c-input__label' %>

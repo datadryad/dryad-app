@@ -1,4 +1,4 @@
-<h1>Update <%= @tenant.id %></h1>
+<h1 id="dialog-title">Update <%= @tenant.id %></h1>
 <%= form_with(url: tenant_update_path, method: :post, local: false) do |form| -%>
   <%= render partial: 'form', locals: {form: form} %>
   <div class="c-modal__buttons-right">

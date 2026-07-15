@@ -48,7 +48,7 @@ export default function ReadMeImport({title, setValue}) {
           <i className="fa fa-upload" aria-hidden="true" />{' '}{title || 'Import README'}
         </label>
       </div>
-      <dialog id="bad-readme-modal" className="modalDialog" aria-modal="true">
+      <dialog id="bad-readme-modal" className="modalDialog" aria-modal="true" aria-labelledby="dialog-title">
         <div className="modalClose">
           <button
             aria-label="Close"
@@ -60,7 +60,7 @@ export default function ReadMeImport({title, setValue}) {
           />
         </div>
         <div>
-          <h1>File not accepted</h1>
+          <h1 id="dialog-title">File not accepted</h1>
           <p>Only <a href="https://www.markdownguide.org/">Markdown format</a> README imports are accepted.</p>
           <p>Have a different file type? Try copying and pasting the contents of your file into the editor!</p>
         </div>
