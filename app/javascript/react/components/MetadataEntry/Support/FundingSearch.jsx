@@ -5,11 +5,13 @@ import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
 function FundingSearch({contributor, updateFunder}) {
   const [grantnum, setGrantnum] = useState(contributor.award_number || '');
+  const [saving, setSaving] = useState(false);
   const [autoBlurred, setAutoBlurred] = useState(false);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const setFundingFromSearch = (fields) => {
-    if (fields) {
+    if (!saving && fields) {
+      setSaving(true);
       try {
         showSavingMsg();
         const contrib = JSON.parse(fields);
@@ -32,6 +34,7 @@ function FundingSearch({contributor, updateFunder}) {
         return false;
       }
     }
+    setSaving(false);
     return false;
   };
 
