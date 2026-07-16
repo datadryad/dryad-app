@@ -48,7 +48,7 @@ RSpec.feature 'ChangeLog', type: :feature, js: true do
       end
 
       it 'shows the metadata log with correct contents' do
-        find('button[aria-label="Metadata changes"]').click
+        find("button[aria-label=\"Metadata changes v#{@resource.stash_version.version}\"]").click
         within(:css, "#metadata_table_#{@resource.id} tbody") do
           expect(page).to have_text('Submission title:')
           expect(page).to have_text(CGI.unescapeHTML(@resource.title.html_safe))
@@ -77,7 +77,7 @@ RSpec.feature 'ChangeLog', type: :feature, js: true do
         click_button 'Files'
         add_required_data_files
         click_button 'Rename file valid.csv'
-        fill_in 'Rename file valid.csv', with: 'super-valid'
+        fill_in 'Rename valid.csv', with: 'super-valid'
         click_button 'Save new name for valid.csv'
         expect(page).to have_text('All progress saved')
         expect(page).to have_text('super-valid.csv')
@@ -85,7 +85,7 @@ RSpec.feature 'ChangeLog', type: :feature, js: true do
         sign_out
         sign_in(curator)
         visit activity_log_path(id: @resource.identifier_id)
-        find('button[aria-label="File changes"]').click
+        find("button[aria-label=\"File changes v#{@resource.stash_version.version}\"]").click
         expect(find("#files_table_#{@resource.id}")).to have_text('Created: README.md')
         expect(find("#files_table_#{@resource.id}")).to have_text('Created: valid.csv (501 B)')
         expect(find("#files_table_#{@resource.id}")).to have_text('Renamed valid.csv → super-valid.csv')

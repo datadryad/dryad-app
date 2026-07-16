@@ -53,6 +53,7 @@ export default function Affiliations({
               isRequired: true,
               errorId: 'author_aff_error',
               desBy: `${id}-${`aff${i}`}-ex`,
+              autoComplete: 'organization',
             }}
           />
           <div id={`${id}-${`aff${i}`}-ex`}><i aria-hidden="true" />Employer or sponsor</div>

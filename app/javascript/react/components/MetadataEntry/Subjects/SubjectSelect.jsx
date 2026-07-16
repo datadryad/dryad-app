@@ -21,7 +21,10 @@ function SubjectSelect({
                 title="Remove"
                 type="button"
                 className="c-keywords__keyword-remove"
-                onClick={() => remove(subj.id || subj)}
+                onClick={() => {
+                  remove(subj.id || subj);
+                  document.getElementById(id).focus();
+                }}
               >
                 <i className="fas fa-times" aria-hidden="true" />
               </button>

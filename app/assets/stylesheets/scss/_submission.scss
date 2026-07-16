@@ -590,21 +590,23 @@ dialog#submission-step[open] {
     }
   }
 
+  & > div > div > *:first-child {
+    margin-top: 0;
+  }
+
   &.open {
     flex: 1 1 920px;
     & > div {
       max-width: 920px;
     }
   }
+}
 
+#submission-wizard, #submission-payment {
   fieldset {
     border: none;
     padding: 0;
     margin: 0;
-  }
-
-  & > div > div > *:first-child {
-    margin-top: 0;
   }
 
   *[aria-invalid="true"]:not(.milkdown):not(fieldset) {

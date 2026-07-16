@@ -133,9 +133,11 @@ select:has(option[value='']:checked) {
 }
 
 .c-ac__error_message {
-  padding: 5px;
   background-color: $red;
-  color: white;
+  color: white !important;
+  &:not(:empty) {
+  	padding: 5px;
+  }
 }
 
 .c-ac__checkbox {

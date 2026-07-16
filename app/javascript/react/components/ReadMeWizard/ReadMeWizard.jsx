@@ -9,7 +9,9 @@ import MarkdownEditor from '../MarkdownEditor';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 import ReadmeWarning from './ReadmeWarning';
 
-export default function ReadMeWizard({resource, setResource, current}) {
+export default function ReadMeWizard({
+  resource, setResource, current, error,
+}) {
   const [loading, setLoading] = useState(true);
   const [desc, setDesc] = useState(null);
   const [fileList, setFileList] = useState([]);
@@ -48,12 +50,13 @@ export default function ReadMeWizard({resource, setResource, current}) {
       fileList={fileList}
       readmeFile={readmeFile}
       warning={<ReadmeWarning resource={resource} />}
+      error={error}
     />
   );
 }
 
 function ReadMe({
-  dcsDescription, title, doi, setResource, fileList, readmeFile, warning,
+  dcsDescription, title, doi, setResource, fileList, readmeFile, warning, error,
 }) {
   const [initialValue, setInitialValue] = useState(null);
   const [replaceValue, setReplaceValue] = useState(null);
@@ -188,6 +191,7 @@ function ReadMe({
           onChange={checkDescription}
           onReplace={saveDescription}
         />
+        <div role="alert">{error}</div>
         <dialog
           id="restart-wizard-dialog"
           className="modalDialog"

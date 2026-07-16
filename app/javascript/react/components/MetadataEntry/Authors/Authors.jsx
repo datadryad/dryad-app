@@ -7,7 +7,7 @@ import {showSavedMsg, showSavingMsg, showModalYNDialog} from '../../../../lib/ut
 import AuthorForm from './AuthorForm';
 
 export default function Authors({
-  resource, setResource, user, current,
+  resource, setResource, user, current, error,
 }) {
   const [users, setUsers] = useState(resource.users);
   const [authors, setAuthors] = useState(resource.authors);
@@ -148,7 +148,7 @@ export default function Authors({
           + Add group author
         </button>
       </div>
-
+      <div role="alert">{error}</div>
       {authors.length === 1 && (
         <div className="callout warn">
           <p>

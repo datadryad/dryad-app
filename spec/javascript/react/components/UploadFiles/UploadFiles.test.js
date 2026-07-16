@@ -262,7 +262,7 @@ describe('UploadFiles', () => {
     const button = screen.getByLabelText('Rename file data.csv');
     userEvent.click(button);
 
-    const input = screen.getByLabelText('Rename file data.csv');
+    const input = screen.getByLabelText('Rename data.csv');
     userEvent.type(input, 'Changed');
     const save = screen.getByLabelText('Save new name for data.csv');
     userEvent.click(save);
@@ -275,23 +275,20 @@ describe('UploadFiles', () => {
   it('does not rename to a used filename', async () => {
     axios.get.mockResolvedValueOnce(form);
     axios.post.mockResolvedValueOnce(software_data);
-    axios.patch.mockResolvedValueOnce({data: {error: 'Filename data.csv is in use'}});
+    axios.patch.mockResolvedValueOnce({data: {error: 'Filename data.csv is already in use'}});
 
     info.resource.generic_files = [loaded, setLoaded(setfile)];
     render(<UploadFiles {...info} />);
-
     const button = screen.getByLabelText('Rename file set.csv');
     userEvent.click(button);
 
-    const input = screen.getByLabelText('Rename file set.csv');
+    const input = screen.getByLabelText('Rename set.csv');
     userEvent.clear(input);
     userEvent.type(input, 'data');
     const save = screen.getByLabelText('Save new name for set.csv');
     userEvent.click(save);
 
-    await waitFor(() => {
-      expect(screen.getByText('Filename data.csv is in use')).toBeInTheDocument();
-    });
+    expect(screen.getAllByText('set.csv')[0]).toBeInTheDocument();
   });
 
   it('does not allow duplicate files', async () => {

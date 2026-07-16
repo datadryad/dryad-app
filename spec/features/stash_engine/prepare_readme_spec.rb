@@ -70,7 +70,7 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
         fname = Faker::Creature::Animal.name
         click_button 'Files'
         click_button "Rename file #{file.download_filename}"
-        fill_in "Rename file #{file.download_filename}", with: fname
+        fill_in "Rename #{file.download_filename}", with: fname
         click_button "Save new name for #{file.download_filename}"
         expect(page).to have_text('All progress saved')
         click_button 'README'
