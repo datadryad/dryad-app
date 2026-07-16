@@ -423,11 +423,18 @@ describe CurationService do
       end
     end
 
-    it 'sets flags for withdrawn' do
-      CurationService.new(resource: resource, user: curator, status: 'withdrawn').process
-      expect(identifier.pub_state).to eq('withdrawn')
-      expect(resource.meta_view).to eq(false)
-      expect(resource.file_view).to eq(false)
+    describe 'when withdrawing' do
+      it 'sets flags for withdrawn' do
+        CurationService.new(resource: resource, user: curator, status: 'withdrawn').process
+        expect(identifier.pub_state).to eq('withdrawn')
+        expect(resource.meta_view).to eq(false)
+        expect(resource.file_view).to eq(false)
+      end
+
+      it 'calls service to remove sponsored payment logs' do
+        expect_any_instance_of(SponsoredPaymentsService).to receive(:remove_logs)
+        CurationService.new(resource: resource, user: curator, status: 'withdrawn').process
+      end
     end
 
     describe 'retractions' do
@@ -482,7 +489,7 @@ describe CurationService do
       it "does not call log_payment if status is #{status}" do
         service.process
 
-        expect(SponsoredPaymentsService).not_to receive(:new)
+        expect_any_instance_of(SponsoredPaymentsService).not_to receive(:log_payment)
         CurationService.new(resource: resource, user: curator, status: status).process
       end
     end
