@@ -72,7 +72,7 @@ Shibboleth flow of control
 - InCommon (or the IdP?) directs users to our SP to initialize the
   transaction, with a URL like https://datadryad.org/Shibboleth.sso/Login, including the IdP entityID and a redirect URL
   - Apache detects that Shibboleth.sso is protected by mod_shib, so it hands control to the shibd process
-- shibd sends to https://wayf.incommonfederation.org/DS/WAYF
+- shibd sends to https://wayfinder.incommon.org/
    - IdP makes a SAML assertion and sends it back to shibd
    - Apache sees it's approved and forwards to puma
 - Once login is complete, control goes back to https://datadryad.org/auth/shibboleth/callback,

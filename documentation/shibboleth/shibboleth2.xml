@@ -36,7 +36,7 @@
               SAML2
             </SSO>
             -->
-            <SSO discoveryProtocol="SAMLDS" discoveryURL="https://wayf.incommonfederation.org/DS/WAYF"> SAML2 SAML1 </SSO>
+            <SSO discoveryProtocol="SAMLDS" discoveryURL="https://wayfinder.incommon.org/"> SAML2 SAML1 </SSO>
 
             <!-- SAML and local-only logout. -->
             <Logout>SAML2 Local</Logout>
