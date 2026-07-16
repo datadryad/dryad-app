@@ -842,4 +842,17 @@ describe SponsoredPaymentsService do
       end
     end
   end
+
+  describe '#remove_logs' do
+    let!(:tenant) { create(:tenant) }
+    let(:resource1) { create(:resource, identifier: identifier, tenant: tenant, created_at: 1.day.ago) }
+    let(:resource2) { create(:resource, identifier: identifier, tenant: tenant, created_at: 1.hour.ago) }
+    let!(:log1) { create(:sponsored_payment_log, resource: resource1, ldf: 259, payer: tenant, sponsor_id: tenant.id, created_at: 1.day.ago) }
+    let!(:log2) { create(:sponsored_payment_log, resource: resource2, ldf: 205, payer: tenant, sponsor_id: tenant.id, created_at: 1.hour.ago) }
+
+    it 'deletes all logs' do
+      CurationService.new(status: 'withdrawn', resource: resource2).process
+      expect(identifier.reload.sponsored_payment_logs).to be_empty
+    end
+  end
 end

@@ -142,7 +142,7 @@
 		margin-right: .5ch;
 	}
 	&.user {
-		color: $medium-blue
+		color: #3794C3;
 	}
 	&.inst {
 		color: $dark-green;
@@ -169,5 +169,8 @@
 	}
 	&.research_integrity {
 		color: #965a3e;
+	}
+	&.future_publication {
+		color: #277c93;
 	}
 }

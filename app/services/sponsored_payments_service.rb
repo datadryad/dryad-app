@@ -48,6 +48,10 @@ class SponsoredPaymentsService
     end
   end
 
+  def remove_logs
+    identifier.sponsored_payment_logs.map(&:destroy)
+  end
+
   private
 
   def update_identifier_files_size

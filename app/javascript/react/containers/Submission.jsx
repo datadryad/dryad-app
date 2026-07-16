@@ -243,8 +243,8 @@ function Submission({
     if (et) {
       const ind = et.dataset.index;
       const inv = ind
-        ? el.querySelectorAll(`*[aria-errormessage="${et.id}"]`)[ind]
-        : el.querySelector(`*[aria-errormessage="${et.id}"]`);
+        ? el.querySelectorAll(`*[aria-errormessage*="${et.id}"]`)[ind]
+        : el.querySelector(`*[aria-errormessage*="${et.id}"]`);
       if (inv) inv.setAttribute('aria-invalid', true);
     }
   };
@@ -273,10 +273,12 @@ function Submission({
     } else if (payment) {
       main.classList.remove('submission-review');
       window.history.pushState(null, null, '?payment');
+      document.title = 'Dryad | Submission | Payment';
     } else if (review && step.name === 'Create a submission') {
       main.classList.add('submission-review');
       if (url) document.querySelector(`*[data-slug=${url}]`)?.focus();
       window.history.pushState(null, null, null);
+      document.title = 'Dryad | Submission | Preview';
     } else if (review) {
       main.classList.remove('submission-review');
     } else {
@@ -285,6 +287,7 @@ function Submission({
     if (step.name !== 'Create a submission') {
       const slug = step.name.split(/[^a-z]/i)[0].toLowerCase();
       if (slug !== url) window.history.pushState(null, null, `?${slug}`);
+      document.title = `Dryad | Submission | ${step.name}`;
     }
   }, [review, step, payment]);
 
@@ -367,12 +370,12 @@ function Submission({
             ) : <ExitButton resource={resource} />}
           </div>
         </div>
-        <nav aria-label="Submission editing" className={step.name !== 'Create a submission' || payment ? 'screen-reader-only' : null}>
+        <nav aria-label="Submission editing" hidden={step.name !== 'Create a submission' || payment || null}>
           <Checklist steps={steps} step={{}} setStep={setStep} open />
         </nav>
         {step.name === 'Create a submission' && (
           <>
-            <div id="submission-preview" ref={previewRef} className={`${user.curator ? 'track-changes' : ''} ${payment ? 'screen-reader-only' : ''}`}>
+            <div id="submission-preview" ref={previewRef} className={`${user.curator ? 'track-changes' : ''}`} hidden={payment || null}>
               {steps().map((s) => (
                 <section key={s.name} aria-label={s.name} aria-live="polite">
                   {s.preview}
@@ -461,7 +464,7 @@ function Submission({
       <div className="submission-edit">
         <ChecklistNav steps={steps} step={step} setStep={setStep} open={open} setOpen={setOpen} />
         <div id="submission-wizard" className={open ? 'open' : null}>
-          <div id="submission-step" role="region" aria-label={step.name} aria-live="polite" aria-describedby="submission-help-text">
+          <div id="submission-step" role="region" aria-label={step.name} aria-describedby="submission-help-text">
             <div>
               <div id="submission-header">
                 <h2 className="o-heading__level2" tabIndex="-1" id="submission-step-title">{step.name}</h2>
@@ -517,7 +520,7 @@ function Submission({
                   <ExitButton resource={resource} />
                 </div>
               </div>
-              <div id="submission-help-text" aria-label="Section help">
+              <div id="submission-help-text" aria-live="polite" aria-label="Section help">
                 {step.name === 'Create a submission' && (
                   <p>Questions? Check this spot for helpful information about each step!</p>
                 )}
