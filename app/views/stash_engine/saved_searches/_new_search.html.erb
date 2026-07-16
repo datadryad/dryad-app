@@ -1,4 +1,5 @@
-<h1>Save this search</h1>
+<h1 id="dialog-title">Save this search</h1>
+<div class="callout alt" role="status"></div>
 <% if current_user.present? %>
   <% if current_user.public_searches.count == 50 %>
     <p>You have 50 saved searches. Please delete one of your <a href="/account#saved" style="font-weight: normal;">existing saved searches</a> to create more.</p>

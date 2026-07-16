@@ -34,6 +34,7 @@ class ApiApplicationController < StashEngine::ApplicationController
 
       # TODO: hook into bugsnag when we get to it
       # Bugsnag.notify(err)
+      AuthFailureService.new(request, @user, params).create(:api_unauthorized) if response_status == 401
       object = StashApi::Error::ServerError.new(err.message, original: err)
     end
 
@@ -106,7 +107,7 @@ class ApiApplicationController < StashEngine::ApplicationController
     return unless @user.blank?
 
     api_logger.error('require_api_user')
-    render json: { error: 'Unauthorized, must have current bearer token' }.to_json, status: 401
+    log_unauthorized_access(message: 'Unauthorized, must have current bearer token')
   end
 
   def optional_api_user
@@ -122,6 +123,12 @@ class ApiApplicationController < StashEngine::ApplicationController
               # Client Credentials Grant type
               doorkeeper_token.application.owner
             end
+
+    if doorkeeper_token.expired?
+      api_logger.error('require_api_user')
+      AuthFailureService.new(request, @user, params).create(:api_expired_token)
+      render json: { error: 'Token expired' }.to_json, status: 401 and return
+    end
 
     logger.info("User: #{@user&.id}")
   end
@@ -146,35 +153,35 @@ class ApiApplicationController < StashEngine::ApplicationController
     return if @resource.permission_to_edit?(user: @user)
 
     api_logger.error('require_permission')
-    render json: { error: 'unauthorized' }.to_json, status: 401
+    log_unauthorized_access
   end
 
   def require_superuser
     return if @user.superuser?
 
     api_logger.error('require_superuser')
-    render json: { error: 'unauthorized' }.to_json, status: 401
+    log_unauthorized_access
   end
 
   def require_min_app_admin
     return if @user.min_app_admin?
 
     api_logger.error('require_min_app_admin')
-    render json: { error: 'unauthorized' }.to_json, status: 401
+    log_unauthorized_access
   end
 
   def require_curator
     return if @user.min_curator?
 
     api_logger.error('require_curator')
-    render json: { error: 'unauthorized' }.to_json, status: 401
+    log_unauthorized_access
   end
 
   def require_admin
-    return if current_user && current_user.min_admin?
+    return if current_user&.min_admin?
 
     api_logger.error('require_admin')
-    render json: { error: 'unauthorized' }.to_json, status: 401
+    log_unauthorized_access
   end
 
   # call this like return_error(messages: 'blah', status: 400) { yield }
@@ -202,5 +209,10 @@ class ApiApplicationController < StashEngine::ApplicationController
     api_logger.info("Path: #{request.path}")
     api_logger.info("Params: #{request.params}")
     api_logger.info("Body: #{request.body}")
+  end
+
+  def log_unauthorized_access(message: 'unauthorized')
+    AuthFailureService.new(request, nil, params).create(:api_unauthorized)
+    render json: { error: message }.to_json, status: 401
   end
 end

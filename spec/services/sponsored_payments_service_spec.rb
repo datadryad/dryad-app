@@ -88,6 +88,14 @@ describe SponsoredPaymentsService do
                 }.stringify_keys
               )
             end
+
+            context 'but the first submitted date was before 2026-01-01' do
+              before do
+                identifier.process_date.update(processing: '2025-12-31'.to_datetime.end_of_day)
+              end
+
+              include_examples('does not create sponsored payment log')
+            end
           end
 
           context 'when tenant has a sponsor' do
@@ -832,6 +840,19 @@ describe SponsoredPaymentsService do
           end
         end
       end
+    end
+  end
+
+  describe '#remove_logs' do
+    let!(:tenant) { create(:tenant) }
+    let(:resource1) { create(:resource, identifier: identifier, tenant: tenant, created_at: 1.day.ago) }
+    let(:resource2) { create(:resource, identifier: identifier, tenant: tenant, created_at: 1.hour.ago) }
+    let!(:log1) { create(:sponsored_payment_log, resource: resource1, ldf: 259, payer: tenant, sponsor_id: tenant.id, created_at: 1.day.ago) }
+    let!(:log2) { create(:sponsored_payment_log, resource: resource2, ldf: 205, payer: tenant, sponsor_id: tenant.id, created_at: 1.hour.ago) }
+
+    it 'deletes all logs' do
+      CurationService.new(status: 'withdrawn', resource: resource2).process
+      expect(identifier.reload.sponsored_payment_logs).to be_empty
     end
   end
 end

@@ -20,15 +20,15 @@
           <td><%= resource.editor ? "<a href=\"#{user_admin_profile_path(id: resource.editor.id)}\">#{resource.editor.name}</a>".html_safe : '' %></td>
           <td>
             <div class="input-line">
-              <button class="c-admin-edit-icon log-button" title="Curation activity" aria-label="Curation activity" aria-controls="cactivity_<%=resource.id %>" aria-expanded="false">
+              <button class="c-admin-edit-icon log-button" title="Curation activity" aria-label="Curation activity v<%= resource.stash_version.version %>" aria-controls="cactivity_<%=resource.id %>" aria-expanded="false">
                 <i class="fas fa-comment" aria-hidden="true"></i>
               </button>
               <% if resource.updated_at > Date.parse('2025-06-24') %>
-                <button class="c-admin-edit-icon log-button" title="Metadata changes" aria-label="Metadata changes" aria-controls="changes_<%= resource.id %>" aria-expanded="false">
+                <button class="c-admin-edit-icon log-button" title="Metadata changes" aria-label="Metadata changes v<%= resource.stash_version.version %>" aria-controls="changes_<%= resource.id %>" aria-expanded="false">
                   <i class="fas fa-user-pen" aria-hidden="true"></i>
                 </button>
                 <% if resource.files_changed? %>
-                  <button class="c-admin-edit-icon log-button" title="File changes" aria-label="File changes" aria-controls="file_changes_<%= resource.id %>" aria-expanded="false">
+                  <button class="c-admin-edit-icon log-button" title="File changes" aria-label="File changes v<%= resource.stash_version.version %>" aria-controls="file_changes_<%= resource.id %>" aria-expanded="false">
                     <i class="fas fa-file-pen" aria-hidden="true"></i>
                   </button>
                 <% end %>
@@ -40,11 +40,11 @@
           <td colspan="7">
             <div class="changes-header">
               <p style="margin: 1ch 0 .25ch; font-weight: bold" role="heading" aria-level="3">Version <%= resource.stash_version.version %> curation activity</p>
-              <button class="c-admin-edit-icon log-close" aria-label="Close">
+              <button class="c-admin-edit-icon log-close" aria-label="Close v<%= resource.stash_version.version %> curation activity">
                 <i class="fas fa-lg fa-close" aria-hidden="true"></i>
               </button>
             </div>
-            <div id="activity_log_<%=resource.id %>" data-load="<%= stash_url_helpers.activity_path(format: :js, id: resource.id) %>" aria-busy="true" aria-live="polite">
+            <div id="activity_log_<%=resource.id %>" data-load="<%= stash_url_helpers.activity_path(format: :js, id: resource.id) %>" aria-busy="true">
               <p><i class="fas fa-spin fa-spinner" aria-hidden="true"></i></p>
             </div>
           </td>
@@ -54,11 +54,11 @@
             <td colspan="7">
               <div class="changes-header">
                 <p style="margin: 1ch 0 .25ch; font-weight: bold" role="heading" aria-level="3">Version <%= resource.stash_version.version %> changes</p>
-                <button class="c-admin-edit-icon log-close" aria-label="Close">
+                <button class="c-admin-edit-icon log-close" aria-label="Close v<%= resource.stash_version.version %> changes">
                   <i class="fas fa-lg fa-close" aria-hidden="true"></i>
                 </button>
               </div>
-              <div id="change_log_<%=resource.id %>" data-load="<%= stash_url_helpers.change_log_path(format: :js, id: resource.id) %>" aria-busy="true" aria-live="polite">
+              <div id="change_log_<%=resource.id %>" data-load="<%= stash_url_helpers.change_log_path(format: :js, id: resource.id) %>" aria-busy="true">
                 <p><i class="fas fa-spin fa-spinner" aria-hidden="true"></i></p>
               </div>
             </td>
@@ -68,11 +68,11 @@
               <td colspan="7">
                 <div class="changes-header">
                   <p style="margin: 1ch 0 .25ch; font-weight: bold" role="heading" aria-level="3">Version <%= resource.stash_version.version %> file changes</p>
-                  <button class="c-admin-edit-icon log-close" aria-label="Close">
+                  <button class="c-admin-edit-icon log-close" aria-label="Close v<%= resource.stash_version.version %> file changes">
                     <i class="fas fa-lg fa-close" aria-hidden="true"></i>
                   </button>
                 </div>
-                <div id="file_change_log_<%=resource.id %>" data-load="<%= stash_url_helpers.file_log_path(format: :js, id: resource.id) %>" aria-busy="true" aria-live="polite">
+                <div id="file_change_log_<%=resource.id %>" data-load="<%= stash_url_helpers.file_log_path(format: :js, id: resource.id) %>" aria-busy="true">
                   <p><i class="fas fa-spin fa-spinner" aria-hidden="true"></i></p>
                 </div>
               </td>

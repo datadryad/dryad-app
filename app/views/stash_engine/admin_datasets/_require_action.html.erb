@@ -1,4 +1,4 @@
-<h1>Action required report</h1>
+<h1 id="dialog-title">Action required report</h1>
 <%= form_with(url: make_report_path(id: @resource&.id), method: :post, local: false) do %>    
   <% if @resource.id != @identifier.latest_resource.id %>
     <div class="callout warn">

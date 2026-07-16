@@ -1,4 +1,4 @@
-<h1>Sensitive data alerts</h1>
+<h1 id="dialog-title">Sensitive data alerts</h1>
 <% if @report %>
   <% @report['issues'].group_by { |issue| issue['pattern'] }.each do |type, matches| %>
     <p class="c-alert--error-lite">

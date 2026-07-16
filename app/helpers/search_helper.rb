@@ -45,9 +45,11 @@ module SearchHelper
 
     array.each_slice(2) do |v, i|
       selected = open?(type) && params[filter_to_term[type]].include?(v)
-      list += "<li>#{selected ? filter_display(type, v) : link_to(filter_display(type, v), filter_search(type, v))}"
+      disp = filter_display(type, v)
+      list += "<li>#{selected ? disp : link_to(disp, filter_search(type, v))}"
       list += if selected
-                "<a href=\"#{remove_filter(type, v)}\" aria-label=\"Remove\"><i class=\"fas fa-trash-can\"></i></a>"
+                "<a href=\"#{remove_filter(type, v)}\" aria-label=\"Remove filter for #{disp}\" title=\"Remove\">
+                <i class=\"fas fa-trash-can\" aria-hidden=\"true\"></i></a>"
               else
                 "<span class=\"filter-count\">#{i}</span>"
               end

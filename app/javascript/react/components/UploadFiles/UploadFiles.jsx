@@ -37,10 +37,10 @@ const AllowedUploadFileTypes = {
   supp: 'supp',
 };
 
-export const displayAriaMsg = (msg) => {
+export const displayAriaMsg = (msg, clear) => {
   const el = document.getElementById('aria-info');
+  if (clear) el.innerHTML = '';
   const content = document.createTextNode(msg);
-  el.innerHTML = '';
   el.appendChild(content);
 };
 
@@ -69,8 +69,9 @@ const changeStatusToProgressBar = (chosenFileId) => {
 };
 
 export default function UploadFiles({
-  resource, setResource, previous, config_maximums, config_s3, s3_dir_name, current, pubDates,
+  resource, setResource, previous, config_maximums, config_s3, s3_dir_name, current, pubDates, error,
 }) {
+  const [touched, setTouched] = useState(false);
   const [initialLoad, setInitialLoad] = useState(false);
   const [chosenFiles, setChosenFiles] = useState([]);
   const [validating, setValidating] = useState([]);
@@ -130,6 +131,7 @@ export default function UploadFiles({
   }, [changes]);
 
   useEffect(() => {
+    if (chosenFiles.length) setTouched(true);
     if (chosenFiles.some((f) => f.uploadType !== 'data')) setZenodo(true);
     chosenFiles.forEach((f) => {
       if (f.status === 'Uploaded' && f.tabularCheckStatus === TabularCheckStatus.checking) setValidating((v) => [...v, f]);
@@ -216,7 +218,7 @@ export default function UploadFiles({
         const transformed = transformData(response.data);
         const files = setTabularCheckStatus(transformed);
         updateAlreadyChosenById(files);
-      }).catch((error) => console.log(error));
+      }).catch((err) => console.log(err));
     }
   }, [pollingCount]);
 
@@ -343,8 +345,11 @@ export default function UploadFiles({
                 }
                 return c;
               }));
-              displayAriaMsg(`${new_file.original_filename} finished uploading`);
-            }).catch((error) => console.log(error));
+              displayAriaMsg(` ${new_file.original_filename} finished uploading.`);
+              if (new_file.download_filename !== new_file.original_filename) {
+                displayAriaMsg(` File name was changed to ${new_file.download_filename}.`);
+              }
+            }).catch((err) => console.log(err));
           },
         };
         // Before start uploading, change file status cell to a progress bar
@@ -363,7 +368,6 @@ export default function UploadFiles({
 
   const addFilesHandler = (event, uploadType) => {
     const timestamp = Date.now();
-    displayAriaMsg('Your files are being checked');
     setWarning([]);
     const files = discardFiles([...event.target.files], uploadType);
     const fileCount = chosenFiles.filter((f) => f.uploadType === uploadType).length + files.length;
@@ -373,7 +377,7 @@ export default function UploadFiles({
     if (fileCount > maxFiles) {
       setWarning([...warning, Messages.tooManyFiles]);
     } else {
-      displayAriaMsg('Your files were added and are being uploaded.');
+      displayAriaMsg('Your files were added and are being uploaded. File names may be changed to replace special and protected characters.', true);
       // TODO: make a function?; future: unify adding file attributes
       const newFiles = files.map((file, index) => {
         file.id = `pending${timestamp + index / 1000}`;
@@ -439,11 +443,11 @@ export default function UploadFiles({
         .then(() => {
           setChosenFiles((cf) => cf.filter((f) => f.id !== id));
         })
-        .catch((error) => console.log(error));
+        .catch((err) => console.log(err));
     } else {
       setChosenFiles((cf) => cf.filter((f) => f.id !== id));
     }
-    displayAriaMsg(`${file.sanitized_name} removed`);
+    displayAriaMsg(`${file.sanitized_name} removed`, true);
   };
 
   const renameFileHandler = (id, newname) => {
@@ -453,17 +457,19 @@ export default function UploadFiles({
     if (file.status !== 'Pending') {
       axios.patch(`/${file.uploadType}_files/${id}/rename`, {resource_id: resource.id, newfilename})
         .then((data) => {
-          const {error, file: renamed, descriptions} = data.data;
-          if (error) {
-            setWarning([error]);
+          const {error: err, file: renamed, descriptions} = data.data;
+          if (err) {
+            const input = document.getElementById(`fname_${file.id}`).querySelector('.filename-input');
+            document.getElementById(`fname_${file.id}-error`).innerText = err;
+            input.setAttribute('aria-errormessage', `fname_${file.id}-error`);
           } else {
             if (descriptions) setResource((r) => ({...r, descriptions}));
             const transformed = transformData([renamed]);
             setChosenFiles((cf) => cf.map((f) => (f.id === id ? transformed[0] : f)));
+            if (newname !== newfilename) displayAriaMsg(`Special characters automatically replaced; file name changed to ${newfilename}`, true);
           }
         });
     }
-    // displayAriaMsg(`${}`);
   };
 
   const hideModal = (event) => {
@@ -514,7 +520,7 @@ export default function UploadFiles({
           updateManifestFiles(response.data);
           setLoading(false);
         })
-        .catch((error) => console.log(error));
+        .catch((err) => console.log(err));
     }
   };
 
@@ -620,7 +626,7 @@ export default function UploadFiles({
         <div>
           {loading ? (
             <p><i className="fas fa-spin fa-spinner" role="img" aria-label="Loading" /></p>
-          ) : <div className="callout"><p>No files have been selected.</p></div> }
+          ) : <div className="callout warn" role="alert"><p>No files have been selected.</p></div> }
         </div>
       )}
       {pubChanges && (
@@ -649,6 +655,7 @@ export default function UploadFiles({
           Wait for file uploads to complete before leaving this page
         </p>
       </div>
+      <div role="alert">{touched && error}</div>
     </div>
   );
 }

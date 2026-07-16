@@ -49,7 +49,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
 
       find('a[title="Activity log"]').click
       within(:css, '#activity_log_table tbody:last-child') do
-        find('button[aria-label="Curation activity"]').click
+        find("button[aria-label=\"Curation activity v#{@resource.stash_version.version}\"]").click
       end
       expect(page).to have_text('This is the dataset activity page.')
       expect(page).to have_text('Not a valid SF link')
@@ -174,7 +174,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
 
       it 'adds a note to the curation activity log' do
         within(:css, '#activity_log_table tbody:last-child') do
-          find('button[aria-label="Curation activity"]').click
+          find("button[aria-label=\"Curation activity v#{@resource.stash_version.version}\"]").click
         end
         click_button 'Add note'
         fill_in('stash_engine_curation_activity[note]', with: 'This is a test of the note functionality')
@@ -186,7 +186,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
         CurationService.new(status: 'action_required', user_id: @user.id, resource_id: @resource.id).process
         refresh
         within(:css, '#activity_log_table tbody:last-child') do
-          find('button[aria-label="Curation activity"]').click
+          find("button[aria-label=\"Curation activity v#{@resource.stash_version.version}\"]").click
         end
         click_button 'Edit notification date'
         fill_in('identifier_notification_date', with: Date.today + 2.months)

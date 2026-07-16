@@ -121,7 +121,7 @@ module StashEngine
 
       check_files = @resource.generic_files.where(type: @file.type).present_files
       duplicates = check_files.where('lower(download_filename) = ?', params[:newfilename].downcase)
-      render json: { error: "Filename #{params[:newfilename]} is in use" } and return if duplicates.present?
+      render json: { error: "Filename #{params[:newfilename]} is already in use" } and return if duplicates.present?
 
       @file.update(download_filename: params[:newfilename])
       @resource.update(has_file_changes: true)

@@ -45,6 +45,12 @@ class PaymentsController < ApplicationController
   def callback
     payment = @resource.payment || @resource.build_payment
 
+    if payment.checkout_session_id != params[:session_id]
+      message = "Resource #{params[:resource_id]} received a payment for wrong checkout session #{params[:session_id]}"
+      Rails.logger.warn(message)
+      CurationService.new(status: @resource.last_curation_activity&.status, resource: @resource, user: current_user, note: message).process
+    end
+
     # do not update if a resource is already paid
     #  - success page refresh
     return if payment.paid?
@@ -54,26 +60,8 @@ class PaymentsController < ApplicationController
       payment_checkout_session_id: params[:session_id],
       paid_at: Time.current
     )
-
     update_identifier_files_size
-
-    if payment.checkout_session_id != params[:session_id]
-      Rails.logger.warn("Resource #{params[:resource_id]} received a payment for wrong checkout session #{params[:checkout_session_id]}")
-    end
-
-    begin
-      session = Stripe::Checkout::Session.retrieve(params[:session_id])
-      payment.update(
-        payment_intent: session[:payment_intent],
-        payment_status: session[:payment_status],
-        payment_email: session[:customer_email] || session[:customer_details][:email]
-      )
-      return unless identifier.old_system_valid_payer?
-
-      identifier.update(payment_type: 'stripe', payment_id: payment.payment_id)
-    rescue StandardError => e
-      Rails.logger.warn("Could not fetch payment details for resource #{@resource.id}, error: #{e.message}")
-    end
+    update_payment_details
   end
 
   def reset_payment
@@ -101,6 +89,21 @@ class PaymentsController < ApplicationController
     return if SponsoredPaymentsService.new(@resource).loggable?
 
     identifier.update(last_invoiced_file_size: [identifier.last_invoiced_file_size.to_i, @resource.total_file_size].max)
+  end
+
+  def update_payment_details
+    session = Stripe::Checkout::Session.retrieve(params[:session_id])
+    payment.update(
+      payment_intent: session[:payment_intent],
+      payment_status: session[:payment_status],
+      payment_email: session[:customer_email] || session[:customer_details][:email]
+    )
+    return unless identifier.old_system_valid_payer?
+    return unless identifier.payment_type.to_s.in?('stripe', 'unknown', '')
+
+    identifier.update(payment_type: 'stripe', payment_id: payment.payment_id)
+  rescue StandardError => e
+    Rails.logger.warn("Could not fetch payment details for resource #{@resource.id}, error: #{e.message}")
   end
 
   def create_params
