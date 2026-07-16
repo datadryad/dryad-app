@@ -42,7 +42,6 @@ class PaymentsController < ApplicationController
     render json: { clientSecret: session.client_secret }
   end
 
-  # rubocop:disable Metrics/AbcSize
   def callback
     payment = @resource.payment || @resource.build_payment
 
@@ -64,7 +63,6 @@ class PaymentsController < ApplicationController
     update_identifier_files_size
     update_payment_details
   end
-  # rubocop:enable Metrics/AbcSize
 
   def reset_payment
     identifier = StashEngine::Identifier.find(params[:identifier_id])
