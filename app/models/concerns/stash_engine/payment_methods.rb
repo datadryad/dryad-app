@@ -145,7 +145,10 @@ module StashEngine
 
       # do not remove recorded institution sponsor due to sponsorship change
       return true if payment_id.present? && payment_id == tenant&.id
-      return false unless PayersService.new(tenant).payment_sponsor&.payment_configuration&.covers_dpc?
+
+      payment_config = PayersService.new(tenant).payment_sponsor&.payment_configuration
+      return false unless payment_config&.covers_dpc?
+      return false unless payment_config.active?
 
       if tenant&.authentication&.strategy == 'author_match'
         # get all unique ror_id associations for all authors

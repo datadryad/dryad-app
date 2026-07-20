@@ -52,7 +52,10 @@ module StashEngine
     scope :servers, -> { where(preprint_server: true) }
 
     def will_pay?
-      PAYMENT_PLANS.include?(payment_sponsor&.payment_configuration&.payment_plan)
+      payment_config = payment_sponsor&.payment_configuration
+      return false unless payment_config&.active?
+
+      PAYMENT_PLANS.include?(payment_config.payment_plan)
     end
 
     def api_journal?
