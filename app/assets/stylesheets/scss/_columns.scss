@@ -21,10 +21,10 @@
 }
 
 #page-columns {
-  flex-direction: column-reverse;
+  flex-direction: column;
 
   @include bp(screen3) {
-    flex-direction: row-reverse;
+    flex-direction: row;
 
     &:first-child:last-child {
       min-height: calc(100vh - 240px);
