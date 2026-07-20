@@ -41,25 +41,25 @@ module StashEngine
 
       if query.start_with?('https://')
         query = RSolr.solr_escape(query.downcase).gsub(' ', '\ ')
-        resp = search('', fq: ["ror_id:#{query}*"], limit: limit)
+        resp = search(query, fq: ["ror_id:#{query}*"], limit: limit)
         resp.dig('response', 'docs') || []
         return map_solr_results(resp.dig('response', 'docs'))
       end
 
       query = RSolr.solr_escape(query.downcase).gsub(' ', '\ ')
       # First, find matches at the beginning of the name string, and exact matches in the acronyms/aliases
-      resp = search('', fq: ["name:#{query}*", "aliases:#{query}", "acronyms:#{query}"], limit: limit)
+      resp = search(query, fq: ["name:#{query}*", "aliases:#{query}", "acronyms:#{query}"], limit: limit)
       results = map_solr_results(resp.dig('response', 'docs'))
 
       # If we don't have enough results, find matches at the beginning of the acronyms/aliases
       if results.count < limit
-        resp = search('', fq: ["aliases:#{query}*", "acronyms:#{query}*"], limit: limit - results.count)
+        resp = search(query, fq: ["aliases:#{query}*", "acronyms:#{query}*"], limit: limit - results.count)
         results += map_solr_results(resp.dig('response', 'docs'))
       end
 
       # If we don't have enough results, find matches elsewhere in the name string
       if results.count < limit
-        resp = search('', fq: ["name:*#{query}*"], limit: limit - results.count)
+        resp = search(query, fq: ["name:*#{query}*"], limit: limit - results.count)
         results += map_solr_results(resp.dig('response', 'docs'))
       end
 

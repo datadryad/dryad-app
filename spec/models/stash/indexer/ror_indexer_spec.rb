@@ -8,7 +8,7 @@ module Stash
           name: 'ROR name',
           acronyms: %w[test common],
           aliases: %w[atest alias],
-          country: 'US'
+          country: 'United States'
         )
       end
       let(:mock_response) { { 'responseHeader' => { 'status' => 0 } } }
@@ -25,7 +25,8 @@ module Stash
               id: ror.id.to_s,
               name: 'ROR name',
               ror_id: 'some_unique_id',
-              country: 'US',
+              country: 'United States',
+              country_priority: 0,
               acronyms: %w[test common],
               aliases: %w[atest alias],
               home_page: nil,
@@ -37,35 +38,35 @@ module Stash
 
       describe '#search' do
         it 'by query string' do
-          filters = { q: 'test', rows: 100 }
+          filters = { q: 'test', rows: 100, sort: 'country_priority asc, score desc' }
           expect(solr_mock).to receive(:get).with('select', params: filters).and_return(mock_response)
 
           StashEngine::RorOrg.search('test')
         end
 
         it 'by query field' do
-          filters = { fq: 'name:some words* OR aliases:test', rows: 100 }
+          filters = { fq: 'name:some words* OR aliases:test', rows: 100, sort: 'country_priority asc, score desc' }
           expect(solr_mock).to receive(:get).with('select', params: filters).and_return(mock_response)
 
           StashEngine::RorOrg.search('', fq: ['name:some words*', 'aliases:test'])
         end
 
         it 'by query field with AND operation' do
-          filters = { fq: 'name:some words* AND aliases:test', rows: 100 }
+          filters = { fq: 'name:some words* AND aliases:test', rows: 100, sort: 'country_priority asc, score desc' }
           expect(solr_mock).to receive(:get).with('select', params: filters).and_return(mock_response)
 
           StashEngine::RorOrg.search('', fq: ['name:some words*', 'aliases:test'], operation: 'AND')
         end
 
         it 'requests specific fields only' do
-          filters = { fq: 'name:some words*', fl: 'id,name', rows: 100 }
+          filters = { fq: 'name:some words*', fl: 'id,name', rows: 100, sort: 'country_priority asc, score desc' }
           expect(solr_mock).to receive(:get).with('select', params: filters).and_return(mock_response)
 
           StashEngine::RorOrg.search('', fq: ['name:some words*'], fl: 'id,name')
         end
 
         it 'limits the results' do
-          filters = { fq: 'name:some words*', fl: 'id,name', rows: 10 }
+          filters = { fq: 'name:some words*', fl: 'id,name', rows: 10, sort: 'country_priority asc, score desc' }
           expect(solr_mock).to receive(:get).with('select', params: filters).and_return(mock_response)
 
           StashEngine::RorOrg.search('', fq: ['name:some words*'], fl: 'id,name', limit: 10)
