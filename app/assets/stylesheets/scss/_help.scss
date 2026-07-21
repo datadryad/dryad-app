@@ -58,6 +58,9 @@
 		i {
 			vertical-align: -2px;
 		}
+		&:hover, &:active {
+			background-color: $medium-blue;
+		}
 	}
 	[type="reset"] {
 		font-family: 'Font Awesome 6 Free';
@@ -87,10 +90,16 @@
 		margin-bottom: 5ch;
 	}
 
-	li {
+	& > li {
 		padding-top: 2ch;
 		margin-bottom: 3ch;
 		border-top: thin solid $light-gray;
+
+		ul {
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+		}
 	}
 
 	a {
@@ -122,6 +131,11 @@
 	}
 }
 .text-tiles {
+	list-style-type: none;
+	margin: 0; padding: 0;
+	li {
+		margin: 0;
+	}
 	a {
 		font-size: 1.15rem;
 	}

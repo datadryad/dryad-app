@@ -54,6 +54,7 @@
 
 #page-content {
   margin-right: auto;
+  max-width: 100%;
 }
 
 .c-columns__sidebar {
@@ -147,6 +148,13 @@
         display: inline-block;
         position: absolute;
         top: 2px; right: 2px;
+      }
+
+      li {
+        display: none;
+      }
+      & > ul:first-of-type > li:first-child {
+        display: block;
       }
     }
 
