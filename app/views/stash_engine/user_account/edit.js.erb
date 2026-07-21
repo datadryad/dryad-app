@@ -1,2 +1,4 @@
-location.reload();
-if(document.getElementById('user_edit_form')) document.getElementById('user_edit_form').reset();
+document.getElementById('user_profile').innerHTML = "<%= escape_javascript(render partial: 'user_profile') %>";
+document.getElementById('api_account').innerHTML = "<%= escape_javascript(render partial: 'api_account') %>";
+document.getElementById('user_edit_form').reset();
+document.getElementById('page-content').querySelector('h1').focus();
