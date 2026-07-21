@@ -98,7 +98,7 @@ module StashEngine
       target_note = "setting manuscript status based on notification from journal #{manuscript.journal&.title} " \
                     "-- manuscript #{manuscript.manuscript_number}, status #{manuscript.status}"
       if manuscript.accepted?
-        target_status = 'queued'
+        target_status = manuscript.identifier.payment_needed? ? 'awaiting_payment' : 'queued'
       elsif manuscript.rejected?
         target_status = 'withdrawn'
         resource.resource_publication.update(publication_name: nil, publication_issn: nil)
