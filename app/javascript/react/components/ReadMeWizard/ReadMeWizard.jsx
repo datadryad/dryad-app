@@ -201,7 +201,9 @@ function ReadMe({
           aria-modal="true"
         >
           <div className="modalClose">
-            <button aria-label="Close" type="button" onClick={() => document.getElementById('restart-wizard-dialog').close()} />
+            <button aria-label="Close" type="button" onClick={() => document.getElementById('restart-wizard-dialog').close()}>
+              <i className="fas fa-close" aria-hidden="true" />
+            </button>
           </div>
           <div>
             <h1 id="readme-alert-title">Are you sure?</h1>

@@ -17,7 +17,8 @@ const modal_url = React.forwardRef(({changedUrls, submitted, clickedClose}, ref)
           aria-label="close"
           type="button"
           onClick={clickedClose}
-        />
+        ><i className="fas fa-close" aria-hidden="true" />
+        </button>
       </h1>
       <textarea
         id="location_urls"
