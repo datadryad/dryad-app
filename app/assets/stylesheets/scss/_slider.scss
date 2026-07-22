@@ -5,11 +5,11 @@
 }
 
 @mixin thumb-style {
-  background-color: $dark-gray;
+  background-color: white;
   cursor: pointer;
   pointer-events: auto;
   border-radius: 50%;
-  border: 3px solid white;
+  border: 3px solid $dark-gray;
 }
 
 .slider {
@@ -71,16 +71,19 @@
     &:hover::-webkit-slider-thumb,
     &:active::-webkit-slider-thumb,
     &:focus::-webkit-slider-thumb {
+      border-color: white;
       background-color: $dark-green;
     }
     &:hover::-moz-range-thumb,
     &:active::-moz-range-thumb,
     &:focus::-moz-range-thumb {
+      border-color: white;
       background-color: $dark-green;
     }
     &:hover::-ms-thumb,
     &:active::-ms-thumb,
     &:focus::-ms-thumb {
+      border-color: white;
       background-color: $dark-green;
     }
 

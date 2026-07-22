@@ -123,7 +123,9 @@ function ImportForm({
         aria-modal="true"
       >
         <div className="modalClose">
-          <button aria-label="Close" type="button" onClick={() => document.getElementById(`overwrite-dialog${importType}`).close()} />
+          <button aria-label="Close" type="button" onClick={() => document.getElementById(`overwrite-dialog${importType}`).close()}>
+            <i className="fas fa-close" aria-hidden="true" />
+          </button>
         </div>
         <div>
           <h1 id="import-alert-title">Overwrite inserted metadata?</h1>

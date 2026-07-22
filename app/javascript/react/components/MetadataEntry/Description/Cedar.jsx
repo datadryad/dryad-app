@@ -223,7 +223,7 @@ export default function Cedar({resource, setResource, templates}) {
       </div>
       <dialog className="modalDialog" id="cedarDialog" aria-modal="true" ref={setRef} aria-label="CEDAR editor">
         <div className="modalClose">
-          <button aria-label="Close" type="button" onClick={() => dialog.current.close()} />
+          <button aria-label="Close" type="button" onClick={() => dialog.current.close()}><i className="fas fa-close" aria-hidden="true" /></button>
         </div>
         <div className="c-modal-content__cedar">
           <cedar-embeddable-editor id="cedarEditor" ref={setRef} />

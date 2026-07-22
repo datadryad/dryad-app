@@ -43,13 +43,6 @@
   margin-left: $spacing-sm;
   font-size: 26px;
 
-  &:after {
-    font-family: 'Font Awesome 6 Free';
-    content: '\f00d';
-    content: '\f00d' / '';
-    font-weight: 900;
-  }
-
   &:hover, &:focus {
     color: $medium-blue;
   }

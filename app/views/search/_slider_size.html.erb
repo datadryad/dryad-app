@@ -3,13 +3,13 @@
   <input type="hidden" name="<%= least_name %>" id="size-least-input" value="<%= least_value || sizes.first %>">
   <input type="hidden" name="<%= most_name %>" id="size-most-input" value="<%= most_value || sizes.last %>">
   <div class="slider-values">
-    <label id="size-least-value" for="size-least"><%= filesize(least_value&.to_i ||sizes.first) %></label>
-    <label id="size-most-value" for="size-most"><%= filesize(most_value&.to_i || sizes.last) %></label>
+    <span id="size-least-value"><%= filesize(least_value&.to_i ||sizes.first) %></span>
+    <span id="size-most-value"><%= filesize(most_value&.to_i || sizes.last) %></span>
   </div>
   <div class="slider">
     <div class="slider-track" id="size-track"></div>
-    <input type="range" min="0" max="<%= sizes.length - 1 %>" value="<%= least_value.present? ? sizes.bsearch_index { |x| least_value.to_i <= x } : 0 %>" id="size-least"/>
-    <input type="range" min="0" max="<%= sizes.length - 1 %>" value="<%= most_value.present? ? sizes.bsearch_index { |x| most_value.to_i <= x } : sizes.length - 1 %>" id="size-most"/>
+    <input type="range" min="0" max="<%= sizes.length - 1 %>" value="<%= least_value.present? ? sizes.bsearch_index { |x| least_value.to_i <= x } : 0 %>" aria-valuetext="<%= filesize(least_value&.to_i ||sizes.first) %>" aria-label="Start of range" id="size-least"/>
+    <input type="range" min="0" max="<%= sizes.length - 1 %>" value="<%= most_value.present? ? sizes.bsearch_index { |x| most_value.to_i <= x } : sizes.length - 1 %>" aria-valuetext="<%= filesize(most_value&.to_i || sizes.last) %>" aria-label="End of range" id="size-most"/>
   </div>
   <script type="text/javascript">
     var strack = document.getElementById('size-track');
@@ -20,8 +20,12 @@
     new DoubleSlider(strack, sleast, smost, svalues)
 
     const formatSize = () => {
-      document.getElementById('size-least-value').textContent = formatSizeUnits(document.getElementById('size-least-input').value)
-      document.getElementById('size-most-value').textContent = formatSizeUnits(document.getElementById('size-most-input').value)
+      const leastValue = formatSizeUnits(document.getElementById('size-least-input').value)
+      const mostValue = formatSizeUnits(document.getElementById('size-most-input').value)
+      sleast.setAttribute('aria-valuetext', leastValue)
+      document.getElementById('size-least-value').textContent = leastValue
+      smost.setAttribute('aria-valuetext', mostValue)
+      document.getElementById('size-most-value').textContent = mostValue
     }
     sleast.addEventListener('input', formatSize)
     smost.addEventListener('input', formatSize)
