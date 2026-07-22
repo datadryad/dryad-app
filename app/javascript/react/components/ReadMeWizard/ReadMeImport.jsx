@@ -57,7 +57,8 @@ export default function ReadMeImport({title, setValue}) {
               document.getElementById('bad-readme-modal').close();
               document.getElementById('readme_upload').setAttribute('aria-invalid', false);
             }}
-          />
+          ><i className="fas fa-close" aria-hidden="true" />
+          </button>
         </div>
         <div>
           <h1 id="dialog-title">File not accepted</h1>
