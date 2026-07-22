@@ -10,7 +10,7 @@ Dryad's search checks for the main text query within most of the metadata fields
 
  * Use quotation marks around your terms to search for an exact phrase (e.g., [`"Dryad data"`](/search?q="Dryad+data"))
  * Terms may include an * at the end to indicate a wildcard, (e.g., [`biolog*`](/search?q=biolog*) retrieves results including *biology*, *biological*, *biologist*, etc.)
- * A term may be negated with ` NOT ` or ` -` to indicate that it should not be present in the results (e.g., [`Dryad -data`](/search?q=Dryad+-data))
+ * A term may be negated with ` NOT ` or ` -`<span class="screen-reader-only">(dash symbol)</span> to indicate that it should not be present in the results (e.g., [`Dryad NOT data`](/search?q=Dryad+NOT+data), [`Dryad -data`](/search?q=Dryad+-data))
 
 
 ## Filters

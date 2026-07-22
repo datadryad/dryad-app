@@ -2,20 +2,20 @@
 <h1>Dryad help center</h1>
 
 <%= render partial: 'search_form' %>
-<p id="help_result_count"></p>
+<p id="help_result_count" role="status"></p>
 <ul id="help_search_results"></ul>
 <p id="prompt" hidden>Unable to find the answer to your question? <a href="/help/contact">Contact the helpdesk</a></p>
 <template id="result">
   <li>
     <a href=""></a>
-    <div class="excerpt"></div>
+    <div class="excerpt" aria-label="Search result excerpt"></div>
   </li>
 </template>
 <template id="subresult">
-  <div class="subresult">
-    <a href=""><i class="fas fa-arrow-turn-up fa-rotate-90"></i></a>
-    <div class="excerpt"></div>
-  </div>
+  <li class="subresult">
+    <a href=""><i class="fas fa-arrow-turn-up fa-rotate-90" aria-hidden="true"></i></a>
+    <div class="excerpt" aria-label="Search result excerpt"></div>
+  </li>
 </template>
 
 <h2>More Dryad documentation</h2>
@@ -35,32 +35,32 @@
 </div>
 
 <h2>Popular topics</h2>
-<div class="tiles text-tiles">
-  <div>
-    <a href="/help/requirements/files#preferred-file-formats">Preferred file formats</a>
-    <div class="excerpt">Use CSV, TSV, or ODF formats for tabular data. Excel files (XLS or XLSX) with formatting can reduce accessibility and complicate downstream analysis</div>
-  </div>
-  <div>
-    <a href="/help/requirements/costs#author-fees">Author fees</a>
-    <div class="excerpt">Authors affiliated with a Dryad partner will have their DPCs sponsored. (If your institution or journal is not yet a Dryad partner, please invite</div>
-  </div>
-  <div>
-    <a href="/help/submission_steps/publication#citing-your-dataset">Citing your dataset</a>
-    <div class="excerpt">As soon as you start a data submission, a DOI is reserved for that dataset in the format https://doi.org/10.5061/dryad.XXXX. This, and a full citation</div>
-  </div>
-  <div>
-    <a href="/help/submission_steps/authors#collaborating-on-a-data-submission">Collaborating on a data submission</a>
-    <div class="excerpt">Any authors in the author list may be invited to collaborate on the submission. Collaborators may edit all of the submission metadata and add or adjust files</div>
-  </div>
-  <div>
-    <a href="/help/guides/search#search-syntax">Search syntax</a>
-    <div class="excerpt">Dryad's search checks for the main text query within most of the metadata fields of each dataset, including the title and abstract. Special syntax can help you retrieve the exact results</div>
-  </div>
-  <div>
-    <a href="/help/submission_steps/peer_review">Private for Peer Review</a>
-    <div class="excerpt">The Reviewer sharing link is a temporary sharing URL that provides privileged access to your uncurated data. It is not a permanent identifier, and should be substituted with the dataset</div>
-  </div>
-</div>
+<ul class="tiles text-tiles">
+  <li>
+    <a href="/help/requirements/files#preferred-file-formats" aria-describedby="help-pff">Preferred file formats</a>
+    <div class="excerpt" aria-label="Help topic excerpt" id="help-pff">Use CSV, TSV, or ODF formats for tabular data. Excel files (XLS or XLSX) with formatting can reduce accessibility and complicate downstream analysis</div>
+  </li>
+  <li>
+    <a href="/help/requirements/costs#author-fees" aria-describedby="help-af">Author fees</a>
+    <div class="excerpt" aria-label="Help topic excerpt" id="help-af">Authors affiliated with a Dryad partner will have their DPCs sponsored. (If your institution or journal is not yet a Dryad partner, please invite</div>
+  </li>
+  <li>
+    <a href="/help/submission_steps/publication#citing-your-dataset" aria-describedby="help-cyd">Citing your dataset</a>
+    <div class="excerpt" aria-label="Help topic excerpt" id="help-cyd">As soon as you start a data submission, a DOI is reserved for that dataset in the format https://doi.org/10.5061/dryad.XXXX. This, and a full citation</div>
+  </li>
+  <li>
+    <a href="/help/submission_steps/authors#collaborating-on-a-data-submission" aria-describedby="help-collab">Collaborating on a data submission</a>
+    <div class="excerpt" aria-label="Help topic excerpt" id="help-collab">Any authors in the author list may be invited to collaborate on the submission. Collaborators may edit all of the submission metadata and add or adjust files</div>
+  </li>
+  <li>
+    <a href="/help/guides/search#search-syntax" aria-describedby="help-ss">Search syntax</a>
+    <div class="excerpt" aria-label="Help topic excerpt" id="help-ss">Dryad's search checks for the main text query within most of the metadata fields of each dataset, including the title and abstract. Special syntax can help you retrieve the exact results</div>
+  </li>
+  <li>
+    <a href="/help/submission_steps/peer_review" aria-describedby="help-ppr">Private for Peer Review</a>
+    <div class="excerpt" aria-label="Help topic excerpt" id="help-ppr">The Reviewer sharing link is a temporary sharing URL that provides privileged access to your uncurated data. It is not a permanent identifier, and should be substituted with the dataset</div>
+  </li>
+</li>
 
 <script type="module" async>
   const pagefind = await import("/pagefind/pagefind.js");
@@ -96,20 +96,27 @@
     prompt.setAttribute('hidden', true)    
     if (weighted.length) {
       count.innerHTML = `${weighted.length} result${weighted.length > 1 ? 's' : ''} for <b>${query}</b>`
-      weighted.forEach((data) => {
+      weighted.forEach((data, i) => {
         const child = temp.content.cloneNode(true)
         child.querySelector('a').href = urlFix(data.url)
         child.querySelector('a').innerHTML = data.meta.title
         child.querySelector('.excerpt').innerHTML = data.excerpt
-        data.sub_results.forEach((s) => {
-          if (s.weighted_locations.some(l => l.balanced_score >= 1)) {
+        child.querySelector('.excerpt').id = `result${i}`
+        child.querySelector('a').setAttribute('aria-describedby', `result${i}`)
+        const subResults = data.sub_results.filter((s) => s.weighted_locations.some(l => l.balanced_score >= 1))
+        if (subResults.length) {
+          const sublist = document.createElement('ul')
+          subResults.forEach((s, ix) => {
             const sub = subtemp.content.cloneNode(true)
             sub.querySelector('a').href = urlFix(s.url)
             sub.querySelector('a').innerHTML += s.title
             sub.querySelector('.excerpt').innerHTML = s.excerpt
-            child.querySelector('li').appendChild(sub)
-          }
-        })
+            sub.querySelector('.excerpt').id = `r${i}s${ix}`
+            sub.querySelector('a').setAttribute('aria-describedby', `r${i}s${ix}`)
+            sublist.appendChild(sub)
+          })
+          child.querySelector('li').appendChild(sublist)
+        }
         container.appendChild(child)
       })
     } else {
