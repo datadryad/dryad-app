@@ -5,7 +5,7 @@ module StashApi
     before_action :doorkeeper_authorize!
     before_action :require_api_user
     before_action :require_min_app_admin
-    before_action -> { initialize_stash_identifier(params[:dataset_id]) }, only: %i[index create]
+    before_action -> { require_stash_identifier(doi: params[:dataset_id]) }, only: %i[index create]
 
     # GET /internal_data/{id}
     def show
@@ -38,12 +38,6 @@ module StashApi
     def destroy
       StashEngine::InternalDatum.destroy(params[:id])
       render json: { status: "Internal datum with identifier #{params[:id]} has been successfully deleted." }.to_json, status: 200
-    end
-
-    def initialize_stash_identifier(id)
-      ds = StashApi::DatasetsController.new
-      @stash_identifier = ds.get_stash_identifier(id)
-      render json: { error: "cannot find dataset with identifier #{id}" }.to_json, status: 404 if @stash_identifier.nil?
     end
   end
 end

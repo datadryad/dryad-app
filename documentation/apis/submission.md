@@ -294,17 +294,3 @@ The internal metadata can be manipulated using either the internal id of a versi
 ### As individual fields
 
 You can POST request to either `api/datasets/<id>/add_internal_datum` or `api/datasets/<id>/set_internal_datum`, depending on the type of data. The body should be JSON in the form of `{"data_type":"mismatchedDOI","value":"223342”}`
-
-## Curation history information
-
-Superusers can view and modify the curation history associated with a
-dataset.
-
-- GET /datasets/{dataset_id}/curation_activity
-- POST /datasets/{dataset_id}/curation_activity
-
-Curation activity does lock down a few fields: the `identifier_id` is
-set by the `dataset_id` on creation and can’t be modified by
-PUT. Similarly, the `user_id` is set to the api user that creates the
-record and can’t be modified by PUT. 
-
