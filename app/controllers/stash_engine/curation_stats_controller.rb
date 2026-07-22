@@ -26,13 +26,12 @@ module StashEngine
 
     def charts
       authorize StashEngine::CurationStats, policy_class: CurationStatsPolicy
+      set_chart_data
+    end
 
-      fields = chart_fields
-      @field_names = fields.values
-      @field_keys = fields.keys
-
-      set_monthly_chart
-      set_daily_chart
+    def update_charts
+      authorize StashEngine::CurationStats, policy_class: CurationStatsPolicy
+      set_chart_data
     end
 
     def csv_enumerator
@@ -64,6 +63,15 @@ module StashEngine
     end
 
     private
+
+    def set_chart_data
+      fields = chart_fields
+      @field_names = fields.values
+      @field_keys = fields.keys
+
+      set_monthly_chart
+      set_daily_chart
+    end
 
     def chart_fields
       {
