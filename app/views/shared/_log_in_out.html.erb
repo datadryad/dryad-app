@@ -6,9 +6,6 @@
     <% if current_user.system_user? %>
       <li><%= link_to 'Manage accounts', user_admin_path %></li>
     <% end %>
-    <% if current_user.superuser? %>
-      <li><%= link_to 'Auth failures', auth_failures_path %></li>
-    <% end %>
     <li><%= link_to 'Logout', sessions_destroy_path, id: 'log-in-out', class: 'js-nav-out', method: :post %></li>
   </ul>
 <% else %>

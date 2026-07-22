@@ -77,18 +77,6 @@ module StashEngine
       @datasets = @datasets.page(@page).per(@page_size)
     end
 
-    def auth_failures
-      authorize %i[stash_engine admin_datasets]
-      @records = AuthFailure.left_joins(:user)
-      if params[:q]
-        @records = @records.where(
-          'error_type like ? OR url like ? OR ip like ? OR params like ? OR CONCAT(first_name, " ", last_name) LIKE ?',
-          "%#{params[:q]}%", "%#{params[:q]}%", "%#{params[:q]}%", "%#{params[:q]}%", "%#{params[:q]}%"
-        )
-      end
-      @records = @records.includes(:user).order(created_at: :desc).page(@page).per(@page_size)
-    end
-
     def new_search
       @properties = params[:properties]
       respond_to(&:js)
