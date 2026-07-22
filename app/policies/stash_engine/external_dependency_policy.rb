@@ -5,5 +5,9 @@ module StashEngine
       @user.superuser?
     end
 
+    def auth_failures?
+      @user.superuser?
+    end
+
   end
 end

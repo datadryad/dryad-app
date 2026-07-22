@@ -1,9 +1,10 @@
-<h1>Authentication failures</h1>
+<%= render partial: 'stash_engine/shared/logs_header', locals: {current: 'auth'} %>
+<h2>Authentication failures</h2>
 
 <%= form_with(url: auth_failures_path, method: 'get') do %>
 <div class="o-admin-form-inline">
   <div class="o-admin-form-pair">
-    <label for="search-terms">DOI search:</label>
+    <label for="search-terms">Search:</label>
     <%= search_field_tag(:q, params[:q], class: 'c-input__text', id: 'search-terms' ) %>
   </div>
   <%= submit_tag('Search', name: nil, class: 'o-button__plain-text2' ) %>

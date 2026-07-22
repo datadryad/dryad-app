@@ -34,7 +34,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
       visit root_path
       find_button('Datasets').hover
       expect(page).to have_link('Admin dashboard')
-      expect(page).to have_link('Status dashboard')
+      expect(page).to have_link('Logs & statuses')
       expect(page).to have_link('Submission queue')
     end
 
