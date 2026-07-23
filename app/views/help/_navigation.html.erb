@@ -23,3 +23,16 @@
     </ul>
   </li>
 </ul>
+<script type="text/javascript">
+  function hideSecs() {
+    const pageNav = document.getElementById('page-nav');
+    if (window.innerWidth < 900 && pageNav.offsetHeight > 100) {
+      Array.from(document.querySelectorAll('#page-nav .expand-button button')).forEach((b) => {
+        b.setAttribute('aria-expanded', 'false')
+        document.getElementById(b.getAttribute('aria-controls')).setAttribute('hidden', '')
+      });
+    }
+  }
+  hideSecs();
+  window.addEventListener('resize', hideSecs);
+</script>

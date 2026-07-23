@@ -1,4 +1,4 @@
-<h1>Link article</h1>
+<h1 id="dialog-title">Link article</h1>
 <p>Does your dataset contain the foundational data for a primary article? Enter the article DOI to create a link.</p>
 <%= form_with(url: stash_url_helpers.save_primary_article_path, method: :post, local: false, scope: :primary_article, model: @related_work) do |f| %>
   <%= f.hidden_field :resource_id %>

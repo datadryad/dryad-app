@@ -339,8 +339,9 @@ Rails.application.routes.draw do
     post 'zenodo_queue/resubmit_job', to: 'zenodo_queue#resubmit_job', as: 'zenodo_queue_resubmit_job'
     post 'zenodo_queue/set_errored', to: 'zenodo_queue#set_errored', as: 'zenodo_queue_set_errored'
 
-    # Administrative Status Dashboard that displays statuses of external dependencies
+    # Administrative Status Dashboard that displays statuses of external dependencies and logs
     get 'status_dashboard', to: 'status_dashboard#show'
+    match 'status_dashboard/auth_failures', to: 'status_dashboard#auth_failures', via: %i[get post], as: 'auth_failures'
 
     # Publication updater page - Allows admins to accept/reject metadata changes from external sources like Crrossref
     get 'publication_updater', to: 'publication_updater#index'

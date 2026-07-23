@@ -47,8 +47,15 @@
   <%= select_tag('sponsor_id', options_for_select(options, @tenant.sponsor_id), class: 'c-input__select') %>
 </div>
 
+<h2>Partnership</h2>
+<div id="payment_notice" role="status" class="callout warn" <%= !@tenant.sponsor_id ? 'hidden' : ''  %>>
+  <p>Payment information must be set at the sponsor level.</p>
+</div>
+
+<div id="payment_container" <%= @tenant.sponsor_id ? 'hidden' : ''  %>>
 <%= render '/stash_engine/payment_configuration/form', format: :html,
-  sponsor_id: @tenant.sponsor_id,
+  sponsor_id: nil,
   payment_configuration: @payment_configuration,
   plan_options: [ ['', 'None'] ] + StashEngine::Tenant::PAYMENT_PLANS.map {|p| [p, p.capitalize]}
 %>
+</div>

@@ -28,6 +28,11 @@ class ApplicationController < ActionController::Base
     return if controller_name == 'help'
     return if request.host == Rails.application.default_url_options[:host]
 
+    log_auth_failure
     render plain: 'Forbidden', status: 403
+  end
+
+  def log_auth_failure(type: :unauthorized)
+    AuthFailureService.new(request, current_user, params).create(type)
   end
 end

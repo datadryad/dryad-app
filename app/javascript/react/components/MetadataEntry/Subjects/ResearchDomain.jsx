@@ -5,7 +5,9 @@ import {xor} from 'lodash';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 import SubjectSelect from './SubjectSelect';
 
-function ResearchDomain({current, resource, setResource}) {
+function ResearchDomain({
+  current, resource, setResource, onBlur,
+}) {
   const fieldRef = useRef(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const [selected, setSelected] = useState(
@@ -70,6 +72,7 @@ function ResearchDomain({current, resource, setResource}) {
           aria-errormessage="domain_error"
           className="c-input__select"
           onChange={(e) => setSelected((s) => s.concat(e.target.value))}
+          onBlur={onBlur}
         >
           <option value="">Select Research domain</option>
           {subjects.filter((s) => !selected.includes(s)).map((s) => <option key={s} value={s}>{s}</option>)}

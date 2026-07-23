@@ -10,7 +10,7 @@ module StashEngine
     before_action :require_user_login
     before_action :require_admin
     protect_from_forgery except: :results
-    before_action :setup_paging, only: %i[results deleted]
+    before_action :setup_paging, only: %i[results deleted auth_failures]
     before_action :setup_limits, only: %i[index results]
     before_action :setup_search, only: %i[index results]
     before_action :load, only: %i[edit update]
@@ -298,6 +298,7 @@ module StashEngine
         "stash_engine_identifiers.publication_date #{date_string(@filters[:first_pub_date])}"
       ) if @filters[:first_pub_date]&.values&.any?(&:present?)
     end
+
     # rubocop:enable Style/MultilineIfModifier, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/AbcSize, Layout/LineLength
 
     def size_filter
@@ -412,7 +413,7 @@ module StashEngine
       return publishing_error if @resource.id != @identifier.last_submitted_resource&.id &&
         %w[embargoed published].include?(params.dig(:stash_engine_resource, :curation_activity, :status))
 
-      return state_error unless CurationActivity.allowed_states(@last_state, current_user).include?(@status)
+      return state_error unless CurationActivity.allowed_states(@last_state, @resource.identifier.pub_state, current_user).include?(@status)
 
       if @status == 'queued' && @last_state == 'peer_review'
         release_resource(@resource)
@@ -512,5 +513,6 @@ module StashEngine
     HTML
     render :curation_activity_error
   end
+
   # rubocop:enable Metrics/ClassLength, Metrics/MethodLength
 end

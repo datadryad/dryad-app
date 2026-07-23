@@ -120,9 +120,10 @@ module StashEngine
       end
     end
 
-    def self.allowed_states(current_state, current_user)
+    def self.allowed_states(current_state, pub_state, current_user)
       statuses = CURATOR_ALLOWED_STATES[current_state].dup
       statuses << 'withdrawn' if current_user.min_manager? # data managers can withdraw a datasets from any status
+      statuses.delete('withdrawn') if %w[published embargoed retracted].include?(pub_state) # if the dataset has not been published
       statuses.uniq
     end
 

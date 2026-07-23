@@ -24,6 +24,7 @@ module Stash
             filters.merge!({ fq: fq.join(" #{operation} ") }) if fq.present?
             filters.merge!({ fl: fl }) if fl.present?
             filters.merge!({ rows: limit })
+            filters.merge!({ sort: 'country_priority asc, score desc' })
 
             solr.get('select', params: filters)
           end
@@ -39,7 +40,8 @@ module Stash
           country: country,
           home_page: home_page,
           acronyms: acronyms,
-          isni_ids: isni_ids
+          isni_ids: isni_ids,
+          country_priority: country_priority
         }
       end
 
@@ -57,6 +59,23 @@ module Stash
         solr_indexer = Stash::Indexer::SolrIndexer.new(solr_url: APP_CONFIG.ror_solr_url)
         solr_indexer.destroy_document(id: id.to_s)
       end
+
+      def country_priority
+        priority = [
+          'United States',
+          'China',
+          'France',
+          'United Kingdom',
+          'Germany',
+          'Japan',
+          'India',
+          'Spain',
+          'Canada',
+          'Brazil'
+        ]
+        priority.index(country) || 99
+      end
+
     end
   end
 end

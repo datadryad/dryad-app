@@ -131,6 +131,14 @@ a {
   }
 }
 
+a[aria-current="page"], a[aria-current="true"] {
+  &:link, &:visited, &:hover, &:focus, &:active {
+    color: black;
+    text-decoration: none;
+    cursor: default;
+  }
+}
+
 .pdfIcon {
   display: inline-block;
   vertical-align: middle;

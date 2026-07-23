@@ -28,6 +28,7 @@ function StepEditor({
         'aria-errormessage': 'readme_error',
         'aria-labelledby': 'md_editor_label',
         'aria-describedby': 'md_editor_desc',
+        'aria-multiline': 'true',
         name: secTitles[step - 1].toLowerCase().replace(/[^\w]/g, '_'),
       }}
       hidden={hidden}

@@ -8,6 +8,46 @@ import {ExitIcon} from '../ExitButton';
 import InvoiceForm from './InvoiceForm';
 import {useStore} from '../../shared/store';
 
+function InvoicingPageMessage({resource, fees}) {
+  if (resource.identifier.display_payer?.id) {
+    return <p>Payment of this fee is due upon receipt of the invoice.</p>;
+  }
+
+  return (
+    <>
+      <p>By submitting the following form, you agree:</p>
+      <p>
+        I want to generate an invoice, due upon receipt, for payment by another entity.{' '}
+        <b>
+          I understand that this will incur an additional, nonrefundable{' '}
+          {fees?.invoice_fee?.toLocaleString('en-US', {style: 'currency', currency: 'USD', maximumFractionDigits: 0})} fee.
+        </b>
+      </p>
+    </>
+  );
+}
+
+function InvoicingMessage({resource}) {
+  let additionalFeeMessage = null;
+
+  if (!resource.identifier.display_payer?.id) {
+    additionalFeeMessage = (
+      <>
+        {' '}
+        <b>An additional, nonrefundable administration fee will be charged for this service.</b>
+        {' '}
+      </>
+    );
+  }
+
+  return (
+    <>
+      If your organization requires an invoice to be sent to a specific email address, one may be generated.
+      {additionalFeeMessage}
+    </>
+  );
+}
+
 function Payments({
   resource, setResource, invoice, setInvoice, setPayment, config,
 }) {
@@ -35,25 +75,6 @@ function Payments({
     if (!invoice) setClientSecret(null);
   }, [invoice]);
 
-  const invoicingPageMessage = () => {
-    if (resource.identifier.display_payer?.id) {
-      return <p>Payment of this fee is due upon receipt of the invoice.</p>;
-    }
-
-    return (
-      <>
-        <p>By submitting the following form, you agree:</p>
-        <p>
-          I want to generate an invoice, due upon receipt, for payment by another entity.{' '}
-          <b>
-            I understand that this will incur an additional, nonrefundable{' '}
-            {fees?.invoice_fee?.toLocaleString('en-US', {style: 'currency', currency: 'USD', maximumFractionDigits: 0})} fee.
-          </b>
-        </p>
-      </>
-    );
-  };
-
   if (invoice) {
     return (
       <div id="submission-payment">
@@ -72,34 +93,13 @@ function Payments({
               </button>
             </p>
             <CalculateFees resource={resource} />
-            {invoicingPageMessage()}
+            <InvoicingPageMessage resource={resource} fees={fees} />
           </>
         )}
         <InvoiceForm resource={resource} setResource={setResource} setPayment={setPayment} />
       </div>
     );
   }
-
-  const invoicingMessage = () => {
-    let additionalFeeMessage = null;
-
-    if (!resource.identifier.display_payer?.id) {
-      additionalFeeMessage = (
-        <>
-          {' '}
-          <b>An additional, nonrefundable administration fee will be charged for this service.</b>
-          {' '}
-        </>
-      );
-    }
-
-    return (
-      <>
-        If your organization requires an invoice to be sent to a specific email address, one may be generated.
-        {additionalFeeMessage}
-      </>
-    );
-  };
 
   return (
     <div id="submission-payment">
@@ -153,7 +153,7 @@ function Payments({
           <>
             <p style={{fontWeight: 'bold'}} role="heading" aria-level="2">Need an invoice?</p>
             <p>
-              {invoicingMessage}
+              <InvoicingMessage resource={resource} />
               <button onClick={() => setInvoice(true)} type="button" className="o-button__plain-textlink" name="get_invoice" style={{paddingLeft: 0}}>
                 Continue to the invoice generation form <i className="fas fa-circle-right" aria-hidden="true" />
               </button>

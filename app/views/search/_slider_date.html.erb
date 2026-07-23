@@ -3,13 +3,13 @@
   <input type="hidden" name="publishedSince" id="date-least-input" value="<%= params['publishedSince'] || months.first %>">
   <input type="hidden" name="publishedBefore" id="date-most-input" value="<%= params['publishedBefore'] || months.last %>">
   <div class="slider-values">
-    <label id="date-least-value" for="date-least"><%= Date.parse(params['publishedSince'] || months.first).strftime('%b %Y') %></label>
-    <label id="date-most-value" for="date-most"><%= Date.parse(params['publishedBefore'] || months.last).strftime('%b %Y') %></label>
+    <span id="date-least-value"><%= Date.parse(params['publishedSince'] || months.first).strftime('%b %Y') %></span>
+    <span id="date-most-value"><%= Date.parse(params['publishedBefore'] || months.last).strftime('%b %Y') %></span>
   </div>
   <div class="slider">
     <div class="slider-track" id="date-track"></div>
-    <input type="range" min="0" max="<%= months.length - 1 %>" value="<%= params['publishedSince'].present? ? months.find_index { |x| params['publishedSince'][0..6] == x[0..6] } : 0 %>" id="date-least"/>
-    <input type="range" min="0" max="<%= months.length - 1 %>" value="<%= params['publishedBefore'].present? ? months.find_index { |x| params['publishedBefore'][0..6] == x[0..6] } :  months.length - 1 %>" id="date-most"/>
+    <input type="range" min="0" max="<%= months.length - 1 %>" value="<%= params['publishedSince'].present? ? months.find_index { |x| params['publishedSince'][0..6] == x[0..6] } : 0 %>" aria-valuetext="<%= Date.parse(params['publishedSince'] || months.first).strftime('%b %Y') %>" id="date-least" aria-label="Start of range"/>
+    <input type="range" min="0" max="<%= months.length - 1 %>" value="<%= params['publishedBefore'].present? ? months.find_index { |x| params['publishedBefore'][0..6] == x[0..6] } :  months.length - 1 %>" aria-valuetext="<%= Date.parse(params['publishedBefore'] || months.last).strftime('%b %Y') %>" id="date-most" aria-label="End of range"/>
   </div>
   <script type="text/javascript">
     const dtrack = document.getElementById('date-track');
@@ -26,8 +26,12 @@
     }
 
     const formatPubDate = () => {
-      document.getElementById('date-least-value').textContent = formatDateDisplay(document.getElementById('date-least-input').value)
-      document.getElementById('date-most-value').textContent = formatDateDisplay(document.getElementById('date-most-input').value)
+      const leastValue = formatDateDisplay(document.getElementById('date-least-input').value)
+      const mostValue = formatDateDisplay(document.getElementById('date-most-input').value)
+      dleast.setAttribute('aria-valuetext', leastValue)
+      document.getElementById('date-least-value').textContent = leastValue
+      dmost.setAttribute('aria-valuetext', mostValue)
+      document.getElementById('date-most-value').textContent = mostValue
     }
     dleast.addEventListener('input', formatPubDate)
     dmost.addEventListener('input', formatPubDate)

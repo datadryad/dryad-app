@@ -45,7 +45,7 @@ div {
 	box-sizing: border-box;
 }
 
-input:focus, button:focus, *[tabindex]:focus, a:focus-visible {
+input:focus, button:focus, button:focus-visible, *[tabindex]:focus, a:focus-visible {
 	outline: 2px solid $medium-blue;
 }
 

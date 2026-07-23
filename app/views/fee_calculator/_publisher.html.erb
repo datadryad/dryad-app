@@ -9,7 +9,7 @@
     <%= form.label :dpc_tier, 'Estimated number of datasets sent to Dryad each year:' %>
     <%= form.select :dpc_tier, options_for_select(FeeCalculator::PublisherService.new.dpc_fee_tiers.map {|t| [t[:range].to_s.gsub('..', '-'), t[:tier]]}), {}, {class: 'c-input__select'} %>
   </p>
-  <div class="input-line spaced" style="justify-content: stretch;">
+  <div class="input-line spaced" style="justify-content: stretch; flex-wrap: wrap;">
     <h3 style="font-weight: bold" id="total_label">Partner fee estimate for one year:</h3>
     <output id="total_estimate" for="service_tier dpc_tier" aria-labelledby="total_label" aria-describedby="total_desc"></output>
   </div>

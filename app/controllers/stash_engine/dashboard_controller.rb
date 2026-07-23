@@ -75,6 +75,7 @@ module StashEngine
     def ensure_tenant
       return unless current_user && current_user.tenant_id.blank?
 
+      log_auth_failure
       redirect_to choose_sso_path, alert: 'You must choose if you are associated with an institution before continuing'
     end
 

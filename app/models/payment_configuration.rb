@@ -6,7 +6,7 @@
 #  covers_dpc             :boolean
 #  covers_ldf             :boolean
 #  ldf_limit              :integer
-#  ldf_limit_notification :boolean          default(FALSE)
+#  ldf_limit_notification :text(65535)
 #  partner_type           :string(191)
 #  payment_plan           :integer
 #  yearly_ldf_limit       :integer
@@ -18,17 +18,35 @@
 # NOTE: ldf_limit stores the tier number and not an actual limit size
 class PaymentConfiguration < ApplicationRecord
   has_paper_trail
+  validate :email_array
 
   belongs_to :partner, polymorphic: true, optional: true
 
   enum :payment_plan, { SUBSCRIPTION: 1, PREPAID: 2, DEFERRED: 3, TIERED: 4, '2025': 5 }
   before_save :reset_limit, :set_covers_dpc
+  before_validation :notification_json
 
   def valid_payer?
     covers_dpc? && payment_plan.present?
   end
 
+  def ldf_limit_notification
+    JSON.parse(super) unless super.blank?
+  rescue JSON::ParserError
+    super
+  end
+
+  def email_array
+    ldf_limit_notification&.each do |email|
+      errors.add(:ldf_limit_notification, "#{email} is not a valid email address") unless email.match?(EMAIL_REGEX)
+    end
+  end
+
   private
+
+  def notification_json
+    self.ldf_limit_notification = ldf_limit_notification.to_s.split("\n").map(&:strip).to_json unless ldf_limit_notification.blank?
+  end
 
   def reset_limit
     return if covers_ldf

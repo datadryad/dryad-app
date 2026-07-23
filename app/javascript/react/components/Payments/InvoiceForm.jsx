@@ -86,6 +86,7 @@ export default function InvoiceForm({resource, setResource, setPayment}) {
                 name="name"
                 type="text"
                 className="c-input__text"
+                autoComplete="name"
                 style={{flex: 1}}
               />
             </span>
@@ -97,11 +98,14 @@ export default function InvoiceForm({resource, setResource, setPayment}) {
                   name="email"
                   type="text"
                   className="c-input__text"
+                  autoComplete="email"
                   aria-errormessage="email_error"
                   aria-invalid={errors.email && touched.email ? true : null}
                   validate={validateEmail}
                 />
-                {errors.email && touched.email && <span className="c-ac__error_message" id="email_error">{errors.email}</span>}
+                <span role="alert" className="c-ac__error_message">
+                  {errors.email && touched.email && <span id="email_error">{errors.email}</span>}
+                </span>
               </span>
             </span>
           </p>

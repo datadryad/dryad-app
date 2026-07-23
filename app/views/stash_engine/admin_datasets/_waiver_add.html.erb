@@ -1,4 +1,4 @@
-<h1>Add fee discount</h1>
+<h1 id="dialog-title">Add fee discount</h1>
 <%= form_with(url: ds_admin_waiver_path(@identifier.id), method: :post, local: false) do |form| -%>
   <% pr = @identifier.resources.by_version_desc.find {|r| r.payment} %>
   <% payment = pr&.payment %>

@@ -101,7 +101,7 @@ module StashEngine
         errors.add(:review_contacts, "#{email} is not a valid email address") unless email.match?(EMAIL_REGEX)
       end
       api_contacts&.each do |email|
-        errors.add(:review_contacts, "#{email} is not a valid email address") unless email.match?(EMAIL_REGEX)
+        errors.add(:api_contacts, "#{email} is not a valid email address") unless email.match?(EMAIL_REGEX)
       end
     end
 

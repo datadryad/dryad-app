@@ -23,7 +23,7 @@
         (Up to <%= filesize(ESTIMATED_FILES_SIZE.find{|tier| tier[:tier] == o.payment_configuration.ldf_limit }[:range].max) %>)
       <% end %>
       <% if o.payment_configuration.yearly_ldf_limit.present? %>
-        <br/><b>Remaining LDF budget:</b> <%= o.payment_configuration.yearly_ldf_limit - SponsoredPaymentLog.for_current_year.where(payer: o.payers_sponsored).sum(:ldf) %>
+        <br/><b>Remaining LDF commitment:</b> <%= o.payment_configuration.yearly_ldf_limit - SponsoredPaymentLog.for_current_year.where(payer: o.payers_sponsored).sum(:ldf) %>
       <% end %>
     <% end %>
   <% end %>

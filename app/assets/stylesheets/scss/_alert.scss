@@ -142,7 +142,7 @@
 		margin-right: .5ch;
 	}
 	&.user {
-		color: $medium-blue
+		color: #3794C3;
 	}
 	&.inst {
 		color: $dark-green;
@@ -155,6 +155,8 @@
 	}
 	&.pending_action {
 		color: #FFDB58;
+		text-stroke: 2px #886300;
+		-webkit-text-stroke: 2px #886300;
 	}
 	&.sensitive_data {
 		color: #7a0094;
@@ -163,9 +165,12 @@
 		color: black;
 	}
 	&.technical_glitch {
-		color: #FF69B4;
+		color: #FE3499;
 	}
 	&.research_integrity {
 		color: #965a3e;
+	}
+	&.future_publication {
+		color: #277c93;
 	}
 }

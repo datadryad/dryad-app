@@ -34,7 +34,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
       visit root_path
       find_button('Datasets').hover
       expect(page).to have_link('Admin dashboard')
-      expect(page).to have_link('Status dashboard')
+      expect(page).to have_link('Logs & statuses')
       expect(page).to have_link('Submission queue')
     end
 
@@ -316,7 +316,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
               click_link 'Activity log'
             end
             within(:css, '#activity_log_table tbody:last-child') do
-              find('button[aria-label="Curation activity"]').click
+              find("button[aria-label=\"Curation activity v#{@resource.stash_version.version}\"]").click
             end
             expect(page).to have_text('My cat says hi')
           end

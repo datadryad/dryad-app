@@ -54,7 +54,9 @@ export default function Editor({
               aria-modal="true"
             >
               <div className="modalClose">
-                <button aria-label="Close" type="button" onClick={() => document.getElementById(`invite-dialog${author.id}`).close()} />
+                <button aria-label="Close" type="button" onClick={() => document.getElementById(`invite-dialog${author.id}`).close()}>
+                  <i className="fas fa-close" aria-hidden="true" />
+                </button>
               </div>
               <form style={{maxWidth: '600px'}}>
                 <h1 id={`invite-${author.id}-title`}>

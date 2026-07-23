@@ -38,6 +38,18 @@ function NoSubmitterWarning({preview, isSubmitter}) {
   );
 }
 
+function PaymentMessage(resource, fees) {
+  if (!fees.total) return null;
+  if (resource.identifier.display_payer?.id) return <p>You will be asked to pay this fee upon submission.</p>;
+
+  return (
+    <p>
+      You will be asked to pay this fee upon submission.
+      If you require an invoice to be sent to another entity for payment, an additional administration fee will be charged.
+    </p>
+  );
+}
+
 function PPRSetting({
   togglePPR, ppr, dpc, curated, subType, reason,
 }) {
@@ -185,18 +197,6 @@ export default function Agreements({
     );
   }
 
-  const paymentMessage = () => {
-    if (!fees.total) return null;
-    if (resource.identifier.display_payer?.id) return <p>You will be asked to pay this fee upon submission.</p>;
-
-    return (
-      <p>
-        You will be asked to pay this fee upon submission.
-        If you require an invoice to be sent to another entity for payment, an additional administration fee will be charged.
-      </p>
-    );
-  };
-
   return (
     <>
       {preview && (
@@ -256,7 +256,7 @@ export default function Agreements({
             : (
               <>
                 <CalculateFees resource={resource} fees={fees} ppr={ppr} />
-                {paymentMessage}
+                <PaymentMessage resource={resource} fees={fees} />
               </>
             )}
         </>

@@ -1,5 +1,7 @@
 # Base class for mailers
 class ApplicationMailer < ActionMailer::Base
+  include StashEngine::SharedController
+
   default from: APP_CONFIG['feedback_email_from'] || APP_CONFIG['helpdesk_email']
   layout 'mailer'
 
@@ -18,6 +20,7 @@ class ApplicationMailer < ActionMailer::Base
 
   def assign_variables(resource)
     @resource = resource
+    @delete_date = formatted_date(resource.process_date.delete_date)
     @title = resource.title&.strip_tags
     @user = resource.submitter || resource.owner_author
     @user_name = user_name(@user)

@@ -18,7 +18,9 @@ module StashEngine
   class Flag < ApplicationRecord
     self.table_name = 'stash_engine_flags'
     has_paper_trail
-    enum :flag, { priority: 0, pending_action: 1, sensitive_data: 2, careful_attention: 3, technical_glitch: 4, research_integrity: 5 }
+    enum :flag,
+         { priority: 0, pending_action: 1, sensitive_data: 2, careful_attention: 3, technical_glitch: 4, research_integrity: 5,
+           future_publication: 6 }
 
     belongs_to :flaggable, polymorphic: true, optional: true
 

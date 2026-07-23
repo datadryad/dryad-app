@@ -21,10 +21,10 @@
 }
 
 #page-columns {
-  flex-direction: column-reverse;
+  flex-direction: column;
 
   @include bp(screen3) {
-    flex-direction: row-reverse;
+    flex-direction: row;
 
     &:first-child:last-child {
       min-height: calc(100vh - 240px);
@@ -50,6 +50,11 @@
   @media (min-width: $screen-lg-min + 200) {
     flex: 0 1 54rem;
   }
+}
+
+#page-content {
+  margin-right: auto;
+  max-width: 100%;
 }
 
 .c-columns__sidebar {
@@ -143,6 +148,13 @@
         display: inline-block;
         position: absolute;
         top: 2px; right: 2px;
+      }
+
+      li {
+        display: none;
+      }
+      & > ul:first-of-type > li:first-child {
+        display: block;
       }
     }
 

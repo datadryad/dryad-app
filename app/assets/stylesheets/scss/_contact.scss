@@ -22,7 +22,9 @@
 }
 
 #total_estimate {
-  flex: 1;
+  flex-grow: 2;
+  flex-shrink: 1;
+  min-width: 3ch;
   font-size: 1.25rem;
   padding: .5ch;
   background-color: white;

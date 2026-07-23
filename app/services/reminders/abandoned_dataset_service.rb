@@ -139,7 +139,7 @@ module Reminders
         .each do |resource|
 
         # Do not withdraw if this dataset has ever been published
-        next if %w[published embargoed].include?(resource.identifier&.calculated_pub_state)
+        next if %w[published embargoed retracted].include?(resource.identifier&.calculated_pub_state)
 
         reminder_flag = 'withdrawn_email_notice'
         last_reminder = resource.curation_activities.where('note LIKE ?', "%#{reminder_flag}%")&.last

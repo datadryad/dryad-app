@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import moment from 'moment';
 import ellipsize from '../../../../lib/string_patch';
 
@@ -99,56 +99,66 @@ export default function File({
     }
   };
 
+  useEffect(() => {
+    const input = document.getElementById(`fname_${file.id}`).querySelector('.filename-input');
+    if (rename) {
+      input.focus();
+      input.removeAttribute('aria-errormessage');
+    }
+  }, [rename]);
+
   const tabularInfo = getTabularInfo();
   return (
     <tr>
-      <th scope="row">
-        {rename ? (
-          <form className="input-line" style={{alignItems: 'center', flexWrap: 'nowrap'}}>
-            <div className="input-line" style={{alignItems: 'center', gap: 0, flexWrap: 'nowrap'}}>
-              <textarea
-                className="c-input__text"
-                aria-label={`Rename file ${file.sanitized_name}`}
-                value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-              />
-              <span style={{whiteSpace: 'nowrap'}}>{ext}</span>
-            </div>
+      <th scope="row" id={`fname_${file.id}`}>
+        <form className="input-line" style={{alignItems: 'center', flexWrap: 'nowrap'}} hidden={!rename}>
+          <div className="input-line" style={{alignItems: 'center', gap: 0, flexWrap: 'nowrap'}}>
+            <textarea
+              className="c-input__text filename-input"
+              aria-label={`Rename ${file.sanitized_name}`}
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+            />
+            <span style={{whiteSpace: 'nowrap'}}>{ext}</span>
+          </div>
+          <button
+            type="button"
+            className="o-button__plain-textlink"
+            onClick={() => {
+              renameFile(file.id, `${newName}${ext}`.trim());
+              document.getElementById(`fname_${file.id}`).querySelector('.filename').focus();
+            }}
+            aria-label={`Save new name for ${file.sanitized_name}`}
+            title="Save"
+          ><i className="fas fa-save" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            className="o-button__plain-textlink"
+            onClick={() => {
+              setRename(false);
+              setNewName(filename);
+              document.getElementById(`fname_${file.id}`).querySelector('.filename').focus();
+            }}
+            aria-label={`Cancel name change for ${file.sanitized_name}`}
+            title="Cancel"
+          ><i className="fas fa-times" aria-hidden="true" />
+          </button>
+        </form>
+        <div role="alert">{rename && <p className="error-text" id={`fname_${file.id}-error`} />}</div>
+        <span className="input-line" hidden={rename}>
+          <span className="filename" tabIndex="-1">{file.sanitized_name}</span>
+          {file.uploaded && (
             <button
               type="button"
               className="o-button__plain-textlink"
-              onClick={() => renameFile(file.id, `${newName}${ext}`.trim())}
-              aria-label={`Save new name for ${file.sanitized_name}`}
-              title="Save"
-            ><i className="fas fa-save" aria-hidden="true" />
+              onClick={() => setRename(true)}
+              aria-label={`Rename file ${file.sanitized_name}`}
+              title="Rename file"
+            ><i className="fas fa-pencil" aria-hidden="true" />
             </button>
-            <button
-              type="button"
-              className="o-button__plain-textlink"
-              onClick={() => {
-                setRename(false);
-                setNewName(filename);
-              }}
-              aria-label={`Cancel name change for ${file.sanitized_name}`}
-              title="Cancel"
-            ><i className="fas fa-times" aria-hidden="true" />
-            </button>
-          </form>
-        ) : (
-          <span className="input-line">
-            {file.sanitized_name}
-            {file.uploaded && (
-              <button
-                type="button"
-                className="o-button__plain-textlink"
-                onClick={() => setRename(true)}
-                aria-label={`Rename file ${file.sanitized_name}`}
-                title="Rename file"
-              ><i className="fas fa-pencil" aria-hidden="true" />
-              </button>
-            )}
-          </span>
-        ) }
+          )}
+        </span>
       </th>
       <td id={`status_${file.id}`} className={`c-uploadtable__status ${statusCss(file.status)}`}>
         {file.status === 'Uploaded' ? (

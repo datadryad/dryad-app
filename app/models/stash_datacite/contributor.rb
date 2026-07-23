@@ -36,6 +36,7 @@ module StashDatacite
 
     belongs_to :resource, class_name: StashEngine::Resource.to_s
     belongs_to :name_identifier, optional: true
+    belongs_to :ror_org, class_name: 'StashEngine::RorOrg', primary_key: 'ror_id', foreign_key: 'name_identifier_id', optional: true
     has_and_belongs_to_many :affiliations, class_name: 'StashDatacite::Affiliation'
     has_one :grouping, class_name: 'StashDatacite::ContributorGrouping', foreign_key: 'name_identifier_id', primary_key: 'name_identifier_id'
 

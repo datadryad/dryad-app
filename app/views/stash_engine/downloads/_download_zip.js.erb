@@ -27,7 +27,7 @@ const loadFiles = async (files) => {
   await insertFiles(files);
   form.submit();
   dlbutton.lastElementChild.innerHTML = 'Download in progress';
-  dialogContent.innerHTML = '<h1>Download in progress</h1><p>Closing this window may interrupt the dataset download. Please keep this window open until your download is complete.</p><p><span id="dl_filename"></span> <span id="dl_filesize"></span><br/><progress id="dl_progressbar" value="0" aria-label="Download progress"></progress></p>';
+  dialogContent.innerHTML = '<h1 id="dialog-title">Download in progress</h1><p>Closing this window may interrupt the dataset download. Please keep this window open until your download is complete.</p><p><span id="dl_filename"></span> <span id="dl_filesize"></span><br/><progress id="dl_progressbar" value="0" aria-label="Download progress"></progress></p>';
   dialog.showModal();
   keepAlive = setInterval(() => {
     navigator.serviceWorker.ready.then(worker => {
@@ -37,7 +37,7 @@ const loadFiles = async (files) => {
 }
 const failMessage = () => {
   if (dialog.open) dialog.close();
-  dialogContent.innerHTML = '<h1>Download error</h1><p>Please reload and try again, or download the individual files.</p>';
+  dialogContent.innerHTML = '<h1 id="dialog-title">Download error</h1><p>Please reload and try again, or download the individual files.</p>';
   dialog.showModal();
   dlbutton.lastElementChild.innerHTML = 'Download full dataset';
   dlbutton.classList.add('o-download__files');
@@ -49,7 +49,7 @@ const checkResponse = async (response) => {
     const files = await response.json();
     loadFiles(files);
   } else if (response.status === 405) {
-    dialogContent.innerHTML = '<h1>Confirm you are human</h1><div id="captcha-div"></div>'
+    dialogContent.innerHTML = '<h1 id="dialog-title">Confirm you are human</h1><div id="captcha-div"></div>'
     AwsWafCaptcha.renderCaptcha(document.getElementById('captcha-div'), {
       apiKey: '<%= APP_CONFIG.waf_key %>',
       skipTitle: true,

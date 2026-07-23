@@ -4,7 +4,9 @@ import {debounce} from 'lodash';
 import MarkdownEditor from '../../MarkdownEditor';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
-export default function Description({setResource, dcsDescription, mceLabel}) {
+export default function Description({
+  setResource, dcsDescription, mceLabel, onBlur,
+}) {
   const [desc, setDesc] = useState(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
@@ -61,11 +63,13 @@ export default function Description({setResource, dcsDescription, mceLabel}) {
             'aria-errormessage': `${dcsDescription?.description_type}_error`,
             'aria-labelledby': `${dcsDescription?.description_type}_label`,
             'aria-describedby': `${dcsDescription?.description_type}-ex`,
+            'aria-multiline': 'true',
             name: dcsDescription?.description_type,
           }}
           htmlInput={desc}
           key={desc?.innerHTML}
           onChange={checkSubmit}
+          onBlur={onBlur}
         />
       )}
     </>

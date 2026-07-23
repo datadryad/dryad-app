@@ -1,0 +1,7 @@
+<nav aria-label="Logs navigation" class="section-nav">
+  <h1 style="margin-bottom: 0;">Logs</h1>
+  <ul class="c-header__nav-group">
+    <li class="c-second__nav-item"><a<% if current == 'dependencies' %> aria-current="page"<%end%> href="<%= status_dashboard_path %>">External dependencies</a>
+    <li class="c-second__nav-item"><a<% if current == 'auth' %> aria-current="page"<%end%> href="<%= auth_failures_path %>">Authentication failures</a>
+  </ul>
+</nav>

@@ -44,8 +44,10 @@ module ApplicationHelper
         extension: { superscript: true, subscript: true, shortcodes: false }
       }
     )
-    doc.walk do |node|
-      node.header_level = node.header_level + header_offset if node.type == :heading
+    while doc.each.any? { |n| n.type == :heading && n.header_level <= header_offset }
+      doc.walk do |node|
+        node.header_level = node.header_level + 1 if node.type == :heading
+      end
     end
     doc.to_html(options: { render: { unsafe: true, escaped_char_spans: false } }, plugins: { syntax_highlighter: { theme: '' } })
   end

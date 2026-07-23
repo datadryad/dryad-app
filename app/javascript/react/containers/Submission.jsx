@@ -48,14 +48,19 @@ function Submission({
       name: 'Connect',
       pass: publicationPass(resource),
       fail: (review || publicationPass(resource)) && publicationFail(resource, review),
-      component: <Publication current={step.name === 'Connect'} resource={resource} setResource={setResource} />,
+      component: <Publication
+        current={step.name === 'Connect'}
+        resource={resource}
+        setResource={setResource}
+        error={publicationFail(resource, review)}
+      />,
       help: <PublicationHelp type={resource.resource_type.resource_type} />,
       preview: <PubPreview resource={resource} previous={previous} curator={user.curator} />,
     }, {
       name: 'Title',
       pass: !titleFail(resource),
       fail: (review || step.index > 0) && titleFail(resource),
-      component: <TitleImport current={step.name === 'Title'} resource={resource} setResource={setResource} />,
+      component: <TitleImport current={step.name === 'Title'} resource={resource} setResource={setResource} error={titleFail(resource)} />,
       help: <TitleHelp />,
       preview: <TitlePreview resource={resource} previous={previous} />,
     },
@@ -63,7 +68,13 @@ function Submission({
       name: 'Authors',
       pass: resource.authors.length > 0 && !authorCheck(resource),
       fail: (review || step.index > 1) && authorCheck(resource),
-      component: <Authors current={step.name === 'Authors'} resource={resource} setResource={setResource} user={user} />,
+      component: <Authors
+        current={step.name === 'Authors'}
+        resource={resource}
+        setResource={setResource}
+        user={user}
+        error={authorCheck(resource)}
+      />,
       help: <AuthHelp />,
       preview: <AuthPreview resource={resource} previous={previous} curator={user.curator} />,
     },
@@ -76,6 +87,7 @@ function Submission({
         resource={resource}
         setResource={setResource}
         curator={user.curator}
+        error={abstractCheck(resource)}
       />,
       help: <DescHelp type={resource.resource_type.resource_type} />,
       preview: <DescPreview resource={resource} previous={previous} curator={user.curator} />,
@@ -84,15 +96,20 @@ function Submission({
       name: 'Subjects',
       pass: keywordPass(resource.subjects),
       fail: (review || step.index > 3) && keywordFail(resource),
-      component: <Subjects current={step.name === 'Subjects'} resource={resource} setResource={setResource} />,
+      component: <Subjects current={step.name === 'Subjects'} resource={resource} setResource={setResource} error={keywordFail(resource)} />,
       help: <SubjHelp />,
       preview: <SubjPreview resource={resource} previous={previous} />,
     },
     {
       name: 'Support',
       pass: !fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
-      fail: (review || step.index > 4) && fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
-      component: <Support current={step.name === 'Support'} resource={resource} setResource={setResource} />,
+      fail: (review || step.index > 4) && fundingCheck(resource.contributors),
+      component: <Support
+        current={step.name === 'Support'}
+        resource={resource}
+        setResource={setResource}
+        error={fundingCheck(resource.contributors)}
+      />,
       help: <SuppHelp type={resource.resource_type.resource_type} />,
       preview: <SuppPreview resource={resource} previous={previous} curator={user.curator} />,
     },
@@ -100,7 +117,7 @@ function Submission({
       name: 'Compliance',
       pass: !complianceCheck(resource),
       fail: (review || step.index > 5) && complianceCheck(resource),
-      component: <Compliance current={step.name === 'Compliance'} resource={resource} setResource={setResource} />,
+      component: <Compliance current={step.name === 'Compliance'} resource={resource} setResource={setResource} error={complianceCheck(resource)} />,
       help: <CompHelp />,
       preview: <CompPreview resource={resource} previous={previous} />,
     },
@@ -114,6 +131,7 @@ function Submission({
             resource, setResource, previous, s3_dir_name, config_s3, config_maximums, pubDates,
           }}
           current={step.name === 'Files'}
+          error={filesCheck(resource, pubDates, user.superuser, config_maximums)}
         />
       ),
       help: <FilesHelp date={resource.identifier.publication_date} maxFiles={config_maximums.files} />,
@@ -125,7 +143,7 @@ function Submission({
       name: 'README',
       pass: resource.descriptions.find((d) => d.description_type === 'technicalinfo')?.description,
       fail: (review || step.index > 7) && readmeCheck(resource),
-      component: <ReadMeWizard resource={resource} setResource={setResource} current={step.name === 'README'} />,
+      component: <ReadMeWizard resource={resource} setResource={setResource} current={step.name === 'README'} error={readmeCheck(resource)} />,
       help: <ReadMeHelp />,
       preview: <ReadMePreview resource={resource} previous={previous} curator={user.curator} />,
     },
@@ -133,7 +151,12 @@ function Submission({
       name: 'Related works',
       pass: resource.related_identifiers.some((ri) => !!ri.related_identifier && ri.work_type !== 'primary_article') || resource.accepted_agreement,
       fail: worksCheck(resource, (review || step.index > 8)),
-      component: <RelatedWorks current={step.name === 'Related works'} resource={resource} setResource={setResource} />,
+      component: <RelatedWorks
+        current={step.name === 'Related works'}
+        resource={resource}
+        setResource={setResource}
+        error={worksCheck(resource)}
+      />,
       help: <WorksHelp setTitleStep={() => setStep(steps().find((l) => l.name === 'Title'))} />,
       preview: <WorksPreview resource={resource} previous={previous} curator={user.curator} />,
     },
@@ -220,8 +243,8 @@ function Submission({
     if (et) {
       const ind = et.dataset.index;
       const inv = ind
-        ? el.querySelectorAll(`*[aria-errormessage="${et.id}"]`)[ind]
-        : el.querySelector(`*[aria-errormessage="${et.id}"]`);
+        ? el.querySelectorAll(`*[aria-errormessage*="${et.id}"]`)[ind]
+        : el.querySelector(`*[aria-errormessage*="${et.id}"]`);
       if (inv) inv.setAttribute('aria-invalid', true);
     }
   };
@@ -250,10 +273,12 @@ function Submission({
     } else if (payment) {
       main.classList.remove('submission-review');
       window.history.pushState(null, null, '?payment');
+      document.title = 'Dryad | Submission | Payment';
     } else if (review && step.name === 'Create a submission') {
       main.classList.add('submission-review');
       if (url) document.querySelector(`*[data-slug=${url}]`)?.focus();
       window.history.pushState(null, null, null);
+      document.title = 'Dryad | Submission | Preview';
     } else if (review) {
       main.classList.remove('submission-review');
     } else {
@@ -262,6 +287,7 @@ function Submission({
     if (step.name !== 'Create a submission') {
       const slug = step.name.split(/[^a-z]/i)[0].toLowerCase();
       if (slug !== url) window.history.pushState(null, null, `?${slug}`);
+      document.title = `Dryad | Submission | ${step.name}`;
     }
   }, [review, step, payment]);
 
@@ -344,14 +370,14 @@ function Submission({
             ) : <ExitButton resource={resource} />}
           </div>
         </div>
-        <nav aria-label="Submission editing" className={step.name !== 'Create a submission' || payment ? 'screen-reader-only' : null}>
+        <nav aria-label="Submission editing" hidden={step.name !== 'Create a submission' || payment || null}>
           <Checklist steps={steps} step={{}} setStep={setStep} open />
         </nav>
         {step.name === 'Create a submission' && (
           <>
-            <div id="submission-preview" ref={previewRef} className={`${user.curator ? 'track-changes' : ''} ${payment ? 'screen-reader-only' : ''}`}>
+            <div id="submission-preview" ref={previewRef} className={`${user.curator ? 'track-changes' : ''}`} hidden={payment || null}>
               {steps().map((s) => (
-                <section key={s.name} aria-label={s.name}>
+                <section key={s.name} aria-label={s.name} aria-live="polite">
                   {s.preview}
                   {s.fail}
                 </section>
@@ -363,7 +389,7 @@ function Submission({
             />
           </>
         )}
-        <dialog id="submission-step" open={step.name !== 'Create a submission' || payment || null}>
+        <dialog id="submission-step" open={step.name !== 'Create a submission' || payment || null} aria-label="Edit submission">
           {payment && (
             <div className="submission-edit">
               <Payments
@@ -404,7 +430,6 @@ function Submission({
                   {steps().map((s, i) => (
                     <div hidden={step.name !== s.name || null} key={s.name} ref={(el) => { subRef.current[i] = el; }}>
                       {s.component}
-                      {steps().find((si) => si.name === s.name).fail}
                     </div>
                   ))}
                 </div>
@@ -439,7 +464,7 @@ function Submission({
       <div className="submission-edit">
         <ChecklistNav steps={steps} step={step} setStep={setStep} open={open} setOpen={setOpen} />
         <div id="submission-wizard" className={open ? 'open' : null}>
-          <div id="submission-step" role="region" aria-label={step.name} aria-live="polite" aria-describedby="submission-help-text">
+          <div id="submission-step" role="region" aria-label={step.name} aria-describedby="submission-help-text">
             <div>
               <div id="submission-header">
                 <h2 className="o-heading__level2" tabIndex="-1" id="submission-step-title">{step.name}</h2>
@@ -452,9 +477,6 @@ function Submission({
               {steps().map((s, i) => (
                 <div hidden={step.name !== s.name || null} key={s.name} ref={(el) => { subRef.current[i] = el; }}>
                   {s.component}
-                  {s.name !== 'README' && (
-                    steps().find((si) => si.name === s.name).fail
-                  )}
                 </div>
               ))}
             </div>
@@ -498,7 +520,7 @@ function Submission({
                   <ExitButton resource={resource} />
                 </div>
               </div>
-              <div id="submission-help-text" aria-label="Section help">
+              <div id="submission-help-text" aria-live="polite" aria-label="Section help">
                 {step.name === 'Create a submission' && (
                   <p>Questions? Check this spot for helpful information about each step!</p>
                 )}

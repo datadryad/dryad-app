@@ -4,7 +4,7 @@
 <script>
   $(window).on("load", function(){
     let txt = `
-    <h1>Connect your ORCID</h1>
+    <h1 id="dialog-title">Connect your ORCID</h1>
     <p>You are a co-author for this dataset.</p>
     <p style="text-align: center;">
       <%= link_to "Connect your ORCID iD", "/auth/orcid?#{{invitation: params[:invitation], identifier_id: identifier_id }.to_param}",

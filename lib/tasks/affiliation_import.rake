@@ -23,8 +23,13 @@ namespace :affiliation_import do
   end
 
   desc 'Sync Affiliation name with ROR organizations name'
-  task update_affiliations_names: :environment do
+  task update_affiliations_name: :environment do
     Stash::Organization::AffiliationUpdater.perform
+  end
+
+  desc 'Sync Contributor name with ROR organizations name'
+  task update_contributors_name: :environment do
+    Stash::Organization::ContributorNameUpdater.perform
   end
 
   # example: RAILS_ENV=development bundle exec rake affiliation_import:process_ror_csv -- --affiliation_mode true

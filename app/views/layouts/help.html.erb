@@ -13,10 +13,6 @@
   <%= render 'shared/top_area' %>
   <main id="maincontent" class="help-page">
     <div id="page-columns">
-      <nav id="page-nav" aria-label="Help navigation">
-        <button id="nav-mobile-button" class="o-button__plain-text1" aria-label="Expand page menu"><i class="fas fa-angles-up"></i></button>
-        <%= render partial: 'help/navigation' %>
-      </nav>
       <div id="page-content" data-pagefind-body>
         <%= yield %>
         <% unless ['/help', '/help/contact'].include?(request.path) %>
@@ -24,6 +20,10 @@
           <p>Unable to find the answer to your question? <a href="/help/contact">Contact the helpdesk</a></p>
         <% end %>
       </div>
+      <nav id="page-nav" aria-label="Help navigation">
+        <button id="nav-mobile-button" class="o-button__plain-text1" aria-label="Expand page menu"><i class="fas fa-angles-up"></i></button>
+        <%= render partial: 'help/navigation' %>
+      </nav>
     </div>
   </main>
   <%= render partial: "shared/footer" %>

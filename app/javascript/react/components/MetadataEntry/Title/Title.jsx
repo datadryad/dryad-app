@@ -4,7 +4,7 @@ import {debounce} from 'lodash';
 import MarkdownEditor from '../../MarkdownEditor';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
-function Title({resource, setResource}) {
+function Title({resource, setResource, onBlur}) {
   const [value, setValue] = useState(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
@@ -56,6 +56,7 @@ function Title({resource, setResource}) {
           id={`title__${resource.id}`}
           key={value?.innerHTML}
           onChange={checkSubmit}
+          onBlur={onBlur}
         />
       )}
       <div id="title-ex"><i aria-hidden="true" />The title should be a succinct summary of the data and its purpose or use</div>

@@ -21,17 +21,14 @@ class CostReportingService
   private
 
   def should_send_notification?
-    # NO - payer has LDF notifications turned off
-    return false unless PayersService.new(resource.identifier.payer).sponsored_limits&.ldf_limit_notification
-
     # NO - payer is not on 2025 payments plan
     return false unless resource.identifier.payer_2025?
 
-    # NO - no emails to send to
-    return false if resource.tenant&.campus_contacts&.blank?
-
     # NO - wrong status
     return false unless @status.in?(%w[queued published])
+
+    # NO - payer has LDF notifications turned off/no LDF email
+    return false unless PayersService.new(resource.identifier.payer).sponsored_limits&.ldf_limit_notification&.present?
 
     # NO - previous notification was already sent for this resource
     return false if resource.curation_activities.where(note: @note).exists?

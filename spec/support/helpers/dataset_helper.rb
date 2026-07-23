@@ -168,7 +168,7 @@ module DatasetHelper
     while page.has_css?('[aria-invalid="true"]')
       fill_in 'Institutional affiliation', with: name
       page.send_keys(:tab)
-      # expect(page).to have_css('.use-text-entered')
+      expect(page).to have_css('.use-text-entered')
       find('.use-text-entered').set(true)
       page.send_keys(:tab)
     end

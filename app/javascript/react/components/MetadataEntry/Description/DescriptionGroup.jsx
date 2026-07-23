@@ -4,12 +4,13 @@ import Description from './Description';
 import Cedar from './Cedar';
 
 export default function DescriptionGroup({
-  resource, setResource, curator, current,
+  resource, setResource, curator, current, error,
 }) {
   const [methods, setMethods] = useState(null);
   const [usage, setUsage] = useState(null);
   const [abstract, setAbstract] = useState(null);
 
+  const [touched, setTouched] = useState(false);
   const [openMethods, setOpenMethods] = useState(false);
   const [showCedar, setShowCedar] = useState(false);
   const [templates, setTemplates] = useState(null);
@@ -58,7 +59,8 @@ export default function DescriptionGroup({
 
   return (
     <>
-      <Description dcsDescription={abstract} setResource={setResource} mceLabel={abstractLabel} curator={curator} />
+      <Description dcsDescription={abstract} setResource={setResource} mceLabel={abstractLabel} curator={curator} onBlur={() => setTouched(true)} />
+      <div role="alert">{touched && error}</div>
       {resource.resource_type.resource_type !== 'collection' && (
         <>
           {openMethods ? (

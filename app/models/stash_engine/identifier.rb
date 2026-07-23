@@ -94,7 +94,7 @@ module StashEngine
     end
 
     scope :publicly_viewable, -> do
-      where(pub_state: %w[published embargoed])
+      where(pub_state: %w[published embargoed retracted])
     end
 
     scope :cited_by_pubmed, -> do

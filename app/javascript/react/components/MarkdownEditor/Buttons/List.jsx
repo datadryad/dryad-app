@@ -59,10 +59,11 @@ export default function List({type, editor, active}) {
     <button
       type="button"
       className={active ? 'active' : undefined}
+      aria-pressed={active}
       title={labels[type]}
       aria-label={labels[type]}
-      role="menuitem"
       onClick={listWizard}
+      tabIndex="-1"
     >{icons[type]}
     </button>
   );

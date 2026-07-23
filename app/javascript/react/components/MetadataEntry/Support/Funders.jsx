@@ -100,7 +100,12 @@ function Funders({current, resource, setResource}) {
       {!disabled && (
         <DragonDropList model="contributor" typeName="funder" items={funders} path="/stash_datacite/contributors/reorder" setItems={setFunders}>
           {orderedItems({items: funders, typeName: 'funder'}).map((contrib) => (
-            <DragonListItem key={contrib.id} item={contrib} typeName="funder">
+            <DragonListItem
+              key={contrib.id}
+              item={contrib}
+              typeName="funder"
+              ids={[`contrib_${contrib.id}`, `contributor_award_number__${contrib.id}`]}
+            >
               <FunderForm current={current} resourceId={resource.id} contributor={contrib} updateFunder={updateFunder} />
               <button
                 type="button"

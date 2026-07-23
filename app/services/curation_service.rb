@@ -149,9 +149,15 @@ class CurationService
   end
 
   def processed_sponsored_resource
-    return unless @status.in?(%w[processing])
+    return unless @status.in?(%w[processing withdrawn])
 
-    SponsoredPaymentsService.new(@resource).log_payment
+    service = SponsoredPaymentsService.new(@resource)
+
+    if @status == 'processing'
+      service.log_payment
+    elsif @status == 'withdrawn'
+      service.remove_logs
+    end
   end
 
   def submit_to_stripe

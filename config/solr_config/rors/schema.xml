@@ -11,6 +11,7 @@
   <field name="name" type="string_ci" indexed="true" stored="true" omitNorms="true" />
   <field name="home_page" type="string_ci" indexed="true" stored="true" omitNorms="true" />
   <field name="country" type="string_ci" indexed="true" stored="true" omitNorms="true" />
+  <field name="country_priority" type="int" indexed="true" stored="true" />
 
   <!-- JSON arrays as multivalued text fields -->
   <field name="acronyms" type="string_ci" indexed="true" stored="true" omitNorms="true" multiValued="true" />
@@ -33,6 +34,7 @@
   <fieldType name="string" class="solr.StrField" sortMissingLast="true" />
   <fieldType name="pdate" class="solr.TrieDateField" precisionStep="0" positionIncrementGap="0" />
   <fieldType name="plong" class="solr.LongPointField" />
+  <fieldType name="int" class="solr.TrieIntField" precisionStep="0" positionIncrementGap="0"/>
 
   <fieldType name="string_ci" class="solr.TextField" sortMissingLast="true" omitNorms="true">
     <analyzer type="index">

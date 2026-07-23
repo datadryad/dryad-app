@@ -190,6 +190,7 @@ function adjustNav() {
   if (window.innerWidth < 900 && pageNav.offsetHeight > 100) {
     if (!pageNav.classList.contains('minimized') && !pageNav.classList.contains('expanded')) {
       pageNav.classList.add('minimized');
+      document.getElementById('nav-mobile-button').setAttribute('aria-expanded', 'false');
     }
   }
 }
@@ -202,5 +203,6 @@ if (pageNav) {
     pageNav.classList.toggle('minimized')
     navButton.firstElementChild.classList.toggle('fa-angles-up')
     navButton.firstElementChild.classList.toggle('fa-angles-down')
+    navButton.setAttribute('aria-expanded', pageNav.classList.contains('expanded'));
   })
 }

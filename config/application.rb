@@ -14,6 +14,7 @@ require "action_view/railtie"
 # require "action_cable/engine"
 require "sprockets/railtie"
 require "rails/test_unit/railtie"
+require_relative "../lib/middleware/oauth_failure_logger"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -48,5 +49,6 @@ module Dash2
     # ryan used this in some manuscript parsing and gem updates break it.  See
     # https://stackoverflow.com/questions/72970170/upgrading-to-rails-6-1-6-1-causes-psychdisallowedclass-tried-to-load-unspecif
     config.active_record.yaml_column_permitted_classes = [ActiveSupport::HashWithIndifferentAccess]
+    config.middleware.use Middleware::OauthFailureLogger
   end
 end
