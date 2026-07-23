@@ -38,14 +38,14 @@
 </div>
 </div>
 
-#### Partnerships &amp; communication team
+#### Partnership development team
 
 <div class="about-bios">
    <div class="bio">
      <img src="/images/shane.jpg" alt="Headshot of Shane Alsop">
      <h5>Shane Alsop</h5><br/>
      <p><em>Partner Accounts Manager</em><br/>
-     Shane is a partnerships and community engagement professional with over 10 years experience across the open research and scholarly publishing landscape. Shane joins Dryad following roles at prominent native Open Access publishers eLife and PLOS, where he developed sustainable partnerships with institutions, funders, early-career researchers, and research organisations. His work has focused on advancing open research through sustainable publishing agreements, community engagement, and collaboration across the global research ecosystem. In his spare time, Shane enjoys spending time with his family and pet Jack Russell, Oona, listening to music, and collecting physical media/memorabilia.
+     Shane is a partnerships and community engagement professional with over 10 years experience across the open research and scholarly publishing landscape. Shane previously held roles at prominent native Open Access publishers eLife and PLOS, where he developed sustainable partnerships with institutions, funders, early-career researchers, and research organisations. His work has focused on advancing open research through sustainable publishing agreements, community engagement, and collaboration across the global research ecosystem. In his spare time, Shane enjoys spending time with his family and pet Jack Russell, Oona, listening to music, and collecting physical media/memorabilia.
      </p>
    </div>
    <div class="bio">
@@ -76,7 +76,7 @@
    </div>
 </div>
 
-#### Curation team
+#### Data publishing team
 
 <div class="about-bios">
 <div class="bio">
