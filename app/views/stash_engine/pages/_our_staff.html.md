@@ -38,6 +38,25 @@
 </div>
 </div>
 
+#### Partnerships &amp; communication team
+
+<div class="about-bios">
+   <div class="bio">
+     <img src="/images/shane.jpg" alt="Headshot of Shane Alsop">
+     <h5>Shane Alsop</h5><br/>
+     <p><em>Partner Accounts Manager</em><br/>
+     Shane is a partnerships and community engagement professional with over 10 years experience across the open research and scholarly publishing landscape. Shane joins Dryad following roles at prominent native Open Access publishers eLife and PLOS, where he developed sustainable partnerships with institutions, funders, early-career researchers, and research organisations. His work has focused on advancing open research through sustainable publishing agreements, community engagement, and collaboration across the global research ecosystem. In his spare time, Shane enjoys spending time with his family and pet Jack Russell, Oona, listening to music, and collecting physical media/memorabilia.
+     </p>
+   </div>
+   <div class="bio">
+     <img src="/images/lindsay.jpg" alt="Headshot of Lindsay Morton">
+     <h5>Lindsay Morton</h5><br/>
+     <p><em>Communications Consultant</em><br/>
+     Lindsay is a writer and strategist specializing in open science and scholarly communications. Drawing on more than 20 years of experience with leading publishers and service organizations, she helps clients to develop clear messaging, strengthen their brands, and communicate complex ideas with clarity, credibility, and impact. At Dryad, she advocates for open data publishing and supports authors and partner organizations through thoughtful, engaging storytelling and community outreach.
+     </p>
+   </div>
+</div>
+
 #### Platform development team
 
 <div class="about-bios">
