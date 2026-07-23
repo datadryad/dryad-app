@@ -1,34 +1,52 @@
 <% content_for :head do %>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style type="text/css">
+    #toggle-buttons {
+      display: flex;
+      column-gap: 2ch;
+      row-gap: 1ch;
+      flex-wrap: wrap;
+    }
+    #toggle-buttons button::before {
+      display: inline-block;
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      color: currentColor;
+      margin-right: .5ch;
+    }
+    #toggle-buttons button[data-hidden='true']::before {
+      content: '\f204';
+      content: '\f204' / '';
+    }
+    #toggle-buttons button[data-hidden='false']::before {
+      content: '\f205';
+      content: '\f205' / '';
+    }
+  </style>
 <% end %>
 <div>
   <h1>Curation status charts</h1>
-  <form method="get">
-    <div role="group" aria-labelledby="range-label">
-      <b id="range-label" style="margin-right: 1ch">Chart date range</b>
-      <label for="start_day">from:</label>
-      <input type="date" id="start_day" name="start_day" class="c-input__text" value="<%= @start_day.to_date %>" />
-      <label for="end_day">to:</label>
-      <input type="date" name="end_day" id="end_day" class="c-input__text" value="<%= @end_day.to_date %>" />
-      <input type="submit" value="Apply" class="o-button__submit" style="margin-left: 1ch" />
+  <div class="admin-dashboard-buttons">
+    <%= form_with(url: curation_stats_charts_path(format: :js), method: :get, id: 'user_edit_form', local: false) do |f| %>
+      <div role="group" aria-labelledby="range-label">
+        <b id="range-label" style="margin-right: 1ch">Chart date range</b>
+        <label for="start_day">from:</label>
+        <input type="date" id="start_day" name="start_day" class="c-input__text" value="<%= @start_day.to_date %>" />
+        <label for="end_day">to:</label>
+        <input type="date" name="end_day" id="end_day" class="c-input__text" value="<%= @end_day.to_date %>" />
+        <input type="submit" value="Apply" class="o-button__plain-text2" style="margin-left: 1ch" />
+      </div>
+    <% end %>
+    <div id="toggle-buttons">
+      <button class="o-button__plain-text7" aria-controls="monthlyChart dailyChart" id="size-toggle" data-hidden="true">Toggle size stats</button>
+      <button class="o-button__plain-text7" aria-controls="monthlyChart dailyChart" id="activity-toggle" data-hidden="true">Toggle activity stats</button>
     </div>
-  </form>
+  </div>
   <div style="margin: 2rem 0; height: 600px;"><canvas id="dailyChart" role="img" aria-label="Daily curation stats: Line chart graphing the count of each column of the curation stats table over time."></canvas></div>
   <div style="height: 600px;"><canvas id="monthlyChart" role="img" aria-label="Monthly curation stats: Line chart graphing the count of each column of the curation stats table over time."></canvas></div>
 </div>
 <script>
-  generate_chart(
-    document.getElementById('monthlyChart').getContext('2d'),
-    <%= raw @monthly_data.to_json %>,
-    'Monthly curation stats'
-  )
-  generate_chart(
-    document.getElementById('dailyChart').getContext('2d'),
-    <%= raw @daily_data.to_json %>,
-    'Daily curation stats'
-  )
-
-  function generate_chart(ctx, rawData, title) {
+  function chartData(rawData) {
     const labels = rawData.map(d => d.period);
     const field_keys = <%= raw @field_keys.to_json %>;
     const field_names = <%= raw @field_names.to_json %>;
@@ -56,11 +74,17 @@
       backgroundColor: colors[i % colors.length],
       tension: 0.3,
       fill: false,
-      hidden: ['aar_size', 'ppr_size', 'datasets_to_be_curated', 'datasets_unclaimed'].includes(field)
+      hidden: field !== 'datasets_to_be_curated',
     }));
 
+    return ({labels, datasets});
+  }
+
+  function generate_chart(ctx, rawData, title) {  
     Chart.defaults.font.family = 'KievitWeb';
     Chart.defaults.font.size = 14;
+
+    const {labels, datasets} = chartData(rawData);
 
     new Chart(ctx, {
       type: 'line',
@@ -86,4 +110,47 @@
       }
     })
   }
+
+  generate_chart(
+    document.getElementById('monthlyChart').getContext('2d'),
+    <%= raw @monthly_data.to_json %>,
+    'Monthly curation stats'
+  )
+  generate_chart(
+    document.getElementById('dailyChart').getContext('2d'),
+    <%= raw @daily_data.to_json %>,
+    'Daily curation stats'
+  )
+
+  function replaceData(chart, rawData) {
+    const {labels, datasets: sets} = chartData(rawData);
+    const datasets = sets.map((d, i) => {
+      d.hidden = !chart.isDatasetVisible(i)
+      return d
+    })
+    chart.data = {labels, datasets};
+    chart.update();
+  }
+
+  function toggleData(chart, indexes, hide) {
+    chart.data.datasets.forEach((d, i) => {
+      if (indexes.includes(i)) d.hidden = hide;
+    });
+    chart.update();
+  }
+
+  document.getElementById('size-toggle').addEventListener('click', (e) => {
+    const indexes = [0, 1, 6, 8]
+    const hide = e.target.dataset.hidden !== 'true';
+    toggleData(Chart.getChart(document.getElementById('monthlyChart')), indexes, hide)
+    toggleData(Chart.getChart(document.getElementById('dailyChart')), indexes, hide)
+    e.target.setAttribute('data-hidden', hide);
+  })
+  document.getElementById('activity-toggle').addEventListener('click', (e) => {
+    const indexes = [2, 3, 4, 5, 7, 9, 10, 11, 12]
+    const hide = e.target.dataset.hidden !== 'true';
+    toggleData(Chart.getChart(document.getElementById('monthlyChart')), indexes, hide)
+    toggleData(Chart.getChart(document.getElementById('dailyChart')), indexes, hide)
+    e.target.setAttribute('data-hidden', hide);
+  })
 </script>

@@ -26,13 +26,17 @@ module StashEngine
 
     def charts
       authorize StashEngine::CurationStats, policy_class: CurationStatsPolicy
-
       fields = chart_fields
       @field_names = fields.values
       @field_keys = fields.keys
 
       set_monthly_chart
       set_daily_chart
+
+      respond_to do |format|
+        format.html
+        format.js
+      end
     end
 
     def csv_enumerator
