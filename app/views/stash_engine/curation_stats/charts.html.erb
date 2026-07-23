@@ -140,14 +140,14 @@
   }
 
   document.getElementById('size-toggle').addEventListener('click', (e) => {
-    const indexes = [0, 1, 2, 6, 8]
+    const indexes = [0, 1, 6, 8]
     const hide = e.target.dataset.hidden !== 'true';
     toggleData(Chart.getChart(document.getElementById('monthlyChart')), indexes, hide)
     toggleData(Chart.getChart(document.getElementById('dailyChart')), indexes, hide)
     e.target.setAttribute('data-hidden', hide);
   })
   document.getElementById('activity-toggle').addEventListener('click', (e) => {
-    const indexes = [3, 4, 5, 7, 9, 10, 11, 12]
+    const indexes = [2, 3, 4, 5, 7, 9, 10, 11, 12]
     const hide = e.target.dataset.hidden !== 'true';
     toggleData(Chart.getChart(document.getElementById('monthlyChart')), indexes, hide)
     toggleData(Chart.getChart(document.getElementById('dailyChart')), indexes, hide)
