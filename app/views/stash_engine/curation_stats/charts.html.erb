@@ -27,7 +27,7 @@
 <div>
   <h1>Curation status charts</h1>
   <div class="admin-dashboard-buttons">
-    <%= form_with(url: curation_stats_update_charts_path, method: :get, id: 'user_edit_form', local: false) do |f| %>
+    <%= form_with(url: curation_stats_charts_path(format: :js), method: :get, id: 'user_edit_form', local: false) do |f| %>
       <div role="group" aria-labelledby="range-label">
         <b id="range-label" style="margin-right: 1ch">Chart date range</b>
         <label for="start_day">from:</label>

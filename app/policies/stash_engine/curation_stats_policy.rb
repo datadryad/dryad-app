@@ -9,9 +9,5 @@ module StashEngine
       @user.min_app_admin?
     end
 
-    def update_charts?
-      charts?
-    end
-
   end
 end
