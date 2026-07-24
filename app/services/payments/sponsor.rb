@@ -18,22 +18,12 @@ module Payments
     end
 
     def total_ldf
-      logs = SponsoredPaymentLog.for_year(@year).where(sponsor_id: sponsor.id)
-      logs = if sponsor.is_a?(StashEngine::JournalOrganization)
-               logs.where(payer_type: 'StashEngine::Journal')
-             else
-               logs.where(payer_type: 'StashEngine::Tenant')
-             end
-      logs.sum(:ldf)
-    end
-
-    def total_ldf
       @total_ldf ||= sponsor_logs.sum(:ldf)
     end
 
     def spent_ldf
       @spent_ldf ||= sponsor_logs
-        .joins(resource: :identifier).where(identifier: {pub_state: %w[published embargoed retracted]})
+        .joins(resource: :identifier).where(identifier: { pub_state: %w[published embargoed retracted] })
         .sum(:ldf)
     end
 
@@ -49,12 +39,11 @@ module Payments
 
     def sponsor_logs
       logs = SponsoredPaymentLog.for_year(@year).where(sponsor_id: sponsor.id)
-      logs = if sponsor.is_a?(StashEngine::JournalOrganization)
+      if sponsor.is_a?(StashEngine::JournalOrganization)
         logs.where(payer_type: 'StashEngine::Journal')
       else
         logs.where(payer_type: 'StashEngine::Tenant')
       end
-      logs
     end
 
     def dpc_fee
