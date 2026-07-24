@@ -31,6 +31,7 @@ export const SMALL_WORDS = new Set([
   "in",
   "neither",
   "nor",
+  "non",
   "of",
   "on",
   "only",
@@ -96,6 +97,7 @@ export function sentenceCase(input, options = {}) {
         const nextChar = token.charAt(wordIndex + word.length);
         isSentenceEnd = terminators.has(nextChar);
         const tag = brill[lower(word, locale)] || brill[upperAt(lower(word), 0, locale)];
+        console.log(word)
         if (IS_MANUAL_CASE.test(word)) {
           // keep manual casing
           value = value;
