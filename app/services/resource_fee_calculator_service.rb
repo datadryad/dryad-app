@@ -15,6 +15,16 @@ class ResourceFeeCalculatorService
     FeeCalculatorService.new(type).storage_fee_tier(resource: resource)
   end
 
+  def sponsored_tier
+    FeeCalculatorService.new(type).sponsored_tier(resource)
+  end
+
+  def ldf_sponsored_amount(paid_storage_size: nil)
+    FeeCalculatorService.new(type)
+      .calculator_service.new({}, resource: resource)
+      .ldf_sponsored_amount(paid_storage_size: paid_storage_size)
+  end
+
   private
 
   def type

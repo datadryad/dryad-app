@@ -16,7 +16,8 @@ class FeeCalculatorService
     calculator_class.constantize.new({}, resource: resource, payer_record: payer).ldf_sponsored_amount
   end
 
-  def sponsored_tier(resource, payer)
+  def sponsored_tier(resource, payer = nil)
+    payer ||= resource.identifier.payer
     limits = PayersService.new(payer).sponsored_limits
     calculator_class.constantize.new({}, resource: resource, payer_record: payer)
       .get_tier_by_value(

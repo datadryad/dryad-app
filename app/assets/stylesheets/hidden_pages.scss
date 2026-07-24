@@ -13,3 +13,11 @@ pre {
   border: 1px solid #ccc;
   padding: 0 10px 10px;
 }
+
+.columns-details-box {
+  display: flex;
+
+  .details-box {
+    width: 50%;
+  }
+}
