@@ -42,6 +42,7 @@ class HiddensController < StashEngine::ApplicationController
     @limits_sponsor_details = PayerDetailsService.new(@limits_sponsor).details
 
     @total_ldf = @service.total_ldf
-    # @total_dpc = @service.total_dpc
+
+    @price_calculation = ResourceFeeCalculatorService.new(@identifier.latest_resource).calculate({})
   end
 end

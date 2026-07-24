@@ -28,7 +28,6 @@ class SponsoredPaymentsService
   def log_payment
     return unless loggable?
 
-    @calculator_service = calculator_service
     SponsoredPaymentLog.transaction do
       should_skip_log = false
       paid_before = delete_larger_file_size_logs
@@ -81,7 +80,7 @@ class SponsoredPaymentsService
     paid_before = identifier.last_invoiced_file_size.to_i
 
     if paid_before > resource.total_file_size
-      new_tier = calculator_service.storage_fee_tier
+      new_tier = @calculator_service.storage_fee_tier
       resource.previous_resources.each do |res|
         return res.total_file_size if res.status_published?
 

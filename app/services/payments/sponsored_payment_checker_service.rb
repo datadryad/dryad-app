@@ -1,33 +1,19 @@
 module Payments
   class SponsoredPaymentCheckerService
-    attr_reader :identifier
-
-    def initialize(identifier, dry_run: true, logging: false)
-      Rails.logger.level = Logger::INFO
-      @identifier = identifier
-      @dry_run = dry_run
-      @logging = logging || dry_run
-    end
-
     def self.check
-      StashEngine::Identifier.order(id: :desc).each do |id|
-        new(id).check_payment_log
-      end
-    end
-
-    def check_payment_log
-      pp "identifier #{identifier.id}" if @logging
-      return unless identifier.sponsored?
-
-      return if identifier.latest_resource.
-        # TODO: skip if sponsored LDF sum is correct and identifier last_invoiced_file_size is correct
-
-        identifier.resources.order(:id).each do |res|
-        Payments::ResourcePaymentCheckerService.new(res, dry_run: @dry_run, logging: @logging).check_payment
-      end
-
-      pp "DONE #{identifier.id} - #{identifier.last_invoiced_file_size}, #{identifier.latest_resource.total_file_size}"
-      true
+      StashEngine::Identifier
+        .joins(:process_date)
+        .where(process_date: { processing: ['2026-01-01'.to_datetime.beginning_of_day..] })
+        .where(last_invoiced_file_size: nil)
+        .where.not(payment_type: ['stripe', 'unknown', '', nil])
+        .order(id: :desc)
+        .reject{|i| i.latest_resource.last_curation_activity.status.in?(['peer_review', 'in_progress', 'withdrawn'])}
+        .select{|i| i.sponsored_payment_logs.none?}
+        .select{|a| a.latest_resource.total_file_size.to_i > 10_000_000_000}
+        .select{|i|
+          (PayersService.new(i.payer).sponsored_limits && PayersService.new(i.payer).sponsored_limits.covers_ldf?) ||
+            PayersService.new(i.payer).payment_sponsor&.payment_configuration&.covers_ldf? }
+        .map(&:id)
     end
   end
 end

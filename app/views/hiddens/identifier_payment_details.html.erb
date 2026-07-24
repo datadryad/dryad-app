@@ -44,6 +44,12 @@
                  })
       )
     %></pre>
+    <h3>Last resource price calculation (<%= @identifier.latest_resource_id %>)</h3>
+    <pre style="display: ruby;"><%=
+      JSON.pretty_generate(
+        @price_calculation
+      )
+    %></pre>
   </div>
 
   <p>Total LDF: <%= number_to_currency(@total_ldf) %></p>
