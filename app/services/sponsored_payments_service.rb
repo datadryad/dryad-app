@@ -5,7 +5,6 @@ class SponsoredPaymentsService
     @resource = resource
     @identifier = resource.identifier
     @payer = @identifier.payer
-    @calculator_service = calculator_service
   end
 
   def loggable?
@@ -59,7 +58,7 @@ class SponsoredPaymentsService
   end
 
   def ldf_fees(size = nil)
-    @calculator_service.ldf_sponsored_amount(paid_storage_size: size)
+    calculator_service.ldf_sponsored_amount(paid_storage_size: size)
   end
 
   def calculator_service
@@ -80,7 +79,7 @@ class SponsoredPaymentsService
     paid_before = identifier.last_invoiced_file_size.to_i
 
     if paid_before > resource.total_file_size
-      new_tier = @calculator_service.storage_fee_tier
+      new_tier = calculator_service.storage_fee_tier
       resource.previous_resources.each do |res|
         return res.total_file_size if res.status_published?
 

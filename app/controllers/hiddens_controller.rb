@@ -27,8 +27,6 @@ class HiddensController < StashEngine::ApplicationController
     @sponsor_details = PayerDetailsService.new(@sponsor).details
 
     @identifiers = @service.identifiers
-    @total_ldf = @service.total_ldf
-    @total_dpc = @service.total_dpc
   end
 
   def identifier_payment_details

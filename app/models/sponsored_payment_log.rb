@@ -31,7 +31,7 @@ class SponsoredPaymentLog < ApplicationRecord
   validates :payer_type, presence: true
   validates :ldf, presence: true
 
-  scope :for_current_year, -> { where('year(created_at) = ?', Date.today.year) }
-  scope :for_year, ->(year) { where('year(created_at) = ?', year) }
+  scope :for_current_year, -> { where('year(sponsored_payment_logs.created_at) = ?', Date.today.year) }
+  scope :for_year, ->(year) { where('year(sponsored_payment_logs.created_at) = ?', year) }
 
 end
