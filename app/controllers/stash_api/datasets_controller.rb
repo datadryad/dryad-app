@@ -150,7 +150,12 @@ module StashApi
       if disposition.present? && (@resource.current_curation_status == 'peer_review')
         if disposition.downcase == 'accept'
           # article is accepted -> transition peer_review to curation
-          CurationService.new(user_id: @user.id, resource: @resource, status: 'queued',
+          status = 'queued'
+          if @resource.identifier.payment_needed?
+            status = 'awaiting_payment'
+            StashEngine::UserMailer.peer_review_payment_needed(@resource).deliver_now
+          end
+          CurationService.new(user_id: @user.id, resource: @resource, status: status,
                               note: 'updating status based on API notification from Editorial Manager').process
         else
           # any other article disposition -> transition peer_review to withdrawn
@@ -445,6 +450,11 @@ module StashApi
       unless %w[queued peer_review].include?(@resource.current_curation_status)
         note = "received API request to change status to #{new_status}, but retaining current curation status due to workflow rules"
         new_status = @resource.current_curation_status
+      end
+      # check for awaiting payment
+      if new_status == 'queued' && @resource.identifier.payment_needed?
+        note = "received API request to change status to #{new_status}, but submission needs further payment"
+        StashEngine::UserMailer.peer_review_payment_needed(@resource).deliver_now
       end
       # and certainly don't withdraw something that was previously published
       if (new_status == 'withdrawn') && @resource.previously_public?
