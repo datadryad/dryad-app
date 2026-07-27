@@ -5,7 +5,7 @@ import {commands} from '../milkdownCommands';
 import {commands as mdCommands} from '../codeKeymap';
 import {labels} from './Details';
 
-/* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role */
+ 
 
 export default function Heading({
   active, editor, editorId, mdEditor, activeEditor, headingLevel,

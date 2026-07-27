@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import RorAutocomplete from '../RorAutocomplete';
 import {useStore} from '../../../shared/store';
-/* eslint-disable react/no-array-index-key */
+ 
 
 export default function Affiliations({
   formRef, id, affiliations, setAffiliations,
