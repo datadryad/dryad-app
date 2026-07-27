@@ -166,6 +166,7 @@
     "nanoid": "<4.0.0",
     "prosemirror-model": "^1.25.4",
     "js-yaml": "^4.1.1",
-    "picomatch": "^4.0.4"
+    "picomatch": "^4.0.4",
+    "brace-expansion": "^2.1.2"
   }
 }
