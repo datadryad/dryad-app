@@ -151,12 +151,13 @@ module StashApi
         if disposition.downcase == 'accept'
           # article is accepted -> transition peer_review to curation
           status = 'queued'
+          note = 'updating status based on API notification from Editorial Manager'
           if @resource.identifier.payment_needed?
             status = 'awaiting_payment'
+            note = 'received API request to change status to queued, but submission needs further payment'
             StashEngine::UserMailer.peer_review_payment_needed(@resource).deliver_now
           end
-          CurationService.new(user_id: @user.id, resource: @resource, status: status,
-                              note: 'updating status based on API notification from Editorial Manager').process
+          CurationService.new(user_id: @user.id, resource: @resource, status: status, note: note).process
         else
           # any other article disposition -> transition peer_review to withdrawn
           CurationService.new(user_id: @user.id, resource: @resource, status: 'withdrawn',
