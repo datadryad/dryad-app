@@ -455,6 +455,7 @@ module StashApi
       # check for awaiting payment
       if new_status == 'queued' && @resource.identifier.payment_needed?
         note = "received API request to change status to #{new_status}, but submission needs further payment"
+        new_status = 'awaiting_payment'
         StashEngine::UserMailer.peer_review_payment_needed(@resource).deliver_now
       end
       # and certainly don't withdraw something that was previously published
