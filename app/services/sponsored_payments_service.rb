@@ -20,6 +20,8 @@ class SponsoredPaymentsService
     return false unless PayersService.new(payer).is_2025_payer?
     # payer does not cover ldf
     return false unless PayersService.new(payer).sponsored_limits&.covers_ldf?
+    # sponsored payment log is already created
+    return false if resource.sponsored_payment_log.present?
 
     true
   end
