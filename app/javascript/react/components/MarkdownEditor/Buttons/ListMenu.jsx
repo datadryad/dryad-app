@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-/* eslint-disable-next-line import/no-cycle */
+ 
 import Button from '../Button';
 
 export default function ListMenu({active, editorId, ...props}) {

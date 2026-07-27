@@ -44,7 +44,7 @@ function ReportTable(props) {
         )}
         <tr className="after-fail">
           <td className="result-row-index">{afterFailRowPosition}</td>
-          {reportError.header && reportError.header.map((_, index) => <td key={index} /> /* eslint-disable-line */ )}
+          {reportError.header && reportError.header.map((_, index) => <td key={index} />   )}
         </tr>
       </tbody>
     </table>

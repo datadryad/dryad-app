@@ -1,5 +1,5 @@
 import {createSlice} from '@milkdown/kit/ctx';
-// eslint-disable-next-line import/no-unresolved
+ 
 import {Plugin, PluginKey} from '@milkdown/kit/prose/state';
 import {InitReady, SchemaReady, prosePluginsCtx} from '@milkdown/kit/core';
 import {debounce} from 'lodash';

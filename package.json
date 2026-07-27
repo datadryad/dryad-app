@@ -132,6 +132,8 @@
     "defaults"
   ],
   "devDependencies": {
+    "@eslint/compat": "^2.1.0",
+    "@eslint/js": "^10.0.1",
     "@faker-js/faker": "^6.0.0-beta.0",
     "@testing-library/dom": "^9.3.3",
     "@testing-library/jest-dom": "^6.1.4",
@@ -141,10 +143,9 @@
     "@webpack-cli/serve": "^2.0.5",
     "datalist-polyfill": "^1.24.4",
     "del": "^6.0.0",
-    "eslint": "^8.19.0",
-    "eslint-config-airbnb": "^19.0.4",
+    "eslint": "^9.0",
     "eslint-import-resolver-typescript": "^4.4.4",
-    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "jest": "^30.4",
@@ -165,6 +166,7 @@
     "nanoid": "<4.0.0",
     "prosemirror-model": "^1.25.4",
     "js-yaml": "^4.1.1",
-    "picomatch": "^4.0.4"
+    "picomatch": "^4.0.4",
+    "brace-expansion": "^2.1.2"
   }
 }

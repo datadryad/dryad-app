@@ -74,7 +74,7 @@ export default function FacilityForm({resource, setResource}) {
       )}
     </Formik>
   );
-  /* eslint-enable react/jsx-no-bind */
+   
 }
 
 FacilityForm.propTypes = {
