@@ -52,6 +52,13 @@ describe RelatedIdentifierService do
         expect(desc).not_to be_nil
         expect(desc.description).to eq(note_text)
       end
+
+      it 'adds a research integrity case when the value is changed to a retracted article' do
+        expect(resource.identifier.research_integrity_case).to be_nil
+        related_identifier.update(related_identifier: 'https://doi.org/10.1098/rsif.2017.0031')
+        subject.process
+        expect(resource.identifier.research_integrity_case).not_to be_nil
+      end
     end
   end
 
