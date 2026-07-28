@@ -388,11 +388,6 @@ module StashApi
       StashEngine::Identifier.where(identifier_type: id_type.upcase).where(identifier: id_text).first
     end
 
-    # def initialize_stash_identifier(id)
-    #   @stash_identifier = get_stash_identifier(id)
-    #   render json: { error: "cannot find dataset with identifier #{id}" }.to_json, status: 404 if @stash_identifier.blank?
-    # end
-
     private
 
     def setup_identifier_and_resource_for_put

@@ -68,9 +68,6 @@ Rails.application.routes.draw do
         get 'calculate_fee'
       end
       resources :related_works, shallow: false, only: 'update'
-      resources :internal_data, shallow: true, path: '/internal_data'
-      resources :curation_activity, shallow: false, path: '/curation_activity'
-
       resources :versions, shallow: true, path: '/versions' do
         get 'download', on: :member
         get 'zip_assembly(/:token)', token: %r{[^\s/]+?}, to: 'versions#zip_assembly', as: 'zip_assembly'
