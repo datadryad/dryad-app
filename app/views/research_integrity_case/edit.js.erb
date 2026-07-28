@@ -1,0 +1,3 @@
+document.getElementById("notes<%=@case.id%>").innerHTML = '';
+document.getElementById("notes<%=@case.id%>").append(document.createRange().createContextualFragment("<%= escape_javascript(render partial: 'notes_edit', locals: { c: @case }) %>"));
+document.getElementById("notes<%=@case.id%>").querySelector('textarea').focus();
