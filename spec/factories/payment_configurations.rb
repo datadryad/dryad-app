@@ -5,6 +5,7 @@
 #  id                     :bigint           not null, primary key
 #  covers_dpc             :boolean
 #  covers_ldf             :boolean
+#  deactivated_at         :datetime
 #  ldf_limit              :integer
 #  ldf_limit_notification :text(65535)
 #  partner_type           :string(191)

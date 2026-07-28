@@ -145,7 +145,7 @@ module StashEngine
       params.permit(:id, :short_name, :long_name, :logo, :campus_contacts, :enabled, :partner_display, :ror_orgs, :sponsor_id,
                     flag_attributes: %i[id note _destroy],
                     payment_configuration_attributes: %i[id payment_plan covers_dpc covers_ldf ldf_limit yearly_ldf_limit
-                                                         ldf_limit_notification _destroy],
+                                                         ldf_limit_notification deactivated_at _destroy],
                     authentication: %i[strategy ranges entity_id entity_domain email_domain])
     end
 

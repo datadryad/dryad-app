@@ -10,6 +10,10 @@
         <br />
       <% end %>
     </fieldset>
+    <p>
+      <%= pf.label :deactivated_at, "Deactivation date" %>
+      <%= pf.date_field :deactivated_at, value: payment_configuration.deactivated_at&.to_date, class: 'c-input__text'%>
+    </p>
   </div>
   <p>
     <%= pf.check_box :covers_ldf, {checked: payment_configuration.covers_ldf}, 1, 0 %>
