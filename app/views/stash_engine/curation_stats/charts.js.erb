@@ -1,0 +1,13 @@
+replaceData(
+  Chart.getChart(document.getElementById('monthlyChart')),
+  <%= raw @monthly_data.to_json %>,
+)
+replaceData(
+  Chart.getChart(document.getElementById('dailyChart')),
+  <%= raw @daily_data.to_json %>,
+)
+
+var urlParams = new URLSearchParams();
+urlParams.set('start_day', '<%= params[:start_day] %>');
+urlParams.set('end_day', '<%= params[:end_day] %>');
+window.history.replaceState(null, null, `?${urlParams}`);
