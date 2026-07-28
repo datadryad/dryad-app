@@ -24,8 +24,18 @@ module StashDatacite
 
     validates :subject_id, presence: true, uniqueness: { scope: :resource_id }
 
-    after_commit do
-      resource.paper_trail.save_with_version if resource
+    after_commit :version_resource
+
+    private
+
+    def version_resource
+      return unless resource
+
+      current_subjects = resource.subjects.map { |s| s.slice(:subject, :scheme_URI) }
+      last_subjects = resource.versions.last&.additional_info&.dig('subjects_list')
+      return if current_subjects == last_subjects
+
+      resource.paper_trail.save_with_version
     end
   end
 end
