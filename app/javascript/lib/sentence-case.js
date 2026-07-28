@@ -121,13 +121,14 @@ export function sentenceCase(input, options = {}) {
         const nextChar = token.charAt(wordIndex + word.length);
         isSentenceEnd = terminators.has(nextChar);
         const tag = brill[lower(word, locale)] || brill[upperAt(lower(word), 0, locale)];
+        const isContraction = token.substring(wordIndex + word.length - 1, wordIndex + word.length + 2) == "n't"
         if (IS_MANUAL_CASE.test(word)) {
           // keep manual casing
           value = value;
           continue;
         } else if (i > 0 && wordSeparators.has(token.charAt(wordIndex - 1))) {
           continue;
-        } else if (prefixes.some(p => lower(word).startsWith(p)) || smallWords.has(lower(word)) || !isNaN(wordsToNumbers(word))) {
+        } else if (prefixes.some(p => lower(word).startsWith(p)) || smallWords.has(lower(word)) || !isNaN(wordsToNumbers(word)) || isContraction) {
           // lowercase all small/common/counting words
           value = lower(value, locale)
         } else if (tag && (tag.includes('NNP') || tag.includes('NNPS'))) {
