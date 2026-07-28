@@ -64,7 +64,7 @@ module StashEngine
     def payment_needed?
       # if payment is via invoice, then user_must_pay returns false
       # since the user does not have to pay anything right now
-      return false unless payments.last.pay_with_invoice? || user_must_pay?
+      return false unless payments.last&.pay_with_invoice? || user_must_pay?
       return false if old_payment_system
 
       if payments.any?
