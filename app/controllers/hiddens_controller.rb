@@ -1,14 +1,34 @@
 class HiddensController < StashEngine::ApplicationController
-  def file_validation
-    authorize current_user, policy_class: HiddenPagesPolicy
+  before_action :require_user_login
+  before_action { authorize current_user, policy_class: HiddenPagesPolicy }
 
+  def file_validation
     ids = params[:ids].split(',')
     @files = StashEngine::GenericFile.where(id: ids)
   end
 
-  def sponsor_payment_details
-    authorize current_user, policy_class: HiddenPagesPolicy
+  def fix_file_size
+    file = StashEngine::GenericFile.find(params[:file_id])
+    file.update(upload_file_size: params[:value])
 
+    redirect_to file_validation_hidden_path(ids: params[:file_id]), notice: 'File size updated'
+  end
+
+  def validate
+    file = StashEngine::GenericFile.find(params[:file_id])
+    StashEngine::FileValidationService.new(file: file).validate_file
+
+    redirect_to file_validation_hidden_path(ids: params[:file_id]), notice: 'Validation triggered successfully'
+  end
+
+  def recreate_digest
+    file = StashEngine::GenericFile.find(params[:file_id])
+    StashEngine::FileValidationService.new(file: file).recreate_digests
+
+    redirect_to file_validation_hidden_path(ids: params[:file_id]), notice: 'Digests recreation triggered successfully'
+  end
+
+  def sponsor_payment_details
     @calculation_year = params[:year] || Date.today.year
     @sponsor = case params[:type]
                when 'StashEngine::Tenant'
@@ -32,8 +52,6 @@ class HiddensController < StashEngine::ApplicationController
   end
 
   def identifier_payment_details
-    authorize current_user, policy_class: HiddenPagesPolicy
-
     @service = Payments::Identifier.new(params[:id])
     @identifier = @service.identifier
     @payment_sponsor = @service.payment_sponsor

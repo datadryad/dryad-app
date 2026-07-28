@@ -601,9 +601,15 @@ Rails.application.routes.draw do
       constraints: { doi_prefix: /doi:10.\d{4,9}/i, doi_suffix: /[A-Z0-9]+\.[A-Z0-9]+/i },
       to: redirect{ |p, req| "/dataset/#{p[:doi_prefix]}/#{p[:doi_suffix]}" }
 
-  resource :hidden do
+  resource :hidden, only: [] do
     collection do
       get :file_validation
+
+      resources :files, only: [] do
+        get "/fix_file_size/:value", to: 'hiddens#fix_file_size', as: 'hidden_fix_file_size'
+        get :validate, to: 'hiddens#validate', as: 'hidden_validate_file'
+        get :recreate_digest, to: 'hiddens#recreate_digest', as: 'hidden_recreate_digest'
+      end
       get :sponsor_payment_details
       get :identifier_payment_details
     end
