@@ -176,7 +176,7 @@ function PublicationForm({
                       placeholder={prefix}
                       required
                     />
-                    <div id="man-ex"><i aria-hidden="true" />APPS-D-17-00113</div>
+                    <div id="man-ex"><i aria-hidden="true" />DRYD-2026-00113</div>
                   </div>
                 </div>
               </>
