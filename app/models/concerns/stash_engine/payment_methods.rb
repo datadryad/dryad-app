@@ -9,6 +9,7 @@ module StashEngine
     # if payer has a LDF limit set and it is reached:
     #  - institution should pay DPC
     #  - user pays LDF calculated as per institution
+    # returns false if the user chooses to pay wia invoice
     def user_must_pay?
       return false if old_system_valid_payer?
       return false if latest_resource.resource_type&.resource_type == 'collection'
@@ -61,7 +62,9 @@ module StashEngine
     end
 
     def payment_needed?
-      return false unless user_must_pay?
+      # if payment is via invoice, then user_nust_pay returns false
+      # since the user does not have to apy anything right now
+      return false unless payments.last.pay_with_invoice? || user_must_pay?
       return false if old_payment_system
 
       if payments.any?
@@ -69,7 +72,7 @@ module StashEngine
         return !invoicer.invoice_paid? if invoicer.invoice_created?
       end
 
-      return false unless last_invoiced_file_size.blank? || last_invoiced_file_size.zero?
+      return false unless last_invoiced_file_size.to_i.zero?
 
       true
     end
