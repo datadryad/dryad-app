@@ -51,6 +51,7 @@ export default function TitleImport({
       p.innerHTML = resource.title;
       const testTitle = p.textContent || p.innerText;
       setCaseTitle(testTitle);
+      setCaseWarning(capitals(testTitle));
       if (!resource.identifier.process_date?.processing) {
         axios.get(`/resources/${resource.id}/dupe_check.json`).then((data) => {
           setDupeWarning(data.data?.[0]?.title || false);
@@ -58,11 +59,9 @@ export default function TitleImport({
       } else {
         setDupeWarning(false);
       }
-      if (capitals(testTitle)) {
-        setCaseWarning(true);
-      } else {
-        setCaseWarning(false);
-      }
+    } else {
+      setDupeWarning(false);
+      setCaseWarning(false);
     }
   }, [resource.title]);
 
