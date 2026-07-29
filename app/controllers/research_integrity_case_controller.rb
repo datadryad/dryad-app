@@ -6,7 +6,7 @@ class ResearchIntegrityCaseController < ApplicationController
   layout 'stash_engine/application'
 
   before_action :require_user_login
-  before_action :setup_paging
+  before_action :setup_paging, only: %i[index history]
 
   def index
     @cases = authorize ResearchIntegrityCase.unresolved.joins(identifier: [:latest_resource])
