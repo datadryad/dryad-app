@@ -1,19 +1,27 @@
+<% last_payment_type = nil %>
 <h1 id="dialog-title">Payment history</h1>
 <ul class="o-list zebra-list">
   <% @logs.each do |log| %>
-    <li style="display: flex; justify-content: space-between; row-gap: 1ch; column-gap: 2ch">
-      <% if log.class.name == 'ResourcePayment' %>
-        <%= log.pay_with_invoice? ? 'Invoice' : 'Bill' %> for $<%= log.amount %> <%= log.status %>
+    <% if log.class.name == 'ResourcePayment' %>
+      <li style="display: flex; justify-content: space-between; row-gap: 1ch; column-gap: 2ch">
+        <% text = log.pay_with_invoice? ? 'Invoice' : 'Bill' %>
+        <span><%= format_external_references(log.payment_id, text: text) %> for $<%= log.amount %> <%= log.status %></span>
         <% if log.has_discount? || log.ppr_fee_paid? %>
           (<% if log.has_discount? %><%= log.amount.zero? ? 'waiver' : 'with PPR fee discount' %><% else %>PPR fee<% end %>)
-        <% end %> 
+        <% end %>
         <span style="font-size: .98rem"><%= formatted_datetime(log.updated_at) %></span>
-      <% else %>
-        <% type = log.object_changes.dig('payment_type', 1) %>
-        <% id = log.object_changes.dig('payment_id', 1) %>
-        <span><%= type === 'waiver' ? 'Added' : 'Sponsorship changed to' %> <%= type %> <%= link_to_account(type, id) %></span> <span style="font-size: .98rem"><%= formatted_datetime(log.created_at) %></span>
+      </li>
+    <% else %>
+      <% type = log.object_changes.dig('payment_type', 1) %>
+      <% id = log.object_changes.dig('payment_id', 1) %>
+      <% if type && type != last_payment_type %>
+        <% type = last_payment_type %>
+          <li style="display: flex; justify-content: space-between; row-gap: 1ch; column-gap: 2ch">
+            <span><%= type === 'waiver' ? 'Added' : 'Sponsorship changed to' %> <%= type %> <%= link_to_account(type, id) %></span>
+            <span style="font-size: .98rem"><%= formatted_datetime(log.created_at) %></span>
+          </li>
       <% end %>
-    </li>
+    <% end %>
   <% end %>
 </ul>
 <div class="c-modal__buttons-right">
