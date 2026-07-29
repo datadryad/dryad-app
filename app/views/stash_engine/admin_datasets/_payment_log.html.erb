@@ -5,10 +5,12 @@
     <% if log.class.name == 'ResourcePayment' %>
       <li style="display: flex; justify-content: space-between; row-gap: 1ch; column-gap: 2ch">
         <% text = log.pay_with_invoice? ? 'Invoice' : 'Bill' %>
-        <span><%= format_external_references(log.payment_id, text: text) %> for $<%= log.amount %> <%= log.status %></span>
-        <% if log.has_discount? || log.ppr_fee_paid? %>
-          (<% if log.has_discount? %><%= log.amount.zero? ? 'waiver' : 'with PPR fee discount' %><% else %>PPR fee<% end %>)
-        <% end %>
+        <span>
+          <%= format_external_references(log.payment_id, text: text) %> for $<%= log.amount %> <%= log.status %>
+          <% if log.has_discount? || log.ppr_fee_paid? %>
+            (<% if log.has_discount? %><%= log.amount.zero? ? 'waiver' : 'with PPR fee discount' %><% else %>PPR fee<% end %>)
+          <% end %>
+        </span>
         <span style="font-size: .98rem"><%= formatted_datetime(log.updated_at) %></span>
       </li>
     <% else %>
