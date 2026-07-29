@@ -20,6 +20,8 @@ class SponsoredPaymentsService
     return false unless PayersService.new(payer).is_2025_payer?
     # payer does not cover ldf
     return false unless PayersService.new(payer).sponsored_limits&.covers_ldf?
+    # sponsored payment log is already created
+    return false if resource.sponsored_payment_log.present?
 
     true
   end
@@ -27,7 +29,6 @@ class SponsoredPaymentsService
   def log_payment
     return unless loggable?
 
-    @calculator_service = calculator_service
     SponsoredPaymentLog.transaction do
       should_skip_log = false
       paid_before = delete_larger_file_size_logs
@@ -59,7 +60,7 @@ class SponsoredPaymentsService
   end
 
   def ldf_fees(size = nil)
-    @calculator_service.ldf_sponsored_amount(paid_storage_size: size)
+    calculator_service.ldf_sponsored_amount(paid_storage_size: size)
   end
 
   def calculator_service

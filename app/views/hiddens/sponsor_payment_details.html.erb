@@ -15,37 +15,41 @@
 
   <div class="details-box">
     <h3>Payment details</h3>
-    <p>Total DPC: <%= number_to_currency(@total_dpc) %></p>
-    <p>Total LDF: <%= number_to_currency(@total_ldf) %></p>
+    <p>Total DPC: <%= number_to_currency(@service.total_dpc) %></p>
+    <p>Total LDF: <%= number_to_currency(@service.total_ldf) %></p>
     <table width="300">
       <tr>
-        <td>LDF Limit</td>
+        <td>LDF Commitment</td>
         <td class="align-end"><%= number_to_currency(@service.payment_configuration&.yearly_ldf_limit) %></td>
       </tr>
       <tr>
-        <td>Used LDF</td>
-        <td class="align-end"><%= number_to_currency(@total_ldf) %></td>
+        <td>LDF Spent</td>
+        <td class="align-end"><%= number_to_currency(@service.spent_ldf) %></td>
       </tr>
       <tr>
-        <td>Remaining LDF</td>
+        <td>LDF Reserved</td>
+        <td class="align-end"><%= number_to_currency(@service.reserved_ldf) %></td>
+      </tr>
+      <tr>
+        <td>LDF Remaining</td>
         <td class="align-end">
           <% if @service.payment_configuration&.yearly_ldf_limit.present? %>
-            <%= number_to_currency(@service.payment_configuration&.yearly_ldf_limit.to_i - @total_ldf) %></td>
+            <%= number_to_currency(@service.payment_configuration&.yearly_ldf_limit.to_i - @service.total_ldf) %></td>
           <% end %>
       </tr>
     </table>
     <table width="300" style="margin-top: 10px">
       <tr>
         <td>Total DPC</td>
-        <td class="align-end"><%= number_to_currency(@total_dpc) %></td>
+        <td class="align-end"><%= number_to_currency(@service.total_dpc) %></td>
       </tr>
       <tr>
         <td>Total LDF</td>
-        <td class="align-end"><%= number_to_currency(@total_ldf) %></td>
+        <td class="align-end"><%= number_to_currency(@service.total_ldf) %></td>
       </tr>
       <tr>
         <td>Total</td>
-        <td class="align-end"><%= number_to_currency(@total_dpc + @total_ldf) %></td>
+        <td class="align-end"><%= number_to_currency(@service.total_dpc + @service.total_ldf) %></td>
       </tr>
     </table>
   </div>
@@ -59,6 +63,8 @@
       <td>Title</td>
       <td>Status</td>
       <td>Status date</td>
+      <td>Resource size</td>
+      <td>Last invoiced size</td>
       <td>Sponsored LDF</td>
       <td>User paid</td>
     </tr>
@@ -68,9 +74,11 @@
         <td><%= link_to ident.id, identifier_payment_details_hidden_path(id: ident.id) %></td>
         <td><%= ident.identifier %></td>
         <td><%= ident.resources.count %></td>
-        <td><%= res.title %></td>
+        <td width="200px"><%= res.title %></td>
         <td><%= res.last_curation_activity.status %></td>
         <td><%= res.last_curation_activity.created_at %></td>
+        <td class="align-end"><%= filesize res.total_file_size %></td>
+        <td class="align-end"><%= filesize ident.last_invoiced_file_size %></td>
         <td class="align-end">
           <%
             sum = ident.sponsored_payment_logs.sum(:ldf)
