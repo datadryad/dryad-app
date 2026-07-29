@@ -61,7 +61,7 @@ class PaymentsController < ApplicationController
       paid_at: Time.current
     )
     update_identifier_files_size
-    update_payment_details
+    update_payment_details(payment)
   end
 
   def reset_payment
@@ -88,20 +88,17 @@ class PaymentsController < ApplicationController
     return if @resource.payment.ppr_fee_paid?
     return if SponsoredPaymentsService.new(@resource).loggable?
 
-    identifier.update(last_invoiced_file_size: [identifier.last_invoiced_file_size.to_i, @resource.total_file_size].max)
+    identifier.update(last_invoiced_file_size: [identifier.last_invoiced_file_size.to_i, @resource.total_file_size.to_i].max)
   end
 
-  def update_payment_details
-    session = Stripe::Checkout::Session.retrieve(params[:session_id])
+  def update_payment_details(payment)
+    stripe_session = Stripe::Checkout::Session.retrieve(params[:session_id])
     payment.update(
-      payment_intent: session[:payment_intent],
-      payment_status: session[:payment_status],
-      payment_email: session[:customer_email] || session[:customer_details][:email]
+      payment_intent: stripe_session[:payment_intent],
+      payment_status: stripe_session[:payment_status],
+      payment_email: stripe_session[:customer_email] || stripe_session[:customer_details][:email]
     )
-    return unless identifier.old_system_valid_payer?
-    return unless identifier.payment_type.to_s.in?('stripe', 'unknown', '')
-
-    identifier.update(payment_type: 'stripe', payment_id: payment.payment_id)
+    Payments::Identifier.new(identifier.id).update_payment_details(payment)
   rescue StandardError => e
     Rails.logger.warn("Could not fetch payment details for resource #{@resource.id}, error: #{e.message}")
   end
