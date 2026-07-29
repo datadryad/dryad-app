@@ -15,7 +15,7 @@
       <% type = log.object_changes.dig('payment_type', 1) %>
       <% id = log.object_changes.dig('payment_id', 1) %>
       <% if type && type != last_payment_type %>
-        <% type = last_payment_type %>
+        <% last_payment_type = type %>
           <li style="display: flex; justify-content: space-between; row-gap: 1ch; column-gap: 2ch">
             <span><%= type === 'waiver' ? 'Added' : 'Sponsorship changed to' %> <%= type %> <%= link_to_account(type, id) %></span>
             <span style="font-size: .98rem"><%= formatted_datetime(log.created_at) %></span>
