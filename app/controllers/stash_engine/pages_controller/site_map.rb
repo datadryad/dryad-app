@@ -2,6 +2,7 @@ require 'nokogiri'
 module StashEngine
   class PagesController
     class SiteMap
+      include StashEngine::PagesHelper
       include Rails.application.routes.url_helpers
 
       attr_accessor :per_page, :count, :latest_update
@@ -62,14 +63,9 @@ module StashEngine
       end
 
       def sitemap_static
-        public_pages = [
-          ROOT_URL, about_url, mission_url, join_us_url, publishers_url, institutions_url, support_us_url, code_of_conduct_url,
-          ethics_url, terms_url, partner_terms_url, definitions_url, publication_policy_url, privacy_url, accessibility_url,
-          choose_login_url, contact_url, journals_url, api_url, help_url
-        ]
         builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
           xml.urlset('xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9') do
-            public_pages.each do |url|
+            public_pages.each_value do |url|
               xml.url do
                 xml.loc url
                 xml.lastmod deploy_date

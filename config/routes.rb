@@ -28,9 +28,7 @@ Rails.application.routes.draw do
 
   get 'xtf/search', :to => redirect { |params, request| "/search?#{request.params.to_query}" }
 
-  # This will route an item at the root of the site into the namespaced engine.
-  # However it is currently broken, so commented out until we fix it.
-  get 'sitemap.xml' => "stash_engine/pages#sitemap", :format => "xml", :as => 'sitemap'
+  get 'sitemap' => "stash_engine/pages#sitemap", :as => 'sitemap'
 
   # routing this into the engine since that is where we have all our models and curation state info which we need
   get 'widgets/bannerForPub' => 'stash_engine/widgets#banner_for_pub'
@@ -486,6 +484,7 @@ Rails.application.routes.draw do
   scope module: 'search', path: 'search' do
     get '/', to: 'search', as: 'new_search'
     get '/advanced', to: 'advanced', as: "advanced_search"
+    get '/description', to: 'description'
   end
   get 'author/:orcid', to: 'search#author_profile', as: 'author_profile'
   get 'metrics_chart', to: 'search#metrics_chart', as: 'metrics_chart'
