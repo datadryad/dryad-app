@@ -190,12 +190,14 @@ table.columned {
 
 .c-lined-table__with-actions {
   display: flex;
+  gap: 1ch;
   align-items: flex-start;
   justify-content: space-between;
   column-gap: $spacing-base;
 }
 
 .c-lined-table__data {
+  flex-grow: 1;
   div {
     margin-top: $spacing-base;
   }
@@ -217,6 +219,7 @@ table.columned {
 }
 
 .c-lined-table__actions {
+  flex-grow: 0;
   display: flex;
   align-items: flex-end;
   flex-direction: column;

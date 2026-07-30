@@ -27,7 +27,7 @@
       <% end %>
     </ul>
     <p> S3 permanent path: <i><%= file.s3_permanent_path %></i></p>
-    <p> S3 bucket: <i><%= APP_CONFIG.s3.bucket %></i></p>
+    <p> S3 bucket: <i><%= APP_CONFIG.s3.merritt_bucket %></i></p>
     <pre><%= JSON.pretty_generate(file.slice(*%i[type id resource_id original_filename download_filename file_state updated_at validated_at digest_type digest upload_file_size])) %></pre>
 
     <% if error %>
@@ -46,6 +46,14 @@
         <pre>StashEngine::FileValidationService.new(file: <%= "#{file.type}.find(#{file.id})" %>).recreate_digests</pre>
       </li>
       <li>Download the file and check file integrity</li>
+    </ol>
+    <strong>Actions:</strong>
+    <ol>
+      <% if info[:size] %>
+        <li><a href="<%= file_hidden_fix_file_size_path(file.id, info[:size]) %>">Set file size</a> to <%= info[:size] %></li>
+      <% end %>
+      <li><a href="<%= file_hidden_validate_file_path(file.id) %>">Re-validate</a></li>
+      <li><a href="<%=  file_hidden_recreate_digest_path(file.id) %>">Recreate digest</a></li>
     </ol>
   </div>
 <% end %>

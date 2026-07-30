@@ -19,6 +19,14 @@ export const publicationPass = (resource) => resource.identifier.import_info
 export const publicationFail = (resource) => {
   const {publication_name, manuscript_number} = resource.resource_publication;
   const primary_article = resource.related_identifiers.find((ri) => ri.work_type === 'primary_article');
+
+  if (manuscript_number?.startsWith('DRYD')) {
+    return (
+      <p className="error-text" id="msid_error">
+        This is an invalid manuscript number. Enter a valid manuscript number, or <code>NA</code> if you are currently submitting your manuscript
+      </p>
+    );
+  }
   if (manuscript_number && !publication_name) {
     return (
       <p className="error-text" id="journal_ms_error">The journal of the related publication is required</p>

@@ -86,6 +86,8 @@ class CurationService
       # Don't send multiple emails for the same resource, or for submission made by curator
       return unless @activity.first_time_in_status?
 
+      # Trigger sponsored payment log for resources that were in PPR are released (not going through processing state)
+      SponsoredPaymentsService.new(@resource).log_payment
       StashEngine::UserMailer.status_change(@resource, @status).deliver_now unless @user.min_curator?
     when 'withdrawn'
       return if @note&.include?('final action required reminder') # this has already gotten a special withdrawal email

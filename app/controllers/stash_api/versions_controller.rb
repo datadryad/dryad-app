@@ -58,8 +58,7 @@ module StashApi
     private
 
     def paged_versions_for_dataset
-      id = StashEngine::Identifier.find_with_id(params[:dataset_id])
-      limited_resources = StashEngine::ResourcePolicy::VersionScope.new(@user, id.resources).resolve
+      limited_resources = StashEngine::ResourcePolicy::VersionScope.new(@user, @stash_identifier.resources).resolve
       all_count = limited_resources.count
       results = limited_resources.limit(per_page).offset(per_page * (page - 1))
       results = results.map { |i| Version.new(resource_id: i.id).metadata_with_links }

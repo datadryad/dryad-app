@@ -23,6 +23,7 @@ module StashEngine
             render xml: sm.sitemap_page(params[:page]), layout: false
           end
         end
+        format.html
       end
     end
 
@@ -47,6 +48,8 @@ module StashEngine
         render 'stash_engine/pages/helpdesk/error', formats: [:js]
       end
     end
+
+    private
 
     def contact_params
       params.permit(:email, :subject, :body, :sname)

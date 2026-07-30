@@ -1,5 +1,5 @@
 
-<p>Congratulations! This dataset has been approved for publication in Dryad:</p>
+<p>We are happy to confirm that this dataset has been approved for publication in Dryad.</p>
 
 <p>
 Title: <%= @resource.title.html_safe %><br/>
@@ -13,4 +13,4 @@ Journal: <%= @resource.identifier.publication_name %>
 <% end %>
 </p>
 
-<p>Thank you for choosing Dryad to host your data. If you have any questions, please contact us at <a href="mailto:<%= @helpdesk_email %>?subject=Dataset with DOI: <%= @resource.identifier_value %>"><%= @helpdesk_email %></a>.</p>
+<p>If you have any questions, please contact us at <a href="mailto:<%= @helpdesk_email %>?subject=Dataset with DOI: <%= @resource.identifier_value %>"><%= @helpdesk_email %></a>.</p>

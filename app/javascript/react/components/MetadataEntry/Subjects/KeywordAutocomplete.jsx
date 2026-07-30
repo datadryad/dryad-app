@@ -80,7 +80,7 @@ export default function KeywordAutocomplete({
       controlOptions={controlOptions}
     />
   );
-  /* eslint-enable react/jsx-no-bind */
+   
 }
 
 KeywordAutocomplete.propTypes = {

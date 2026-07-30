@@ -16,7 +16,7 @@ describe('ResearchDomain', () => {
     for (let i = 0; i < 30; i += 1) {
       subjectList.push({subject: faker.company.companyName(), subject_scheme: 'fos'});
     }
-    subject = subjectList[10]; /* eslint-disable-line */
+    subject = subjectList[10];  
     resource = {
       id: faker.datatype.number(),
       subjects: [

@@ -28,9 +28,7 @@ Rails.application.routes.draw do
 
   get 'xtf/search', :to => redirect { |params, request| "/search?#{request.params.to_query}" }
 
-  # This will route an item at the root of the site into the namespaced engine.
-  # However it is currently broken, so commented out until we fix it.
-  get 'sitemap.xml' => "stash_engine/pages#sitemap", :format => "xml", :as => 'sitemap'
+  get 'sitemap' => "stash_engine/pages#sitemap", :as => 'sitemap'
 
   # routing this into the engine since that is where we have all our models and curation state info which we need
   get 'widgets/bannerForPub' => 'stash_engine/widgets#banner_for_pub'
@@ -68,9 +66,6 @@ Rails.application.routes.draw do
         get 'calculate_fee'
       end
       resources :related_works, shallow: false, only: 'update'
-      resources :internal_data, shallow: true, path: '/internal_data'
-      resources :curation_activity, shallow: false, path: '/curation_activity'
-
       resources :versions, shallow: true, path: '/versions' do
         get 'download', on: :member
         get 'zip_assembly(/:token)', token: %r{[^\s/]+?}, to: 'versions#zip_assembly', as: 'zip_assembly'
@@ -367,6 +362,11 @@ Rails.application.routes.draw do
     resource :pots, only: [:show]
   end
 
+  get 'research_integrity', to: 'research_integrity_case#index'
+  get 'research_integrity/history', to: 'research_integrity_case#history'
+  get 'research_integrity/:id', to: 'research_integrity_case#edit', as: 'research_integrity_edit'
+  match 'research_integrity/:id', to: 'research_integrity_case#update', via: %i[put post], as: 'research_integrity_update'
+
   ########################## StashDatacite support ######################################
 
   scope module: 'stash_datacite', path: '/stash_datacite' do
@@ -489,6 +489,7 @@ Rails.application.routes.draw do
   scope module: 'search', path: 'search' do
     get '/', to: 'search', as: 'new_search'
     get '/advanced', to: 'advanced', as: "advanced_search"
+    get '/description', to: 'description'
   end
   get 'author/:orcid', to: 'search#author_profile', as: 'author_profile'
   get 'metrics_chart', to: 'search#metrics_chart', as: 'metrics_chart'
@@ -604,9 +605,15 @@ Rails.application.routes.draw do
       constraints: { doi_prefix: /doi:10.\d{4,9}/i, doi_suffix: /[A-Z0-9]+\.[A-Z0-9]+/i },
       to: redirect{ |p, req| "/dataset/#{p[:doi_prefix]}/#{p[:doi_suffix]}" }
 
-  resource :hidden do
+  resource :hidden, only: [] do
     collection do
       get :file_validation
+
+      resources :files, only: [] do
+        get "/fix_file_size/:value", to: 'hiddens#fix_file_size', as: 'hidden_fix_file_size'
+        get :validate, to: 'hiddens#validate', as: 'hidden_validate_file'
+        get :recreate_digest, to: 'hiddens#recreate_digest', as: 'hidden_recreate_digest'
+      end
       get :sponsor_payment_details
       get :identifier_payment_details
     end

@@ -113,7 +113,12 @@ export default function Authors({
       </p>
       <DragonDropList model="author" typeName="author" items={authors} path="/stash_datacite/authors/reorder" setItems={setAuthors}>
         {orderedItems({items: authors, typeName: 'author'}).map((author) => (
-          <DragonListItem key={author.id} item={author} typeName="author">
+          <DragonListItem
+            key={author.id}
+            item={author}
+            typeName="author"
+            ids={[`author_first_name__${author.id}`, `author_last_name__${author.id}`, `author_org_name__${author.id}`]}
+          >
             <AuthorForm
               author={author}
               user={user}

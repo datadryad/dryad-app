@@ -6,6 +6,7 @@ const keepers = [
   'mRNAs are really cool',
   'Why would anyone name their kid something like XYZ123',
   'X2a3b contributes to stuff in the cell',
+  'Non-noble metal intermetallic compound design',
   'The title should be a succinct summary of the data and its purpose or use',
   'The absolutely true story about how I found a frog',
   'my_manuscript is_submitted to a journal',
@@ -22,6 +23,7 @@ describe('sentenceCase', () => {
     expect(sentenceCase('why would Anyone Name Their Kid something like XYZ123')).toBe(keepers[3])
     expect(sentenceCase('Why Would Anyone Name Their Kid Something Like XYZ123')).toBe(keepers[3])
     expect(sentenceCase('X2a3b CONTRIBUTES TO STUFF IN THE CELL')).toBe(keepers[4])
+    expect(sentenceCase('Non-Noble Metal Intermetallic Compound Design')).toBe(keepers[5])
   })
   it('keeps casing when correct', () => {
     keepers.forEach(s => {

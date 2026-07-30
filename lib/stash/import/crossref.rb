@@ -61,12 +61,13 @@ module Stash
         date = @sm.dig('updated', 'date-time')[0..9]
         desc = StashDatacite::Description.find_or_create_by(resource_id: @resource.id, description_type: 'concern')
         desc.update(description: "<p>The <a href=\"#{doi}\">primary article associated with this dataset</a> has been retracted.</p>")
-        CurationService.new(
+        ca = CurationService.new(
           resource: @resource,
           user_id: 0, # system user
           status: @resource.current_curation_status,
           note: "Crossref found retraction of primary article. Retraction date #{date}"
         ).process
+        ResearchIntegrityCase.find_or_create_by(identifier_id: @resource.identifier_id).update(curation_activity_id: ca.id)
       end
 
       # rubocop:disable Metrics/AbcSize
