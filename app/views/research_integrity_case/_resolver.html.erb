@@ -1,0 +1,7 @@
+<% text = c.resolved ? 'Mark unresolved' : 'Mark resolved' %>
+<%= form_with(url: research_integrity_update_path(id: c.id), method: :post, local: false) do %>
+  <input type="hidden" name="resolved" value="<%= !c.resolved %>">
+  <button class="c-admin-edit-icon" title="<%= text %>" aria-label="Resolve">
+    <i class="far fa-lg fa-square<%= '-check' if c.resolved %>" aria-hidden="true"></i>
+  </button>
+<% end %>

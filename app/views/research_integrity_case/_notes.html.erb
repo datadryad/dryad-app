@@ -1,0 +1,10 @@
+<div class="c-lined-table__with-actions">
+  <div class="c-lined-table__data" style="white-space: pre-wrap;"><%= c.notes %></div>
+  <div class="c-lined-table__actions">
+    <%= form_with(url: research_integrity_edit_path(id: c.id), method: :get, local: false) do %>
+      <button class="c-admin-edit-icon" title="Edit notes" aria-label="Edit notes" aria-haspopup="menu" aria-expanded="false">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+      </button>
+    <% end %>
+  </div>
+</div>

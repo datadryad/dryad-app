@@ -362,6 +362,11 @@ Rails.application.routes.draw do
     resource :pots, only: [:show]
   end
 
+  get 'research_integrity', to: 'research_integrity_case#index'
+  get 'research_integrity/history', to: 'research_integrity_case#history'
+  get 'research_integrity/:id', to: 'research_integrity_case#edit', as: 'research_integrity_edit'
+  match 'research_integrity/:id', to: 'research_integrity_case#update', via: %i[put post], as: 'research_integrity_update'
+
   ########################## StashDatacite support ######################################
 
   scope module: 'stash_datacite', path: '/stash_datacite' do
