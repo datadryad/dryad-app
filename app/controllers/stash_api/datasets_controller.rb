@@ -150,8 +150,14 @@ module StashApi
       if disposition.present? && (@resource.current_curation_status == 'peer_review')
         if disposition.downcase == 'accept'
           # article is accepted -> transition peer_review to curation
-          CurationService.new(user_id: @user.id, resource: @resource, status: 'queued',
-                              note: 'updating status based on API notification from Editorial Manager').process
+          status = 'queued'
+          note = 'updating status based on API notification from Editorial Manager'
+          if @resource.identifier.payment_needed?
+            status = 'awaiting_payment'
+            note = 'received API request to change status to queued, but submission needs further payment'
+            StashEngine::UserMailer.peer_review_payment_needed(@resource).deliver_now
+          end
+          CurationService.new(user_id: @user.id, resource: @resource, status: status, note: note).process
         else
           # any other article disposition -> transition peer_review to withdrawn
           CurationService.new(user_id: @user.id, resource: @resource, status: 'withdrawn',
@@ -388,11 +394,6 @@ module StashApi
       StashEngine::Identifier.where(identifier_type: id_type.upcase).where(identifier: id_text).first
     end
 
-    # def initialize_stash_identifier(id)
-    #   @stash_identifier = get_stash_identifier(id)
-    #   render json: { error: "cannot find dataset with identifier #{id}" }.to_json, status: 404 if @stash_identifier.blank?
-    # end
-
     private
 
     def setup_identifier_and_resource_for_put
@@ -445,6 +446,12 @@ module StashApi
       unless %w[queued peer_review].include?(@resource.current_curation_status)
         note = "received API request to change status to #{new_status}, but retaining current curation status due to workflow rules"
         new_status = @resource.current_curation_status
+      end
+      # check for awaiting payment
+      if new_status == 'queued' && @resource.identifier.payment_needed?
+        note = "received API request to change status to #{new_status}, but submission needs further payment"
+        new_status = 'awaiting_payment'
+        StashEngine::UserMailer.peer_review_payment_needed(@resource).deliver_now
       end
       # and certainly don't withdraw something that was previously published
       if (new_status == 'withdrawn') && @resource.previously_public?

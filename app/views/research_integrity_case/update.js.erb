@@ -1,0 +1,3 @@
+document.getElementById("notes<%= @case.id %>").innerHTML = '<%= escape_javascript(render partial: 'notes', locals: { c: @case }) %>'
+document.getElementById("resolver<%=@case.id%>").innerHTML = '<%= escape_javascript(render partial: 'resolver', locals: { c: @case }) %>'
+document.getElementById("<%= @resolve ? 'resolver' : 'notes'%><%= @case.id %>").querySelector('button').focus();

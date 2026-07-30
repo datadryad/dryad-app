@@ -131,7 +131,7 @@ export default function AuthPreview({resource, previous, curator}) {
             <del>Author affiliations</del>
           </p>
           <ol style={{listStyle: ''}}>
-            {del_affs.map((aff) => <li><del>{aff[1]}</del></li>)}
+            {del_affs.map((aff) => <li key={aff[0]}><del>{aff[1]}</del></li>)}
           </ol>
         </div>
       )}

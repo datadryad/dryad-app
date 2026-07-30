@@ -97,7 +97,7 @@ export default function SuppPreview({resource, previous, curator}) {
           <h3><del>Funding</del></h3>
           <ul className="o-list">
             {delFunders.map((f) => (
-              <del>{f.contributor_name}{f.award_id ? `, ${f.award_id}` : ''}{f.award_description ? `: ${f.award_description}` : ''}</del>
+              <del key={f.id}>{f.contributor_name}{f.award_id ? `, ${f.award_id}` : ''}{f.award_description ? `: ${f.award_description}` : ''}</del>
             ))}
           </ul>
         </div>

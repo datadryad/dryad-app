@@ -73,6 +73,7 @@ module StashEngine
     has_many :curation_activities, class_name: 'StashEngine::CurationActivity', through: :resources
     has_many :payments, class_name: 'ResourcePayment', through: :resources
     has_many :sponsored_payment_logs, through: :resources
+    has_one :research_integrity_case
 
     after_create :create_process_date, unless: :process_date
     after_create :create_share

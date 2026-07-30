@@ -15,6 +15,31 @@ export const TITLE_TERMINATORS = new Set([
   "'",
   "”",
   ]);
+export const PREFIXES = [
+  'anti',
+  'auto',
+  'dis',
+  'extra',
+  'hyper',
+  'inter',
+  'intra',
+  'mega',
+  'mid',
+  'mis',
+  'non',
+  'over',
+  'out',
+  'post',
+  'pre',
+  'pro',
+  're',
+  'semi',
+  'sub',
+  'super',
+  'tele',
+  'ultra',
+  'un'
+]
 export const SMALL_WORDS = new Set([
   "a",
   "an",
@@ -62,7 +87,7 @@ export const SMALL_WORDS = new Set([
   "supporting"
   ]);
 export function sentenceCase(input, options = {}) {
-  const { locale = 'en-US', sentenceCase = false, sentenceTerminators = SENTENCE_TERMINATORS, titleTerminators = TITLE_TERMINATORS, smallWords = SMALL_WORDS, wordSeparators = WORD_SEPARATORS, } = typeof options === "string" || Array.isArray(options)
+  const { locale = 'en-US', sentenceCase = false, sentenceTerminators = SENTENCE_TERMINATORS, titleTerminators = TITLE_TERMINATORS, smallWords = SMALL_WORDS, wordSeparators = WORD_SEPARATORS, prefixes = PREFIXES } = typeof options === "string" || Array.isArray(options)
   ? { locale: options }
   : options;
   const terminators = sentenceCase ? sentenceTerminators : titleTerminators;
@@ -96,11 +121,14 @@ export function sentenceCase(input, options = {}) {
         const nextChar = token.charAt(wordIndex + word.length);
         isSentenceEnd = terminators.has(nextChar);
         const tag = brill[lower(word, locale)] || brill[upperAt(lower(word), 0, locale)];
+        const isContraction = token.substring(wordIndex + word.length - 1, wordIndex + word.length + 2) == "n't"
         if (IS_MANUAL_CASE.test(word)) {
           // keep manual casing
           value = value;
           continue;
-        } else if (smallWords.has(lower(word)) || !isNaN(wordsToNumbers(word))) {
+        } else if (i > 0 && wordSeparators.has(token.charAt(wordIndex - 1))) {
+          continue;
+        } else if (prefixes.some(p => lower(word).startsWith(p)) || smallWords.has(lower(word)) || !isNaN(wordsToNumbers(word)) || isContraction) {
           // lowercase all small/common/counting words
           value = lower(value, locale)
         } else if (tag && (tag.includes('NNP') || tag.includes('NNPS'))) {

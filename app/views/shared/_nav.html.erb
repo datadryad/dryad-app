@@ -58,10 +58,11 @@
               <li><%= link_to 'Curation stats', curation_stats_path %>
               <li><%= link_to 'Journals', journals_path %>
               <% if current_user.min_curator? %>
-                <li><%= link_to 'Deleted datasets', deleted_data_path %></li>
                 <li><%= link_to 'Publication updater', publication_updater_path %></li>
+                <li><%= link_to 'Deleted datasets', deleted_data_path %></li>
               <% end %>
               <% if current_user.min_manager? %>
+                <li><%= link_to 'Research integrity', research_integrity_path %></li>
                 <li><%= link_to 'Submission queue', submission_queue_path %>
                 <li><%= link_to 'Manage CEDAR', cedar_word_bank_path %></li>
               <% end %>

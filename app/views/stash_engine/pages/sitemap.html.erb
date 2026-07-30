@@ -1,0 +1,10 @@
+<% @page_title = 'Site map' %>
+<% content_for :head do %>
+  <link rel="alternate" type="application/xml" title="Sitemap" href="/sitemap.xml">
+<% end %>
+<h1>Site map</h1>
+<ul>
+<% public_pages.map do |title, link| %>
+  <li><%= link_to title, link %></li>
+<% end %>
+</ul>

@@ -73,7 +73,7 @@ class ApiApplicationController < StashEngine::ApplicationController
   def require_stash_identifier(doi:)
     # check to see if the identifier is actually an id and not a DOI first
     @stash_identifier = StashEngine::Identifier.where(id: doi).first
-    @stash_identifier ||= StashEngine::Identifier.find_with_id(doi)
+    @stash_identifier ||= StashEngine::Identifier.find_with_id(normalize_doi(doi)) if @stash_identifier.nil?
 
     return if @stash_identifier.present?
 
@@ -197,6 +197,12 @@ class ApiApplicationController < StashEngine::ApplicationController
 
   def force_json_content_type
     response.headers['Content-Type'] = 'application/json; charset=utf-8'
+  end
+
+  def normalize_doi(doi)
+    return doi if doi.include?(':')
+
+    "doi:#{doi}"
   end
 
   def api_logger

@@ -12,14 +12,18 @@ export const orderedItems = ({items, typeName}) => items.slice(0).sort((a, b) =>
   return a[orderProp] - b[orderProp];
 });
 
-export function DragonListItem({item, typeName, children}) {
+export function DragonListItem({
+  item, typeName, children, ids,
+}) {
+  const label = ids.map((id) => document.getElementById(id)?.value).filter(Boolean).join(' ');
   return (
     <li key={item.id} className="dd-list-item" data-id={item.id}>
       <button
         aria-describedby={`${typeName}s-global-help`}
         type="button"
         className="handle"
-        aria-label={`Drag to reorder this ${typeName}`}
+        aria-label={`Drag to reorder ${label}`}
+        data-label={label}
         id={`${typeName}-button-${item.id}`}
       />
       {children}
@@ -100,15 +104,16 @@ export default function DragonDropList({
       const dragon = new DragonDrop(dragonRef.current, {
         handle: '.handle',
         item: ':scope > li',
+        liveRegion: {ariaLive: 'polite'},
         announcement: {
-          grabbed: (el) => `${el.querySelector('input').value} grabbed`,
-          dropped: (el) => `${el.querySelector('input').value} dropped`,
+          grabbed: (el) => `${el.dataset.label} grabbed`,
+          dropped: (el) => `${el.dataset.label} dropped`,
           reorder: (el, x) => {
             const pos = x.indexOf(el) + 1;
-            const text = el.querySelector('input').value;
-            return `The rankings have been updated, ${text} is now ranked #${pos} out of ${x.length}`;
+            const text = el.dataset.label;
+            return `The order has been updated, ${text} is now #${pos} out of ${x.length}`;
           },
-          cancel: 'Reranking cancelled.',
+          cancel: 'Reordering cancelled.',
         },
       });
       savedWrapper.current = wrappingFunction;

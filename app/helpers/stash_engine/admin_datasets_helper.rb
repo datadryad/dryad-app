@@ -76,14 +76,15 @@ module StashEngine
       str.html_safe
     end
 
-    def format_external_references(instring)
+    def format_external_references(instring, text: nil)
       return '' unless instring.present?
 
       # Stripe invoice references
       if instring.start_with?('in_', 'pi_') && !instring.start_with?('in_progress')
         str = instring.start_with?('in_') ? 'invoice' : 'payment'
+        text ||= str
         return render inline:
-          link_to(str, "https://dashboard.stripe.com/#{str.pluralize}/#{instring}", target: :_blank)
+          link_to(text, "#{ResourcePayment::STRIPE_LINK}/#{str.pluralize}/#{instring}", target: :_blank)
       end
 
       # Turn salesforce references into hyperlinks

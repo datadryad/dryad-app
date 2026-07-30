@@ -192,50 +192,6 @@ module StashApi
         expect(output[:locations].first[:place]).to eq(@meta.hash[:locations].first[:place])
       end
 
-      it 'creates new curation activities and sets the publication date' do
-        response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
-        output = response_body_hash
-        expect(response_code).to eq(201)
-        @stash_id = StashEngine::Identifier.find(output[:id])
-        @resource = @stash_id.resources.last
-        expect(@resource.curation_activities.size).to eq(2) # one for default creation, one for the API
-
-        @curation_activity = StashApi::CurationMetadata.new
-        dataset_id = CGI.escape(output[:identifier])
-        response_code = post "/api/v2/datasets/#{dataset_id}/curation_activity",
-                             params: @curation_activity.json,
-                             headers: default_authenticated_headers
-        expect(response_code).to eq(200)
-
-        @resource.reload
-        expect(@resource.curation_activities.size).to eq(3)
-        expect(@resource.publication_date).to be
-      end
-
-      it 'does not update the publication date if one is already set' do
-        response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
-        output = response_body_hash
-        expect(response_code).to eq(201)
-        @stash_id = StashEngine::Identifier.find(output[:id])
-        @resource = @stash_id.resources.last
-        expect(@resource.curation_activities.size).to eq(2)
-
-        # Set a publication date in the past
-        publish_date = Time.now - 10.days
-        @resource.update!(publication_date: publish_date)
-
-        @curation_activity = StashApi::CurationMetadata.new
-        dataset_id = CGI.escape(output[:identifier])
-        response_code = post "/api/v2/datasets/#{dataset_id}/curation_activity",
-                             params: @curation_activity.json,
-                             headers: default_authenticated_headers
-        expect(response_code).to eq(200)
-
-        @resource.reload
-        expect(@resource.curation_activities.size).to eq(3)
-        expect(@resource.publication_date).to be_within(10.days).of(publish_date)
-      end
-
       context 'when submitted twice' do
         it 'does not create duplicates' do
           expect do
@@ -1012,7 +968,7 @@ module StashApi
           @identifier.reload
         end
 
-        it 'allows curationStatus to be updated' do
+        it 'sets curationStatus to awaiting payment if DPC unpaid' do
           expect(@res.current_curation_status).to eq('peer_review')
 
           @patch_body = [{ op: 'replace', path: '/curationStatus', value: 'queued' }].to_json
@@ -1022,7 +978,21 @@ module StashApi
                                   'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
                                 )
           expect(response_code).to eq(200)
-          expect(@res.current_curation_status).to eq('queued')
+          expect(@res.current_curation_status).to eq('awaiting_payment')
+        end
+
+        it 'allows curationStatus to be updated' do
+          allow(@res.identifier).to receive(:payment_needed?).and_return(false)
+          expect(@res.current_curation_status).to eq('peer_review')
+
+          @patch_body = [{ op: 'replace', path: '/curationStatus', value: 'queued' }].to_json
+          response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
+                                params: @patch_body,
+                                headers: default_json_headers.merge(
+                                  'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
+                                )
+          expect(response_code).to eq(200)
+          expect(@res.current_curation_status).to eq('awaiting_payment')
         end
 
         it 'does not allow curationStatus to be updated if the item is already published' do

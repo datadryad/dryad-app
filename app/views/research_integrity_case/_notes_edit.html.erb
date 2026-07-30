@@ -1,0 +1,12 @@
+<%= form_with(url: research_integrity_update_path(id: c.id), method: :post, local: false) do %>
+  <div class="c-lined-table__with-actions">
+    <div class="c-lined-table__data">
+      <textarea name="notes" style="width: 99%" rows="4"><%= c.notes %></textarea>
+    </div>
+    <div class="c-lined-table__actions">
+      <button class="c-admin-edit-icon" title="Save notes" aria-label="Save notes">
+        <i class="fa fa-lg fa-save" aria-hidden="true"></i>
+      </button>      
+    </div>
+  </div>
+<% end %>

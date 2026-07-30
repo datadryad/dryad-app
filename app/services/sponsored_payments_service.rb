@@ -11,15 +11,22 @@ class SponsoredPaymentsService
     # do not log payment if dataset is set for PPR
     return false if resource.hold_for_peer_review?
 
-    # do not log for items with first submitted date older than 2026-01-01
-    fss = resource.identifier.process_date&.processing
-    return false if fss && fss < Date.new(2026, 1, 1)
     # there is no payer
     return false if payer.nil?
+
+    # for institutions ONLY
+    # do not log for items with first submitted date older than 2026-01-01
+    if PayersService.new(payer).payment_sponsor.is_a?(StashEngine::Tenant)
+      fss = resource.identifier.process_date&.processing
+      return false if fss && fss < Date.new(2026, 1, 1)
+    end
+
     # payer is not on 2025 plan
     return false unless PayersService.new(payer).is_2025_payer?
     # payer does not cover ldf
     return false unless PayersService.new(payer).sponsored_limits&.covers_ldf?
+    # sponsored payment log is already created
+    return false if resource.sponsored_payment_log.present?
 
     true
   end
@@ -27,7 +34,6 @@ class SponsoredPaymentsService
   def log_payment
     return unless loggable?
 
-    @calculator_service = calculator_service
     SponsoredPaymentLog.transaction do
       should_skip_log = false
       paid_before = delete_larger_file_size_logs
@@ -59,7 +65,7 @@ class SponsoredPaymentsService
   end
 
   def ldf_fees(size = nil)
-    @calculator_service.ldf_sponsored_amount(paid_storage_size: size)
+    calculator_service.ldf_sponsored_amount(paid_storage_size: size)
   end
 
   def calculator_service
