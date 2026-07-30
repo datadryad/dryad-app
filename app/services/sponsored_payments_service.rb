@@ -11,11 +11,16 @@ class SponsoredPaymentsService
     # do not log payment if dataset is set for PPR
     return false if resource.hold_for_peer_review?
 
-    # do not log for items with first submitted date older than 2026-01-01
-    fss = resource.identifier.process_date&.processing
-    return false if fss && fss < Date.new(2026, 1, 1)
     # there is no payer
     return false if payer.nil?
+
+    # for institutions ONLY
+    # do not log for items with first submitted date older than 2026-01-01
+    if PayersService.new(payer).payment_sponsor.is_a?(StashEngine::Tenant)
+      fss = resource.identifier.process_date&.processing
+      return false if fss && fss < Date.new(2026, 1, 1)
+    end
+
     # payer is not on 2025 plan
     return false unless PayersService.new(payer).is_2025_payer?
     # payer does not cover ldf
