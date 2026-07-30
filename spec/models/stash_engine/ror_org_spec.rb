@@ -18,6 +18,7 @@
 #
 # Indexes
 #
+#  index_stash_engine_ror_orgs_on_ror_id  (ror_id)
 #  index_stash_engine_ror_orgs_on_status  (status)
 #
 
