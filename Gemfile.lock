@@ -406,7 +406,7 @@ GEM
       ruby2_keywords (>= 0.0.5)
     mock_redis (0.50.0)
       redis (~> 5)
-    msgpack (1.8.0)
+    msgpack (1.8.2)
     multi_json (1.19.1)
     multi_xml (0.8.0)
       bigdecimal (>= 3.1, < 5)
