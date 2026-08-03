@@ -656,7 +656,7 @@ namespace :identifiers do
     log "Writing Shopping Cart Report for #{year_month} to file..."
     CSV.open("shopping_cart_report_#{year_month}.csv", 'w') do |csv|
       csv << %w[DOI ArticleDOI CreatedDate CurationStartDate ApprovalDate
-                Size PaymentType PaymentID WaiverBasis DpcDate TransactionId
+                TotalVersionedSize CurrentSize LastInvoicedSize PaymentType PaymentID WaiverBasis DpcDate TransactionId
                 InstitutionName JournalName JournalISSN SponsorName CurrentStatus]
 
       # Limit the query to datasets that existed at the time of the target report,
@@ -686,9 +686,10 @@ namespace :identifiers do
 
         csv << [
           i.identifier, i.publication_article_doi, created_date_str, curation_start_date_str, approval_date_str,
-          i.storage_size, i.payment_type, i.payment_id, i.waiver_basis, dpc_date, payment_transaction_id,
+          i.storage_size, i.latest_resource&.total_file_size, i.last_invoiced_file_size.to_i,
+          i.payment_type, i.payment_id, i.waiver_basis, dpc_date, payment_transaction_id,
           i.submitter_affiliation&.long_name, i.publication_name, i.publication_issn, i.journal&.sponsor&.name,
-          i&.resources&.last&.current_curation_status
+          i.latest_resource&.current_curation_status
         ]
       end
     end
