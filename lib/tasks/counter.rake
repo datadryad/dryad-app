@@ -1,26 +1,6 @@
 require 'net/scp'
-require_relative 'counter/validate_file'
-require_relative 'counter/log_combiner'
-require_relative 'counter/json_stats'
 
 namespace :counter do
-  # example: RAILS_ENV=production bundle exec rake counter:cop_manual -- --json_directory /user/me/json-reports
-  desc 'manually populate CoP stats from json files'
-  task cop_manual: :environment do
-    # this keeps the output from buffering forever until a chunk fills so that output is timely
-    $stdout.sync = true
-    args = Tasks::ArgsParser.parse(:json_directory)
-    puts "JSON_DIRECTORY is #{args.json_directory}"
-
-    js = Tasks::Counter::JsonStats.new
-    Dir.glob(File.join(args.json_directory, '????-??.json')).each do |f|
-      puts f
-      js.update_stats(f)
-    end
-    js.update_database
-    exit
-  end
-
   desc 'pre-populate our COUNTER CoP stats from datacite hub'
   task cop_populate: :environment do
     $stdout.sync = true
@@ -64,17 +44,6 @@ namespace :counter do
       sleep 1 if (idx + 1) % 10 == 0 # to avoid overloading DataCite hub
     end
     puts "Completed populating citations at #{Time.new.utc.iso8601}"
-  end
-
-  # example: RAILS_ENV=development bundle exec rake counter:test_env -- --log_directory /user/me/dir --scp_hosts host1,host2
-  desc 'test that environment is passed in'
-  task :test_env do
-    args = Tasks::ArgsParser.parse(:log_directory, :scp_hosts)
-
-    puts "LOG_DIRECTORY is set as #{args.log_directory}" if args.log_directory
-    puts "SCP_HOSTS are set as #{args.scp_hosts.split(',')}" if args.scp_hosts
-    puts "note: in order to scp, you must add this server's public key to the authorized keys for the server you want to copy from"
-    exit
   end
 
   # example: RAILS_ENV=development bundle exec rake counter:datacite_pusher -- --report_dir /user/me/dir --report_ids true
