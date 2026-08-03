@@ -32,7 +32,7 @@ module StashApi
 
     # GET /files/digest/<digest>
     def digest
-      files = StashEngine::DataFile.joins(:resource).where(resource: {file_view: true}, digest: params[:digest])
+      files = StashEngine::DataFile.joins(:resource).where(resource: { file_view: true }, digest: params[:digest])
       paged = files.limit(per_page).offset(per_page * (page - 1)).map { |file| StashApi::File.new(file_id: file.id, user: @user).metadata }
       render json: files_output(files.count, paged)
     end
