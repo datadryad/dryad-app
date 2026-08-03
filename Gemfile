@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '3.3.7'
+ruby '3.3.12'
 
 # ############################################################
 # Rails
@@ -14,8 +14,8 @@ gem 'sprockets', '~> 4.2.2'
 # ############################################################
 # Deployment
 gem 'bcrypt_pbkdf', '~> 1.0'
-gem 'capistrano', '~> 3.20.0'
-gem 'capistrano3-puma', '~> 7.1.0'
+gem 'capistrano', '~> 3.20.1'
+gem 'capistrano3-puma', '~> 8.1.0'
 gem 'capistrano-rails', '~> 1.7.0'
 gem 'capistrano-sidekiq', '~> 3.2.0'
 gem 'capistrano-yarn'

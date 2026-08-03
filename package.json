@@ -105,7 +105,7 @@
     "puppeteer": "^24.15.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^7.0",
+    "react-router-dom": "^7.18.2",
     "react_ujs": "^2.6.1",
     "remark-sub-super": "^1.0.21",
     "sass": "^1.97.0",
@@ -146,8 +146,8 @@
     "eslint": "^9.0",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-jsx-a11y": "^6.10.2",
-    "eslint-plugin-react": "^7.28.0",
-    "eslint-plugin-react-hooks": "^4.3.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4",
     "jest-fail-on-console": "^2.2.3",
@@ -167,6 +167,6 @@
     "prosemirror-model": "^1.25.4",
     "js-yaml": "^4.1.1",
     "picomatch": "^4.0.4",
-    "brace-expansion": "^2.1.2"
+    "brace-expansion": "^2.1.3"
   }
 }
