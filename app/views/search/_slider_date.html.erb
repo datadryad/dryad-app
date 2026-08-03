@@ -17,23 +17,12 @@
     const dmost = document.getElementById('date-most');
     const dvalues = <%= months.to_json.html_safe %>;
 
-    new DoubleSlider(dtrack, dleast, dmost, dvalues)
-
     const formatDateDisplay = (d) => {
       const date = new Date(d);
       const abbrv = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       return `${abbrv[date.getMonth()]} ${date.getFullYear()}`
     }
 
-    const formatPubDate = () => {
-      const leastValue = formatDateDisplay(document.getElementById('date-least-input').value)
-      const mostValue = formatDateDisplay(document.getElementById('date-most-input').value)
-      dleast.setAttribute('aria-valuetext', leastValue)
-      document.getElementById('date-least-value').textContent = leastValue
-      dmost.setAttribute('aria-valuetext', mostValue)
-      document.getElementById('date-most-value').textContent = mostValue
-    }
-    dleast.addEventListener('input', formatPubDate)
-    dmost.addEventListener('input', formatPubDate)
+    new DoubleSlider(dtrack, dleast, dmost, dvalues, formatDateDisplay)
   </script>
 </div>

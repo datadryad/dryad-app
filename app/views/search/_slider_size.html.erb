@@ -17,17 +17,6 @@
     var smost = document.getElementById('size-most');
     var svalues = <%= sizes.to_json.html_safe %>;
 
-    new DoubleSlider(strack, sleast, smost, svalues)
-
-    const formatSize = () => {
-      const leastValue = formatSizeUnits(document.getElementById('size-least-input').value)
-      const mostValue = formatSizeUnits(document.getElementById('size-most-input').value)
-      sleast.setAttribute('aria-valuetext', leastValue)
-      document.getElementById('size-least-value').textContent = leastValue
-      smost.setAttribute('aria-valuetext', mostValue)
-      document.getElementById('size-most-value').textContent = mostValue
-    }
-    sleast.addEventListener('input', formatSize)
-    smost.addEventListener('input', formatSize)
+    new DoubleSlider(strack, sleast, smost, svalues, formatSizeUnits)
   </script>
 </div>

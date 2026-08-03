@@ -434,6 +434,10 @@ function Submission({
                   ))}
                 </div>
                 <div id="submission-help">
+                  <i className="fas fa-circle-question" aria-label="Guidance:" role="img" />
+                  <div id="submission-help-text">
+                    {step.help}
+                  </div>                  
                   <button
                     type="button"
                     className="o-button__plain-text2"
@@ -441,10 +445,6 @@ function Submission({
                   >
                     Preview changes
                   </button>
-                  <div id="submission-help-text">
-                    {step.help}
-                  </div>
-                  <i className="fas fa-circle-question" aria-hidden="true" />
                 </div>
               </div>
             </div>
@@ -464,10 +464,10 @@ function Submission({
       <div className="submission-edit">
         <ChecklistNav steps={steps} step={step} setStep={setStep} open={open} setOpen={setOpen} />
         <div id="submission-wizard" className={open ? 'open' : null}>
-          <div id="submission-step" role="region" aria-label={step.name} aria-describedby="submission-help-text">
+          <div id="submission-step" role="region" aria-label={step.name}>
             <div>
               <div id="submission-header">
-                <h2 className="o-heading__level2" tabIndex="-1" id="submission-step-title">{step.name}</h2>
+                <h2 className="o-heading__level2" tabIndex="-1" id="submission-step-title" aria-describedby="submission-help-text">{step.name}</h2>
                 <div role="status">
                   <div className="saving_text" hidden>Saving&hellip;</div>
                   <div className="saved_text" hidden>All progress saved</div>
@@ -481,6 +481,13 @@ function Submission({
               ))}
             </div>
             <div id="submission-help">
+              <i className="fas fa-circle-question" aria-label="Guidance: " role="img" />
+              <div id="submission-help-text" aria-live="polite" aria-label="Section help">
+                {step.name === 'Create a submission' && (
+                  <p>Questions? Check this spot for helpful information about each step!</p>
+                )}
+                {step.help}
+              </div>
               <div className="dataset-nav-container">
                 <div className="dataset-nav">
                   {step.name === 'Agreements' ? (
@@ -520,13 +527,6 @@ function Submission({
                   <ExitButton resource={resource} />
                 </div>
               </div>
-              <div id="submission-help-text" aria-live="polite" aria-label="Section help">
-                {step.name === 'Create a submission' && (
-                  <p>Questions? Check this spot for helpful information about each step!</p>
-                )}
-                {step.help}
-              </div>
-              <i className="fas fa-circle-question" aria-hidden="true" />
             </div>
           </div>
         </div>
