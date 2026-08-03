@@ -7,6 +7,7 @@ class DoubleSlider {
     this.most = most
     this.values = values
     this.formatter = formatter
+    this.thumb = null
 
     this.leastVal = document.getElementById(`${least.id}-value`)
     this.leastIn = document.getElementById(`${least.id}-input`)
@@ -18,6 +19,8 @@ class DoubleSlider {
 
     this.least.addEventListener('input', this.getLeast.bind(this), true);
     this.most.addEventListener('input', this.getMost.bind(this), true);
+    this.least.addEventListener('blur', this.setThumb.bind(this), true);
+    this.most.addEventListener('blur', this.setThumb.bind(this), true);
 
     this.track.addEventListener('click', this.onTrackClick.bind(this), true);
   }
@@ -52,18 +55,25 @@ class DoubleSlider {
     this.fillColor();
   }
 
+  setThumb(e) {
+    if (e.relatedTarget == this.track) {
+      this.thumb = e.target
+    } else {
+      this.thumb = null
+    }
+  }
+
   onTrackClick(e) {
-    e.preventDefault();
-    e.stopPropagation();
     const x = e.offsetX;
     const len = this.track.offsetWidth / this.values.length;
     const loc = Math.floor(x / len);
 
     const diffMin = Math.abs(this.least.value - loc);
     const diffMax = Math.abs(this.most.value - loc);
-    const thumb = diffMax >= diffMin ? this.least : this.most;
+    const thumb = this.thumb || (diffMax >= diffMin ? this.least : this.most);
 
     thumb.value = loc;
     thumb.dispatchEvent(new Event('input'));
+    this.thumb = null;
   }
 }

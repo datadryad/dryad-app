@@ -7,7 +7,7 @@
     <span id="size-most-value"><%= filesize(most_value&.to_i || sizes.last) %></span>
   </div>
   <div class="slider">
-    <div class="slider-track" id="size-track"></div>
+    <div class="slider-track" id="size-track" tabindex="-1"></div>
     <input type="range" min="0" max="<%= sizes.length - 1 %>" value="<%= least_value.present? ? sizes.bsearch_index { |x| least_value.to_i <= x } : 0 %>" aria-valuetext="<%= filesize(least_value&.to_i ||sizes.first) %>" aria-label="Start of range" id="size-least"/>
     <input type="range" min="0" max="<%= sizes.length - 1 %>" value="<%= most_value.present? ? sizes.bsearch_index { |x| most_value.to_i <= x } : sizes.length - 1 %>" aria-valuetext="<%= filesize(most_value&.to_i || sizes.last) %>" aria-label="End of range" id="size-most"/>
   </div>

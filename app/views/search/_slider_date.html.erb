@@ -7,7 +7,7 @@
     <span id="date-most-value"><%= Date.parse(params['publishedBefore'] || months.last).strftime('%b %Y') %></span>
   </div>
   <div class="slider">
-    <div class="slider-track" id="date-track"></div>
+    <div class="slider-track" id="date-track" tabindex="-1"></div>
     <input type="range" min="0" max="<%= months.length - 1 %>" value="<%= params['publishedSince'].present? ? months.find_index { |x| params['publishedSince'][0..6] == x[0..6] } : 0 %>" aria-valuetext="<%= Date.parse(params['publishedSince'] || months.first).strftime('%b %Y') %>" id="date-least" aria-label="Start of range"/>
     <input type="range" min="0" max="<%= months.length - 1 %>" value="<%= params['publishedBefore'].present? ? months.find_index { |x| params['publishedBefore'][0..6] == x[0..6] } :  months.length - 1 %>" aria-valuetext="<%= Date.parse(params['publishedBefore'] || months.last).strftime('%b %Y') %>" id="date-most" aria-label="End of range"/>
   </div>
