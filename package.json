@@ -154,7 +154,7 @@
     "jquery-ui": "^1.13.2",
     "node": "^24.0",
     "normalize-scss": "^7.0.1",
-    "postcss": "^8.5.18",
+    "postcss": "^8.5.23",
     "react-test-renderer": "^18.0.0",
     "serve-static": "^1.16.1",
     "stylelint": "^16.0.0",
