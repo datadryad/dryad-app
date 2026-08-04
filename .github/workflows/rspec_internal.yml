@@ -28,7 +28,7 @@ jobs:
 
     - name: 'Set Ruby and Bundler Versions'
       run: |
-        echo "RUBY_VERSION=3.3.12" >> $GITHUB_ENV
+        echo "RUBY_VERSION=3.4.5" >> $GITHUB_ENV
         echo "BUNDLER_VERSION=`cat ./Gemfile.lock | grep -A 1 'BUNDLED WITH' | grep -oE '[0-9]\.[0-9]'`" >> $GITHUB_ENV
 
     - name: 'Install Ruby and gems'

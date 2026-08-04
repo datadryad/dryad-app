@@ -114,8 +114,8 @@ GEM
     auth-sanitizer (0.2.3)
       version_gem (~> 1.1, >= 1.1.14)
     aws-eventstream (1.4.0)
-    aws-partitions (1.1196.0)
-    aws-sdk-core (3.240.0)
+    aws-partitions (1.1277.0)
+    aws-sdk-core (3.254.0)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
       aws-sigv4 (~> 1.9)
@@ -123,14 +123,14 @@ GEM
       bigdecimal
       jmespath (~> 1, >= 1.6.1)
       logger
-    aws-sdk-kms (1.118.0)
-      aws-sdk-core (~> 3, >= 3.239.1)
+    aws-sdk-kms (1.130.0)
+      aws-sdk-core (~> 3, >= 3.254.0)
       aws-sigv4 (~> 1.5)
     aws-sdk-lambda (1.145.0)
       aws-sdk-core (~> 3, >= 3.216.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-s3 (1.208.0)
-      aws-sdk-core (~> 3, >= 3.234.0)
+    aws-sdk-s3 (1.228.2)
+      aws-sdk-core (~> 3, >= 3.254.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
     aws-sdk-sns (1.99.0)
@@ -259,6 +259,7 @@ GEM
       net-http (~> 0.5)
     faraday-retry (2.3.2)
       faraday (~> 2.0)
+    ffi (1.17.0)
     ffi (1.17.0-arm64-darwin)
     ffi (1.17.0-x86_64-darwin)
     ffi (1.17.0-x86_64-linux-gnu)
@@ -491,8 +492,9 @@ GEM
       method_source (~> 1.0)
     pry-rails (0.3.11)
       pry (>= 0.13.0)
+    pstore (0.1.4)
     public_suffix (7.0.5)
-    puma (7.2.1)
+    puma (8.0.2)
       nio4r (~> 2.0)
     pundit (2.5.2)
       activesupport (>= 3.0.0)
@@ -794,7 +796,7 @@ DEPENDENCIES
   amoeba (~> 3.3.0)
   annotaterb (~> 4.13.0)
   aws-sdk-lambda
-  aws-sdk-s3 (~> 1.208)
+  aws-sdk-s3 (~> 1.228.2)
   aws-sdk-sns
   bcrypt_pbkdf (~> 1.0)
   binding_of_caller
@@ -865,7 +867,8 @@ DEPENDENCIES
   paper_trail (~> 17.0)
   pry
   pry-rails
-  puma (= 7.2.1)
+  pstore
+  puma (= 8.0.2)
   pundit (~> 2.5.2)
   rack-attack
   rack-mini-profiler
@@ -911,7 +914,7 @@ DEPENDENCIES
   zaru (~> 1.0.0)
 
 RUBY VERSION
-   ruby 3.3.12p206
+   ruby 3.4.5p51
 
 BUNDLED WITH
-   2.6.2
+   2.6.9
