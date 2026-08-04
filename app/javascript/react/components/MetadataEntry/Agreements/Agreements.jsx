@@ -38,9 +38,8 @@ function NoSubmitterWarning({preview, isSubmitter}) {
   );
 }
 
-function PaymentMessage(resource, fees) {
-  if (!fees || !fees.total) return null;
-  if (resource.identifier.display_payer?.id) return <p>You will be asked to pay this fee upon submission.</p>;
+function PaymentMessage(resource) {
+  if (resource.identifier?.display_payer?.id) return <p>You will be asked to pay this fee upon submission.</p>;
 
   return (
     <p>
@@ -191,7 +190,7 @@ export default function Agreements({
     if (preview || current) updateStore({refreshDpcStatus: true});
   }, [current, preview]);
 
-  if (Object.keys(dpc).length === 0) {
+  if (!resource.identifier || Object.keys(dpc).length === 0) {
     return (
       <p><i className="fas fa-spinner fa-spin" role="img" aria-label="Loading..." /></p>
     );
@@ -256,7 +255,9 @@ export default function Agreements({
             : (
               <>
                 <CalculateFees resource={resource} fees={fees} ppr={ppr} />
-                <PaymentMessage resource={resource} fees={fees} />
+                {fees && fees.total ? (
+                  <PaymentMessage resource={resource} />
+                ) : null }
               </>
             )}
         </>
