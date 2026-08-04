@@ -39,7 +39,7 @@ function NoSubmitterWarning({preview, isSubmitter}) {
 }
 
 function PaymentMessage(resource, fees) {
-  if (!fees.total) return null;
+  if (!fees || !fees.total) return null;
   if (resource.identifier.display_payer?.id) return <p>You will be asked to pay this fee upon submission.</p>;
 
   return (
