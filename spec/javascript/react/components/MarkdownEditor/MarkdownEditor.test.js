@@ -60,9 +60,7 @@ describe('MarkdownEditor', () => {
   it('renders superscript and subscript', async () => {
     info.initialValue = 'Markdown test\n\nThis is a sentence with ^superscript^ and ~subscript~';
     render(<MarkdownEditor {...info} />);
-    await waitFor(() => {
-      expect(screen.getByText('Markdown test')).toBeInTheDocument();
-    });
+    expect(await screen.findAllByText("Markdown test")).toHaveLength(2);
     const superscript = screen.getAllByText('superscript');
     const subscript = screen.getAllByText('subscript');
     expect(superscript[0].tagName).toBe('SUP');
