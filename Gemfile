@@ -56,7 +56,6 @@ gem 'exception_notification', git: 'https://github.com/smartinez87/exception_not
 gem 'ezid-client', '~> 1.9.2'
 gem 'ffi', '~> 1.17.4'
 gem 'filesize', '~> 0.2.0'
-gem 'ffi', '~> 1.17.4'
 gem 'font-awesome-sass', '~> 6.7.2'
 gem 'google-apis-gmail_v1', '~> 0.14.0'
 gem 'grover'
