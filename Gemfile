@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '3.3.7'
+ruby '3.4.5'
 
 # ############################################################
 # Rails
@@ -14,8 +14,8 @@ gem 'sprockets', '~> 4.2.2'
 # ############################################################
 # Deployment
 gem 'bcrypt_pbkdf', '~> 1.0'
-gem 'capistrano', '~> 3.20.0'
-gem 'capistrano3-puma', '~> 7.1.0'
+gem 'capistrano', '~> 3.20.1'
+gem 'capistrano3-puma', '~> 8.1.0'
 gem 'capistrano-rails', '~> 1.7.0'
 gem 'capistrano-sidekiq', '~> 3.2.0'
 gem 'capistrano-yarn'
@@ -23,7 +23,7 @@ gem 'ed25519', '>= 1.2', '< 2.0'
 gem 'rdoc', '~> 6.1.1' # for some reason needs to be installed for capistrano to work right
 gem 'rubocop', '~> 1.86.1', require: false
 # Use Puma as the app server
-gem 'puma', '7.2.1', group: :puma, require: false
+gem 'puma', '8.0.2', group: :puma, require: false
 
 # ############################################################
 # UI
@@ -40,7 +40,7 @@ gem 'acts_as_paranoid', '~> 0.11.0'
 gem 'amatch', '~> 0.6.0'
 gem 'amoeba', '~> 3.3.0'
 gem 'aws-sdk-lambda'
-gem 'aws-sdk-s3', '~> 1.208'
+gem 'aws-sdk-s3', '~> 1.228.2'
 gem 'aws-sdk-sns'
 gem 'bootsnap', require: false
 gem 'charlock_holmes', '~> 0.7.9'
@@ -54,6 +54,7 @@ gem 'doorkeeper', '~> 5.9.0'
 gem 'down'
 gem 'exception_notification', git: 'https://github.com/smartinez87/exception_notification.git'
 gem 'ezid-client', '~> 1.9.2'
+gem 'ffi', '~> 1.17.4'
 gem 'filesize', '~> 0.2.0'
 gem 'font-awesome-sass', '~> 6.7.2'
 gem 'google-apis-gmail_v1', '~> 0.14.0'
@@ -77,6 +78,7 @@ gem 'omniauth-orcid', '~> 2.1', '>= 2.1.1'
 gem 'omniauth-rails_csrf_protection', '~> 1.0.1'
 gem 'omniauth-shibboleth', '~> 1.3.0'
 gem 'paper_trail', '~> 17.0'
+gem 'pstore'
 gem 'pundit', '~> 2.5.2'
 gem 'rack-attack'
 gem 'rb-readline', require: false
