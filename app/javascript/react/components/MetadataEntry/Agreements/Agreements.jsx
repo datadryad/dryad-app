@@ -38,8 +38,8 @@ function NoSubmitterWarning({preview, isSubmitter}) {
   );
 }
 
-function PaymentMessage(resource) {
-  if (resource.identifier?.display_payer?.id) return <p>You will be asked to pay this fee upon submission.</p>;
+function PaymentMessage({resource}) {
+  if (resource.identifier.display_payer?.id) return <p>You will be asked to pay this fee upon submission.</p>;
 
   return (
     <p>
