@@ -24,6 +24,8 @@ module FeeCalculator
 
         add_zero_fee(:service_tier)
         add_zero_fee(:dpc_tier)
+        # add approximate sponsored amount to json for display
+        @sum_options[:dpc_sponsored] = base_dpc_cost
 
         if @covers_ldf
           @limits_service = PaymentLimitsService.new(resource, @payer_record, ldf_sponsored_amount: ldf_sponsored_amount)
@@ -31,6 +33,8 @@ module FeeCalculator
           if @ldf_limit.nil? && @limits_service.payment_allowed?
             # if no limit is hit,
             # the user pays no storage fee
+            # add sponsored amount to json for display
+            @sum_options[:storage_fee_sponsored] = verify_max_storage_size
             verify_max_storage_size
             add_zero_fee(:storage_size)
           elsif @limits_service.amount_limits_exceeded?
@@ -166,6 +170,9 @@ module FeeCalculator
       paid_tier_price = price_by_range(storage_fee_tiers, paid_storage_size)
       new_tier_price = price_by_range(storage_fee_tiers, resource.total_file_size)
 
+      # add sponsored amount to json for display
+      @sum_options[:storage_fee_sponsored] = paid_tier_price
+
       diff = new_tier_price - paid_tier_price
       diff = 0 if diff < 0
 
@@ -213,6 +220,10 @@ module FeeCalculator
       raise ActionController::BadRequest, OUT_OF_RANGE_MESSAGE if tier.nil?
 
       tier[:price]
+    end
+
+    def base_dpc_cost
+      get_tier_by_value(INDIVIDUAL_ESTIMATED_FILES_SIZE, 1)[:price]      
     end
 
     def get_tier_by_range(tier_definition, value)

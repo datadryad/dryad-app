@@ -3,49 +3,70 @@ import axios from 'axios';
 import {loadStripe} from '@stripe/stripe-js';
 import {EmbeddedCheckoutProvider, EmbeddedCheckout} from '@stripe/react-stripe-js';
 import Calculations from '../MetadataEntry/Agreements/Calculations';
-import CalculateFees from '../CalculateFees';
+import CalculateFees, {formatCost} from '../CalculateFees';
 import {ExitIcon} from '../ExitButton';
 import InvoiceForm from './InvoiceForm';
 import {useStore} from '../../shared/store';
 
-function InvoicingPageMessage({resource, fees}) {
-  if (resource.identifier.display_payer?.id) {
-    return <p>Payment of this fee is due upon receipt of the invoice.</p>;
-  }
 
+function Receipt({fees}) {
+  if (!fees.dpc_sponsored) return null
   return (
     <>
-      <p>By submitting the following form, you agree:</p>
-      <p>
-        I want to generate an invoice, due upon receipt, for payment by another entity.{' '}
-        <b>
-          I understand that this will incur an additional, nonrefundable{' '}
-          {fees?.invoice_fee?.toLocaleString('en-US', {style: 'currency', currency: 'USD', maximumFractionDigits: 0})} fee.
-        </b>
-      </p>
+      <p>Your fee breakdown is as follows:</p>
+      <div className="table-wrapper" style={{textAlign: 'center'}}>
+        <table style={{margin: '0 auto'}}>
+          <caption style={{fontSize: '.98rem'}}>All Dryad fees are set on a cost-recovery basis.</caption>
+          <thead>
+            <tr><td></td><th scope="col">Data Publishing Charge</th><th scope="col">Large Data Fee</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row>">Dryad fees</th>
+              <td>{formatCost(fees.dpc_sponsored)}</td>
+              <td>{formatCost(fees.storage_fee + fees.storage_fee_sponsored)}</td>
+            </tr>
+            <tr>
+              <th scope="row>">Sponsor credit</th>
+              <td>-{formatCost(fees.dpc_sponsored)}</td>
+              <td>-{formatCost(fees.storage_fee_sponsored)}</td>
+            </tr>
+            <tr>
+              <th scope="row>">Amount due</th>
+              <td></td>
+              <td>{formatCost(fees.storage_fee)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </>
-  );
+  )
 }
 
-function InvoicingMessage({resource}) {
-  let additionalFeeMessage = null;
+function InvoicingPageMessage({fees}) {
+  if (fees.dpc_sponsored) {
+    return (
+      <p>Payment of this fee is due upon receipt of the invoice. You must complete payment to submit your dataset for curation and publication.</p>
+    );
+  }
 
-  if (!resource.identifier.display_payer?.id) {
-    additionalFeeMessage = (
+  if (fees.invoice_fee) {
+    return (
       <>
-        {' '}
-        <b>An additional, nonrefundable administration fee will be charged for this service.</b>
-        {' '}
+        <p>You must complete payment to submit your dataset for curation and publication.</p>
+        <p>By submitting the following form, you agree:</p>
+        <p>
+          I want to generate an invoice, due upon receipt, for payment by another entity.{' '}
+          <b>
+            I understand that this will incur an additional, nonrefundable{' '}
+            {formatCost(fees.invoice_fee)} fee.
+          </b>
+        </p>
       </>
     );
   }
 
-  return (
-    <>
-      If your organization requires an invoice to be sent to a specific email address, one may be generated.
-      {additionalFeeMessage}
-    </>
-  );
+  return null
 }
 
 function Payments({
@@ -93,7 +114,8 @@ function Payments({
               </button>
             </p>
             <CalculateFees resource={resource} />
-            <InvoicingPageMessage resource={resource} fees={fees} />
+            <Receipt fees={fees} />
+            <InvoicingPageMessage fees={fees} />
           </>
         )}
         <InvoiceForm resource={resource} setResource={setResource} setPayment={setPayment} />
@@ -135,6 +157,7 @@ function Payments({
       ) : (
         <>
           <CalculateFees resource={resource} />
+          <Receipt fees={fees} />
           <p>You must complete payment to submit your dataset for curation and publication.</p>
         </>
       )}
@@ -153,7 +176,8 @@ function Payments({
           <>
             <p style={{fontWeight: 'bold'}} role="heading" aria-level="2">Need an invoice?</p>
             <p>
-              <InvoicingMessage resource={resource} />
+              If your organization requires an invoice to be sent to a specific email address, one may be generated.
+              {fees.dpc_sponsored ? '' : <> <b>An additional, nonrefundable administration fee will be charged for this service.</b> </>}
               <button onClick={() => setInvoice(true)} type="button" className="o-button__plain-textlink" name="get_invoice" style={{paddingLeft: 0}}>
                 Continue to the invoice generation form <i className="fas fa-circle-right" aria-hidden="true" />
               </button>
