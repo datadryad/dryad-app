@@ -6,8 +6,7 @@ import Calculations from './Calculations';
 import CalculateFees from '../../CalculateFees';
 import {useStore} from '../../../shared/store';
 
-function TermsOfSubmission({preview, resource}) {
-  if (!preview) return null;
+function TermsOfSubmission({resource}) {
   if (resource.accepted_agreement) {
     return (
       <p>
@@ -314,18 +313,20 @@ export default function Agreements({
             </>
           )}
           {!preview && (
-            <p className="radio_choice" style={{marginTop: '2em'}}>
-              <label>
-                <input type="checkbox" id="agreement" defaultChecked={agree} onChange={toggleTerms} required disabled={submitted} />
-                <span className="input-label">I agree</span>
-                {` to Dryad's ${subType !== 'collection' && userMustPay ? 'payment terms and ' : ''}`}
-                <a href="/terms" target="_blank">terms of submission<ExitIcon /></a>
-              </label>
-            </p>
+            <form id="term-acceptance" onSubmit={(e) => e.preventDefault()}>
+              <p className="radio_choice" style={{marginTop: '2em'}}>
+                <label>
+                  <input type="checkbox" id="agreement" defaultChecked={agree} onChange={toggleTerms} required disabled={submitted} />
+                  <span className="input-label">I agree</span>
+                  {` to Dryad's ${subType !== 'collection' && userMustPay ? 'payment terms and ' : ''}`}
+                  <a href="/terms" target="_blank">terms of submission<ExitIcon /></a>
+                </label>
+              </p>
+            </form>
           )}
         </>
       )}
-      <TermsOfSubmission {...{preview, resource}} />
+      {preview && <TermsOfSubmission resource={resource} />}
     </>
   );
 }

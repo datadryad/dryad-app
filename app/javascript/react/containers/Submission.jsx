@@ -216,7 +216,7 @@ function Submission({
         }
         updateStore({refreshFees: false, fees: data.fees || {}});
       });
-  }, [userMustPay, resource.hold_for_peer_review, resource.generic_files, resource.authors, invoice, refreshFees]);
+  }, [userMustPay, resource.hold_for_peer_review, resource.total_file_size, resource.authors, invoice, refreshFees]);
 
   const recheckPayer = () => {
     axios.get(`/resources/${resource.id}/payer_check`)
@@ -492,12 +492,15 @@ function Submission({
                 <div className="dataset-nav">
                   {step.name === 'Agreements' ? (
                     <button
-                      type="button"
+                      type="submit"
+                      form="term-acceptance"
                       className="o-button__plain-text2"
-                      disabled={!resource.accepted_agreement}
+                      aria-disabled={!resource.accepted_agreement || null}
                       onClick={() => {
-                        setStep({name: 'Create a submission'});
-                        setReview(true);
+                        if (resource.accepted_agreement) {
+                          setStep({name: 'Create a submission'});
+                          setReview(true);
+                        }
                       }}
                     >
                     Preview submission
