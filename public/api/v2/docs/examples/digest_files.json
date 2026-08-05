@@ -1,0 +1,83 @@
+value: {
+  "_links": {
+    "self": {
+      "href": "/api/v2/files/digest/1adGSDHSG232776e7qedqgdaysdfts8"
+    },
+    "first": {
+      "href": "/api/v2/files/digest/1adGSDHSG232776e7qedqgdaysdfts8"
+    },
+    "last": {
+      "href": "/api/v2/files/digest/1adGSDHSG232776e7qedqgdaysdfts8?page=1"
+    }
+  },
+  "count": 2,
+  "total": 2,
+  "_embedded": {
+    "stash:files": [
+      {
+        "_links": {
+          "self": {
+            "href": "/api/v2/files/66"
+          },
+          "stash:dataset": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2MK6CD6D"
+          },
+          "stash:version": {
+            "href": "/api/v2/versions/32"
+          },
+          "stash:files": {
+            "href": "/api/v2/versions/32/files"
+          },
+          "stash:download": {
+            "href": "/api/v2/downloads/66"
+          },
+          "curies": [
+            {
+              "name": "stash",
+              "href": "https://github.com/datadryad/dryad-app/blob/main/documentation/apis/link_relations.md#{rel}",
+              "templated": "true"
+            }
+          ]
+        },
+        "path": "I0006475A.jpg",
+        "size": 218594,
+        "mimeType": "image/jpeg",
+        "status": "copied",
+        "digest": "1adGSDHSG232776e7qedqgdaysdfts8",
+        "digestType": "md5"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/api/v2/files/56"
+          },
+          "stash:dataset": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2MK6CD6D"
+          },
+          "stash:version": {
+            "href": "/api/v2/versions/30"
+          },
+          "stash:files": {
+            "href": "/api/v2/versions/30/files"
+          },
+          "stash:download": {
+            "href": "/api/v2/downloads/56"
+          },
+          "curies": [
+            {
+              "name": "stash",
+              "href": "https://github.com/datadryad/dryad-app/blob/main/documentation/apis/link_relations.md#{rel}",
+              "templated": "true"
+            }
+          ]
+        },
+        "path": "I0006475A.jpg",
+        "size": 218594,
+        "mimeType": "image/jpeg",
+        "status": "created",
+        "digest": "1adGSDHSG232776e7qedqgdaysdfts8",
+        "digestType": "md5"
+      },
+    ]
+  }
+}

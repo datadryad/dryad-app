@@ -119,8 +119,7 @@ describe('RelatedWorks', () => {
 
     render(<RelatedWorks resource={resource} setResource={setResource} />);
 
-    await waitFor(() => data); // waits for the axios promise to fulfill
-    const removes = screen.getAllByLabelText('Remove work');
-    expect(removes.length).toBe(1);
+    const removes = await screen.findAllByLabelText("Remove work");
+    expect(removes).toHaveLength(1);
   });
 });

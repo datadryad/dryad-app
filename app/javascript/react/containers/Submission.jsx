@@ -2,7 +2,7 @@ import React, {
   Fragment, useRef, useState, useEffect,
 } from 'react';
 import axios from 'axios';
-import {BrowserRouter, useLocation} from 'react-router-dom';
+import {BrowserRouter, useLocation} from 'react-router';
 import {upCase} from '../../lib/utils';
 import ChecklistNav, {Checklist} from '../components/Checklist';
 import SubmissionForm from '../components/SubmissionForm';

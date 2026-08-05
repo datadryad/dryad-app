@@ -445,6 +445,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 
+  # --- files uris ---
   '/files/{id}':
     get:
       summary: Get metadata information about a file
@@ -500,6 +501,33 @@ paths:
                 $ref: '#/components/schemas/Error'
               example: 
                 error: This file must be part of an an in-progress version.
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  '/files/digest/{digest}':
+    get:
+      summary: Get metadata information about all public files with the same digest
+      tags:
+        - files
+      description: Returns file metadata information visible to the public by the SHA-256 (or rarely, MD5) digest. Results include links back to the versions which contain each file.
+      parameters:
+        - $ref: '#/components/parameters/file_digest'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/per_page'
+      responses:
+        '200':
+          description: A list of the public files with this digest.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/files'
+              examples:
+                success:
+                  $ref: api/v2/docs/examples/digest_files.json
+        '406':
+          $ref: '#/components/responses/Unacceptable'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
 
@@ -1620,9 +1648,17 @@ components:
       required: true
       description: "The file ID is a unique integer and can be obtained from the list of files for a version of a dataset."
 
+    file_digest:
+      in: path
+      name: digest
+      schema:
+        type: string
+      required: true
+      description: "The file digest is usually an SHA-256, but occasionally an MD5, checksum confirming the contents of a file."
+
     filename:
       in: path
-      name: id
+      name: filename
       schema:
         type: string
       required: true
