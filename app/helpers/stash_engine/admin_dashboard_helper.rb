@@ -14,7 +14,9 @@ module StashEngine
       end
       head << 'Submitter' if @fields.include?('submitter')
       head << 'Status' if @fields.include?('status')
-      head << 'Size' if @fields.include?('size')
+      head << 'Current Size' if @fields.include?('size')
+      head << 'Invoiced Size' if @fields.include?('invoiced_size')
+      head << 'Total Versioned Size' if @fields.include?('versioned_size')
       head << 'Views' << 'Downloads' << 'Citations' if @fields.include?('metrics')
       if @fields.include?('funders') || @fields.include?('awards')
         head << (@fields.include?('funders') ? 'Grant funders' : 'Award IDs')
@@ -69,6 +71,9 @@ module StashEngine
         }"
       end
       row << StashEngine::CurationActivity.readable_status(dataset.last_curation_activity.status) if @fields.include?('status')
+      row << dataset.total_file_size if @fields.include?('size')
+      row << dataset.identifier.last_invoiced_file_size.to_i if @fields.include?('invoiced_size')
+      row << dataset.identifier.storage_size if @fields.include?('versioned_size')
       row << dataset.total_file_size if @fields.include?('size')
       if @fields.include?('metrics')
         row << dataset.identifier.counter_stat.unique_investigation_count.to_i
