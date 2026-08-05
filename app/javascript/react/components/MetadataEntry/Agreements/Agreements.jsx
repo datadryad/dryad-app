@@ -106,6 +106,7 @@ export default function Agreements({
                 </>
               )}
               {userMustPay && 
+              // Not for LDF payments
               (!dpc.funder_will_pay && !dpc.institution_will_pay && !dpc.journal_will_pay) && 
               (!dpc.aff_tenant || dpc.aff_tenant.id !== resource.tenant_id) && (
                 <div className="callout warn" style={{margin: '1em 0', paddingBottom: '5px'}}>
