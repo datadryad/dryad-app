@@ -29,6 +29,14 @@ export default function SubmissionForm({
     if (mustPay) setPayment(true);
   };
 
+  if (!resource.generic_files || !fees) {
+    return (
+      <div id="submission-submit" role="status" aria-busy="true" hidden={payment || null}>
+        <div><p><i className="fas fa-spinner fa-spin" role="img" aria-label="Loading..." /></p></div>
+      </div>
+    )
+  }
+
   return (
     <div id="submission-submit" role="status" hidden={payment || null}>
       <div>
