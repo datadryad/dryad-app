@@ -99,7 +99,7 @@ export default function SubmissionForm({
           >
             {curator
               ? 'Submit changes'
-              : `${fees.total ? 'Pay & S' : 'S'}ubmit for ${resource.hold_for_peer_review ? 'peer review' : 'publication'}`}
+              : `${fees.total ? 'Pay & s' : 'S'}ubmit for ${resource.hold_for_peer_review ? 'peer review' : 'publication'}`}
           </button>
         </form>
       </div>
