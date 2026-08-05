@@ -15,6 +15,7 @@ module FeeCalculator
       @ldf_limit = resource ? PayersService.new(@payer_record).sponsored_limits&.ldf_limit : nil
     end
 
+    # rubocop:disable Metrics/MethodLength
     def call
       verify_payer
       verify_new_payment_system
@@ -59,6 +60,7 @@ module FeeCalculator
       add_storage_fee_label
       @sum_options.merge(total: @sum)
     end
+    # rubocop:enable Metrics/MethodLength
 
     def storage_fee_tiers
       ESTIMATED_FILES_SIZE
@@ -223,7 +225,7 @@ module FeeCalculator
     end
 
     def base_dpc_cost
-      get_tier_by_value(INDIVIDUAL_ESTIMATED_FILES_SIZE, 1)[:price]      
+      get_tier_by_value(INDIVIDUAL_ESTIMATED_FILES_SIZE, 1)[:price]
     end
 
     def get_tier_by_range(tier_definition, value)
