@@ -86,7 +86,9 @@ export default function Agreements({
             : (
               <>
                 <CalculateFees resource={resource} fees={fees} ppr={ppr} />
-                <PaymentMessage resource={resource} />
+                {fees && fees.total ? (
+                  <PaymentMessage resource={resource} />
+                ) : null }
               </>
             )}
         </>
