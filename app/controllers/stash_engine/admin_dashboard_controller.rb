@@ -217,13 +217,13 @@ module StashEngine
 
     def date_fields
       filter_on = @filters[:first_sub_date]&.values&.any?(&:present?)
+      filter2_on = @filters[:queue_date]&.values&.any?(&:present?)
       @datasets = @datasets.joins(
-        "#{'LEFT OUTER ' unless filter_on}JOIN stash_engine_process_dates id_dates ON id_dates.processable_type = 'StashEngine::Identifier'
+        "#{'LEFT OUTER ' unless filter_on || filter2_on}JOIN stash_engine_process_dates id_dates ON id_dates.processable_type = 'StashEngine::Identifier'
           AND id_dates.processable_id = stash_engine_identifiers.id
-        #{" AND COALESCE(id_dates.processing, id_dates.queued, id_dates.peer_review) #{date_string(@filters[:first_sub_date])}" if filter_on}"
-      ).select(
-        'COALESCE(id_dates.processing, id_dates.queued, id_dates.peer_review) as first_sub_date, id_dates.queued as queue_date'
-      ).select('stash_engine_identifiers.publication_date as first_pub_date')
+        #{" AND id_dates.processing #{date_string(@filters[:first_sub_date])}" if filter_on}
+        #{" AND id_dates.queued #{date_string(@filters[:queue_date])}" if filter2_on}"
+      ).select('id_dates.processing as first_sub_date, id_dates.queued as queue_date').select('stash_engine_identifiers.publication_date as first_pub_date')
 
       return unless @filters[:submit_date]&.values&.any?(&:present?) || %w[submit_date last_status_date].include?(@sort)
 
