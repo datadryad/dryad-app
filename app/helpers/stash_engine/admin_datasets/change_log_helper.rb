@@ -160,6 +160,11 @@ module StashEngine
             end.join(', ')
             str += '</dd></div>'
           end
+          if c.additional_info&.dig('credit_list')&.present?
+            str += '<div><dt>Contributions:</dt><dd>'
+            str += c.additional_info['credit_list'].join(', ')
+            str += '</dd></div>'
+          end
           str += '</dl>'
           str.html_safe
         else

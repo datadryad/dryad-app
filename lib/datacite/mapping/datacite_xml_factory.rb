@@ -62,6 +62,8 @@ module Datacite
 
         add_subjects(dcs_resource)
         add_contributors(dcs_resource, datacite_3: datacite_3)
+        add_contacts(dcs_resource, datacite_3: datacite_3)
+        add_sponsor(dcs_resource)
         add_dates(dcs_resource)
         add_alt_ids(dcs_resource)
         add_related_ids(dcs_resource)
@@ -176,23 +178,63 @@ module Datacite
       end
 
       def add_contributors(dcs_resource, datacite_3: false)
-        se_resource.contributors.completed.where.not(contributor_type: 'funder').each do |c|
+        se_resource.authors.with_credit.each do |c|
+          c.credit_roles.each do |r|
+            dcs_resource.contributors << Contributor.new(
+              name: ContributorName.new(
+                value: c.author_full_name,
+                type: c.author_org_name.present? ? NameType::ORGANIZATIONAL : NameType::PERSONAL
+              ),
+              identifier: dcs_identifier_from(c.author_orcid),
+              type: r.contributor_type_mapping_obj,
+              affiliations: c.affiliations.map do |a|
+                if a.ror_id && !datacite_3
+                  Affiliation.new(
+                    identifier: a.ror_id,
+                    identifier_scheme: 'ROR',
+                    scheme_uri: 'https://ror.org',
+                    value: a.smart_name
+                  )
+                else
+                  Affiliation.new(value: a.smart_name)
+                end
+              end
+            )
+          end
+        end
+      end
+
+      def add_contacts(dcs_resource, datacite_3: false)
+        se_resource.authors.contacts.each do |c|
           dcs_resource.contributors << Contributor.new(
-            name: c.contributor_name,
-            identifier: to_dcs_identifier(c.name_identifier),
-            type: c.contributor_type_mapping_obj,
+            name: ContributorName.new(
+              value: c.author_full_name,
+              type: c.author_org_name.present? ? NameType::ORGANIZATIONAL : NameType::PERSONAL
+            ),
+            identifier: dcs_identifier_from(c.author_orcid),
+            type: :CONTACT_PERSON,
             affiliations: c.affiliations.map do |a|
               if a.ror_id && !datacite_3
                 Affiliation.new(
                   identifier: a.ror_id,
                   identifier_scheme: 'ROR',
-                  scheme_uri: to_uri('https://ror.org'),
+                  scheme_uri: 'https://ror.org',
                   value: a.smart_name
                 )
               else
                 Affiliation.new(value: a.smart_name)
               end
             end
+          )
+        end
+      end
+
+      def add_sponsor(dcs_resource)
+        se_resource.contributors.completed.where.not(contributor_type: 'funder').each do |c|
+          dcs_resource.contributors << Contributor.new(
+            name: c.contributor_name,
+            identifier: to_dcs_identifier(c.name_identifier),
+            type: c.contributor_type_mapping_obj
           )
         end
       end
