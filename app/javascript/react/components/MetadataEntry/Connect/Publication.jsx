@@ -26,13 +26,13 @@ export default function Publication({
           console.log("couldn't change import_type on remote server");
         }
         showSavedMsg();
+        if (choice === 'other') setAssoc(false);
       });
   };
 
   const setImport = (e) => {
     const v = e.target.value;
     if (v === 'no') {
-      setAssoc(false);
       setConnections([]);
       optionChange('other');
     }
