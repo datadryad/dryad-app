@@ -19,9 +19,9 @@ function PaymentMessage({resource, fees}) {
           }
         </p>
         <p>
-          The total fees are {formatCost(fees.dpc_sponsored + fees.storage_fee_sponsored + fees.storage_fee)}.
+          The total fees are {formatCost(fees.dpc_sponsored + fees.storage_sponsored + fees.storage_fee)}.
           The {partner_name} has sponsored the base Data Publishing Charge ({formatCost(fees.dpc_sponsored)}){
-            fees.storage_fee_sponsored ? ` and Large Data Fee (${formatCost(fees.storage_fee_sponsored)})` : ''}.
+            fees.storage_sponsored ? ` and Large Data Fee (${formatCost(fees.storage_sponsored)})` : ''}.
         </p>
       </>
       // if (Object.hasOwn(partner, 'long_name')) <p>For questions about your sponsorship, please contact {?}</p>

@@ -15,7 +15,6 @@ module FeeCalculator
       @ldf_limit = resource ? PayersService.new(@payer_record).sponsored_limits&.ldf_limit : nil
     end
 
-    # rubocop:disable Metrics/MethodLength
     def call
       verify_payer
       verify_new_payment_system
@@ -35,22 +34,19 @@ module FeeCalculator
             # if no limit is hit,
             # the user pays no storage fee
             # add sponsored amount to json for display
-            @sum_options[:storage_fee_sponsored] = verify_max_storage_size
-            verify_max_storage_size
+            @sum_options[:storage_sponsored] = verify_max_storage_size
             add_zero_fee(:storage_size)
           elsif @limits_service.amount_limits_exceeded?
             # if the yearly amount limit is hit,
             # the user needs to pay the full storage difference
-            add_storage_fee_difference
-            add_invoice_fee
+            add_sponsored_amount
           else
             # if the amount by adding sponsored storage fee is not exceeded
             # user mult pay the difference between sponsored size and resource size
             handle_ldf_limit
           end
         else
-          add_storage_fee_difference
-          add_invoice_fee
+          add_sponsored_amount
         end
       else
         add_service_fee
@@ -60,7 +56,6 @@ module FeeCalculator
       add_storage_fee_label
       @sum_options.merge(total: @sum)
     end
-    # rubocop:enable Metrics/MethodLength
 
     def storage_fee_tiers
       ESTIMATED_FILES_SIZE
@@ -75,7 +70,12 @@ module FeeCalculator
       tier = get_tier_by_value(storage_fee_tiers, @ldf_limit)
       paid_for = [tier[:range].max, resource.identifier.last_invoiced_file_size.to_i].max
 
-      add_storage_fee_difference(paid_for)
+      add_sponsored_amount(paid_for)
+    end
+
+    def add_sponsored_amount(amount = nil)
+      add_storage_fee_difference(amount)
+      @sum_options[:storage_sponsored] = price_by_range(storage_fee_tiers, amount)
       add_invoice_fee
     end
 
@@ -171,9 +171,6 @@ module FeeCalculator
       paid_storage_size ||= resource.identifier.last_invoiced_file_size
       paid_tier_price = price_by_range(storage_fee_tiers, paid_storage_size)
       new_tier_price = price_by_range(storage_fee_tiers, resource.total_file_size)
-
-      # add sponsored amount to json for display
-      @sum_options[:storage_fee_sponsored] = paid_tier_price
 
       diff = new_tier_price - paid_tier_price
       diff = 0 if diff < 0
