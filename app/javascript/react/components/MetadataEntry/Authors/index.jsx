@@ -2,7 +2,7 @@ import React from 'react';
 import {upCase, ordinalNumber} from '../../../../lib/utils';
 import {orderedItems} from '../DragonDropList';
 
-export {default} from './Authors';
+export {default} from './AuthorSteps';
 export {default as AuthPreview} from './AuthPreview';
 
 const checkName = (a) => [a.author_first_name, a.author_last_name, a.author_org_name].filter(Boolean).join(' ').toLowerCase();
@@ -30,13 +30,6 @@ export const authorCheck = (resource) => {
       </p>
     );
   }
-  const affErr = authors.findIndex((a) => !a.author_org_name && !a.affiliations?.[0]?.long_name);
-  if (affErr >= 0) {
-    const ind = authors.filter((a) => a.author_org_name === null).findIndex((a) => !a.affiliations?.[0]?.long_name);
-    return (
-      <p className="error-text" id="author_aff_error" data-index={ind}>{upCase(ordinalNumber(affErr + 1))} author affiliation is required</p>
-    );
-  }
   const dupeName = authors.findIndex((a, i) => authors.find((au, x) => (i === x ? false : checkName(a) === checkName(au))));
   if (dupeName >= 0) {
     const name = checkName(authors[dupeName]);
@@ -62,6 +55,16 @@ export const authorCheck = (resource) => {
   if (!authors.some((a) => a.corresp)) {
     return (
       <p className="error-text" id="author_corresp_error">At least 1 published email is required</p>
+    );
+  }
+  const affErr = authors.findIndex((a) => !a.author_org_name && !a.affiliations?.[0]?.long_name);
+  if (affErr >= 0) {
+    const ind = authors.filter((a) => !a.author_org_name).map((a) => {
+      if (!a.affiliations.length) return ({i: 0})
+      return a.affiliations.map((aff, i) => ({i, aff}))
+    }).flat().findIndex(l => l.i === 0 && !l.aff?.long_name)
+    return (
+      <p className="error-text" id="author_aff_error" data-index={ind}>{upCase(ordinalNumber(affErr + 1))} author affiliation is required</p>
     );
   }
   return false;

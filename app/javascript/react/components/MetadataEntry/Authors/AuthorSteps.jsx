@@ -1,0 +1,94 @@
+import React, {useState, useRef, useEffect} from 'react';
+import axios from 'axios';
+import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
+import Authors from './Authors'
+import Affiliations from './Affiliations'
+
+export default function AuthorSteps({resource, setResource, current, user, error}) {
+  const errRef = useRef(null);
+  const [authors, setAuthors] = useState(resource.authors);
+  const [step, setStep] = useState(1);
+  const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
+
+  const updateItem = (author) => {
+    showSavingMsg();
+    return axios.patch(
+      '/stash_datacite/authors/update',
+      {authenticity_token, author},
+      {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
+    ).then((data) => {
+      if (data.status !== 200) {
+        console.log('Response failure not a 200 response from author save');
+      }
+      setAuthors((as) => as.map((a) => (a.id === author.id ? data.data : a)));
+      showSavedMsg();
+    });
+  };
+
+  const secTitles = ['Authors', 'Affiliations', 'Contributions']
+
+  const sections = {
+    1: <Authors {...{resource, setResource, authors, setAuthors, user, current, updateItem}} />,
+    2: <Affiliations {...{authors, updateItem}} />,
+    3: <></>,
+  }
+
+  useEffect(() => {
+    if (current && errRef.current !== error.props.id) {
+      if (error.props.id === 'author_aff_error') setStep(2)
+      errRef.current = error.props.id;
+    }
+  }, [current, error])
+
+  return (
+    <>
+      <div className="steps-wrapper">
+        {Object.keys(sections).map((i) => (
+          /* eslint-disable eqeqeq */
+          <div
+            key={`step${i}`}
+            className={`step${i < step ? ' completed' : ''}${i == step ? ' current' : ''}`}
+            aria-current={step == i ? 'step' : null}
+            role="button"
+            tabIndex={0}
+            onClick={() => setStep(Number(i))}
+            onKeyDown={(e) => {
+              if (['Enter', 'Space'].includes(e.key)) {
+                setStep(Number(i));
+              }
+            }}
+          >
+            <span className="bar" /><span className="step-counter">{i}</span><span className="step-name">{secTitles[i - 1]}</span>
+          </div>
+        ))}
+      </div>
+      <h3>{secTitles[step -1]}</h3>
+      {sections[step]}
+      <div className="dataset-nav" style={{marginTop: '2rem', marginBottom: '2rem'}}>
+        {step === secTitles.length ? null : (
+          <button
+            type="button"
+            className="o-button__plain-text1"
+            onClick={() => setStep((s) => Number(s) + 1)}
+            id="readme-next"
+            aria-labelledby="submission-step-title readme-next"
+          >
+            Next <i className="fa fa-caret-right" aria-hidden="true" />
+          </button>
+        )}
+        {step > 1 && (
+          <button
+            type="button"
+            className="o-button__plain-text0"
+            onClick={() => setStep((s) => Number(s) - 1)}
+            id="readme-previous"
+            aria-labelledby="submission-step-title readme-previous"
+          >
+            <i className="fa fa-caret-left" aria-hidden="true" /> Previous
+          </button>
+        )}
+      </div>
+      <div role="alert">{error}</div>
+    </>
+  );
+}

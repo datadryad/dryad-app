@@ -1,6 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {Field, Form, Formik} from 'formik';
-import Affiliations from './Affiliations';
 import OrcidInfo from './OrcidInfo';
 import Editor from './Editor';
 import EmailConfirm from './EmailConfirm';
@@ -9,7 +8,6 @@ export default function AuthorForm({
   author, users, emails, update, invite, user,
 }) {
   const formRef = useRef(0);
-  const [affiliations, setAffiliations] = useState(author?.affiliations);
   const [confirmed, setConfirmed] = useState(false);
   const editor = author.author_orcid && users.find((u) => u.orcid === author.author_orcid);
 
@@ -21,7 +19,6 @@ export default function AuthorForm({
       author_org_name: author.author_org_name !== null ? values.author_org_name : null,
       author_email: values.author_email,
       resource_id: author.resource_id,
-      affiliations,
     };
     return update(submit);
   };
@@ -48,10 +45,6 @@ export default function AuthorForm({
       setConfirmed(false);
     }
   }, [confirmed]);
-
-  useEffect(() => {
-    if (formRef.current && affiliations.length < author.affiliations.length) formRef.current.handleSubmit();
-  }, [affiliations]);
 
   return (
     <Formik
@@ -123,7 +116,6 @@ export default function AuthorForm({
                 />
                 <div id={`${author.id}lname-ex`}><i aria-hidden="true" />Family name</div>
               </div>
-              <Affiliations formRef={formRef} id={author.id} affiliations={affiliations} setAffiliations={setAffiliations} />
               <div className="author-form email-opts">
                 <div className="input-stack">
                   <label className={`input-label ${(author.author_orcid ? 'required' : '')}`} htmlFor={`author_email__${author.id}`}>
