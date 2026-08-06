@@ -91,11 +91,11 @@ end
   <% if @role_object.blank? || @user_role.role == 'curator' %>
     <div>
       <%= check('curator').html_safe %>
-      <span class="help" id="curator-desc">The curator currently assigned to the dataset.</span>
+      <span class="help" id="curator-desc">The curator currently assigned to the dataset. Internal to Dryad.</span>
     </div>
     <div>
       <%= check('editor').html_safe %>
-      <span class="help" id="editor-desc">The user currently editing the dataset.</span>
+      <span class="help" id="editor-desc">The user currently editing the dataset. Internal to Dryad.</span>
     </div>
   <% end %>
   <div>
@@ -122,16 +122,14 @@ end
     <%= check('created_at').html_safe %>
     <span class="help" id="created_at-desc">Creation date of the dataset.</span>
   </div>
-  <% if @role_object.blank? || @user_role.role == 'curator' %>
-    <div>
-      <%= check('queue_date').html_safe %>
-      <span class="help" id="queue_date-desc">First time the dataset entered the curator queue.</span>
-    </div>
-  <% end %>
+  <div>
+    <%= check('queue_date').html_safe %>
+    <span class="help" id="queue_date-desc">First time the dataset entered the curator queue.</span>
+  </div>
   <% if @role_object.blank? %>
     <div>
       <%= check('status_date').html_safe %>
-      <span class="help" id="status_date-desc">The date the dataset version entered its current status.</span>
+      <span class="help" id="status_date-desc">The date the dataset version entered its current status. Internal to Dryad.</span>
     </div>
   <% end %>
 </fieldset>
