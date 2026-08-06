@@ -21,7 +21,6 @@ default: &default
   port: <%= Rails.application.credentials[Rails.env.to_sym][:database_port] %>
   encoding: utf8mb4
   collation: utf8mb4_unicode_ci
-  reconnect: true
 
 development:
   <<: *default
