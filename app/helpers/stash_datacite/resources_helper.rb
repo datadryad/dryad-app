@@ -34,5 +34,15 @@ module StashDatacite
       end
     end
 
+    def credit_display(authors)
+      authors.map do |author|
+        next unless author.author_standard_name
+
+        str = "<em>#{author.author_standard_name}:</em> "
+        role_list = author.credit_roles.map(&:credit_role).join(', ')
+        str += role_list.capitalize
+        str
+      end.reject(&:blank?).join('. ')
+    end
   end
 end
