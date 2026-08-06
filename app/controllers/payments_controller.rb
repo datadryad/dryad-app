@@ -4,7 +4,7 @@ class PaymentsController < ApplicationController
   include StashEngine::SharedSecurityController
 
   skip_before_action :verify_authenticity_token
-  before_action :resource
+  before_action :resource, except: %i[invoice_callback]
   before_action :ajax_require_unsubmitted, only: :create
 
   layout 'stash_engine/application'
@@ -62,6 +62,25 @@ class PaymentsController < ApplicationController
     )
     update_identifier_files_size
     update_payment_details(payment)
+  end
+
+  def invoice_callback
+    render json: {}, status: :ok and return unless params[:type] == 'invoice.paid'
+
+    invoice_id = params[:data][:object][:id]
+    payment = ResourcePayment.where(pay_with_invoice: true, invoice_id: invoice_id).last
+    if payment
+      payment.update(
+        status: :paid,
+        paid_at: Time.at(params[:data][:object][:status_transitions][:paid_at].to_i)
+      )
+      CurationService.new(resource: id.latest_resource, user_id: 0, status: 'queued', note: 'Invoice has been paid').process
+    else
+      message = "No payment record for Invoice with ID #{invoice_id} flagged as paid."
+      Rails.logger.warn(message)
+    end
+
+    render json: {}, status: :ok
   end
 
   def reset_payment

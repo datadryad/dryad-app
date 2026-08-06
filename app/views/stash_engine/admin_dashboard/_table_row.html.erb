@@ -53,8 +53,18 @@
       <%= render partial: 'table_status', locals: {dataset: dataset} %>
     </td>
   <% end %>
-  <% if @fields.include?('size') %>
-    <td class="c-lined-table__digits"><%= filesize(dataset.total_file_size) %></td>
+  <% if @fields.include?('size') || @fields.include?('invoiced_size') || @fields.include?('versioned_size')%>
+    <td class="c-lined-table__digits">
+      <% if @fields.include?('size') %>
+        <%= filesize(dataset.total_file_size) %><% if @fields.include?('invoiced_size') || @fields.include?('versioned_size') %> (current)<% end %>
+      <% end %>
+      <% if @fields.include?('invoiced_size') %>
+        <%= filesize(dataset.identifier.last_invoiced_file_size.to_i) %> (invoiced)
+      <% end %>
+      <% if @fields.include?('versioned_size') %>
+        <%= filesize(dataset.identifier.storage_size) %> (total versioned)
+      <% end %>
+    </td>
   <% end %>
   <% if @fields.include?('metrics') %>
     <td class="c-lined-table__digits"><%= dataset.identifier.counter_stat.unique_investigation_count.to_i %> views<br/>
@@ -101,7 +111,7 @@
     <td class="c-lined-table__digits"><%= formatted_datetime(dataset.submitted_date) %></td>
   <% end %>
   <% if @fields.include?('first_sub_date') %>
-    <td class="c-lined-table__digits"><%= formatted_datetime(dataset.identifier.process_date.processing || dataset.identifier.process_date.queued || dataset.identifier.process_date.peer_review) %></td>
+    <td class="c-lined-table__digits"><%= formatted_datetime(dataset.identifier.process_date.processing) %></td>
   <% end %>
   <% if @fields.include?('publication_date') %>
     <td class="c-lined-table__digits" id="dataset_published_<%= dataset.identifier_id %>">

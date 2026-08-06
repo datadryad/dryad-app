@@ -55,7 +55,7 @@ module Stash
           file = inventory.files[0]
           expect(file.pathname).to eq('mydata.xlsx')
           expect(file.size_bytes).to eq(12_345_678)
-          expect(file.mime_type).to eq(MIME::Type.new('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))
+          expect(file.mime_type).to eq(MIME::Types['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'].first)
 
           descriptive = wrapper.stash_descriptive
           expect(descriptive).to be_an(Array)
@@ -178,7 +178,7 @@ module Stash
           file = inventory.files[0]
           expect(file.pathname).to eq('mydata.xlsx')
           expect(file.size_bytes).to eq(12_345_678)
-          expect(file.mime_type).to eq(MIME::Type.new('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))
+          expect(file.mime_type).to eq(MIME::Types['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'].first)
         end
 
         describe '#file_names' do

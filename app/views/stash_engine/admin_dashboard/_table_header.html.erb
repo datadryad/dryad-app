@@ -22,7 +22,7 @@
         <%= sortable_column_head sort_field: 'status', title: 'Status', remote: true %>
       </th>
     <% end %>
-    <% if @fields.include?('size') %>
+    <% if @fields.include?('size') || @fields.include?('invoiced_size') || @fields.include?('versioned_size') %>
       <th class="c-lined-table__sort" <%= sort_display('total_file_size') %>>
         <%= sortable_column_head sort_field: 'total_file_size', title: 'Size', remote: true %>
       </th>
