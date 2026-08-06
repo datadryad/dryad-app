@@ -1,6 +1,6 @@
 class HiddensController < StashEngine::ApplicationController
   before_action :require_user_login
-  before_action { authorize current_user, policy_class: HiddenPagesPolicy }
+  before_action :authorize_file_actions, only: %i[file_validation fix_file_size validate recreate_digest]
 
   def file_validation
     ids = params[:ids].split(',')
@@ -29,6 +29,8 @@ class HiddensController < StashEngine::ApplicationController
   end
 
   def sponsor_payment_details
+    authorize current_user, policy_class: HiddenPagesPolicy
+
     @calculation_year = params[:year] || Date.today.year
     @sponsor = case params[:type]
                when 'StashEngine::Tenant'
@@ -50,6 +52,8 @@ class HiddensController < StashEngine::ApplicationController
   end
 
   def identifier_payment_details
+    authorize current_user, policy_class: HiddenPagesPolicy
+
     @service = Payments::Identifier.new(params[:id])
     @identifier = @service.identifier
     @payment_sponsor = @service.payment_sponsor
@@ -60,5 +64,11 @@ class HiddensController < StashEngine::ApplicationController
     @total_ldf = @service.total_ldf
 
     @price_calculation = ResourceFeeCalculatorService.new(@identifier.latest_resource).calculate({})
+  end
+
+  private
+
+  def authorize_file_actions
+    authorize(current_user, :file_validation?, policy_class: HiddenPagesPolicy)
   end
 end

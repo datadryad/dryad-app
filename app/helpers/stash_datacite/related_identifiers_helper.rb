@@ -23,6 +23,8 @@ module StashDatacite
     end
 
     def unpublished
+      return false if @resource.identifier.retracted?
+
       @resource.identifier.latest_resource_with_public_download.nil?
     end
 

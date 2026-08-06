@@ -2,7 +2,7 @@
 def check(id, indent = false)
   h = {funders: 'Grant funders', awards: 'Award IDs', sponsor: 'Journal sponsor', dpc: 'DPC paid by', updated_at: 'Last modified', submit_date: 'Submitted', publication_date: 'Published', first_sub_date: 'First submitted', first_pub_date: 'First published', queue_date: 'First queued', created_at: 'First created', identifiers: 'Publication IDs', status_date: 'Entered status'}
   label = h[id.to_sym]
-  label ||= id.length < 4 ? id.upcase : id.capitalize
+  label ||= id.length < 4 ? id.upcase : id.humanize.capitalize
 
   '<span class="field-pair">' + (indent ? '<i class="fa-solid fa-arrow-turn-up fa-rotate-90" style="font-size:.85em; margin-left: .2em" role="img" aria-label="Can include "></i>' : '') +
   check_box_tag('fields[]', id, @fields.include?(id), {id: id, 'aria-describedby': "#{id}-desc"}) +
@@ -50,7 +50,15 @@ end
   </div>
   <div>
     <%= check('size').html_safe %>
-    <span class="help" id="size-desc">Total size of the uploaded data files.</span>
+    <span class="help" id="size-desc">Total size of the current uploaded data files.</span>
+  </div>
+  <div>
+    <%= check('invoiced_size', true).html_safe %>
+    <span class="help" id="size-desc">Size of the data files in the version invoiced (largest published version).</span>
+  </div>
+  <div>
+    <%= check('versioned_size', true).html_safe %>
+    <span class="help" id="size-desc">Storage size of all unique files uploaded for every version of the dataset.</span>
   </div>
   <div>
     <%= check('metrics').html_safe %>
@@ -83,11 +91,11 @@ end
   <% if @role_object.blank? || @user_role.role == 'curator' %>
     <div>
       <%= check('curator').html_safe %>
-      <span class="help" id="curator-desc">The curator currently assigned to the dataset.</span>
+      <span class="help" id="curator-desc">The curator currently assigned to the dataset. Internal to Dryad.</span>
     </div>
     <div>
       <%= check('editor').html_safe %>
-      <span class="help" id="editor-desc">The user currently editing the dataset.</span>
+      <span class="help" id="editor-desc">The user currently editing the dataset. Internal to Dryad.</span>
     </div>
   <% end %>
   <div>
@@ -114,16 +122,14 @@ end
     <%= check('created_at').html_safe %>
     <span class="help" id="created_at-desc">Creation date of the dataset.</span>
   </div>
-  <% if @role_object.blank? || @user_role.role == 'curator' %>
-    <div>
-      <%= check('queue_date').html_safe %>
-      <span class="help" id="queue_date-desc">First time the dataset entered the curator queue.</span>
-    </div>
-  <% end %>
+  <div>
+    <%= check('queue_date').html_safe %>
+    <span class="help" id="queue_date-desc">First time the dataset entered the curator queue.</span>
+  </div>
   <% if @role_object.blank? %>
     <div>
       <%= check('status_date').html_safe %>
-      <span class="help" id="status_date-desc">The date the dataset version entered its current status.</span>
+      <span class="help" id="status_date-desc">The date the dataset version entered its current status. Internal to Dryad.</span>
     </div>
   <% end %>
 </fieldset>

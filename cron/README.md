@@ -39,25 +39,3 @@ systemctl enable cron_hourly
 Make sure to edit the `*.service` files to specify the proper Rails environment.
 
 After changing any of the files in `/etc/systemd/system/`, you need to reload the systemd daemon using `systemctl daemon-reload`.
-
-##counter-processor move to new server (require for counter weekly cron to work after move)
-- Set up ssh so you can scp files
-- Do commands like these after checking out the counter processor from github on the new server
-  and being in the same directory on the new server.
-  
-```bash
-scp <user>@<domain>:~/apps/counter/counter-processor/config/config.yaml .
-scp <user>@<domain>:~/apps/counter/counter-processor/config/secrets.yaml .
-cd ../maxmind_geoip
-scp <user>@<domain>:~/apps/counter/counter-processor/maxmind_geoip/* .
-cd ..
-mkdir state
-cd state
-scp <user>@<domain>:~/apps/counter/counter-processor/state/* .
-```
-
-Also copy over any old finished reports
-```bash
-cd /home/ec2-user/deploy/shared/cron/counter-json
-scp <user>@<domain>:/apps/dryad-prd-shared/json-reports/* .
-```

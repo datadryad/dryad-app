@@ -9,10 +9,6 @@ export REPORT_DIR="/home/ec2-user/deploy/shared/cron/counter-json"
 # force counter submissions for last month (and will submit other missing months)
 # export FORCE_SUBMISSION="`date --date="$(date +%Y-%m-15) - 1 month" "+%Y-%m"`"
 
-# run the script with the above settings (RAILS_ENV, REPORT_DIR, FORCE_SUBMISSION)
-# this script is no longer used since we don't routinely update and force reports based on logs/json files
-# bundle exec rails counter:datacite_pusher >> /home/ec2-user/deploy/shared/log/counter-uploader.log 2>&1
-
 # Check for integration issues
 bundle exec rails journal_email:check_integrations >> /home/ec2-user/deploy/shared/log/integration_check.log 2>&1
 

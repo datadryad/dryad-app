@@ -12,6 +12,12 @@ const validateEmail = (value) => {
   return null;
 };
 
+function ButtonText({resource}) {
+  if (resource.identifier.old_payment_system) return <>Submit for {resource.hold_for_peer_review ? 'peer review' : 'publication'}</>
+
+  return 'Send invoice & submit data'
+}
+
 export default function InvoiceForm({resource, setResource, setPayment}) {
   const {storeState: {fees}} = useStore();
   const {authors, users} = resource;
@@ -119,9 +125,7 @@ export default function InvoiceForm({resource, setResource, setPayment}) {
                 || errors.email
               }
             >
-              {resource.identifier.old_payment_system ? '' : 'Send invoice & '}
-              Submit for{' '}
-              {resource.hold_for_peer_review ? 'peer review' : 'publication'}
+              <ButtonText resource={resource} />
             </button>
           </p>
           <br />

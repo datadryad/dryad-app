@@ -14,7 +14,9 @@ module StashEngine
       end
       head << 'Submitter' if @fields.include?('submitter')
       head << 'Status' if @fields.include?('status')
-      head << 'Size' if @fields.include?('size')
+      head << 'Current Size' if @fields.include?('size')
+      head << 'Invoiced Size' if @fields.include?('invoiced_size')
+      head << 'Total Versioned Size' if @fields.include?('versioned_size')
       head << 'Views' << 'Downloads' << 'Citations' if @fields.include?('metrics')
       if @fields.include?('funders') || @fields.include?('awards')
         head << (@fields.include?('funders') ? 'Grant funders' : 'Award IDs')
@@ -70,6 +72,9 @@ module StashEngine
       end
       row << StashEngine::CurationActivity.readable_status(dataset.last_curation_activity.status) if @fields.include?('status')
       row << dataset.total_file_size if @fields.include?('size')
+      row << dataset.identifier.last_invoiced_file_size.to_i if @fields.include?('invoiced_size')
+      row << dataset.identifier.storage_size if @fields.include?('versioned_size')
+      row << dataset.total_file_size if @fields.include?('size')
       if @fields.include?('metrics')
         row << dataset.identifier.counter_stat.unique_investigation_count.to_i
         row << dataset.identifier.counter_stat.unique_request_count.to_i
@@ -98,9 +103,7 @@ module StashEngine
       end
       row << dataset.last_curation_activity.updated_at if @fields.include?('updated_at')
       row << dataset.submitted_date if @fields.include?('submit_date')
-      if @fields.include?('first_sub_date')
-        row << (dataset.identifier.process_date.processing || dataset.identifier.process_date.queued || dataset.identifier.process_date.peer_review)
-      end
+      row << dataset.identifier.process_date.processing if @fields.include?('first_sub_date')
       row << dataset.publication_date if @fields.include?('publication_date')
       row << dataset.identifier.publication_date if @fields.include?('first_pub_date')
       row << dataset.identifier.created_at if @fields.include?('created_at')

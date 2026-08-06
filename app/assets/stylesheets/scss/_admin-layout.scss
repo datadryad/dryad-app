@@ -209,8 +209,13 @@
       gap: 3ch;
       flex-wrap: wrap;
       fieldset {
+        border: 0;
+        padding: 0;
         gap: 1ch;
         flex-wrap: wrap;
+        &:last-of-type {
+          margin-left: auto;
+        }
       }
       legend {
         display: inline;
@@ -230,6 +235,10 @@
         display: grid;
         grid-column: span 2;
         grid-template-columns: subgrid;
+      }
+
+      fieldset:last-of-type{
+        margin-left: 0;
       }
 
       @media (max-width: 850px) { 
