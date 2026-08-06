@@ -506,6 +506,7 @@ Rails.application.routes.draw do
 
   resources :payments, only: [] do
     collection do
+      post :invoice_callback, format: :json
       post ':resource_id', to: 'payments#create'
       get :callback
 
