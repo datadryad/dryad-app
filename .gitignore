@@ -21,8 +21,6 @@ public/pagefind/
 uploads/
 /reports/
 test-reports/
-script/stash/counter-uploader/reports/*.json
-script/stash/counter-uploader/tmp/*.json
 
 # notifier state which is shared/linked and not comitted
 config/notifier_state.json
