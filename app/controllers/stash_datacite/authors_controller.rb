@@ -31,6 +31,7 @@ module StashDatacite
       AuthorsService.new(@author).check_orcid
       @author.reload
       process_affiliations
+      process_credit_roles
 
       # IF affiliations changed
       # trigger new version creation manually
@@ -38,7 +39,7 @@ module StashDatacite
 
       respond_to do |format|
         format.js { render template: 'stash_datacite/shared/update.js.erb' }
-        format.json { render json: @author.as_json(include: :affiliations) }
+        format.json { render json: @author.as_json(include: %i[affiliations credit_roles]) }
       end
     end
 
@@ -152,7 +153,8 @@ module StashDatacite
     def aff_params
       params.require(:author).permit(:id, :author_first_name, :author_last_name, :author_org_name,
                                      :author_email, :resource_id, :author_orcid, :author_order, :corresp,
-                                     affiliations: %i[id ror_id long_name])
+                                     affiliations: %i[id ror_id long_name],
+                                     credit_roles: %i[id])
     end
 
     # find correct affiliation based on long_name and ror_id and set it, create one if needed.
@@ -193,6 +195,13 @@ module StashDatacite
       return if affil.ror_id.nil? && @author.affiliations.where(ror_id: nil).pluck(:long_name).include?(affil.long_name)
 
       @author.affiliation = affil
+    end
+
+    def process_credit_roles
+      roles = aff_params['credit_roles']
+      roles.each { |cr| StashDatacite::CreditRoleAuthor.find_or_create_by(author_id: @author.id, credit_role_id: cr['id']) }
+      del = @author.credit_roles.map(&:id) - aff_params['credit_roles'].map { |c| c['id'].to_i }
+      @author.credit_role_authors.where(credit_role_id: del).destroy_all if del.present?
     end
 
     def check_reorder_valid

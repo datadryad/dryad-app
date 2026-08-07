@@ -3,6 +3,7 @@ import axios from 'axios';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 import Authors from './Authors'
 import Affiliations from './Affiliations'
+import Contributions from './Contributions'
 
 export default function AuthorSteps({resource, setResource, current, user, error}) {
   const errRef = useRef(null);
@@ -30,7 +31,7 @@ export default function AuthorSteps({resource, setResource, current, user, error
   const sections = {
     1: <Authors {...{resource, setResource, authors, setAuthors, user, current, updateItem}} />,
     2: <Affiliations {...{authors, updateItem}} />,
-    3: <></>,
+    3: <Contributions {...{authors, updateItem}} />,
   }
 
   useEffect(() => {

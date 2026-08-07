@@ -456,6 +456,8 @@ Rails.application.routes.draw do
     post 'affiliations/create', to: 'affiliations#create'
     delete 'affiliations/:id/delete', to: 'affiliations#delete', as: 'affiliations_delete'
 
+    get 'credit_roles', to: 'credit_roles#index'
+
     get 'licenses/details', to: 'licenses#details', as: 'license_details'
 
     # Actions through Leaflet Ajax posts
