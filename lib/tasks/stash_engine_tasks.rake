@@ -380,7 +380,7 @@ namespace :identifiers do
     log 'Writing curation_publication_report.csv...'
     launch_day = Date.new(2019, 9, 17)
     CSV.open('curation_publication_report.csv', 'w') do |csv|
-      csv << %w[DOI CreatedAt Size NumFiles FileExtensions DaysSubmissionToApproval DaysInCuration]
+      csv << %w[DOI CreatedAt CurrentSize NumFiles FileExtensions DaysSubmissionToApproval DaysInCuration]
       StashEngine::Identifier.publicly_viewable.where("created_at > '#{launch_day + 1.day}'").find_each do |i|
         num_files = i.latest_resource.data_files.select { |f| %w[copied created].include?(f[:file_state]) }.size
         file_extensions = i.latest_resource.data_files.map { |f| File.extname(f.upload_file_name).downcase }.uniq
@@ -400,7 +400,7 @@ namespace :identifiers do
         # TimeToApproval = time from submission to approval
         time_to_approval = (i.approval_date - r.submitted_date).to_i / 1.day if i.approval_date && r.submitted_date
 
-        csv << [i.identifier, i.created_at, i.latest_resource.size, num_files, file_extensions, time_to_approval, time_in_curation]
+        csv << [i.identifier, i.created_at, i.latest_resource.total_file_size, num_files, file_extensions, time_to_approval, time_in_curation]
       end
     end
   end
@@ -480,7 +480,7 @@ namespace :identifiers do
   task in_progress_detail_report: :environment do
     log 'Writting in_progress_detail.csv'
     CSV.open('in_progress_detail.csv', 'w') do |csv|
-      csv << %w[DOI PubDOI Version DateEnteredIP DateExitedIP StatusExitedTo DatasetSize CurrentStatus EverCurated? EverPublished? Journal WhoPays]
+      csv << %w[DOI PubDOI Version DateEnteredIP DateExitedIP StatusExitedTo CurrentSize CurrentStatus EverCurated? EverPublished? Journal WhoPays]
       StashEngine::Identifier.find_each.with_index do |i, ind|
         log ind if (ind % 100) == 0
         in_ip = false
@@ -513,7 +513,7 @@ namespace :identifiers do
             in_ip = false
             csv << [i.identifier, i.publication_article_doi,
                     ca.resource.stash_version.version, date_entered_ip, ca.created_at, ca.status,
-                    ca.resource.size, i.latest_resource&.current_curation_status,
+                    ca.resource.total_file_size, i.latest_resource&.current_curation_status,
                     ever_curated, ever_published,
                     i.journal&.title, who_pays]
           end
@@ -556,7 +556,7 @@ namespace :identifiers do
   task ppr_detail_report: :environment do
     log 'Writting ppr_detail.csv'
     CSV.open('ppr_detail.csv', 'w') do |csv|
-      csv << %w[DOI PubDOI ManuNumber Version DateEnteredPPR DateExitedPPR StatusExitedTo DatasetSize Journal AutoPPR Integrated WhoPays]
+      csv << %w[DOI PubDOI ManuNumber Version DateEnteredPPR DateExitedPPR StatusExitedTo CurrentSize Journal AutoPPR Integrated WhoPays]
       StashEngine::Identifier.find_each.with_index do |i, ind|
         log ind if (ind % 100) == 0
         in_ppr = false
@@ -586,16 +586,16 @@ namespace :identifiers do
             in_ppr = false
             csv << [i.identifier, i.publication_article_doi, i.manuscript_number,
                     ca.resource.stash_version.version, date_entered_ppr, ca.created_at, ca.status,
-                    ca.resource.size, i.journal&.title, i.journal&.default_to_ppr, i.journal&.manuscript_number_regex&.present?, who_pays]
+                    ca.resource.total_file_size, i.journal&.title, i.journal&.default_to_ppr, i.journal&.manuscript_number_regex&.present?, who_pays]
           end
         end
         # if we're at the end of the history and in_ppr,
         # finalize the current stats before moving to next identifier
         next unless in_ppr
 
-        csv << [i.identifier, i.publication_article_doi, i.manuscript_number,
-                i.latest_resource.stash_version.version, date_entered_ppr, 'None', 'None',
-                i.latest_resource.size, i.journal&.title, i.journal&.default_to_ppr, i.journal&.manuscript_number_regex&.present?, who_pays]
+        csv << [i.identifier, i.publication_article_doi, i.manuscript_number, i.latest_resource.stash_version.version,
+                date_entered_ppr, 'None', 'None', i.latest_resource.total_file_size, i.journal&.title,
+                i.journal&.default_to_ppr, i.journal&.manuscript_number_regex&.present?, who_pays]
         in_ppr = false
       end
     end
@@ -656,7 +656,7 @@ namespace :identifiers do
     log "Writing Shopping Cart Report for #{year_month} to file..."
     CSV.open("shopping_cart_report_#{year_month}.csv", 'w') do |csv|
       csv << %w[DOI ArticleDOI CreatedDate CurationStartDate ApprovalDate
-                Size PaymentType PaymentID WaiverBasis DpcDate TransactionId
+                TotalVersionedSize CurrentSize LastInvoicedSize PaymentType PaymentID WaiverBasis DpcDate TransactionId
                 InstitutionName JournalName JournalISSN SponsorName CurrentStatus]
 
       # Limit the query to datasets that existed at the time of the target report,
@@ -686,9 +686,10 @@ namespace :identifiers do
 
         csv << [
           i.identifier, i.publication_article_doi, created_date_str, curation_start_date_str, approval_date_str,
-          i.storage_size, i.payment_type, i.payment_id, i.waiver_basis, dpc_date, payment_transaction_id,
+          i.storage_size, i.latest_resource&.total_file_size, i.last_invoiced_file_size.to_i,
+          i.payment_type, i.payment_id, i.waiver_basis, dpc_date, payment_transaction_id,
           i.submitter_affiliation&.long_name, i.publication_name, i.publication_issn, i.journal&.sponsor&.name,
-          i&.resources&.last&.current_curation_status
+          i.latest_resource&.current_curation_status
         ]
       end
     end
@@ -1037,7 +1038,7 @@ namespace :identifiers do
     log "Writing dataset info report to file #{filename}"
     CSV.open(filename, 'w') do |csv|
       csv << ['Dataset DOI', 'Article DOI', 'Approval Date', 'Title',
-              'Size', 'Institution Name', 'Journal Name']
+              'TotalVersionedSize', 'Institution Name', 'Journal Name']
       StashEngine::Identifier.publicly_viewable.find_each do |i|
         approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
         res = i.latest_viewable_resource
@@ -1096,7 +1097,7 @@ namespace :identifiers do
               'OECD Field',
               'Curation Status',
               'Date First Submitted', 'Date First Published', 'Date Last Modified',
-              'Size',
+              'Total Versioned Size',
               'Views', 'Downloads', 'Citations',
               'Payer', 'Journal', 'Journal Sponsor',
               'Grant Funders',
@@ -1162,7 +1163,7 @@ namespace :identifiers do
               'Submitter Affiliation', 'Submitter Country',
               'Curation Status',
               'Date First Submitted', 'Date First Published', 'Date Last Modified',
-              'Size',
+              'Total Versioned Size',
               'Payer', 'Journal', 'Journal Sponsor',
               'Grant Funders',
               'Journal Name']
@@ -1207,7 +1208,7 @@ namespace :identifiers do
     CSV.open(filename, 'w') do |csv|
       csv << ['Dataset DOI', 'Status', 'Preprint Server', 'Preprint Link',
               'Journal Name', 'Article DOI', 'Title',
-              'Size', 'Institution Name',
+              'Total Versioned Size', 'Institution Name',
               'Submitter First', 'Submitter Last', 'Submitter Email']
       ii = Set[]
 
@@ -1332,7 +1333,7 @@ namespace :curation_stats do
   task curation_timeline_report: :environment do
     launch_day = Date.new(2019, 9, 17)
     CSV.open('curation_timeline_report.csv', 'w') do |csv|
-      csv << %w[DOI CreatedDate CurationStartDate TimesCurated ApprovalDate Size NumFiles FileFormats]
+      csv << %w[DOI CreatedDate CurationStartDate TimesCurated ApprovalDate TotalVersionedSize NumFiles FileFormats]
       StashEngine::Identifier.where(created_at: launch_day..Time.now.utc.to_date).find_each.with_index do |i, idx|
         log("#{idx}/#{datasets.size}") if idx % 100 == 0
         approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
