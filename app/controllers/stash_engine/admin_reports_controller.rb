@@ -1,6 +1,6 @@
 module StashEngine
   class AdminReportsController < ApplicationController
-    # helper SortableTableHelper
+    helper SortableTableHelper
 
     before_action :set_page_info
 
@@ -36,7 +36,7 @@ module StashEngine
         :report_type_filter,
         :status_filter,
         :page,
-        :page_size,
+        :page_size
       )
     end
   end

@@ -41,7 +41,7 @@ module Reports
       Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG.s3.reports_bucket)
         .put(s3_key: @filename, contents: file_contents)
       Report.create(
-        title: "Datasets age by status",
+        title: 'Datasets age by status',
         bucket: APP_CONFIG.s3.reports_bucket,
         s3_key: @filename,
         time: datetime,
