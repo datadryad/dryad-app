@@ -11,7 +11,7 @@ module Reports
     def initialize(status, date)
       @status = status
       @datetime = date.to_datetime.end_of_day
-      @file_path = "#{Rails.env}/volume_and_age/datasets-in-#{status}-on-#{@datetime.to_date}.csv"
+      @file_path = "#{Rails.env}/volume_and_age/datasets-in-#{status}-on-#{@datetime.to_date}-#{Time.current}.csv"
     end
 
     def generate
@@ -20,7 +20,7 @@ module Reports
         in_status_on_date.includes(:identifier, { resource: :process_date }).find_each do |ca|
           entered_in_status = ca.resource.process_date.last_status_date
           age_in_status = TimeInStatus.new(return_in: 'days').readable_time(datetime.to_i - entered_in_status.to_i)
-          csv << [ca.identifier_id, ca.identifier.identifier, ca.resource.process_date.last_status_date, age_in_status]
+          csv << [ca.identifier_id, ca.identifier&.identifier, ca.resource.process_date.last_status_date, age_in_status]
         end
       end
       upload_to_s3(file_contents, @file_path)
@@ -30,8 +30,19 @@ module Reports
     private
 
     def in_status_on_date
-      latest_per_identifier = StashEngine::CurationActivity.with_deleted.select('identifier_id, MAX(id) AS last_ca_id')
+      # some of the CurationActivity records were added later on older versions by cleanup or fixes scripts
+      # so we are excepting those activities
+      latest_per_identifier = StashEngine::CurationActivity.select('identifier_id, MAX(id) AS last_ca_id')
         .where(created_at: ..datetime)
+        .where(
+          "note IS NULL OR note != ?",
+          "remove_abandoned_datasets CRON - mark files as deleted"
+        )
+        .where(
+          "note IS NULL OR note NOT LIKE ?",
+          "System cleanup%"
+        )
+        .where.not(identifier_id: nil)
         .group('identifier_id')
 
       StashEngine::CurationActivity

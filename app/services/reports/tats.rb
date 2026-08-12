@@ -12,7 +12,7 @@ module Reports
       @start_time = "#{year}-#{month}-1".to_datetime.beginning_of_month
       @end_time = "#{year}-#{month}-1".to_datetime.end_of_month
 
-      @file_path = "#{Rails.env}/tats/Curation-time-report-for_#{month}-#{year}.csv"
+      @file_path = "#{Rails.env}/tats/Curation-time-report-for_#{month}-#{year}-#{Time.current}.csv"
     end
 
     def generate

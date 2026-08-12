@@ -10,7 +10,8 @@ module StashEngine
       @reports = Report
       apply_filters
 
-      ord = helpers.sortable_table_order(whitelist: %w[title report_type time status])
+      params[:direction] ||= 'desc'
+      ord = helpers.sortable_table_order(whitelist: %w[created_at])
       @reports = @reports.order(ord)
       @reports = @reports.page(@page).per(@page_size)
     end
