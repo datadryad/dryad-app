@@ -14,7 +14,7 @@
 #
 class Report < ApplicationRecord
 
-  enum(:report_type, %w[age_by_status].to_h { |i| [i.to_sym, i] })
+  enum(:report_type, %w[volume_and_age tats].to_h { |i| [i.to_sym, i] })
 
   def download_url
     s3 = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG.s3.reports_bucket)

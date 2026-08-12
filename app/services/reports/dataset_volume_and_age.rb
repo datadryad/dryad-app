@@ -1,27 +1,30 @@
+# :nocov:
 require 'csv'
 
-# run from console: Reports::DatasetAgeByStatus.new.generate
+# run from console: Reports::DatasetVolumeAndAge.new.generate
 module Reports
-  class DatasetAgeByStatus
+  class DatasetVolumeAndAge
+    include BaseS3Report
 
     attr_reader :status, :datetime
 
     def initialize(status, date)
       @status = status
-      @datetime = date.to_datetime.beginning_of_day
-      @filename = "#{Rails.env}/volume_and_age/datasets-in-#{status}-on-#{@datetime.to_date}.csv"
+      @datetime = date.to_datetime.end_of_day
+      @file_path = "#{Rails.env}/volume_and_age/datasets-in-#{status}-on-#{@datetime.to_date}.csv"
     end
 
     def generate
-      file_contents = CSV.generate do |row|
-        row << ['Identifier ID', 'DOI', 'Last status date', 'Age (day)']
+      file_contents = CSV.generate do |csv|
+        csv << ['Identifier ID', 'DOI', 'Last status date', 'Age (day)']
         in_status_on_date.includes(:identifier, { resource: :process_date }).find_each do |ca|
           entered_in_status = ca.resource.process_date.last_status_date
           age_in_status = TimeInStatus.new(return_in: 'days').readable_time(datetime.to_i - entered_in_status.to_i)
-          row << [ca.identifier_id, ca.identifier.identifier, ca.resource.process_date.last_status_date, age_in_status]
+          csv << [ca.identifier_id, ca.identifier.identifier, ca.resource.process_date.last_status_date, age_in_status]
         end
       end
-      upload_to_s3(file_contents)
+      upload_to_s3(file_contents, @file_path)
+      create_report_record
     end
 
     private
@@ -34,20 +37,18 @@ module Reports
       StashEngine::CurationActivity
         .joins("inner join (#{latest_per_identifier.to_sql}) as latest on stash_engine_curation_activities.id=last_ca_id")
         .where(status: status, created_at: ..datetime)
-        .limit(3).offset(1000)
     end
 
-    def upload_to_s3(file_contents)
-      Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG.s3.reports_bucket)
-        .put(s3_key: @filename, contents: file_contents)
+    def create_report_record
       Report.create(
-        title: 'Datasets age by status',
+        title: 'Datasets volume and age',
         bucket: APP_CONFIG.s3.reports_bucket,
-        s3_key: @filename,
+        s3_key: @file_path,
         time: datetime,
         status: status,
-        report_type: Report.report_types[:age_by_status]
+        report_type: Report.report_types[:volume_and_age]
       )
     end
   end
 end
+# :nocov:
