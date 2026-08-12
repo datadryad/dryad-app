@@ -21,18 +21,5 @@ module StashEngine
       @latest_check = StashEngine::ExternalDependency.where.not(status: 2).limit(1).first
         .updated_at.localtime
     end
-
-    def auth_failures
-      authorize StashEngine::ExternalDependency.all
-      @records = AuthFailure.left_joins(:user)
-      if params[:q]
-        @records = @records.where(
-          'error_type like ? OR url like ? OR ip like ? OR params like ? OR CONCAT(first_name, " ", last_name) LIKE ?',
-          "%#{params[:q]}%", "%#{params[:q]}%", "%#{params[:q]}%", "%#{params[:q]}%", "%#{params[:q]}%"
-        )
-      end
-      @records = @records.includes(:user).order(created_at: :desc).page(@page).per(@page_size)
-    end
-
   end
 end

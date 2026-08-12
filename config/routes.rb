@@ -338,7 +338,6 @@ Rails.application.routes.draw do
 
     # Administrative Status Dashboard that displays statuses of external dependencies and logs
     get 'status_dashboard', to: 'status_dashboard#show'
-    match 'status_dashboard/auth_failures', to: 'status_dashboard#auth_failures', via: %i[get post], as: 'auth_failures'
 
     # Publication updater page - Allows admins to accept/reject metadata changes from external sources like Crrossref
     get 'publication_updater', to: 'publication_updater#index'
