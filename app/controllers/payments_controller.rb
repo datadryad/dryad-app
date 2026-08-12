@@ -10,9 +10,6 @@ class PaymentsController < ApplicationController
   layout 'stash_engine/application'
 
   def create
-    Stripe.api_key = APP_CONFIG.payments.key
-    Stripe.api_version = '2026-05-27.dahlia'
-
     payment_service = PaymentsService.new(current_user, @resource, create_params)
 
     begin
