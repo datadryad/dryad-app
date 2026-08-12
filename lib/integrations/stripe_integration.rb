@@ -1,5 +1,9 @@
 module Integrations
   class StripeIntegration
+    # Settings used by all Stripe services
+    Stripe.api_key = APP_CONFIG.payments.key
+    Stripe.api_version = '2026-05-27.dahlia'
+
     class << self
       def get_balance_transaction(transaction_id)
         return nil unless transaction_id.present?
