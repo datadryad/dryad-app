@@ -57,7 +57,7 @@ module Tasks
 
       def csv_header
         [
-          'ID', 'DOI', 'Title', 'Readable Size', 'Size', 'Institution Partner', 'Journal', 'Journal Sponsor', 'Curator',
+          'ID', 'DOI', 'Title', 'Readable Size', 'Total Versioned Size', 'Institution Partner', 'Journal', 'Journal Sponsor', 'Curator',
           'Time in queue (Queued)', 'Time in queue (%)',
           'Time with curator (Curation)', 'Time with curator (%)',
           'Time with author (AAR)', 'Time with author (%)',
