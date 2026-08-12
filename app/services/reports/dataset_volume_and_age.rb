@@ -35,12 +35,12 @@ module Reports
       latest_per_identifier = StashEngine::CurationActivity.select('identifier_id, MAX(id) AS last_ca_id')
         .where(created_at: ..datetime)
         .where(
-          "note IS NULL OR note != ?",
-          "remove_abandoned_datasets CRON - mark files as deleted"
+          'note IS NULL OR note != ?',
+          'remove_abandoned_datasets CRON - mark files as deleted'
         )
         .where(
-          "note IS NULL OR note NOT LIKE ?",
-          "System cleanup%"
+          'note IS NULL OR note NOT LIKE ?',
+          'System cleanup%'
         )
         .where.not(identifier_id: nil)
         .group('identifier_id')
