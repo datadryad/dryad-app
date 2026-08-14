@@ -35,7 +35,7 @@ module StashEngine
       qs = qd.to_a.reject { |h| h['period'].nil? }
       pubs = pd.to_a.reject { |h| h['period'].nil? }
 
-      return [{ dates: [Date.today.strftime('%F')], subs: [0], qs: [0], pubs: [0] }] unless subs.first.present?
+      return [{ dates: [Date.today.strftime('%F')], subs: [0], qs: [0], pubs: [0] }] if subs.first.blank? || pubs.first.blank?
 
       range = (Date.parse(subs.first['period'])..Date.parse(pubs.last['period'])).map { |d| d.strftime('%F') }.uniq
 
