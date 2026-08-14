@@ -74,7 +74,6 @@ module StashEngine
       row << dataset.total_file_size if @fields.include?('size')
       row << dataset.identifier.last_invoiced_file_size.to_i if @fields.include?('invoiced_size')
       row << dataset.identifier.storage_size if @fields.include?('versioned_size')
-      row << dataset.total_file_size if @fields.include?('size')
       if @fields.include?('metrics')
         row << dataset.identifier.counter_stat.unique_investigation_count.to_i
         row << dataset.identifier.counter_stat.unique_request_count.to_i
