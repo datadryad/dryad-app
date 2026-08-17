@@ -167,7 +167,7 @@ describe('AuthorSteps', () => {
     render(<AuthorSteps resource={resource} setResource={setResource} user={user} />);
 
     await waitFor(() => {
-      expect(screen.getAllByRole('listitem').length).toBe(3);
+      expect(screen.getAllByRole('listitem').length).toBe(6);
     });
 
     const button = screen.getAllByRole('button')[3];
