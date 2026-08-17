@@ -92,7 +92,7 @@ module StashDatacite
         @author.reload
         format.json do
           render json: {
-            author: @author.as_json(include: %i[affiliations edit_code]),
+            author: @author.as_json(include: %i[affiliations credit_roles edit_code]),
             users: @resource.users.select('stash_engine_users.*', 'stash_engine_roles.role')
           }
         end
@@ -126,7 +126,7 @@ module StashDatacite
         )
       end
 
-      render json: @author.as_json(include: [:affiliations])
+      render json: @author.as_json(include: %i[affiliations credit_roles])
     end
 
     private
