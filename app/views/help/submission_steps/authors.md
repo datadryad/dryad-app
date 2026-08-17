@@ -14,10 +14,25 @@ The author list can be reordered with a drag-and-drop mechanism.
 
 ### Required fields
 
-The name and at least one institutional affiliation are required for each author in the author list of your submission. Institutional affiliations are retrieved from[ ROR](https://ror.org/) (Research Organization Registry), and can be searched by name or by ROR ID URL (for example, [https://ror.org/00x6h5n95](https://ror.org/00x6h5n95)). Institution names not found on ROR can also be entered.
+The name and at least one institutional affiliation are required for each author in the author list of your submission. Institutional affiliations are retrieved from [ROR](https://ror.org/) (Research Organization Registry), and can be searched by name or by ROR ID URL (for example, [https://ror.org/00x6h5n95](https://ror.org/00x6h5n95)). Institution names not found on ROR can also be entered.
 
 Email addresses may be included for all authors, and are required for collaboration on the submission. At least one email address is required to be displayed on the public dataset page, for the data’s corresponding author.
 
+## Recognizing author contributions
+
+Different authors play different roles in the generation, curation, and publication of a dataset. To accurately recognize and share these varied contributions, we use an adapted list of [CRediT](https://credit.niso.org) roles that incorporates a [GREI-recommended subset for generalist repositories](https://zenodo.org/records/16953589). We ask that each author select one or more from a list of possible options.
+
+While we encourage use of this functionality, we do not mandate it. However, should a role for any author be selected, then at least one role is required for each author of the same dataset. It is the Submitting author's responsibility to ensure the accuracy of all authors' submitted roles.
+
+Where supplied, contribution roles are then presented in the "Author informationdetails" section on the dataset landing page.
+
+### Role definitions
+
+<dl id="credit-defs"><div><dt>Conceptualization</dt><dd>Identifying the research goals behind the dataset.</dd></div><div><dt>Data curation</dt><dd>Managing, cleaning, and preparing data for sharing and reuse.</dd></div><div><dt>Investigation</dt><dd>Performing the experiments or data collection.</dd></div><div><dt>Methodology</dt><dd>Designing the processes that guided data collection or analysis.</dd></div><div><dt>Project administration</dt><dd>Overseeing project execution, including data management
+planning.</dd></div><div><dt>Software</dt><dd>Writing code or scripts used to generate or prepare the data.</dd></div><div><dt>Supervision</dt><dd>Oversight of data collection or project execution,
+typically by senior researchers, PIs, or data managers.</dd></div><div><dt>Writing – original draft</dt><dd>Drafting associated documentation, such as README files
+or metadata.</dd></div><div><dt>Writing – review &amp; editing</dt><dd>Reviewing or improving documentation and descriptive
+metadata.</dd></div></dl>
 
 ## Collaborating on a data submission
 
