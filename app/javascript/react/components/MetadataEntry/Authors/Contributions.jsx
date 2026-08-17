@@ -15,7 +15,7 @@ function ContributionForm({author, roleList, updateItem}) {
   };
 
   return (
-    <fieldset className="input-line" aria-label="Select author contributions" onChange={setOption}>
+    <fieldset className="input-line" aria-label="Select author contributions" onChange={setOption} aria-errormessage="author_role_error">
       {roleList.map((r) => (
         <span className="radio_choice" key={r.credit_id}>
           <label>
@@ -49,7 +49,7 @@ export default function Contributions({authors, updateItem}){
 
   return (
     <>
-      <p>Select the appropriate <a href="https://credit.niso.org/" target="blank">CRediT roles<ExitIcon/></a> for each author on this data submission. If a role for any author is selected, each author must have one role. Not every role must be used.</p>
+      <p>Select the appropriate <a href="https://credit.niso.org/" target="blank">CRediT roles<ExitIcon/></a> for each author on this data submission. If a role for any author is selected, each author must have at least one role. Not every role must be used.</p>
       <button type="button" className="o-button__plain-textlink" style={{paddingLeft: 0}} aria-controls="credit-defs" aria-expanded={!hideKey} 
         onClick={()=>showKey(!hideKey)}>
         Data submission CRediT role definitions

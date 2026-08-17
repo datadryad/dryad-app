@@ -67,5 +67,13 @@ export const authorCheck = (resource) => {
       <p className="error-text" id="author_aff_error" data-index={ind}>{upCase(ordinalNumber(affErr + 1))} author affiliation is required</p>
     );
   }
+  if (authors.some(a => a.credit_roles.length) && authors.some(a => !a.credit_roles.length)) {
+    const ind = authors.findIndex((a) => !a.credit_roles.length);
+    return (
+      <p className="error-text" id="author_role_error" data-index={ind}>
+        If a role for any author is selected, each author must have at least one role
+      </p>
+    )
+  }
   return false;
 };

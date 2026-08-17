@@ -1,6 +1,6 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef, useEffect, useCallback} from 'react';
 import axios from 'axios';
-import {isEqual} from 'lodash';
+import {isEqual, debounce} from 'lodash';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 import Authors from './Authors'
 import Affiliations from './Affiliations'
@@ -8,13 +8,22 @@ import Contributions from './Contributions'
 
 export default function AuthorSteps({resource, setResource, current, user, error}) {
   const errRef = useRef(null);
+  const [active, setActive] = useState(false);
   const [authors, setAuthors] = useState(resource.authors);
   const [users, setUsers] = useState(resource.users)
   const [step, setStep] = useState(1);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
+  const inactive = useCallback(debounce(() => setActive(false), 2000), []);
+
+  const activity = () => {
+    setActive(true);
+    inactive();
+  }
+
   const updateItem = (author) => {
     showSavingMsg();
+    activity();
     return axios.patch(
       '/stash_datacite/authors/update',
       {authenticity_token, author},
@@ -37,11 +46,12 @@ export default function AuthorSteps({resource, setResource, current, user, error
   }
 
   useEffect(() => {
-    if (current && errRef.current !== error.props.id) {
+    if (errRef.current !== error.props.id && !active) {
       if (error.props.id === 'author_aff_error') setStep(2)
+      if (error.props.id === 'author_role_error') setStep(3)
       errRef.current = error.props.id;
     }
-  }, [current, error])
+  }, [active, error])
 
   useEffect(() => {
     if (!isEqual(resource.authors, authors) || !isEqual(resource.users, users)) {
@@ -53,9 +63,15 @@ export default function AuthorSteps({resource, setResource, current, user, error
     if (current) {
       setAuthors(resource.authors);
       setUsers(resource.users);
+      document.body.addEventListener('click', activity)
+      document.body.addEventListener('keypress', activity)
+    }
+    () => {
+      document.body.removeEventListener('click', activity)
+      document.body.removeEventListener('keypress', activity)
     }
   }, [current]);
-
+  
   return (
     <>
       <div className="steps-wrapper">
@@ -80,8 +96,9 @@ export default function AuthorSteps({resource, setResource, current, user, error
       </div>
       <h3>{secTitles[step -1]}</h3>
       {sections[step]}
+      <div role="alert">{error}</div>
       <div className="dataset-nav" style={{marginTop: '2rem', marginBottom: '2rem'}}>
-        {step === secTitles.length ? null : (
+        {step === secTitles.length ? <span/> : (
           <button
             type="button"
             className="o-button__plain-text1"
@@ -104,7 +121,6 @@ export default function AuthorSteps({resource, setResource, current, user, error
           </button>
         )}
       </div>
-      <div role="alert">{error}</div>
     </>
   );
 }
