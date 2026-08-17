@@ -28,7 +28,7 @@ export default function AuthorForm({
     if (!/^[\w+\-.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+$/i.test(value)) {
       return 'Invalid email address';
     }
-    if (emails.includes(value)) {
+    if (emails?.includes(value)) {
       return 'Email already belongs to another author';
     }
     if (value !== author.author_email && author.author_orcid && !confirmed) {

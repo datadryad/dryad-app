@@ -3,7 +3,10 @@ import {render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
 import axios from 'axios';
-import Authors from '../../../../../../app/javascript/react/components/MetadataEntry/Authors';
+import roles from './credit_roles.json';
+import AuthorSteps from '../../../../../../app/javascript/react/components/MetadataEntry/Authors/AuthorSteps';
+
+global.structuredClone = (val) => JSON.parse(JSON.stringify(val))
 
 jest.mock('../../../../../../app/javascript/react/shared/store', () => ({
   useStore: () => ({
@@ -27,10 +30,11 @@ const makeAuthor = (resource_id, myOrder) => {
     author_order: myOrder,
     orcid_invite_path: faker.internet.url(),
     affiliations: [],
+    credit_roles: [],
   };
 };
 
-describe('Authors', () => {
+describe('AuthorSteps', () => {
   let resource; let user; let dryadAuthors;
   const setResource = (item) => { resource = item; };
   beforeEach(() => {
@@ -59,16 +63,51 @@ describe('Authors', () => {
   });
 
   it('renders multiple authors in authors section', () => {
-    render(<Authors resource={resource} setResource={setResource} user={user} />);
+    render(<AuthorSteps resource={resource} setResource={setResource} user={user} />);
 
-    const labeledElements = screen.getAllByLabelText('Institutional affiliation', {exact: false});
-    expect(labeledElements.length).toBe(3);
     const firsts = screen.getAllByLabelText('First name', {exact: false});
     expect(firsts.length).toBe(3);
     expect(firsts[0]).toHaveValue(dryadAuthors[2].author_first_name);
     expect(firsts[2]).toHaveValue(dryadAuthors[0].author_first_name);
 
     expect(screen.getByText('+ Add author')).toBeInTheDocument();
+  });
+
+  it('renders multiple authors in affiliations section', async() => {
+    resource.authors = resource.authors.map(a => {
+      a.affiliations = [ {long_name: '', ror_id: ''} ]
+      return a
+    })
+    const promises = resource.authors.map(a => Promise.resolve({
+      status: 200,
+      data: {...a},
+    }));
+    axios.patch.mockImplementationOnce(() => promises[0]);
+    axios.patch.mockImplementationOnce(() => promises[1]);
+    axios.patch.mockImplementationOnce(() => promises[2]);
+
+    render(<AuthorSteps resource={resource} setResource={setResource} user={user} />);      
+    const button = screen.getAllByRole('button')[1];
+    expect(button).toHaveTextContent('Affiliations')
+    userEvent.click(button);
+    await waitFor(() => promises);
+
+    const labeledElements = screen.getAllByLabelText('Institutional affiliation', {exact: false});
+    expect(labeledElements.length).toBe(3);
+  });
+
+  it ('renders multiple authors in contributions section', async() => {
+    const resp = {status: 200, data: roles};
+    axios.get.mockResolvedValueOnce(resp);
+
+    render(<AuthorSteps resource={resource} setResource={setResource} user={user} />);      
+    const button = screen.getAllByRole('button')[2];
+    expect(button).toHaveTextContent('Contributions')
+    userEvent.click(button);
+
+    await waitFor(() => resp);
+    const labeledElements = screen.getAllByLabelText('Conceptualization');
+    expect(labeledElements.length).toBe(3);
   });
 
   it('removes an author from the document', async () => {
@@ -79,7 +118,7 @@ describe('Authors', () => {
 
     axios.delete.mockImplementationOnce(() => promise);
 
-    render(<Authors resource={resource} setResource={setResource} user={user} />);
+    render(<AuthorSteps resource={resource} setResource={setResource} user={user} />);
 
     let removes = screen.getAllByLabelText('Remove author');
     expect(removes.length).toBe(3);
@@ -110,7 +149,7 @@ describe('Authors', () => {
 
     axios.post.mockImplementationOnce(() => promise);
 
-    render(<Authors resource={resource} setResource={setResource} user={user} />);
+    render(<AuthorSteps resource={resource} setResource={setResource} user={user} />);
 
     const removes = screen.getAllByLabelText('Remove author');
     expect(removes.length).toBe(3);
@@ -125,14 +164,17 @@ describe('Authors', () => {
   it('should trigger drag and drop', async () => {
     const promise = Promise.resolve({status: 200, data: []});
     axios.patch.mockImplementationOnce(() => promise);
-    render(<Authors resource={resource} setResource={setResource} user={user} />);
+    render(<AuthorSteps resource={resource} setResource={setResource} user={user} />);
 
     await waitFor(() => {
       expect(screen.getAllByRole('listitem').length).toBe(3);
     });
 
-    const button = screen.getAllByRole('button')[0];
+    const button = screen.getAllByRole('button')[3];
 
+    userEvent.tab();
+    userEvent.tab();
+    userEvent.tab();
     userEvent.tab();
     expect(button.matches(':focus')).toBe(true);
 

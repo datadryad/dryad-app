@@ -54,9 +54,6 @@ describe('AuthorForm', () => {
   it('renders the basic author form', () => {
     render(<AuthorForm author={author} update={update} users={users} user={user} />);
 
-    const labeledElements = screen.getAllByLabelText('Institutional affiliation', {exact: false});
-    expect(labeledElements.length).toBe(1);
-
     expect(screen.getByLabelText('First name')).toHaveValue(author.author_first_name);
     expect(screen.getByLabelText('Last name')).toHaveValue(author.author_last_name);
     expect(screen.getByLabelText('Email address')).toHaveValue(author.author_email);
