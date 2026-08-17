@@ -12,18 +12,18 @@ function AffiliationsForm({author, updateItem}) {
   const id = author.id;
   const [affiliations, setAffiliations] = useState(author.affiliations.length > 0 ? author.affiliations : [{long_name: '', ror_id: ''}]);
 
+  const submitForm = async () => {
+    const a = structuredClone(author)
+    a.affiliations = affiliations
+    await updateItem(a)
+    updateStore({refreshFees: true});
+  }
+
   useEffect(() => {
     if (formRef.current && affiliations !== author.affiliations) {
       submitForm()
     }
   }, [affiliations, formRef]);
-
-  const submitForm = () => {
-    const a = structuredClone(author)
-    a.affiliations = affiliations
-    updateItem(a)
-    updateStore({refreshFees: true});
-  }
 
   const updateName = (i, v) => {
     setAffiliations((afs) => afs.map((a, x) => (i === x ? {...a, long_name: v} : a)));
@@ -46,6 +46,7 @@ function AffiliationsForm({author, updateItem}) {
         submitForm();
         setSubmitting(false);
       }}
+      initialValues={{}}
       validateOnChange={false}
     >
       {() => (

@@ -1,15 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import {isEqual} from 'lodash';
 import DragonDropList, {DragonListItem, orderedItems} from '../DragonDropList';
 import {showSavedMsg, showSavingMsg, showModalYNDialog} from '../../../../lib/utils';
 import AuthorForm from './AuthorForm';
 
 export default function Authors({
-  resource, setResource, authors, setAuthors, user, current, updateItem
+  authors, setAuthors, user, users, setUsers, updateItem, resource_id
 }) {
-  const [users, setUsers] = useState(resource.users);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const lastOrder = () => (authors.length ? Math.max(...authors.map((auth) => auth.author_order)) + 1 : 0);
@@ -20,7 +18,7 @@ export default function Authors({
     author_org_name: null,
     author_email: '',
     author_orcid: null,
-    resource_id: resource.id,
+    resource_id: resource_id,
   };
 
   const addNewAuthor = (org) => {
@@ -76,19 +74,6 @@ export default function Authors({
       }
     });
   };
-
-  useEffect(() => {
-    if (!isEqual(resource.authors, authors) || !isEqual(resource.users, users)) {
-      setResource((r) => ({...r, authors, users}));
-    }
-  }, [authors, users]);
-
-  useEffect(() => {
-    if (current) {
-      setAuthors(resource.authors);
-      setUsers(resource.users);
-    }
-  }, [current]);
 
   return (
     <>

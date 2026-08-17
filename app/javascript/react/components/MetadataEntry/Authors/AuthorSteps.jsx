@@ -1,5 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react';
 import axios from 'axios';
+import {isEqual} from 'lodash';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 import Authors from './Authors'
 import Affiliations from './Affiliations'
@@ -8,6 +9,7 @@ import Contributions from './Contributions'
 export default function AuthorSteps({resource, setResource, current, user, error}) {
   const errRef = useRef(null);
   const [authors, setAuthors] = useState(resource.authors);
+  const [users, setUsers] = useState(resource.users)
   const [step, setStep] = useState(1);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
@@ -29,7 +31,7 @@ export default function AuthorSteps({resource, setResource, current, user, error
   const secTitles = ['Authors', 'Affiliations', 'Contributions']
 
   const sections = {
-    1: <Authors {...{resource, setResource, authors, setAuthors, user, current, updateItem}} />,
+    1: <Authors {...{authors, setAuthors, user, users, setUsers, updateItem}} resource_id={resource.id} />,
     2: <Affiliations {...{authors, updateItem}} />,
     3: <Contributions {...{authors, updateItem}} />,
   }
@@ -40,6 +42,19 @@ export default function AuthorSteps({resource, setResource, current, user, error
       errRef.current = error.props.id;
     }
   }, [current, error])
+
+  useEffect(() => {
+    if (!isEqual(resource.authors, authors) || !isEqual(resource.users, users)) {
+      setResource((r) => ({...r, authors, users}));
+    }
+  }, [authors, users]);
+
+  useEffect(() => {
+    if (current) {
+      setAuthors(resource.authors);
+      setUsers(resource.users);
+    }
+  }, [current]);
 
   return (
     <>

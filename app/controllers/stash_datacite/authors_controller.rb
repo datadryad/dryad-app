@@ -29,9 +29,9 @@ module StashDatacite
       aff = @author.affiliations.pluck(:long_name).sort
 
       AuthorsService.new(@author).check_orcid
-      @author.reload
       process_affiliations
       process_credit_roles
+      @author.reload
 
       # IF affiliations changed
       # trigger new version creation manually
@@ -161,12 +161,12 @@ module StashDatacite
     def process_affiliations
       return unless @author.present?
 
-      @author.affiliations.destroy_all
-      args = aff_params
-      affs = args['affiliations']&.reject { |a| a['long_name'].blank? }
-      affs&.each do |aff|
+      affs = aff_params['affiliations']&.reject { |a| a['long_name'].blank? } || []
+      affs.each do |aff|
         process_affiliation(aff['long_name'].squish, aff['ror_id'])
       end
+      del = @author.affiliations.map(&:long_name) - affs.map { |a| a['long_name'] }
+      @author.affiliation_authors.joins(:affiliation).where(affiliation: { long_name: del }).destroy_all if del.present?
     end
 
     def process_affiliation(name, ror_val)
@@ -198,9 +198,10 @@ module StashDatacite
     end
 
     def process_credit_roles
-      roles = aff_params['credit_roles']
+      roles = aff_params['credit_roles'] || []
+
       roles.each { |cr| StashDatacite::CreditRoleAuthor.find_or_create_by(author_id: @author.id, credit_role_id: cr['id']) }
-      del = @author.credit_roles.map(&:id) - aff_params['credit_roles'].map { |c| c['id'].to_i }
+      del = @author.credit_roles&.map(&:id)&.- roles.map { |c| c['id'].to_i }
       @author.credit_role_authors.where(credit_role_id: del).destroy_all if del.present?
     end
 
