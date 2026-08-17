@@ -47,8 +47,8 @@ RSpec.feature 'Landing', type: :feature, js: true do
         resource.authors.each do |author|
           expect(page).to have_text(author.author_full_name)
         end
-        expect(page).to have_button('Author affiliations')
-        click_button 'Author affiliations'
+        expect(page).to have_button('Author information')
+        click_button 'Author information'
         expect(page).to have_content(resource.authors.first.affiliations.first.smart_name)
       end
 
@@ -153,8 +153,8 @@ RSpec.feature 'Landing', type: :feature, js: true do
         resource.authors.each do |author|
           expect(page).to have_text(author.author_full_name)
         end
-        expect(page).to have_button('Author affiliations')
-        click_button 'Author affiliations'
+        expect(page).to have_button('Author information')
+        click_button 'Author information'
         expect(page).to have_content(resource.authors.first.affiliations.first.smart_name)
       end
 
@@ -206,8 +206,8 @@ RSpec.feature 'Landing', type: :feature, js: true do
         resource.authors.each do |author|
           expect(page).to have_text(author.author_full_name)
         end
-        expect(page).to have_button('Author affiliations')
-        click_button 'Author affiliations'
+        expect(page).to have_button('Author information')
+        click_button 'Author information'
         expect(page).to have_content(resource.authors.first.affiliations.first.smart_name)
       end
 

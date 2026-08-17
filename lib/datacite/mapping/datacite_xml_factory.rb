@@ -212,7 +212,7 @@ module Datacite
               type: c.author_org_name.present? ? NameType::ORGANIZATIONAL : NameType::PERSONAL
             ),
             identifier: dcs_identifier_from(c.author_orcid),
-            type: :CONTACT_PERSON,
+            type: StashDatacite::Contributor.contributor_type_mapping_obj('ContactPerson'),
             affiliations: c.affiliations.map do |a|
               if a.ror_id && !datacite_3
                 Affiliation.new(

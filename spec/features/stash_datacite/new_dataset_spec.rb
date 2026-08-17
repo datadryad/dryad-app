@@ -82,6 +82,7 @@ RSpec.feature 'NewDataset', type: :feature do
       company = Faker::Company.name
       res_id = page.current_path.match(%r{submission/(\d+)})[1].to_i
       click_button 'Authors'
+      click_button 'Author list'
       click_button '+ Add group author'
       fill_in 'Organization or group name', with: company
       page.send_keys(:tab)
@@ -93,6 +94,7 @@ RSpec.feature 'NewDataset', type: :feature do
 
     it 'reorders authors with keyboard' do
       click_button 'Authors'
+      click_button 'Author list'
       first_author = { first: Faker::Name.unique.first_name, last: Faker::Name.unique.last_name, email: Faker::Internet.email }
       second_author = { first: Faker::Name.unique.first_name, last: Faker::Name.unique.last_name, email: Faker::Internet.email }
 

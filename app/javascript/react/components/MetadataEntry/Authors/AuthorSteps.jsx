@@ -37,7 +37,7 @@ export default function AuthorSteps({resource, setResource, current, user, error
     });
   };
 
-  const secTitles = ['Authors', 'Affiliations', 'Contributions']
+  const secTitles = ['Author list', 'Affiliations', 'Contributions']
 
   const sections = {
     1: <Authors {...{authors, setAuthors, user, users, setUsers, updateItem}} resource_id={resource.id} />,
@@ -46,7 +46,7 @@ export default function AuthorSteps({resource, setResource, current, user, error
   }
 
   useEffect(() => {
-    if (errRef.current !== error.props.id && !active) {
+    if (error && errRef.current !== error.props.id && !active) {
       if (error.props.id === 'author_aff_error') setStep(2)
       if (error.props.id === 'author_role_error') setStep(3)
       errRef.current = error.props.id;
@@ -74,26 +74,27 @@ export default function AuthorSteps({resource, setResource, current, user, error
   
   return (
     <>
-      <div className="steps-wrapper">
+      <ol className="steps-wrapper">
         {Object.keys(sections).map((i) => (
           /* eslint-disable eqeqeq */
-          <div
+          <li
             key={`step${i}`}
             className={`step${i < step ? ' completed' : ''}${i == step ? ' current' : ''}`}
             aria-current={step == i ? 'step' : null}
-            role="button"
-            tabIndex={0}
-            onClick={() => setStep(Number(i))}
-            onKeyDown={(e) => {
-              if (['Enter', 'Space'].includes(e.key)) {
-                setStep(Number(i));
-              }
-            }}
           >
-            <span className="bar" /><span className="step-counter">{i}</span><span className="step-name">{secTitles[i - 1]}</span>
-          </div>
+            <button 
+              onClick={() => setStep(Number(i))}
+              onKeyDown={(e) => {
+                if (['Enter', 'Space'].includes(e.key)) {
+                  setStep(Number(i));
+                }
+              }}
+            >
+              <span className="bar" /><span className="step-counter">{i}</span><span className="step-name">{secTitles[i - 1]}</span>
+            </button>
+          </li>
         ))}
-      </div>
+      </ol>
       <h3>{secTitles[step -1]}</h3>
       {sections[step]}
       <div role="alert">{error}</div>
@@ -103,8 +104,8 @@ export default function AuthorSteps({resource, setResource, current, user, error
             type="button"
             className="o-button__plain-text1"
             onClick={() => setStep((s) => Number(s) + 1)}
-            id="readme-next"
-            aria-labelledby="submission-step-title readme-next"
+            id="authors-next"
+            aria-labelledby="submission-step-title authors-next"
           >
             Next <i className="fa fa-caret-right" aria-hidden="true" />
           </button>
@@ -114,8 +115,8 @@ export default function AuthorSteps({resource, setResource, current, user, error
             type="button"
             className="o-button__plain-text0"
             onClick={() => setStep((s) => Number(s) - 1)}
-            id="readme-previous"
-            aria-labelledby="submission-step-title readme-previous"
+            id="authors-previous"
+            aria-labelledby="submission-step-title authors-previous"
           >
             <i className="fa fa-caret-left" aria-hidden="true" /> Previous
           </button>
