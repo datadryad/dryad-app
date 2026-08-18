@@ -20,37 +20,54 @@ module StashEngine
       d
     end
 
-    # rubocop:disable Metrics/AbcSize
     def datasets_by_date
+      if submission_query.first.blank? || publication_query.first.blank?
+        return [{ dates: [Date.today.strftime('%F')], subs: [0], qs: [0], pubs: [0] }]
+      end
+
+      range = date_range
+      [{
+        dates: range.map { |d| label_format(d) },
+        subs: range.map { |d| submission_query.sum { |h| h['period'].start_with?(d) ? h['count'] : 0 } },
+        qs: range.map { |d| queue_query.sum { |h| h['period'].start_with?(d) ? h['count'] : 0 } },
+        pubs: range.map { |d| publication_query.sum { |h| h['period'].start_with?(d) ? h['count'] : 0 } }
+      }]
+    end
+
+    def submission_query
+      return @subs if @subs
+
       sd = ActiveRecord::Base.connection.select_all(
         "select DATE_FORMAT(first_sub_date, '%Y-%m-%d') AS period, count(*) as count from (#{params[:sql]}) subquery GROUP BY period ORDER BY period"
       )
+      @subs = sd.to_a.reject { |h| h['period'].nil? }
+    end
+
+    def queue_query
+      return @queue_date_query if @queue_date_query
+
       qd = ActiveRecord::Base.connection.select_all(
         "select DATE_FORMAT(queue_date, '%Y-%m-%d') AS period, count(*) as count from (#{params[:sql]}) subquery GROUP BY period ORDER BY period"
       )
+      @queue_date_query = qd.to_a.reject { |h| h['period'].nil? }
+    end
+
+    def publication_query
+      return @publication_date_query if @publication_date_query
+
       pd = ActiveRecord::Base.connection.select_all(
         "select DATE_FORMAT(first_pub_date, '%Y-%m-%d') AS period, count(*) as count from (#{params[:sql]}) subquery GROUP BY period ORDER BY period"
       )
-      subs = sd.to_a.reject { |h| h['period'].nil? }
-      qs = qd.to_a.reject { |h| h['period'].nil? }
-      pubs = pd.to_a.reject { |h| h['period'].nil? }
+      @queue_date_query = pd.to_a.reject { |h| h['period'].nil? }
+    end
 
-      return [{ dates: [Date.today.strftime('%F')], subs: [0], qs: [0], pubs: [0] }] unless subs.first.present?
-
-      range = (Date.parse(subs.first['period'])..Date.parse(pubs.last['period'])).map { |d| d.strftime('%F') }.uniq
-
+    def date_range
+      range = (Date.parse(submission_query.first['period'])..Date.parse(publication_query.last['period'])).map { |d| d.strftime('%F') }.uniq
       if range.length > 62
         range = range.map { |d| d[0..6] }.uniq
         range = range.map { |d| d[0..3] }.uniq if range.length > 36
       end
-
-      [{
-        dates: range.map { |d| label_format(d) },
-        subs: range.map { |d| subs.sum { |h| h['period'].start_with?(d) ? h['count'] : 0 } },
-        qs: range.map { |d| qs.sum { |h| h['period'].start_with?(d) ? h['count'] : 0 } },
-        pubs: range.map { |d| pubs.sum { |h| h['period'].start_with?(d) ? h['count'] : 0 } }
-      }]
+      range
     end
-    # rubocop:enable Metrics/AbcSize
   end
 end
