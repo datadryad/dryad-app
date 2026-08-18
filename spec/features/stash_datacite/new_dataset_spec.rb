@@ -102,6 +102,7 @@ RSpec.feature 'NewDataset', type: :feature do
       fill_in_author(first_name: first_author[:first], last_name: first_author[:last], email: first_author[:email], has_orcid: true)
 
       # fill second
+      click_button 'Author list'
       click_button 'Add author'
       expect(page).to have_content('Second author name is required. Fill in or delete the entry')
       within(:css, '.dd-list-item:nth-child(2)') do

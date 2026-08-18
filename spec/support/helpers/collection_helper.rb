@@ -44,6 +44,7 @@ module CollectionHelper
     click_button 'Title'
     fill_in_title
     click_button 'Authors'
+    click_button 'Affiliations'
     fill_in_affiliation
     expect(find_button('Authors')).to match_selector('[aria-describedby="step-complete"')
     click_button 'Description'

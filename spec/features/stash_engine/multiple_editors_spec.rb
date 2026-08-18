@@ -18,7 +18,6 @@ RSpec.feature 'MultipleEditors', type: :feature, js: true do
         fill_in_title
         click_button 'Authors'
         click_button 'Author list'
-        fill_in_affiliation
       end
 
       it 'invites an author who is a user' do
