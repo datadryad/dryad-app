@@ -78,26 +78,27 @@ export default function ReadMeSteps({
 
   return (
     <>
-      <div className="steps-wrapper">
+      <ol className="steps-wrapper">
         {Object.keys(sections).map((i) => (
           /* eslint-disable eqeqeq */
-          <div
+          <li
             key={`step${i}`}
             className={`step${i < step ? ' completed' : ''}${i == step ? ' current' : ''}`}
             aria-current={step == i ? 'step' : null}
-            role="button"
-            tabIndex={0}
-            onClick={() => setStep(Number(i))}
-            onKeyDown={(e) => {
-              if (['Enter', 'Space'].includes(e.key)) {
-                setStep(Number(i));
-              }
-            }}
           >
-            <span className="bar" /><span className="step-counter">{i}</span><span className="step-name">{secTitles[i - 1]}</span>
-          </div>
+            <button
+              onClick={() => setStep(Number(i))}
+              onKeyDown={(e) => {
+                if (['Enter', 'Space'].includes(e.key)) {
+                  setStep(Number(i));
+                }
+              }}
+            >
+              <span className="bar" /><span className="step-counter">{i}</span><span className="step-name">{secTitles[i - 1]}</span>
+            </button>
+          </li>
         ))}
-      </div>
+      </ol>
       <h3 id="md_editor_label">{secTitles[step - 1]}</h3>
       <div style={{margin: '-.5em 0'}} id="md_editor_desc">
         {sections[step].desc}

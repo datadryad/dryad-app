@@ -25,18 +25,25 @@ module StashEngine
     self.table_name = 'stash_engine_authors'
     has_paper_trail meta: {
       resource_id: proc(&:resource_id),
-      additional_info: proc { |record| { affiliations_list: record.affiliations.map { |a| a.slice(:long_name, :ror_id) } } }
+      additional_info: proc { |record|
+        {
+          affiliations_list: record.affiliations.map { |a| a.slice(:long_name, :ror_id) },
+          credit_list: record.credit_roles.map(&:credit_role)
+        }
+      }
     }
 
     belongs_to :resource, class_name: 'StashEngine::Resource'
     has_many :affiliation_authors, class_name: 'StashDatacite::AffiliationAuthor', dependent: :destroy
     has_many :affiliations, class_name: 'StashDatacite::Affiliation', through: :affiliation_authors
+    has_many :credit_role_authors, class_name: 'StashDatacite::CreditRoleAuthor', dependent: :destroy
+    has_many :credit_roles, class_name: 'StashDatacite::CreditRole', through: :credit_role_authors
     has_one :edit_code, class_name: 'StashEngine::EditCode', dependent: :destroy
 
     # I believe the default to ordering by author oder is fin and it falls back to the ID order (order of creation) as secondary
     default_scope { order(author_order: :asc, id: :asc) }
 
-    accepts_nested_attributes_for :affiliations
+    accepts_nested_attributes_for :affiliations, :credit_roles
 
     validates :author_email, format: EMAIL_REGEX, allow_blank: true
 
@@ -44,9 +51,11 @@ module StashEngine
 
     scope :names_filled, -> { where("TRIM(IFNULL(author_first_name,'')) <> '' AND TRIM(IFNULL(author_last_name,'')) <> ''") }
     scope :with_orcid, -> { where.not(author_orcid: [nil, '']) }
+    scope :with_credit, -> { joins(:credit_roles).distinct }
+    scope :contacts, -> { where(corresp: true) }
 
     amoeba do
-      clone :affiliation_authors
+      clone %i[affiliation_authors credit_role_authors]
     end
 
     def ==(other)
@@ -66,6 +75,12 @@ module StashEngine
       return unless affil.is_a?(StashDatacite::Affiliation)
 
       affiliations << affil
+    end
+
+    def credit_role=(role)
+      return unless role.is_a?(StashDatacite::CreditRole)
+
+      credit_roles << role
     end
 
     def name

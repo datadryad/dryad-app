@@ -14,13 +14,13 @@ module StashDatacite
           :resource_type, :resource_publication, :resource_preprint,
           :related_identifiers, :edit_histories, :subjects, :descriptions, :cedar_json,
           { contributors: { methods: [:api_integration_key] } },
-          { authors: { methods: [:orcid_invite_path], include: %i[affiliations edit_code] },
+          { authors: { methods: [:orcid_invite_path], include: %i[affiliations credit_roles edit_code] },
             identifier: { methods: %i[new_upload_size_limit user_must_pay? display_payer], include: %i[process_date software_license] },
             previous_curated_resource: {
               include: [
                 :subjects, :descriptions, :cedar_json, :resource_publication, :related_identifiers, :contributors, :action_reports,
                 {
-                  authors: { include: [:affiliations] },
+                  authors: { include: %i[affiliations credit_roles] },
                   tenant: { include: %i[payment_configuration] },
                   journal: { include: %i[payment_configuration] }
                 }
