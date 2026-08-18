@@ -76,7 +76,7 @@ module Datacite
       @dc4_builder ||= Datacite::Mapping::DataciteXMLFactory.new(
         doi_value: resource.identifier_value,
         se_resource_id: resource.id,
-        total_size_bytes: resource.identifier.storage_size,
+        total_size_bytes: resource.total_file_size,
         version: resource.version_number
       )
     end

@@ -99,7 +99,7 @@ module StashApi
       {
         identifier: @se_identifier.to_s,
         id: @se_identifier.id,
-        storageSize: @se_identifier.storage_size,
+        storageSize: last_se_resource.total_file_size,
         relatedPublicationISSN: @se_identifier.publication_issn || @se_identifier.preprint_issn
       }
     end
