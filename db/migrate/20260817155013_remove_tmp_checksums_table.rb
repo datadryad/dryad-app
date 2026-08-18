@@ -1,9 +1,11 @@
 class RemoveTmpChecksumsTable < ActiveRecord::Migration[8.0]
   def up
-    drop_table :tmp_checksums
+    drop_table :tmp_checksums if table_exists?(:tmp_checksums)
   end
 
   def down
+    return if table_exists?(:tmp_checksums)
+
     create_table "tmp_checksums", id: false, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
       t.text "ark"
       t.integer "version"
