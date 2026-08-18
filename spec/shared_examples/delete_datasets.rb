@@ -51,5 +51,6 @@ RSpec.shared_examples('deletes resource files form S3') do
 
     expect(new_version.last_curation_activity.status).to eq('withdrawn')
     expect(new_version.last_curation_activity.note).to eq('remove_abandoned_datasets CRON - mark files as deleted')
+    expect(identifier.reload.pub_state).to eq('withdrawn')
   end
 end
