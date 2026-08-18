@@ -165,13 +165,12 @@ module DatasetHelper
   end
 
   def fill_in_affiliation(name: Faker::Educator.university)
-    while page.has_css?('[aria-invalid="true"]')
-      fill_in 'Institutional affiliation', with: name
-      page.send_keys(:tab)
-      expect(page).to have_css('.use-text-entered')
-      find('.use-text-entered').set(true)
-      page.send_keys(:tab)
-    end
+    click_button 'Affiliations'
+    find_field('Institutional affiliation').send_keys(name)
+    page.send_keys(:tab)
+    expect(page).to have_css('.use-text-entered')
+    find('.use-text-entered').set(true)
+    page.send_keys(:tab)
   end
 
   def fill_in_validation
