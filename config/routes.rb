@@ -156,6 +156,7 @@ Rails.application.routes.draw do
     get 'choose_dashboard', to: 'dashboard#choose', as: 'choose_dashboard'
     get 'dashboard', to: 'dashboard#show', as: 'dashboard'
     get 'dashboard/user_datasets', to: 'dashboard#user_datasets'
+    get 'dashboard/withdraw_button', to: 'dashboard#withdraw_button'
     get 'dashboard/primary_article/:resource_id', to: 'dashboard#primary_article', as: 'primary_article'
     get 'dashboard/contact_helpdesk/:id', to: 'dashboard#contact_helpdesk', as: 'contact_helpdesk_form'
     post 'dashboard/primary_article', to: 'dashboard#save_primary_article', as: 'save_primary_article'
