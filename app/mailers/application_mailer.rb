@@ -1,6 +1,7 @@
 # Base class for mailers
 class ApplicationMailer < ActionMailer::Base
   include StashEngine::SharedController
+
   rescue_from Net::SMTPSyntaxError, with: :handle_smtp_error
 
   default from: APP_CONFIG['feedback_email_from'] || APP_CONFIG['helpdesk_email']
