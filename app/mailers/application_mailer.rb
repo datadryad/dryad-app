@@ -1,6 +1,7 @@
 # Base class for mailers
 class ApplicationMailer < ActionMailer::Base
   include StashEngine::SharedController
+  rescue_from Net::SMTPSyntaxError, with: :handle_smtp_error
 
   default from: APP_CONFIG['feedback_email_from'] || APP_CONFIG['helpdesk_email']
   layout 'mailer'
@@ -45,5 +46,12 @@ class ApplicationMailer < ActionMailer::Base
     return "[#{Rails.env}] " unless Rails.env.include?('production')
 
     ''
+  end
+
+  def handle_smtp_error(error)
+    Rails.logger.error(
+      "Email delivery failed with error: #{error.class}, and message: #{error.message}"
+    )
+    StashEngine::UserMailer.error_report(@resource, error).deliver_now
   end
 end
