@@ -48,3 +48,6 @@ bundle exec rails checksums:validate_files >> /home/ec2-user/deploy/shared/log/v
 bundle exec rails checksums:generate_digests >> /home/ec2-user/deploy/shared/log/generate_file_digests.log 2>&1
 
 bundle exec rails internal:csp_reports >> /home/ec2-user/deploy/shared/log/csp_reports.log 2>&1
+
+# Automatic reports that run based on current date
+bundle exec rails automatic_reports:reports_by_date >> /home/ec2-user/deploy/shared/log/reports_by_date.log 2>&1
