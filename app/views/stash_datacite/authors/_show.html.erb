@@ -16,7 +16,7 @@
 		  	<% end %>
 		  	</ol>
 		  <% end %>
-		  <% if affs.present? || authors.with_credit.present? %>
+		  <% if authors.with_credit.present? %>
 		  	<p role="heading" aria-level="3">Contributions</p>
 		  	<p><%= credit_display(authors.with_credit).html_safe %></p>
 		  <% end %>
