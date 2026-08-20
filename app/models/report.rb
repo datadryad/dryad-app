@@ -13,11 +13,17 @@
 #  updated_at  :datetime         not null
 #
 class Report < ApplicationRecord
-
   enum(:report_type, %w[volume_and_age tats].to_h { |i| [i.to_sym, i] })
+  after_destroy :delete_s3_file
 
   def download_url
     s3 = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG.s3.reports_bucket)
     s3.presigned_download_url(s3_key: s3_key)
+  end
+
+  def delete_s3_file
+    s3 = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG.s3.reports_bucket)
+    pp " ----- deleting #{s3_key}"
+    s3.delete_file(s3_key: s3_key)
   end
 end
