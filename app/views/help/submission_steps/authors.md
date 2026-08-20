@@ -14,7 +14,7 @@ The author list can be reordered with a drag-and-drop mechanism.
 
 ### Required fields
 
-The name and at least one institutional affiliation are required for each author in the author list of your submission. Institutional affiliations are retrieved from[ ROR](https://ror.org/) (Research Organization Registry), and can be searched by name or by ROR ID URL (for example, [https://ror.org/00x6h5n95](https://ror.org/00x6h5n95)). Institution names not found on ROR can also be entered.
+The name and at least one institutional affiliation are required for each author in the author list of your submission. Institutional affiliations are retrieved from [ROR](https://ror.org/) (Research Organization Registry), and can be searched by name or by ROR ID URL (for example, [https://ror.org/00x6h5n95](https://ror.org/00x6h5n95)). Institution names not found on ROR can also be entered.
 
 Email addresses may be included for all authors, and are required for collaboration on the submission. At least one email address is required to be displayed on the public dataset page, for the data’s corresponding author.
 
@@ -35,3 +35,23 @@ One collaborator must be selected as the submitter. The submitter has several im
 The creator of the submission may select another author to be the submitter. If the submitter needs to be changed again after this selection is made, please contact the helpdesk.
 
 Only one collaborator may actively work on a submission at a time. To save your work and allow other collaborators to access the editor, click **Save & exit** from within the submission editor, or on the dataset listing on your [My datasets](/dashboard) page. If you are unable to edit a submission because the current editor is unresponsive, please contact the helpdesk.
+
+
+## Recognizing author contributions
+
+Different authors play different roles in the generation, curation, and publication of a dataset. To accurately recognize and share these varied contributions, we use an adapted list of [CRediT](https://credit.niso.org) roles that incorporates a [GREI-recommended subset for generalist repositories](https://zenodo.org/records/16953589). We ask that each author select one or more from a list of possible options.
+
+While we encourage use of this functionality, we do not mandate it. However, should a role for any author be selected, then at least one role is required for each author of the same dataset. It is the submitter's responsibility to ensure the accuracy of all authors' roles.
+
+Where supplied, contribution roles are then presented in the "Author information" section on the dataset landing page.
+
+### Role definitions
+
+<dl id="credit-defs">
+<% StashDatacite::CreditRole.all.map do |cr| %>
+  <div>
+    <dt><%= cr.credit_role %></dt>
+    <dd><%= cr.description %></dd>
+  </div>
+<% end %>
+</dl>
