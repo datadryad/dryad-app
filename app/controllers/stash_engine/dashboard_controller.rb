@@ -40,11 +40,6 @@ module StashEngine
       end
     end
 
-    def withdraw_button
-      @identifier = StashEngine::Identifier.find_by(id: params[:id])
-      respond_to(&:js)
-    end
-
     def contact_helpdesk
       respond_to(&:js)
     end

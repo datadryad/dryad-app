@@ -1,7 +1,0 @@
-<% if withdraw_check(@identifier) %>
-  <em>Withdraw requested</em>
-<% else %>  
-  <%= form_with(url: contact_helpdesk_form_path(id: @identifier.id), method: :get, local: false, class: 'o-button__inline-form') do %>
-    <button class="o-button__plain-text7" id="d<%=@identifier.id%>_delete" aria-labelledby="d<%=@identifier.id%>_delete d<%=@identifier.id%>_title"><i class="fas fa-trash-can" aria-hidden="true"></i>Withdraw</button>
-  <% end %>
-<% end %>
