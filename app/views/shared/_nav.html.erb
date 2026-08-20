@@ -70,6 +70,9 @@
             <% if current_user.superuser? %>
               <li><%= link_to 'Logs & statuses', status_dashboard_path %>
             <% end %>
+            <% if current_user.min_curator? %>
+              <li><%= link_to 'Reports', admin_reports_path %>
+            <% end %>
           </ul>
         <% else %>
         <%= link_to 'My datasets', dashboard_path, class: 'js-nav-out border-left' %>
