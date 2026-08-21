@@ -481,16 +481,27 @@ module Reminders
             subject.auto_withdraw
           end
 
-          it 'sends only one email ever' do
+          it 'sends only one email per year' do
             Timecop.travel(1.year.from_now) do
               subject.send(:create_activity, 'withdrawn_email_notice', resource)
             end
             expect(StashEngine::ResourceMailer).to receive(:send_set_to_withdrawn_notification).never
 
-            [1.second, 1.day, 2.week, 1.month, 10.years].each do |period|
+            [1.second, 1.day, 2.week, 1.month, 1.year - 1.minute].each do |period|
               Timecop.travel(1.year.from_now + period) do
                 subject.auto_withdraw
               end
+            end
+          end
+
+          it 'sends another email each year' do
+            Timecop.travel(Time.current) do
+              subject.send(:create_activity, 'withdrawn_email_notice', resource)
+            end
+            expect(StashEngine::ResourceMailer).to receive(:send_set_to_withdrawn_notification).once
+
+            Timecop.travel(1.year.from_now) do
+              subject.auto_withdraw
             end
           end
         end
@@ -541,10 +552,21 @@ module Reminders
             end
             expect(StashEngine::ResourceMailer).to receive(:send_set_to_withdrawn_notification).never
 
-            [1.second, 1.day, 2.week, 1.month, 10.years].each do |period|
+            [1.second, 1.day, 2.week, 1.month, 1.year - 1.minute].each do |period|
               Timecop.travel(1.year.from_now + period) do
                 subject.auto_withdraw
               end
+            end
+          end
+
+          it 'sends another email each year' do
+            Timecop.travel(1.year.from_now) do
+              subject.send(:create_activity, 'withdrawn_email_notice', resource)
+            end
+            expect(StashEngine::ResourceMailer).to receive(:send_set_to_withdrawn_notification).once
+
+            Timecop.travel(2.year.from_now) do
+              subject.auto_withdraw
             end
           end
 
