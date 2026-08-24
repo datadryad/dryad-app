@@ -361,6 +361,7 @@ Rails.application.routes.draw do
     get 'gmail_auth', to: 'gmail_auth#index'
 
     resource :pots, only: [:show]
+    resources :admin_reports, only: [:index]
   end
 
   get 'research_integrity', to: 'research_integrity_case#index'
