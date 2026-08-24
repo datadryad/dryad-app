@@ -154,7 +154,7 @@
     "jquery-ui": "^1.13.2",
     "node": "^24.0",
     "normalize-scss": "^7.0.1",
-    "postcss": "^8.5.23",
+    "postcss": "^8.5.26",
     "react-test-renderer": "^18.0.0",
     "serve-static": "^1.16.1",
     "stylelint": "^16.0.0",
@@ -163,7 +163,6 @@
     "webpack-dev-server": "^6.0"
   },
   "resolutions": {
-    "nanoid": "<4.0.0",
     "prosemirror-model": "^1.25.4",
     "js-yaml": "^4.3.1",
     "picomatch": "^4.0.4",
