@@ -29,7 +29,7 @@ document.getElementById('cancel_dialog').addEventListener('click', (e) => {
   })
 <% end %>
 <% if @field == 'waiver' %>
-  <% if @identifier.payment_type == 'stripe' && @identifier.payment_id.starts_with?("in_") %>
+  <% if @identifier.payment_type == 'stripe' && @identifier.payment_id&.starts_with?("in_") %>
     document.getElementById('popup_submit').setAttribute('hidden', 'hidden');
   <% else %>
     document.getElementById('waiver_basis').addEventListener('change', (e) => {

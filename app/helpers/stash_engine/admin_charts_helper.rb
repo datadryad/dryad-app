@@ -40,7 +40,7 @@ module StashEngine
       sd = ActiveRecord::Base.connection.select_all(
         "select DATE_FORMAT(first_sub_date, '%Y-%m-%d') AS period, count(*) as count from (#{params[:sql]}) subquery GROUP BY period ORDER BY period"
       )
-      @subs = sd.to_a.reject { |h| h['period'].nil? }
+      @subs = sd.to_a.reject { |h| h.nil? || h['period'].nil? }
     end
 
     def queue_query
