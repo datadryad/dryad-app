@@ -230,7 +230,7 @@ module StashEngine
     end
 
     def google_drive_redirect?(status_code, redirected_to)
-      status_code >= 500 && redirected_to.include?('googleusercontent.com')
+      status_code >= 500 && redirected_to&.include?('googleusercontent.com')
     end
 
   end

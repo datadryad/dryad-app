@@ -209,6 +209,8 @@ module StashEngine
     def orcid_preprocessor
       @auth_hash = request.env['omniauth.auth']
       @params = request.env['omniauth.params']
+      return setup_orcid if @params.nil?
+
       if @params['origin'] == 'feedback'
         session[:target_page] = stash_url_helpers.feedback_path(m: @params['m'], l: @params['l'])
       elsif @params['origin'] == 'metadata'
