@@ -20,6 +20,7 @@ module FeeCalculator
       verify_new_payment_system
 
       if resource.present?
+        add_sponsored_amount(resource.total_file_size) if resource.hold_for_peer_review
         return no_payment_required if resource.identifier.old_system_valid_payer? || resource.hold_for_peer_review
 
         add_zero_fee(:service_tier)

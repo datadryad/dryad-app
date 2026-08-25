@@ -1,10 +1,11 @@
 import React, {useRef, useState, useEffect} from 'react';
+import {formatSizeUnits} from '../../../../lib/utils';
+import {useStore} from '../../../shared/store';
 import {ExitIcon} from '../../ExitButton';
-import Calculations from './Calculations';
 import CalculateFees, {formatCost} from '../../CalculateFees';
+import Calculations from './Calculations';
 import PPRSetting from './PPRSetting';
 import SubmitterAgreement from './SubmitterAgreement';
-import {useStore} from '../../../shared/store';
 
 function PaymentMessage({resource, fees}) {
   if (fees.dpc_sponsored) {
@@ -28,7 +29,17 @@ function PaymentMessage({resource, fees}) {
     )
   }
 
-  if (!fees.total) return null
+  if (!fees.total) {
+    if (fees.storage_sponsored) {
+      return (
+        <p>
+         There may be an additional <a href="/costs" target="blank">{
+            fees.storage_fee_label
+          }<ExitIcon /></a> to be paid when your {formatSizeUnits(resource.total_file_size)} dataset leaves Private for Peer Review status.
+        </p>
+      )
+    } else return null
+  }
 
   return (
     <p>
