@@ -1,0 +1,51 @@
+h1 {
+  margin-bottom: 0
+}
+
+pre {
+  font-size: .98rem;
+}
+
+#configuration {
+  display: grid;
+  grid-template-columns: 1.5fr 60px 1fr;
+  gap: 2ch;
+
+  h3, pre {
+    margin: 0;
+  }
+}
+
+.payment-tables {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 2ch;
+  
+  h3 {
+    margin: 0;
+  }
+
+  table  {
+    font-size: .98rem;
+    width: 300px;
+  }
+}
+
+.align-end {
+  text-align: right;
+}
+
+.details-box {
+  border: 1px solid #ccc;
+  padding: 0 10px 10px;
+}
+
+.columns-details-box {
+  display: flex;
+
+  .details-box {
+    width: 50%;
+  }
+}

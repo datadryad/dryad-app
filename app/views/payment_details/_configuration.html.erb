@@ -1,0 +1,61 @@
+<div>
+<% if @sponsor_details.type == 'StashEngine::Tenant' %>
+  <% if @sponsor.payment_sponsor&.payment_configuration&.payment_plan&.present? %>
+    <b>Plan:</b> <%= @sponsor.payment_sponsor&.payment_configuration&.payment_plan&.humanize %><br/>
+    <b>Covers LDF:</b> <%= @sponsor.payment_sponsor&.payment_configuration&.covers_ldf ? "Yes" : "No" %>
+    <% if @sponsor.payment_sponsor&.payment_configuration&.covers_ldf %>
+      <% if @sponsor.payment_sponsor.payment_configuration.ldf_limit.present? %>
+        (Up to <%= filesize(ESTIMATED_FILES_SIZE.find{|tier| tier[:tier] == @sponsor.payment_sponsor.payment_configuration.ldf_limit }[:range].max) %>)
+      <% end %>
+      <% if @sponsor.payment_sponsor.payment_configuration.yearly_ldf_limit.present? %>
+        <br/><b>Remaining LDF commitment:</b> $<%= @sponsor.payment_sponsor.payment_configuration.yearly_ldf_limit - SponsoredPaymentLog.for_current_year.where(payer: @sponsor.payment_sponsor.payers_sponsored).sum(:ldf) %>
+      <% end %>
+      <% if @sponsor.payment_sponsor.payment_configuration.ldf_limit_notification.present? %>
+        <br/><b>LDF contacts:</b> <%= @sponsor.payment_sponsor.payment_configuration.ldf_limit_notification&.join(', ') %>
+      <% end %>
+    <% end %>
+    <% if @sponsor.sponsor_id %><br/><b>Inherited from:</b> <a href="?id=<%= @sponsor.sponsor_id %>&type=<%=@sponsor_details.type %>"><%= @sponsor.sponsor_id %></a><% end %>
+  <% end %>
+<% elsif @sponsor_details.type == 'StashEngine::JournalOrganization' %>
+  <% if @sponsor.top_level_org.payment_configuration&.payment_plan&.present? %>
+    <b>Plan:</b> <%= @sponsor.top_level_org.payment_configuration&.payment_plan&.humanize %><br/>
+    <b>Covers LDF:</b> <%= @sponsor.payment_configuration&.covers_ldf ? "Yes" : "No" %>
+    <% if @sponsor.payment_configuration&.covers_ldf %>
+      <% if @sponsor.payment_configuration.ldf_limit.present? %>
+        (Up to <%= filesize(ESTIMATED_FILES_SIZE.find{|tier| tier[:tier] == @sponsor.payment_configuration.ldf_limit }[:range].max) %>)
+      <% end %>
+      <% if @sponsor.payment_configuration.yearly_ldf_limit.present? %>
+        <br/><b>Remaining LDF commitment:</b> $<%= @sponsor.payment_configuration.yearly_ldf_limit - SponsoredPaymentLog.for_current_year.where(payer: @sponsor.payers_sponsored).sum(:ldf) %>
+      <% end %>
+      <% if @sponsor.payment_configuration.ldf_limit_notification.present? %>
+        <br/><b>LDF contacts:</b> <%= @sponsor.payment_configuration.ldf_limit_notification&.join(', ') %>
+      <% end %>
+    <% end %>
+    <% if @sponsor.parent_org_id %>
+      <br/><b>Inherited from:</b> <a href="?id=<%= @sponsor.parent_org_id %>&type=<%=@sponsor_details.type %>"><%= @sponsor.parent_org.name %></a>
+    <% end %>
+  <% end %>
+<% else %>
+  <% if @sponsor.payment_sponsor&.payment_configuration&.payment_plan&.present? %>
+    <b>Plan:</b> <%= @sponsor.payment_sponsor&.payment_configuration&.payment_plan&.humanize %><br/>
+    <b>Covers LDF:</b> <%= @sponsor.limits_sponsor&.payment_configuration&.covers_ldf ? "Yes" : "No" %>
+    <% if @sponsor.limits_sponsor&.payment_configuration&.covers_ldf %>
+      <% if @sponsor.limits_sponsor.payment_configuration.ldf_limit.present? %>
+        (Up to <%= filesize(ESTIMATED_FILES_SIZE.find{|tier| tier[:tier] == @sponsor.limits_sponsor.payment_configuration.ldf_limit }[:range].max) %>)
+      <% end %>
+      <% if @sponsor.limits_sponsor.payment_configuration.yearly_ldf_limit.present? %>
+        <br/><b>Remaining LDF commitment:</b> $<%= @sponsor.limits_sponsor.payment_configuration.yearly_ldf_limit - SponsoredPaymentLog.for_current_year.where(payer: @sponsor.limits_sponsor.payers_sponsored).sum(:ldf) %>
+      <% end %>
+      <% if @sponsor.limits_sponsor.payment_configuration.ldf_limit_notification.present? %>
+        <br/><b>LDF contacts:</b> <%= @sponsor.limits_sponsor.payment_configuration.ldf_limit_notification&.join(', ') %>
+      <% end %>
+    <% end %>
+    <% if @sponsor.sponsor_id %>
+      <% arr = [@sponsor.limits_sponsor, @sponsor.payment_sponsor].uniq %>
+      <br/><b>Inherited from:</b> <%= arr.map {|s| "<a href=\"?id=#{ s.id}&type=#{s.class}\">#{s.name}</a>" }.join(', ').html_safe %>
+    <% end %>
+  <% end %>
+<% end %>
+</div>
+<h3>JSON:</h3>
+<pre><code><%= JSON.pretty_generate(@service.payment_configuration&.attributes) %></code></pre>
