@@ -15,8 +15,6 @@
     </div>
     <pre><code><%= JSON.pretty_generate(@payment_sponsor.payment_configuration&.attributes) %></code></pre>
   </div>
-  <% else %>
-    <p>No payment sponsor</p>
   <% end %>
   <% if @limits_sponsor %>
   <div>
@@ -26,8 +24,6 @@
     </div>
     <pre><code><%= JSON.pretty_generate(@limits_sponsor.payment_configuration&.attributes) %></code></pre>
   </div>
-  <% else %>
-    <p>No limits sponsor</p>
   <% end %>
   <div>
     <h3>Identifier</h3>
