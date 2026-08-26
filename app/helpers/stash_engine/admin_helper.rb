@@ -14,7 +14,7 @@ module StashEngine
 
       content_tag :div do
         link_to '<i class="fas fa-receipt" aria-hidden="true"></i>'.html_safe, payment_details_identifier_path(id: identifier_id),
-                { 'aria-label': 'Payment details', title: 'Payment details' }
+                { 'aria-label': 'Developer details', title: 'Developer details' }
       end
     end
 
@@ -23,7 +23,7 @@ module StashEngine
 
       content_tag :div do
         link_to '<i class="fas fa-receipt" aria-hidden="true"></i>'.html_safe, payment_details_sponsor_path(id: payer.id, type: payer.class.name),
-                { 'aria-label': 'Developer details', title: 'Developer details' }
+                { 'aria-label': 'Payment details', title: 'Payment details' }
       end
     end
   end
