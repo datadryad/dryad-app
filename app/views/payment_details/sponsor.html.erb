@@ -1,0 +1,120 @@
+<%= stylesheet_link_tag 'payment_details' %>
+<div class="activity-log-header">
+<div>
+  <h1>Payment details: <%= @sponsor_details.name %></h1>
+  <code><%= @sponsor_details.type %>.find(<%= @sponsor_details.id %>)</code>
+</div>
+<p style="color: <%= @sponsor_details.enabled ? '#3c763d' : 'rgb(209, 44, 29)'%>"><%= @sponsor_details.enabled ? 'Enabled' : 'Disabled' %></p>
+</div>
+
+<div class="admin-dashboard-results">
+  <h2>Configuration</h2>
+  <% if @sponsor_details.type != 'StashEngine::Journal' && policy(@sponsor).edit? %>
+    <%= form_with(url: payment_details_edit_path(id: @sponsor.id, type: @sponsor_details.type), method: :get, local: false) do %>
+      <button class="c-admin-edit-icon" aria-label="Edit payment details" aria-haspopup="dialog" id="edit_button_<%= @sponsor.id %>">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+      </button>
+    <% end %>
+  <% end %>
+</div>
+<div id="configuration">
+  <%= render partial: 'configuration' %>
+</div>
+
+<h2>Calculations</h2>
+<p>Calculation year: <%= @calculation_year %></p>
+<div class="payment-tables">
+  <table>
+    <caption>Payment totals</caption>
+    <tr>
+      <th scope="row">Total DPC</th>
+      <td class="align-end"><%= number_to_currency(@service.total_dpc) %></td>
+    </tr>
+    <tr>
+      <th scope="row">DPC dataset count</th>
+      <td class="align-end"><%= number_with_delimiter(@identifiers.where.not(pub_state: 'withdrawn').count) %></td>
+    </tr>
+    <tr>
+      <th scope="row">Total LDF</th>
+      <td class="align-end"><%= number_to_currency(@service.total_ldf) %></td>
+    </tr>
+    <tr>
+      <th scope="row">Total</th>
+      <td class="align-end"><%= number_to_currency(@service.total_dpc + @service.total_ldf) %></td>
+    </tr>
+  </table>
+  <table>
+    <caption>LDF calculations</caption>
+    <tr>
+      <th scope="row">LDF Commitment</th>
+      <td class="align-end"><%= number_to_currency(@service.payment_configuration&.yearly_ldf_limit) %></th>
+    </tr>
+    <tr>
+      <th scope="row">LDF Reserved</th>
+      <td class="align-end"><%= number_to_currency(@service.reserved_ldf) %></td>
+    </tr>
+    <tr>
+      <th scope="row">LDF Spent</th>
+      <td class="align-end"><%= number_to_currency(@service.spent_ldf) %></td>
+    </tr>
+    <tr>
+      <th scope="row">LDF Remaining</th>
+      <td class="align-end">
+        <% if @service.payment_configuration&.yearly_ldf_limit.present? %>
+          <%= number_to_currency(@service.payment_configuration&.yearly_ldf_limit.to_i - @service.total_ldf) %></td>
+        <% end %>
+    </tr>
+  </table>
+</div>
+
+<h3 id="id_head"><%= number_with_delimiter(@identifiers.count) %> datasets: </h3>
+<div class="table-wrapper c-lined-table-wrapper" style="margin-top: .5rem" tabindex="0" role="region" aria-labelledby="id_head">
+  <table class="c-lined-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>DOI</th>
+        <th>Version count</th>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Status date</th>
+        <th>Current size</th>
+        <th>Last invoiced size</th>
+        <th>Sponsored LDF</th>
+        <th>User paid</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @identifiers.includes(:payments, latest_resource: [:last_curation_activity]).each do |ident| %>
+      <% res = ident.latest_resource %>
+      <tr>
+        <td><%= link_to ident.id, activity_log_path(id: ident.id) %></td>
+        <td><%= ident.identifier %></td>
+        <td><%= ident.resources.count %></td>
+        <td width="200px"><%= res.title %></td>
+        <td><%= res.last_curation_activity.status %></td>
+        <td class="c-lined-table__digits"><%= res.last_curation_activity.created_at %></td>
+        <td class="align-end c-lined-table__digits"><%= filesize res.total_file_size %></td>
+        <td class="align-end c-lined-table__digits"><%= filesize ident.last_invoiced_file_size %></td>
+        <td class="align-end c-lined-table__digits">
+          <%
+            sum = ident.sponsored_payment_logs.sum(:ldf)
+            if sum > 0
+          %>
+            <%= number_to_currency(sum) %>
+          <% end %>
+        </td>
+
+        <td class="align-end c-lined-table__digits">
+          <%
+            sum = ident.payments.paid.sum(:amount)
+            if sum > 0
+          %>
+            <%= number_to_currency(sum) %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>

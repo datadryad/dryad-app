@@ -36,7 +36,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
         it 'user pays LDF value' do
           build_min_dataset(resource_file_size: '53_200_000_000')
 
-          expect(page).to have_content('This 53.2 GB dataset has a Large data fee of $464.00.')
+          expect(page).to have_content('This 53.2 GB dataset has a Large Data Fee of $464.00.')
           expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
           expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
         end
@@ -48,7 +48,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
         it 'sponsored user does not pay anything' do
           build_min_dataset(resource_file_size: '53_200_000_000')
 
-          expect(page).not_to have_content('Large data fee')
+          expect(page).not_to have_content('Large Data Fee')
           expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
           expect(page).to have_css('button', exact_text: 'Submit for publication')
         end
@@ -63,7 +63,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
             it 'sponsored user does not pay anything' do
               build_min_dataset(resource_file_size: '13_200_000_000')
 
-              expect(page).not_to have_content('Large data fee')
+              expect(page).not_to have_content('Large Data Fee')
               expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
               expect(page).to have_css('button', exact_text: 'Submit for publication')
             end
@@ -73,7 +73,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
             it 'user pays only the difference' do
               build_min_dataset(resource_file_size: '123_200_000_000')
 
-              expect(page).to have_content('This 123.2 GB dataset has a Large data fee overage of $659.00')
+              expect(page).to have_content('This 123.2 GB dataset has a Large Data Fee of $659.00')
               expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
               expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
             end
@@ -90,7 +90,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
             it 'sponsored user does not pay anything' do
               build_min_dataset(resource_file_size: '53_200_000_000')
 
-              expect(page).not_to have_content('Large data fee')
+              expect(page).not_to have_content('Large Data Fee')
               expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
               expect(page).to have_css('button', exact_text: 'Submit for publication')
             end
@@ -100,7 +100,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
             it 'user pays the entire amount' do
               build_min_dataset(resource_file_size: '123_200_000_000')
 
-              expect(page).to have_content('This 123.2 GB dataset has a Large data fee of $1,123.00')
+              expect(page).to have_content('This 123.2 GB dataset has a Large Data Fee of $1,123.00')
               expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
               expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
             end
@@ -115,7 +115,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
           it 'sponsored user does not pay anything' do
             build_min_dataset(resource_file_size: '153_200_000_000')
 
-            expect(page).not_to have_content('Large data fee')
+            expect(page).not_to have_content('Large Data Fee')
             expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
             expect(page).to have_css('button', exact_text: 'Submit for publication')
           end

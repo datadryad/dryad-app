@@ -63,7 +63,7 @@ describe PaymentsService do
               price_data: {
                 currency: 'usd',
                 product_data: {
-                  name: "Large data fee for #{identifier} (11 GB) submitted by #{resource.submitter.name}"
+                  name: "Large Data Fee for #{identifier} (11 GB) submitted by #{resource.submitter.name}"
                 },
                 unit_amount: 25_900
               }

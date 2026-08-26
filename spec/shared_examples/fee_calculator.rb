@@ -29,11 +29,11 @@ end
 
 RSpec.shared_examples('it only covers limited LDF') do
   let(:new_files_size) { 100_000_000_000 }
-  let(:no_charges_response) { { storage_fee: 0, storage_fee_label: 'Large data fee overage' } }
+  let(:no_charges_response) { { storage_fee: 0, storage_fee_label: 'Large Data Fee' } }
 
   context 'with nil limit' do
     let(:ldf_limit) { nil }
-    let(:no_charges_response) { { storage_fee: 0, storage_fee_label: 'Large data fee' } }
+    let(:no_charges_response) { { storage_fee: 0, storage_fee_label: 'Large Data Fee' } }
 
     it { is_expected.to include(no_charges_response) }
   end
@@ -56,7 +56,7 @@ RSpec.shared_examples('it only covers limited LDF') do
     context 'with limit is under the new file size' do
       let(:ldf_limit) { 1 }
 
-      it { is_expected.to include({ storage_fee: 205, storage_fee_label: 'Large data fee overage' }) }
+      it { is_expected.to include({ storage_fee: 205, storage_fee_label: 'Large Data Fee' }) }
     end
   end
 end

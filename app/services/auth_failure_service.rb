@@ -19,15 +19,15 @@ class AuthFailureService
   end
 
   def create(error_type)
-    raise ArgumentError, "Invalid error_type: #{error_type}" unless error_type.to_s.in?(AuthFailure.error_types.keys)
-
-    AuthFailure.create!(
+    data = {
       ip: @request.remote_ip,
       url: @request.fullpath,
       params: @params,
       user_id: @current_user&.id,
       user_agent: @request.user_agent,
-      error_type: error_type
-    )
+      error_type: error_type,
+      time: Time.now
+    }
+    Rails.logger.error "AuthFailure: #{data.inspect}"
   end
 end
