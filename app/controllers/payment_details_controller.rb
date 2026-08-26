@@ -1,12 +1,11 @@
 class PaymentDetailsController < StashEngine::ApplicationController
   before_action :require_user_login
   before_action :set_sponsor, except: :identifier
+  before_action :setup_paging, only: :sponsor
 
   def sponsor
     authorize current_user, policy_class: PaymentDetailsPolicy
-
-    @calculation_year = params[:year] || Date.today.year
-    @identifiers = @service.identifiers
+    @identifiers = @service.identifiers.page(@page).per(@page_size)
   end
 
   def edit
@@ -49,7 +48,14 @@ class PaymentDetailsController < StashEngine::ApplicationController
                  raise "Unknown sponsor type: #{params[:type]}"
                end
     @sponsor_details = PayerDetailsService.new(@sponsor).details
+    @calculation_year = params[:year] || Date.today.year
     @service = Payments::Sponsor.new(@sponsor, year: @calculation_year)
+  end
+
+  def setup_paging
+    @page = params[:page] || 1
+    @page_size = 50 if params[:page_size].blank? || params[:page_size].to_i == 0
+    @page_size ||= params[:page_size].to_i
   end
 
   def edit_params
