@@ -205,6 +205,8 @@ export default function UploadFiles({
         interval.current = null;
       }
     } else {
+      if(!current) return;
+
       console.log('polling for Frictionless report updates', pollingCount);
       // these are files with remaining checks
       const toCheck = chosenFiles.filter((f) => (f?.id && f?.status === 'Uploaded' && f?.tabularCheckStatus === TabularCheckStatus.checking));

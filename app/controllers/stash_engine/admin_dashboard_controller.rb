@@ -10,7 +10,7 @@ module StashEngine
     before_action :require_user_login
     before_action :require_admin
     protect_from_forgery except: :results
-    before_action :setup_paging, only: %i[results deleted auth_failures]
+    before_action :setup_paging, only: %i[results deleted]
     before_action :setup_limits, only: %i[index results]
     before_action :setup_search, only: %i[index results]
     before_action :load, only: %i[edit update]

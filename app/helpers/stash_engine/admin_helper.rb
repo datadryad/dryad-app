@@ -10,18 +10,20 @@ module StashEngine
     end
 
     def identifier_payment_details_debugger(identifier_id)
-      return unless current_user.superuser?
+      return unless current_user.system_user?
 
       content_tag :div do
-        link_to 'Payment details page', identifier_payment_details_hidden_path(id: identifier_id)
+        link_to '<i class="fas fa-receipt" aria-hidden="true"></i>'.html_safe, payment_details_identifier_path(id: identifier_id),
+                { 'aria-label': 'Payment details', title: 'Payment details' }
       end
     end
 
-    def payer_payment_details_debugger(payer, text = 'Details')
-      return unless current_user.superuser?
+    def payer_payment_details_debugger(payer)
+      return unless current_user.system_user?
 
       content_tag :div do
-        link_to text, sponsor_payment_details_hidden_path(id: payer.id, type: payer.class.name)
+        link_to '<i class="fas fa-receipt" aria-hidden="true"></i>'.html_safe, payment_details_sponsor_path(id: payer.id, type: payer.class.name),
+                { 'aria-label': 'Developer details', title: 'Developer details' }
       end
     end
   end

@@ -338,7 +338,6 @@ Rails.application.routes.draw do
 
     # Administrative Status Dashboard that displays statuses of external dependencies and logs
     get 'status_dashboard', to: 'status_dashboard#show'
-    match 'status_dashboard/auth_failures', to: 'status_dashboard#auth_failures', via: %i[get post], as: 'auth_failures'
 
     # Publication updater page - Allows admins to accept/reject metadata changes from external sources like Crrossref
     get 'publication_updater', to: 'publication_updater#index'
@@ -364,6 +363,12 @@ Rails.application.routes.draw do
     resource :pots, only: [:show]
     resources :admin_reports, only: [:index]
   end
+
+  # payment_details
+  get 'payment_details/sponsor', to: 'payment_details#sponsor'
+  get 'payment_details/identifier', to: 'payment_details#identifier'
+  get 'payment_details/edit', to: 'payment_details#edit'
+  post 'payment_details/update', to: 'payment_details#update'
 
   get 'research_integrity', to: 'research_integrity_case#index'
   get 'research_integrity/history', to: 'research_integrity_case#history'
@@ -548,6 +553,20 @@ Rails.application.routes.draw do
   get '/cedar_word_bank/:id', to: 'cedar_word_bank#edit', as: 'cedar_word_bank_edit'
   post '/cedar_word_bank/:id', to: 'cedar_word_bank#update', as: 'cedar_word_bank_update'
 
+  resource :hidden, only: [] do
+    collection do
+      get :file_validation
+
+      resources :files, only: [] do
+        get "/fix_file_size/:value", to: 'hiddens#fix_file_size', as: 'hidden_fix_file_size'
+        get :validate, to: 'hiddens#validate', as: 'hidden_validate_file'
+        get :recreate_digest, to: 'hiddens#recreate_digest', as: 'hidden_recreate_digest'
+      end
+    end
+  end
+
+  post '/csp-violation-report-endpoint', to: 'csp_violation_reports#create'
+
   ########################## Redirects ######################################
 
   # Routing to redirect old Dryad URLs to their correct locations in this system
@@ -608,20 +627,4 @@ Rails.application.routes.draw do
   get '/resource/:doi_prefix/:doi_suffix*file',
       constraints: { doi_prefix: /doi:10.\d{4,9}/i, doi_suffix: /[A-Z0-9]+\.[A-Z0-9]+/i },
       to: redirect{ |p, req| "/dataset/#{p[:doi_prefix]}/#{p[:doi_suffix]}" }
-
-  resource :hidden, only: [] do
-    collection do
-      get :file_validation
-
-      resources :files, only: [] do
-        get "/fix_file_size/:value", to: 'hiddens#fix_file_size', as: 'hidden_fix_file_size'
-        get :validate, to: 'hiddens#validate', as: 'hidden_validate_file'
-        get :recreate_digest, to: 'hiddens#recreate_digest', as: 'hidden_recreate_digest'
-      end
-      get :sponsor_payment_details
-      get :identifier_payment_details
-    end
-  end
-
-  post '/csp-violation-report-endpoint', to: 'csp_violation_reports#create'
 end

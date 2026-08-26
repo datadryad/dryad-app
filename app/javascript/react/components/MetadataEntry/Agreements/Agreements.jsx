@@ -1,12 +1,45 @@
 import React, {useRef, useState, useEffect} from 'react';
+import {formatSizeUnits} from '../../../../lib/utils';
+import {useStore} from '../../../shared/store';
+import {ExitIcon} from '../../ExitButton';
+import CalculateFees, {formatCost} from '../../CalculateFees';
 import Calculations from './Calculations';
-import CalculateFees from '../../CalculateFees';
 import PPRSetting from './PPRSetting';
 import SubmitterAgreement from './SubmitterAgreement';
-import {useStore} from '../../../shared/store';
 
-function PaymentMessage({resource}) {
-  if (resource.identifier.display_payer?.id) return <p>You will be asked to pay this fee upon submission.</p>;
+function PaymentMessage({resource, fees}) {
+  if (fees.dpc_sponsored) {
+    const partner = resource.identifier.display_payer
+    const partner_name = Object.hasOwn(partner, 'name') && partner.name || Object.hasOwn(partner, 'title') && partner.title || partner.long_name
+    return (
+      <>
+        <p>
+          {fees.total ? 
+            'You will be asked to pay this fee upon submission.' : 
+            <>All <a href="/costs" target="blank">data publishing fees<ExitIcon/></a> are covered by your sponsorship.</>
+          }
+        </p>
+        <p>
+          The total fees are {formatCost(fees.dpc_sponsored + fees.storage_sponsored + fees.storage_fee)}.
+          The {partner_name} has sponsored the base Data Publishing Charge ({formatCost(fees.dpc_sponsored)}){
+            fees.storage_sponsored ? ` and Large Data Fee (${formatCost(fees.storage_sponsored)})` : ''}.
+        </p>
+      </>
+      // if (Object.hasOwn(partner, 'long_name')) <p>For questions about your sponsorship, please contact {?}</p>
+    )
+  }
+
+  if (!fees.total) {
+    if (fees.storage_sponsored) {
+      return (
+        <p>
+         There may be an additional <a href="/costs" target="blank">{
+            fees.storage_fee_label
+          }<ExitIcon /></a> to be paid when your {formatSizeUnits(resource.total_file_size)} dataset leaves Private for Peer Review status.
+        </p>
+      )
+    } else return null
+  }
 
   return (
     <p>
@@ -86,9 +119,7 @@ export default function Agreements({
             : (
               <>
                 <CalculateFees resource={resource} fees={fees} ppr={ppr} />
-                {fees && fees.total ? (
-                  <PaymentMessage resource={resource} />
-                ) : null }
+                <PaymentMessage resource={resource} fees={fees} />
               </>
             )}
         </>
