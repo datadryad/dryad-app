@@ -79,6 +79,10 @@ export default function Agreements({
     if (preview || current) updateStore({refreshDpcStatus: true});
   }, [current, preview]);
 
+  useEffect(() => {
+    updateStore({refreshFees: true})
+  }, [ppr])
+
   if (Object.keys(dpc).length === 0) {
     return (
       <p><i className="fas fa-spinner fa-spin" role="img" aria-label="Loading..." /></p>
