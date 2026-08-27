@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ClassLength
 module FeeCalculator
   class BaseService
     attr_reader :options, :resource
@@ -121,7 +122,7 @@ module FeeCalculator
     private
 
     def sponsored_limits
-      @sponsored_limits ||=  PayersService.new(@payer_record).sponsored_limits
+      @sponsored_limits ||= PayersService.new(@payer_record).sponsored_limits
     end
 
     def verify_new_payment_system
@@ -277,3 +278,4 @@ module FeeCalculator
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
