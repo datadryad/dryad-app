@@ -30,7 +30,7 @@ function PaymentMessage({resource, fees}) {
   }
 
   if (!fees.total) {
-    if (fees.storage_sponsored) {
+    if (fees.ppr_warning) {
       return (
         <p>
          There may be an additional <a href="/costs" target="blank">{
