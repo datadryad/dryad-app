@@ -32,7 +32,7 @@ module StashEngine
       @proposed_change.approved!
       @proposed_change.reload
 
-      PublicationJob.perform_async(proposed_change.resource.last_curation_activity_id) if @proposed_change.resource.status_published?
+      PublicationJob.perform_async(@proposed_change.resource.last_curation_activity_id) if @proposed_change.resource.status_published?
 
       @proposed_change.reload
       respond_to(&:js)
