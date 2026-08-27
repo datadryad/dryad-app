@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ClassLength
 module FeeCalculator
   class BaseService
     attr_reader :options, :resource
@@ -11,8 +12,8 @@ module FeeCalculator
       @payer = PayersService.new(@payer_record).payment_sponsor if @payer_record
 
       @payment_plan_is_2025 = resource ? resource.identifier.payer_2025?(@payer) : false
-      @covers_ldf = resource ? PayersService.new(@payer_record).sponsored_limits&.covers_ldf : false
-      @ldf_limit = resource ? PayersService.new(@payer_record).sponsored_limits&.ldf_limit : nil
+      @covers_ldf = resource ? sponsored_limits&.covers_ldf : false
+      @ldf_limit = resource ? sponsored_limits&.ldf_limit : nil
     end
 
     def call
@@ -21,7 +22,7 @@ module FeeCalculator
 
       if resource.present?
         # add any ldf to indicate ppr warning should be shown
-        add_sponsored_amount(resource.total_file_size) if resource.hold_for_peer_review
+        ppr_warning(resource.total_file_size) if resource.hold_for_peer_review
         return no_payment_required if resource.identifier.old_system_valid_payer? || resource.hold_for_peer_review
 
         add_zero_fee(:service_tier)
@@ -77,8 +78,15 @@ module FeeCalculator
 
     def add_sponsored_amount(amount = nil)
       add_storage_fee_difference(amount)
-      @sum_options[:storage_sponsored] = price_by_range(storage_fee_tiers, amount)
+      @sum_options[:storage_sponsored] = sponsored_limits&.covers_ldf ? ldf_sponsored_amount : 0
       add_invoice_fee
+    end
+
+    def ppr_warning(amount = nil)
+      return unless sponsored_limits&.ldf_limit || sponsored_limits&.yearly_ldf_limit
+
+      add_storage_fee_difference(amount)
+      @sum_options[:ppr_warning] = ldf_sponsored_amount > 0
     end
 
     def ldf_sponsored_amount(paid_storage_size: nil)
@@ -112,6 +120,10 @@ module FeeCalculator
     end
 
     private
+
+    def sponsored_limits
+      @sponsored_limits ||= PayersService.new(@payer_record).sponsored_limits
+    end
 
     def verify_new_payment_system
       return if resource.blank? || !resource.identifier.old_payment_system?
@@ -266,3 +278,4 @@ module FeeCalculator
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
