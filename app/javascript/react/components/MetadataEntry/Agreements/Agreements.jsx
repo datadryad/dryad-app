@@ -30,7 +30,7 @@ function PaymentMessage({resource, fees}) {
   }
 
   if (!fees.total) {
-    if (fees.storage_sponsored) {
+    if (fees.ppr_warning) {
       return (
         <p>
          There may be an additional <a href="/costs" target="blank">{
@@ -78,6 +78,10 @@ export default function Agreements({
   useEffect(() => {
     if (preview || current) updateStore({refreshDpcStatus: true});
   }, [current, preview]);
+
+  useEffect(() => {
+    updateStore({refreshFees: true})
+  }, [ppr])
 
   if (Object.keys(dpc).length === 0) {
     return (
