@@ -24,6 +24,10 @@ module StashEngine
     has_one :payment_configuration, as: :partner, dependent: :destroy
     has_many :payment_logs, class_name: 'SponsoredPaymentLog', as: :payer
 
-    scope :exemptions, -> { joins(:payment_configuration).where(enabled: true, payment_configurations: { covers_dpc: true }) }
+    scope :exemptions, -> {
+      joins(:payment_configuration)
+        .where(enabled: true, payment_configurations: { covers_dpc: true })
+        .where('deactivated_at IS NULL OR deactivated_at > ?', Time.current)
+    }
   end
 end
