@@ -142,7 +142,12 @@ module Reminders
         next if %w[published embargoed retracted].include?(resource.identifier&.calculated_pub_state)
 
         reminder_flag = 'withdrawn_email_notice'
-        last_reminder = resource.curation_activities.where('note LIKE ?', "%#{reminder_flag}%")&.last
+        # only continue if it wasn't auto-withdrawn in the past year
+        # this allows same dataset to be auto-withdrawn multiple times, but not twice in one year
+        last_reminder = resource.curation_activities
+          .where('note LIKE ?', "%#{reminder_flag}%")
+          .where('stash_engine_curation_activities.created_at >= ?', 1.year.ago)
+          .last
         next if last_reminder.present?
 
         status_updated = create_activity(reminder_flag, resource, status: 'withdrawn',
