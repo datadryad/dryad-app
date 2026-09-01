@@ -26,6 +26,7 @@ RSpec.feature 'JournalOrganizationAdmin', type: :feature do
         fill_in 'name', with: 'Test publisher entry'
         find('input[name=commit]').click
       end
+      sleep 1
       expect(page).not_to have_content('Enter a new publisher')
       expect(page).to have_content 'Test publisher entry'
       expect(StashEngine::JournalOrganization.all.length).to eql(4)
