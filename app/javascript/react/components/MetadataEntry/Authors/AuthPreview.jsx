@@ -17,12 +17,15 @@ const getAffs = (ar) => ar.map((a) => a.affiliations).flat().reduce((arr, aff) =
 const getRoles = (ar) => ar.reduce((arr, a) => {
   if (a.credit_roles.length) {
     const list = a.credit_roles.flat().map((r) => r.credit_role).join(', ')
-    arr.push(`${fullname(a)}: ${upCase(list.toLowerCase())}`)
+    arr.push([fullname(a), upCase(list.toLowerCase())])
   }
   return arr
 }, []);
 
-const fullname = (author) => [author?.author_first_name, author?.author_last_name].filter(Boolean).join(' ');
+const fullname = (author) => {
+  if (author?.author_org_name) return author.author_org_name;
+  return [author?.author_first_name, author?.author_last_name].filter(Boolean).join(' ');
+};
 const citename = (author) => {
   if (author?.author_org_name) return author.author_org_name;
   return [author?.author_last_name, author?.author_first_name].filter(Boolean).join(', ');
@@ -153,9 +156,15 @@ export default function AuthPreview({resource, previous, curator}) {
           <p role="heading" aria-level="2" style={{marginTop: '1em', fontSize: '1rem'}}><b>Contributions</b></p>
           <p>
             {roles.map((r, i) => (
-              <>{previous && roles[i] !== prev_roles?.[i] ? 
-                <ins>{roles[i]}</ins> : 
-                roles[i]}{previous && roles[i] !== prev_roles?.[i] && prev_roles?.[i] && <del>{prev_roles?.[i]}</del>}.</>
+              <>
+                {previous && roles[i] !== prev_roles?.[i] ? (
+                  <ins><em>{r[0]}:</em> {r[1]}</ins> 
+                ) : ( 
+                  <><em>{r[0]}:</em> {r[1]}</>
+                )}
+                {previous && r[1] !== prev_roles[i]?.[1] && prev_roles[i]?.[1] && <del><em>{prev_roles[i][0]}:</em> {prev_roles[i][1]}</del>}
+                {'. '}
+              </>
             ))}
           </p>
         </div>
@@ -166,7 +175,7 @@ export default function AuthPreview({resource, previous, curator}) {
             <del>Contributions</del>
           </p>
           <p>
-            {del_roles.map((r) => <del key={r}>{r}</del>)}
+            {del_roles.map((r) => <><del key={r}><em>{r[0]}:</em> {r[1]}</del>{'. '}</>)}
           </p>
         </div>
       )}
