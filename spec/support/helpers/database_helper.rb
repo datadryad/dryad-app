@@ -4,6 +4,7 @@ module DatabaseHelper
 
   def create_basic_dataset!
     resource = create(:resource, :paid, :submitted, created_at: 1.minute.ago, authors: 3.times.map { create(:author) })
+    resource.authors.each { |a| a.credit_role = create(:credit_role) }
     create(:data_file, resource: resource)
     create(:description, resource: resource, description_type: 'technicalinfo')
     create(:description, resource: resource, description_type: 'hsi_statement', description: nil)
