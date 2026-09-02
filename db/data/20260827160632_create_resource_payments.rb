@@ -3,9 +3,11 @@
 class CreateResourcePayments < ActiveRecord::Migration[8.0]
   def up
     # create resource payments records for old invoices
-    StashEngine::Identifier.where("stash_engine_identifiers.payment_type = 'stripe'").where.missing(:payments).distinct.each do |id|
+    StashEngine::Identifier.where("stash_engine_identifiers.payment_type = 'stripe' and payment_id like 'in_%'").where.missing(:payments).distinct.each do |id|
+      return if id.payments.present?
+      
       res = id.resources.with_public_metadata.first
-      payment = ResourcePayment.create(
+      ResourcePayment.create(
         resource_id: res.id,
         payment_type: id.payment_type,
         pay_with_invoice: true,
