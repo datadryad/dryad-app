@@ -23,9 +23,7 @@ function PaymentMessage({resource, fees}) {
           The {partner.name} has sponsored the base Data Publishing Charge ({formatCost(fees.dpc_sponsored)}){
             fees.storage_sponsored ? ` and Large Data Fee (${formatCost(fees.storage_sponsored)})` : ''}.
           {partner.contact && 
-            <> For questions about your sponsorship, please contact <a href={`mailto:${partner.contact}`}>
-              {partner.contact}
-            </a>.</>
+            <> For questions about your sponsorship, please contact <a href={`mailto:${partner.contact}`}>{partner.contact}</a>.</>
           }
         </p>
       </>
