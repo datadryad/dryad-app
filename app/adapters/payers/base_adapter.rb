@@ -10,6 +10,7 @@ module Payers
       {
         id: payer.id,
         name: name,
+        contact: contact,
         enabled: enabled
       }
     end
@@ -20,6 +21,10 @@ module Payers
 
     def enabled
       payer.enabled
+    end
+
+    def contact
+      payer.contact
     end
   end
 end
