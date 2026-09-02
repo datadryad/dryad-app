@@ -9,6 +9,7 @@
 #  ldf_limit_notification :text(65535)
 #  partner_type           :string(191)
 #  payment_plan           :integer
+#  submitter_contact      :text(65535)
 #  yearly_ldf_limit       :integer
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
@@ -19,6 +20,7 @@
 class PaymentConfiguration < ApplicationRecord
   has_paper_trail
   validate :email_array
+  validates :submitter_contact, format: { with: EMAIL_REGEX, message: '%{value} is not a valid email address' }, allow_blank: true
 
   belongs_to :partner, polymorphic: true, optional: true
 

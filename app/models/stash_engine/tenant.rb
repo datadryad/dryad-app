@@ -121,6 +121,10 @@ module StashEngine
       end
     end
 
+    def as_json
+      super(methods: :submitter_contact)
+    end
+
     def sponsored_deep
       s = sponsored
       sponsored&.each do |suborg|
@@ -145,6 +149,10 @@ module StashEngine
 
     def limits_sponsor
       payment_sponsor
+    end
+
+    def submitter_contact
+      payment_sponsor&.payment_configuration&.submitter_contact
     end
   end
 end

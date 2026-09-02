@@ -183,12 +183,8 @@ module StashEngine
       pub.update(publication_name: new_title, publication_issn: new_issn)
     end
 
-    def as_json(_options = {})
-      super(
-        include: {
-          payment_configuration: { only: %i[payment_plan covers_dpc covers_ldf ldf_limit yearly_ldf_fee_limit] }
-        }
-      )
+    def as_json
+      super(methods: :submitter_contact)
     end
 
     def sponsored_identifiers
@@ -202,6 +198,10 @@ module StashEngine
 
     def limits_sponsor
       sponsor
+    end
+
+    def submitter_contact
+      limits_sponsor&.payment_configuration&.submitter_contact
     end
   end
 end

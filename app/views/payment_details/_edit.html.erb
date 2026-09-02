@@ -22,6 +22,7 @@
       plan_options = [['', 'None']] + @sponsor.class::PAYMENT_PLANS.map { |p| [p, p.capitalize] }
       sponsor_id = @sponsor.has_attribute?(:parent_org_id) ? @sponsor.parent_org_id : nil
     %>
+    <h2>Partnership configuration</h2>
 
     <%= render '/stash_engine/payment_configuration/form', format: :html,
       sponsor_id: sponsor_id,

@@ -31,7 +31,7 @@ module StashEngine
                elsif institution_will_pay?
                  latest_resource&.tenant
                elsif journal_will_pay?
-                 @payer = journal
+                 journal
                end
       @payer
     end
