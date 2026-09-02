@@ -142,8 +142,8 @@ module StashEngine
 
     def display_payer
       sponsor = recorded_payer if published? && recorded_payer.present?
-      sponsor ||= payer.presence || {}
-      PayerDetailsService.new(sponsor).details.to_h
+      sponsor ||= payer
+      sponsor.present? ? PayerDetailsService.new(sponsor).details.to_h : {}
     end
 
     def institution_will_pay?
