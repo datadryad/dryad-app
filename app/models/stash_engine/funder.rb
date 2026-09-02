@@ -25,13 +25,5 @@ module StashEngine
     has_many :payment_logs, class_name: 'SponsoredPaymentLog', as: :payer
 
     scope :exemptions, -> { joins(:payment_configuration).where(enabled: true, payment_configurations: { covers_dpc: true }) }
-
-    def as_json
-      super(methods: :submitter_contact)
-    end
-
-    def submitter_contact
-      payment_configuration.submitter_contact
-    end
   end
 end
