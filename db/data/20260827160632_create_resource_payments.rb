@@ -12,8 +12,6 @@ class CreateResourcePayments < ActiveRecord::Migration[8.0]
         invoice_id: id.payment_id,
         created_at: res.first_published_status.created_at
       )
-      invoicer = Stash::Payments::StripeInvoicer.new(res.reload)
-      invoicer.mark_invoice_paid! if invoicer.invoice_paid?
     end
   end
 
