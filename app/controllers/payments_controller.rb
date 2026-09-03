@@ -66,14 +66,14 @@ class PaymentsController < ApplicationController
 
     invoice_id = params[:data][:object][:id]
     payment = ResourcePayment.where(pay_with_invoice: true, invoice_id: invoice_id).last
-    if payment
+    if payment && !payment.paid?
       payment.update(
         status: :paid,
         paid_at: Time.at(params[:data][:object][:status_transitions][:paid_at].to_i)
       )
-      CurationService.new(resource: id.latest_resource, user_id: 0, status: 'queued', note: 'Invoice has been paid').process
+      CurationService.new(resource: payment.resource, user_id: 0, status: 'queued', note: 'Invoice has been paid').process
     else
-      message = "No payment record for Invoice with ID #{invoice_id} flagged as paid."
+      message = "No payment record for Invoice with ID #{invoice_id} flagged as unpaid."
       Rails.logger.warn(message)
     end
 
