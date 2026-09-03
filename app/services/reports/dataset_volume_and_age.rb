@@ -18,9 +18,7 @@ module Reports
       file_contents = CSV.generate do |csv|
         csv << ['Identifier ID', 'DOI', 'Last status date', 'Age (day)']
         in_status_on_date.includes(:identifier, { resource: :process_date }).find_each do |ca|
-          entered_in_status = ca.resource.process_date.last_status_date
-          age_in_status = TimeInStatus.new(return_in: 'days').readable_time(datetime.to_i - entered_in_status.to_i)
-          csv << [ca.identifier_id, ca.identifier&.identifier, ca.resource.process_date.last_status_date, age_in_status]
+          csv << [ca.identifier_id, ca.identifier&.identifier, ca.resource.process_date.last_status_date, age_in_status(ca)]
         end
       end
       upload_to_s3(file_contents, @file_path)
@@ -48,6 +46,27 @@ module Reports
       StashEngine::CurationActivity
         .joins("inner join (#{latest_per_identifier.to_sql}) as latest on stash_engine_curation_activities.id=last_ca_id")
         .where(status: status, created_at: ..datetime)
+    end
+
+    def age_in_status(ca)
+      case status
+      when 'peer_review'
+        TimeInStatus.new(identifier: ca.identifier, return_in: 'days', up_to_date: datetime)
+          .last_time_in_status(ca.status, include_statuses: %w[in_progress])
+      when 'curation'
+        TimeInStatus.new(identifier: ca.identifier, return_in: 'days', up_to_date: datetime)
+          .last_time_in_status(ca.status, include_statuses: %w[in_progress queued], action_taken_by: :dryad)
+      else
+        entered_in_status = ca.resource.process_date.last_status_date
+        TimeInStatus.new(return_in: 'days').readable_time(datetime.to_i - entered_in_status.to_i)
+      end
+    end
+
+    def based_on_process_date(ca)
+      entered_in_status = ca.resource.process_date.last_status_date
+      datetime.to_i
+      entered_in_status.to_i
+      TimeInStatus.new(return_in: 'days').readable_time(datetime.to_i - entered_in_status.to_i)
     end
 
     def create_report_record
