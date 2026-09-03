@@ -101,7 +101,7 @@ export default function Agreements({
               <div className="callout">
                 <p>Payment for this submission is sponsored by <b>{resource.identifier.display_payer.name}</b></p>
               </div>
-              {resource.identifier.display_payer.type === 'StashEngine::Identifier' && 
+              {resource.identifier.display_payer.type === 'StashEngine::Tenant' && 
               (previous && resource.tenant_id !== previous.tenant_id) && <p className="del ins">Partner institution changed</p>}
             </>
           )}
