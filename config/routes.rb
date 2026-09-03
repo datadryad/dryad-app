@@ -571,7 +571,9 @@ Rails.application.routes.draw do
 
   # Routing to redirect old Dryad URLs to their correct locations in this system
   get '/pages/faq', to: redirect('/requirements')
-  get '/pages/jdap', to: redirect('docs/JointDataArchivingPolicy.pdf')
+  get '/pages/jdap', to: redirect('/docs/JointDataArchivingPolicy.pdf')
+  get '/pages/endangeredSpecies', to: redirect('/docs/EndangeredSpeciesData.pdf')
+  get '/pages/humanSubjectsData', to: redirect('/docs/HumanSubjectsData.pdf')
   get '/pages/membershipOverview', to: redirect('/join_us#our-membership')
   get '/stash/our_membership', to: redirect('/join_us#our-membership')
   get '/stash/our_community', to: redirect('/join_us#our-membership')
