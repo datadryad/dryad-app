@@ -151,7 +151,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
   describe '#resource_fee_calculator_url(resource)' do
     before do
       allow(FeeCalculatorService).to receive(:new).with(type).and_return(service_instance)
-      allow(service_instance).to receive(:calculate).with(options, resource: resource).and_return({ some_fee: 12 })
+      allow(service_instance).to receive(:calculate).with(options, resource: resource, payer_record: nil).and_return({ some_fee: 12 })
     end
 
     describe '#institutional fee' do
@@ -177,7 +177,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         end
 
         it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
+          expect(service_instance).to have_received(:calculate).with(options, resource: resource, payer_record: nil)
         end
       end
 
@@ -194,7 +194,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         end
 
         it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
+          expect(service_instance).to have_received(:calculate).with(options, resource: resource, payer_record: nil)
         end
       end
     end
@@ -223,7 +223,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         end
 
         it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
+          expect(service_instance).to have_received(:calculate).with(options, resource: resource, payer_record: nil)
         end
       end
 
@@ -240,7 +240,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         end
 
         it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
+          expect(service_instance).to have_received(:calculate).with(options, resource: resource, payer_record: nil)
         end
       end
     end
@@ -272,7 +272,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         end
 
         it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
+          expect(service_instance).to have_received(:calculate).with(options, resource: resource, payer_record: nil)
         end
       end
 
@@ -289,7 +289,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         end
 
         it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
+          expect(service_instance).to have_received(:calculate).with(options, resource: resource, payer_record: nil)
         end
       end
     end
@@ -315,7 +315,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         end
 
         it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
+          expect(service_instance).to have_received(:calculate).with(options, resource: resource, payer_record: nil)
         end
       end
 
@@ -332,7 +332,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         end
 
         it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
+          expect(service_instance).to have_received(:calculate).with(options, resource: resource, payer_record: nil)
         end
       end
     end
@@ -357,7 +357,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
       end
 
       it 'calls calculate on the service instance with the correct params' do
-        expect(service_instance).to have_received(:calculate).with(options, resource: resource)
+        expect(service_instance).to have_received(:calculate).with(options, resource: resource, payer_record: nil)
       end
     end
   end
