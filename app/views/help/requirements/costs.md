@@ -40,7 +40,7 @@ Authors not affiliated with a Dryad partner organization are asked to pay a DPC 
 </div>
 </div>
 
-Partner organizations sponsor data submissions up to 10 GB. A Large Data Fee applies to larger than 10 GB, payable by either the author or their sponsoring organization, depending on the specific partner agreement with Dryad. Large data fees are billed as follows:
+Partner organizations sponsor data submissions up to 10 GB. A Large Data Fee applies to datasets larger than 10 GB, payable by either the author or their sponsoring organization, depending on the specific partner agreement with Dryad. Large data fees are billed as follows:
 
 <div style="text-align: center;">
 <div class="table-wrapper" role="region" tabindex="0" style="width: 500px; max-width: 100%; margin: 0 auto">
