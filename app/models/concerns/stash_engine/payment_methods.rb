@@ -143,6 +143,7 @@ module StashEngine
     def display_payer
       sponsor = recorded_payer if published? && recorded_payer.present?
       sponsor ||= payer
+      sponsor = nil if sponsor.is_a?(StashEngine::User)
       sponsor.present? ? PayerDetailsService.new(sponsor).details.to_h : {}
     end
 
