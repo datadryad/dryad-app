@@ -620,6 +620,17 @@ dialog#submission-step[open] {
     }
   }
 
+  .aff-form fieldset[aria-invalid="true"] {
+    label{ color: black; }
+    input[type="checkbox"], input[type="radio"] {
+      border: thin solid black;
+    }
+  }
+
+  .aff-form:has(fieldset[aria-invalid="true"]) {
+    border: thin solid $red;
+  }
+
   label:has(input[type="checkbox"][aria-invalid="true"]) {
     color: $red;
   }
