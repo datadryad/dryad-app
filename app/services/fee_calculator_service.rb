@@ -22,7 +22,7 @@ class FeeCalculatorService
     calculator_class.constantize.new({}, resource: resource, payer_record: payer)
       .get_tier_by_value(
         ESTIMATED_FILES_SIZE,
-        limits.ldf_limit
+        limits&.ldf_limit
       )
   end
 

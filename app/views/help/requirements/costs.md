@@ -5,6 +5,13 @@ As a community-driven non-profit organization, Dryad is committed to enabling th
 
 Our Data Publishing Charge (DPC) is based on the variable costs of curating, publishing, and preserving a dataset.
 
+<div hidden>
+
+## Your Data Publishing Charge
+
+</div>
+
+<%= render partial: 'fee_calculator/individual' %>
 
 ## Author fees
 
@@ -33,7 +40,7 @@ Authors not affiliated with a Dryad partner organization are asked to pay a DPC 
 </div>
 </div>
 
-Partner organizations that sponsor DPCs fully cover author data submissions up to 10 GB. For datasets larger than 10 GB, a large data fee will be charged to either the author or their sponsoring organization, depending on the specific partner agreement with Dryad. Large data fees are billed as follows:
+Partner organizations sponsor data submissions up to 10 GB. A Large Data Fee applies to larger than 10 GB, payable by either the author or their sponsoring organization, depending on the specific partner agreement with Dryad. Large data fees are billed as follows:
 
 <div style="text-align: center;">
 <div class="table-wrapper" role="region" tabindex="0" style="width: 500px; max-width: 100%; margin: 0 auto">
@@ -62,7 +69,9 @@ Effective June 2024, Dryad's Data Publishing Charge cannot be paid using voucher
 
 ## Private for Peer Review Fee
 
-During submission, authors have the option to make their data [Private for Peer Review](help/submission_steps/peer_review). Private datasets are made available via a temporary, anonymous link suitable for double-anonymous peer review. Authors have the option to pay the full Data Publishing Charge at submission or pay a Private for Peer Review Fee of $50. The Private for Peer Review Fee is nonrefundable, but it is applied toward the balance of the [Data Publishing Charge](#author-fees) once the dataset advances to curation for publication.
+During submission, authors have the option to make their data [Private for Peer Review](help/submission_steps/peer_review). Private datasets are made available via a temporary, anonymous link suitable for double-anonymous peer review. 
+
+This service is free to authors affiliated with Dryad partners. Unsponsored authors have the option to pay the full Data Publishing Charge at submission or pay a Private for Peer Review Fee of $50. The Private for Peer Review Fee is nonrefundable, but it is applied toward the balance of the [Data Publishing Charge](#author-fees) once the dataset advances to curation for publication.
 
 When you&apos;re ready to make a dataset public, you can release it for curation. It will then advance through the Dryad screening and publication process.
 

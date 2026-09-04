@@ -508,6 +508,7 @@ Rails.application.routes.draw do
   get :discover, to: 'search#discover'
 
   get :fee_calculator, to: 'fee_calculator#calculate_fee', format: :json
+  get :fee_estimator, to: 'fee_calculator#calculate_estimate', format: :json
   get 'resource_fee_calculator/:id', to: 'fee_calculator#calculate_resource_fee', format: :json, as: :resource_fee_calculator
 
   resources :payments, only: [] do

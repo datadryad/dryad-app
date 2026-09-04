@@ -1,0 +1,43 @@
+<%= form_with(url: stash_url_helpers.fee_estimator_path, method: :get, local: false, html: {class: 'callout alt', style: 'padding: 0 2ch'} ) do |form| %>
+  <h2 style="font-weight: bold; text-align: center; padding-top: 1ch" id="your-data-publishing-charge">Check your Data Publishing Charge</h2>
+  <%= form.hidden_field :type, value: 'individual' %>
+  <%= form.hidden_field :payer_type %>
+  <%= form.hidden_field :payer_id %>
+  <p>Enter a few key details below to check whether your Dryad data publication is sponsored by one of our Partners, and estimate potential Data Publishing Charges.</p>
+  <p class="input-line center">
+    <%= form.label :institution_id, 'Your institutional affiliation:' %>
+    <%= form.select :institution_id, options_for_select([['Other', 'dryad']] + StashEngine::Tenant.connect_list.map{|t| [t.short_name, t.id]}), {}, {class: 'c-input__select'} %>
+  </p>
+  <div class="input-line center">
+    <%= render partial: 'stash_engine/shared/search_select', locals: {
+        id: 'journal',
+        label: 'Your journal:',
+        field_name: 'journal',
+        options_path: '/stash_datacite/publications/autocomplete?term=',
+        options_label: 'title',
+        options_value: 'id',
+        selected: {},
+    } %>
+  </div>
+  <p class="input-line center">
+    <%= form.label :storage_size, 'Estimated data size:' %>
+    <%= form.select :storage_size, options_for_select(FeeCalculator::IndividualService.new.storage_fee_tiers.map{|t| [t[:range].to_s.split('..').map{|n| filesize(n.to_i) }.join('-'), t[:range].to_s.split('..')[1]]}), {}, {class: 'c-input__select'} %>
+  </p>
+  <div class="input-line spaced" style="justify-content: stretch; flex-wrap: wrap;">
+    <h3 style="font-weight: bold" id="total_label">Estimate:</h3>
+    <div id="estimate_stack">
+      <output id="total_estimate" for="service_tier dpc_tier" aria-labelledby="total_label" aria-describedby="total_desc"></output>
+      <div id="ldf_info" role="status" style="font-size: .98rem"></div>
+    </div>
+  </div>
+  <p style="font-size: .98rem" id="total_desc">Fees are estimated based on available information and are subject to change based on the final submission.</p>
+<% end %>
+
+<template id="calc-loading"><i class="fa fa-spinner fa-spin" role="img" aria-label="Loading..."></i></template>
+<template id="unsponsored">Your data is not sponsored by a Dryad Partner. Your estimated Data Publishing Charge is <span class="cost"></span></template>
+<template id="sponsored">Your data is fully sponsored by <span class="org"></span>, a Dryad partner. You will not pay a fee.</template>
+<template id="large-data">Your data is partially sponsored by <span class="org"></span>, a Dryad partner sponsoring <span class="mod">datasets up to</span> <span class="size"></span>. Based on the size of your dataset, we estimate that you will owe <span class="cost"></span>.</template>
+<template id="ldf-note"><p>Support for Large Data is subject to available funds.</p></template>
+<template id="ldf-contact"> Please contact your institution via <a href=""></a> for more information.</template>
+
+<script type="text/javascript" src="<%= asset_path 'calculator_test.js'%>"></script>
