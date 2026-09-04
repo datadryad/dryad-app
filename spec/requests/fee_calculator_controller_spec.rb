@@ -362,6 +362,75 @@ RSpec.describe 'FeeCalculatorController', type: :request do
     end
   end
 
+  describe '#fee_estimator_url(resource)' do
+    let!(:dryad) { create(:tenant_dryad) }
+    let(:json) do
+      { dpc_fee: 0, dpc_sponsored: 150, service_fee: 0, storage_fee: 0, storage_fee_label: 'Large Data Fee', storage_sponsored: 0,
+        total: 0 }.stringify_keys!
+    end
+    let(:ldf) do
+      { dpc_fee: 0, dpc_sponsored: 150, service_fee: 0, storage_fee: 464, storage_fee_label: 'Large Data Fee', storage_sponsored: 0,
+        total: 464 }.stringify_keys!
+    end
+
+    describe '#institutional sponsorship' do
+      let(:type) { 'institution' }
+      let!(:tenant) { create(:tenant) }
+      let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: false) }
+
+      it 'is fully sponsored' do
+        get fee_estimator_url, params: { storage_size: 1000, type: type, payer_type: 'StashEngine::Tenant', payer_id: tenant.id, institution_id: tenant.id }
+
+        expect(response).to have_http_status(:ok)
+        expect(json_response).to eq(json)
+      end
+
+      it 'is not fully sponsored' do
+        get fee_estimator_url, params: { storage_size: 100_000_000_000, type: type, payer_type: 'StashEngine::Tenant', payer_id: tenant.id, institution_id: tenant.id }
+
+        expect(response).to have_http_status(:ok)
+        expect(json_response).to eq(ldf)
+      end
+    end
+
+    describe '#publisher sponsorship from journal' do
+      let(:type) { 'publisher' }
+      let(:org) { create(:journal_organization) }
+      let!(:journal) { create(:journal, sponsor: org) }
+      let!(:payment_conf) { create(:payment_configuration, partner: org, payment_plan: '2025', covers_ldf: false) }
+
+      it 'is fully sponsored' do
+        get fee_estimator_url, params: { storage_size: 1000, type: type, institution_id: dryad.id, payer_type: 'StashEngine::Journal', payer_id: journal.id }
+
+        expect(response).to have_http_status(:ok)
+        expect(json_response).to eq(json)
+      end
+
+      it 'is not fully sponsored' do
+        get fee_estimator_url, params: { storage_size: 100_000_000_000, type: type, institution_id: dryad.id, payer_type: 'StashEngine::Journal', payer_id: journal.id }
+
+        expect(response).to have_http_status(:ok)
+        expect(json_response).to eq(ldf)
+      end
+
+    end
+
+    describe '#individual unsponsored' do
+      let(:type) { 'individual' }
+      let(:options) { { storage_size: 1000, type: type, institution_id: dryad.id } }
+      let(:json) { { storage_fee: 150, storage_fee_label: 'Data Publishing Charge', total: 150 }.stringify_keys! }
+
+      before do
+        get fee_estimator_url, params: options
+      end
+
+      it 'is not sponsored' do
+        expect(response).to have_http_status(:ok)
+        expect(json_response).to eq(json)
+      end
+    end
+  end
+
   describe 'examples in documentation table' do
     context 'sample institutional fee calculation' do
       let(:type) { 'institution' }
