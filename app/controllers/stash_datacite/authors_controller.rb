@@ -160,6 +160,7 @@ module StashDatacite
     # find correct affiliation based on long_name and ror_id and set it, create one if needed.
     def process_affiliations
       return unless @author.present?
+      return unless aff_params.key?('affiliations')
 
       affs = aff_params['affiliations']&.reject { |a| a['long_name'].blank? } || []
       affs.each do |aff|
@@ -198,6 +199,8 @@ module StashDatacite
     end
 
     def process_credit_roles
+      return unless aff_params.key?('credit_roles')
+
       roles = aff_params['credit_roles'] || []
 
       roles.each { |cr| StashDatacite::CreditRoleAuthor.find_or_create_by(author_id: @author.id, credit_role_id: cr['id']) }
