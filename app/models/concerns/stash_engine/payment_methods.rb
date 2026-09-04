@@ -31,7 +31,7 @@ module StashEngine
                elsif institution_will_pay?
                  latest_resource&.tenant
                elsif journal_will_pay?
-                 @payer = journal
+                 journal
                end
       @payer
     end
@@ -141,9 +141,10 @@ module StashEngine
     end
 
     def display_payer
-      return recorded_payer if published? && recorded_payer.present?
-
-      payer.presence || {}
+      sponsor = recorded_payer if published? && recorded_payer.present?
+      sponsor ||= payer
+      sponsor = nil if sponsor.is_a?(StashEngine::User)
+      sponsor.present? ? PayerDetailsService.new(sponsor).details.to_h : {}
     end
 
     def institution_will_pay?

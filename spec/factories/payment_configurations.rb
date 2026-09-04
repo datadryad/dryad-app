@@ -9,6 +9,7 @@
 #  ldf_limit_notification :text(65535)
 #  partner_type           :string(191)
 #  payment_plan           :integer
+#  submitter_contact      :text(65535)
 #  yearly_ldf_limit       :integer
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null

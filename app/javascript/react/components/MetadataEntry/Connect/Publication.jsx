@@ -62,7 +62,7 @@ export default function Publication({
     const {manuscript_number} = resource.resource_publication;
     const primary_article = resource.related_identifiers.find((r) => r.work_type === 'primary_article')?.related_identifier;
     if (manuscript_number || primary_article) {
-      setSponsored(Object.hasOwn(resource.identifier.display_payer, 'title') ? resource.identifier.display_payer.title : false);
+      setSponsored(resource.identifier.display_payer.type === 'StashEngine::Journal' ? resource.identifier.display_payer.name : false);
     } else {
       setSponsored(false);
     }

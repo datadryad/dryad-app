@@ -59,7 +59,8 @@ class PaymentDetailsController < StashEngine::ApplicationController
   end
 
   def edit_params
-    params.permit(payment_configuration_attributes: %i[id payment_plan covers_ldf ldf_limit yearly_ldf_limit ldf_limit_notification _destroy])
+    params.permit(payment_configuration_attributes: %i[id payment_plan covers_ldf ldf_limit yearly_ldf_limit ldf_limit_notification submitter_contact
+                                                       _destroy])
   end
 
 end
