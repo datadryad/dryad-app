@@ -4,14 +4,23 @@
   <%= author_display(authors, affs).html_safe %>
 	</p>
 <% end %>
-<% if affs.present? %>
+<% if affs.present? || authors.with_credit.present? %>
   <div class="o-metadata__aff-list">
-  	<p role="heading" aria-level="2"><button class="o-button__plain-text4" id="affiliation-list-button" aria-expanded="false" aria-controls="affiliation-list">Author affiliations<i class="fas fa-caret-down" aria-hidden="true"></i></button></p>
-  	<ol id="affiliation-list" hidden>
-  	<% affs.map do |aff| %>
-  		<li id="aff<%= aff[0] %>"><% if aff[2].present? %><a href="<%= new_search_path(org: aff[2]) %>"><%= aff[1] %></a><% else %><%= aff[1] %><%if current_user&.min_app_admin? %><i class="fas fa-triangle-exclamation unmatched-icon" role="note" aria-label="Unmatched affiliation" title="Unmatched affiliation"></i><%end%><%end%></li>
-  	<% end %>
-  	</ol>
+  	<p role="heading" aria-level="2"><button class="o-button__plain-textlink" id="affiliation-list-button" aria-expanded="false" aria-controls="affiliation-list">Author information<i class="fas fa-caret-down" aria-hidden="true"></i></button></p>
+  	<div id="affiliation-list" hidden>
+	  	<% if affs.present? %>
+	  		<p role="heading" aria-level="3">Affiliations</p>
+		  	<ol>
+		  	<% affs.map do |aff| %>
+		  		<li id="aff<%= aff[0] %>"><% if aff[2].present? %><a href="<%= new_search_path(org: aff[2]) %>"><%= aff[1] %></a><% else %><%= aff[1] %><%if current_user&.min_app_admin? %><i class="fas fa-triangle-exclamation unmatched-icon" role="note" aria-label="Unmatched affiliation" title="Unmatched affiliation"></i><%end%><%end%></li>
+		  	<% end %>
+		  	</ol>
+		  <% end %>
+		  <% if authors.with_credit.present? %>
+		  	<p role="heading" aria-level="3">Contributions</p>
+		  	<p><%= credit_display(authors.with_credit).html_safe %></p>
+		  <% end %>
+  	</div>
   </div>
   <script type="text/javascript">
   	document.getElementById('affiliation-list-button').addEventListener('click', (e) => {
@@ -28,7 +37,7 @@
   	})
   	const openHash = () => {
   		const hashed = document.getElementById(window.location.hash.substring(1))
-			if (hashed && hashed.parentElement.hasAttribute('hidden')) {
+			if (hashed && hashed.parentElement.parentElement.hasAttribute('hidden')) {
 	    	document.getElementById('affiliation-list-button').click()
 	    }
   	}

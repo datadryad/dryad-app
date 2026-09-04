@@ -764,6 +764,15 @@ dialog#submission-step[open] {
   }
 }
 
+.author-form.aff-form {
+  background-color: $lightest-gray;
+  margin: 1rem auto;
+  padding: 2ch;
+  & > div:first-child { 
+    flex: 1 1 calc(100%);
+  }
+}
+
 .remove-collab-button {
   @extend %author-form-button;
   margin-left: 1ch;
@@ -784,6 +793,24 @@ dialog#submission-step[open] {
   i {
     transform: rotate(75deg);
     color: $dark-gray;
+  }
+}
+
+#credit-defs {
+  div {
+    margin-bottom: 1em;
+    padding-left: 3em;
+    text-indent: -3em;
+    line-height: 150%;
+  }
+  dt {
+    display: inline;
+    font-weight: 600;
+  }
+  dd {
+    margin: 0;
+    padding-left: 1ch;
+    display: inline;
   }
 }
 

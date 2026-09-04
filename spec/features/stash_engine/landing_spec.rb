@@ -42,14 +42,15 @@ RSpec.feature 'Landing', type: :feature, js: true do
         expect(page).to have_css('#display_resource h1 sub')
       end
 
-      it 'displays the author list and expands affiliations' do
+      it 'displays the author list and expands information' do
         visit stash_url_helpers.landing_show_path(id: identifier.to_s)
         resource.authors.each do |author|
           expect(page).to have_text(author.author_full_name)
         end
-        expect(page).to have_button('Author affiliations')
-        click_button 'Author affiliations'
+        expect(page).to have_button('Author information')
+        click_button 'Author information'
         expect(page).to have_content(resource.authors.first.affiliations.first.smart_name)
+        expect(page).to have_content(resource.authors.first.credit_roles.first.credit_role)
       end
 
       it 'displays and expands the included sections' do
@@ -153,8 +154,8 @@ RSpec.feature 'Landing', type: :feature, js: true do
         resource.authors.each do |author|
           expect(page).to have_text(author.author_full_name)
         end
-        expect(page).to have_button('Author affiliations')
-        click_button 'Author affiliations'
+        expect(page).to have_button('Author information')
+        click_button 'Author information'
         expect(page).to have_content(resource.authors.first.affiliations.first.smart_name)
       end
 
@@ -206,8 +207,8 @@ RSpec.feature 'Landing', type: :feature, js: true do
         resource.authors.each do |author|
           expect(page).to have_text(author.author_full_name)
         end
-        expect(page).to have_button('Author affiliations')
-        click_button 'Author affiliations'
+        expect(page).to have_button('Author information')
+        click_button 'Author information'
         expect(page).to have_content(resource.authors.first.affiliations.first.smart_name)
       end
 
