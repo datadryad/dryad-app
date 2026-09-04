@@ -33,3 +33,16 @@
     content: '\00a0';
   }
 }
+
+#estimate_stack {
+  flex-basis: calc(100% - 126px);
+  flex-grow: 0;
+  display: flex;
+  flex-direction: column;
+
+  #total_estimate {
+    font-size: 1.1rem;
+    padding: .75ch;
+    text-align: left;
+  }
+}
