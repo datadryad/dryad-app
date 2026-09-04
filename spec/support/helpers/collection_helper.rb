@@ -44,6 +44,7 @@ module CollectionHelper
     click_button 'Title'
     fill_in_title
     click_button 'Authors'
+    click_button 'Affiliations'
     fill_in_affiliation
     expect(find_button('Authors')).to match_selector('[aria-describedby="step-complete"')
     click_button 'Description'
@@ -63,14 +64,13 @@ module CollectionHelper
   end
 
   def fill_in_collection
-    page.find('#checklist-button').click unless page.has_button?('Related works')
     click_button 'Related works'
     expect(page).to have_content('Please list all the datasets in the collection')
     res = StashEngine::Resource.find(page.current_path.match(%r{submission/(\d+)})[1].to_i)
     sets = StashEngine::Resource.where.not(id: res.id).limit(3)
     sets.each_with_index do |set, i|
       within(".work-form:nth-of-type(#{i + 1})") do
-        fill_in 'DOI or other URL', with: set.identifier_uri
+        find_field('DOI or other URL').send_keys(set.identifier_uri)
         page.send_keys(:tab)
       end
       click_button '+ Add work' unless i == sets.length - 1

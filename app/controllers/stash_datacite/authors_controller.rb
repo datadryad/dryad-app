@@ -29,8 +29,9 @@ module StashDatacite
       aff = @author.affiliations.pluck(:long_name).sort
 
       AuthorsService.new(@author).check_orcid
-      @author.reload
       process_affiliations
+      process_credit_roles
+      @author.reload
 
       # IF affiliations changed
       # trigger new version creation manually
@@ -38,7 +39,7 @@ module StashDatacite
 
       respond_to do |format|
         format.js { render template: 'stash_datacite/shared/update.js.erb' }
-        format.json { render json: @author.as_json(include: :affiliations) }
+        format.json { render json: @author.as_json(include: %i[affiliations credit_roles]) }
       end
     end
 
@@ -91,7 +92,7 @@ module StashDatacite
         @author.reload
         format.json do
           render json: {
-            author: @author.as_json(include: %i[affiliations edit_code]),
+            author: @author.as_json(include: %i[affiliations credit_roles edit_code]),
             users: @resource.users.select('stash_engine_users.*', 'stash_engine_roles.role')
           }
         end
@@ -125,7 +126,7 @@ module StashDatacite
         )
       end
 
-      render json: @author.as_json(include: [:affiliations])
+      render json: @author.as_json(include: %i[affiliations credit_roles])
     end
 
     private
@@ -152,19 +153,21 @@ module StashDatacite
     def aff_params
       params.require(:author).permit(:id, :author_first_name, :author_last_name, :author_org_name,
                                      :author_email, :resource_id, :author_orcid, :author_order, :corresp,
-                                     affiliations: %i[id ror_id long_name])
+                                     affiliations: %i[id ror_id long_name],
+                                     credit_roles: %i[id])
     end
 
     # find correct affiliation based on long_name and ror_id and set it, create one if needed.
     def process_affiliations
       return unless @author.present?
+      return unless aff_params.key?('affiliations')
 
-      @author.affiliations.destroy_all
-      args = aff_params
-      affs = args['affiliations']&.reject { |a| a['long_name'].blank? }
-      affs&.each do |aff|
+      affs = aff_params['affiliations']&.reject { |a| a['long_name'].blank? } || []
+      affs.each do |aff|
         process_affiliation(aff['long_name'].squish, aff['ror_id'])
       end
+      del = @author.affiliations.map(&:long_name) - affs.map { |a| a['long_name'] }
+      @author.affiliation_authors.joins(:affiliation).where(affiliation: { long_name: del }).destroy_all if del.present?
     end
 
     def process_affiliation(name, ror_val)
@@ -193,6 +196,16 @@ module StashDatacite
       return if affil.ror_id.nil? && @author.affiliations.where(ror_id: nil).pluck(:long_name).include?(affil.long_name)
 
       @author.affiliation = affil
+    end
+
+    def process_credit_roles
+      return unless aff_params.key?('credit_roles')
+
+      roles = aff_params['credit_roles'] || []
+
+      roles.each { |cr| StashDatacite::CreditRoleAuthor.find_or_create_by(author_id: @author.id, credit_role_id: cr['id']) }
+      del = @author.credit_roles&.map(&:id)&.- roles.map { |c| c['id'].to_i }
+      @author.credit_role_authors.where(credit_role_id: del).destroy_all if del.present?
     end
 
     def check_reorder_valid
