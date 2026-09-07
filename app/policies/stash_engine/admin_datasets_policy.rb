@@ -33,6 +33,10 @@ module StashEngine
       @user.min_manager?
     end
 
+    def payment_details?
+      @user.min_manager?
+    end
+
     def add_concern?
       @user.min_manager?
     end

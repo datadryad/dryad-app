@@ -131,7 +131,7 @@ module StashEngine
     private
 
     def ownership_transfer_needed?
-      valid_edit_code? && (resource.submitter.id == 0 || resource.submitter.blank? || resource.submitter.orcid.blank?)
+      valid_edit_code? && (resource.submitter.blank? || resource.submitter.orcid.blank? || resource.submitter.id == 0)
     end
 
     def resource_exist

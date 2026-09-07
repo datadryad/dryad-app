@@ -109,8 +109,12 @@ module SearchHelper
   end
 
   def result_citation(c, issn)
-    str = c['author'].first(3).map { |a| a['family'] }.join(', ')
-    str += ', et al' if c['author'].size > 3
+    if c['author'].is_a?(Array)
+      str = c['author'].first(3).map { |a| a['family'] }.join(', ')
+      str += ', et al' if c['author'].size > 3
+    else
+      str = c['author']
+    end
     str += '. '
     str += "(#{c.dig('issued', 'date-parts').first.first}) " if c.dig('issued', 'date-parts').present?
     str += " <a href=\"https://doi.org/#{c['DOI']}\" target=\"_blank\" rel=\"noreferrer\">#{c['title']}"

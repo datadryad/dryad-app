@@ -26,7 +26,7 @@
 <div id="payment_plan_notice" role="status" class="callout warn" <%= !sponsor_id ? 'hidden' : ''  %>>
   <p>The payment plan must be selected for the top level organization.</p>
 </div>
-<div id="limits_notice" role="status" class="callout warn">
+<div id="limits_notice" role="status" class="callout warn" <%= sponsor_id ? 'hidden' : ''  %>>
   <p>Payment limits can also be set on each lowest level organization.</p>
 </div>
 

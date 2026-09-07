@@ -54,7 +54,7 @@ class SearchController < ApplicationController
       format.js do
         return @metrics = { dates: [Date.today.strftime('%Y')], views: [], downloads: [], citations: [] } unless metrics.dig(:views, 0).present?
 
-        range = (Date.parse("#{metrics[:views].first['yearMonth']}-01")..Date.today).map { |d| d.strftime('%Y-%m') }.uniq
+        range = (Date.parse("#{metrics[:views].first['yearMonth']}-01")..Date.today).map { |d| d.strftime('%Y-%m') }.uniq.reject(&:blank?)
 
         if range.length > 36
           range = range.map { |d| d[0..3] }.uniq
@@ -153,8 +153,8 @@ class SearchController < ApplicationController
   end
 
   def label_format(d)
-    c = d.split('-')
-    return Date.new(c.first.to_i, c.last.to_i, 1).strftime('%b %Y') if d.length > 4
+    c = d&.split('-')
+    return Date.new(c.first.to_i, c.last.to_i, 1).strftime('%b %Y') if d&.length&.> 4
 
     d
   end

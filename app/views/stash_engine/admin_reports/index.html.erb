@@ -1,0 +1,70 @@
+<% @page_title = "Reports" %>
+<h2 id="user-label">Reports</h2>
+
+<%= form_with(url: admin_reports_path, method: 'get', id: 'admin_search') do %>
+  <div class="o-admin-form-inline">
+    <div class="o-admin-form-pair">
+      <label for="search-terms">Title:</label>
+      <%= search_field_tag(:q, @filters[:q], class: 'c-input__text', id: 'search-terms') %>
+    </div>
+    <div class="o-admin-form-pair">
+      <label for="status_filter">Status:</label>
+      <%= select_tag :status_filter, options_for_select([['All', '']] + StashEngine::Resource::STATUSES.to_a { |i| [i, i] }, @filters[:status_filter]), class: 'c-input__select' %>
+    </div>
+    <div class="o-admin-form-pair">
+      <label for="report_type_filter">Report type:</label>
+      <%= select_tag :report_type_filter, options_for_select([['All', '']] + Report.report_types.to_a, @filters[:report_type_filter]), class: 'c-input__select' %>
+    </div>
+    <%= submit_tag('Search', name: nil, class: 'o-button__plain-text2') %>
+  </div>
+<% end %>
+<div class="table-wrapper c-lined-table-wrapper" role="region" tabindex="0" aria-labelledby="user-label">
+  <table style="width: 100%">
+    <thead>
+    <tr>
+      <th class="c-lined-table__sort c-admin-table__user-email" <%= sort_display('title') %>>
+        <%= sortable_column_head sort_field: 'title', title: 'Title' %>
+      </th>
+      <th class="c-lined-table__sort c-admin-table__user-email" <%= sort_display('time') %>>
+        <%= sortable_column_head sort_field: 'time', title: 'Report time' %>
+      </th>
+      <th class="c-lined-table__sort c-admin-table__user-email" <%= sort_display('status') %>>
+        <%= sortable_column_head sort_field: 'status', title: 'Status' %>
+      </th>
+      <th class="c-lined-table__sort c-admin-table__user-email" <%= sort_display('report_type') %>>
+        <%= sortable_column_head sort_field: 'report_type', title: 'Report type' %>
+      </th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @reports.each do |report| %>
+      <tr>
+        <td><%= report.title %></td>
+        <td><%= report.time %></td>
+        <td><%= report.status %></td>
+        <td><%= report.report_type %></td>
+        <td><%= link_to 'Download', report.download_url %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+<div class="search-results-footer">
+  <div class="c-space-paginator">
+    <%= paginate @reports, params: { page_size: @page_size } %>
+    <div class="c-paginator-page_size">
+      Page size:
+      <%
+        current_ps = @filters[:page_size].to_i
+        current_ps = 10 if current_ps == 0
+        [10, 50, 100].each do |ps| %>
+        <% if ps == current_ps %>
+          <span class="page-current"><%= ps %></span>
+        <% else %>
+          <%= link_to(ps, admin_reports_path(request.parameters.except(:action, :controller).merge(page_size: ps, page: 1)), 'aria-label': "#{ps} results per page") %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -39,7 +39,12 @@
 </div>
 
 <div class="activity-log-header">
-  <h2>Activity log</h2>
+  <div class="input-line" style="align-items: baseline;">
+    <h2>Activity log</h2>
+    <% if policy([:stash_engine, :admin_datasets]).payment_details? %>
+      <%= identifier_payment_details_debugger(@identifier.id) %>
+    <% end %>
+  </div>
   <div class="input-line" style="align-items: baseline;">
     <% if policy([:stash_engine, :admin_datasets]).note_popup? %>
       <%= form_with(url: ds_admin_popup_path(id: @identifier.id, field: 'note'), method: :get, local: false) do %>
@@ -62,7 +67,6 @@
 <div id="activity-log">
   <%= render partial: 'activity_log' %>
 </div>
-<%= identifier_payment_details_debugger(@identifier.id) %>
 
 <% if policy([:stash_engine, :admin_datasets]).create_salesforce_case? %>
 <% if Stash::Salesforce.sf_user %>

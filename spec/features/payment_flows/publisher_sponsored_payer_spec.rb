@@ -54,7 +54,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
         let(:resource_file_size) { 53_200_000_000 }
 
         it 'user pays LDF value' do
-          expect(page).to have_content('This 53.2 GB dataset has a Large data fee of $464.00.')
+          expect(page).to have_content('This 53.2 GB dataset has a Large Data Fee of $464.00.')
           expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
           expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
         end
@@ -65,7 +65,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
         let(:resource_file_size) { 53_200_000_000 }
 
         it 'sponsored user does not pay anything' do
-          expect(page).not_to have_content('Large data fee')
+          expect(page).not_to have_content('Large Data Fee')
           expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
           expect(page).to have_css('button', exact_text: 'Submit for publication')
         end
@@ -77,7 +77,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
             let(:resource_file_size) { 13_200_000_000 }
 
             it 'sponsored user does not pay anything' do
-              expect(page).not_to have_content('Large data fee')
+              expect(page).not_to have_content('Large Data Fee')
               expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
               expect(page).to have_css('button', exact_text: 'Submit for publication')
             end
@@ -87,7 +87,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
             let(:resource_file_size) { 123_200_000_000 }
 
             it 'user pays only the difference' do
-              expect(page).to have_content('This 123.2 GB dataset has a Large data fee overage of $659.00')
+              expect(page).to have_content('This 123.2 GB dataset has a Large Data Fee of $659.00')
               expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
               expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
             end
@@ -101,7 +101,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
             let(:resource_file_size) { 53_200_000_000 }
 
             it 'sponsored user does not pay anything' do
-              expect(page).not_to have_content('Large data fee')
+              expect(page).not_to have_content('Large Data Fee')
               expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
               expect(page).to have_css('button', exact_text: 'Submit for publication')
             end
@@ -111,7 +111,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
             let(:resource_file_size) { 123_200_000_000 }
 
             it 'user pays the entire amount' do
-              expect(page).to have_content('This 123.2 GB dataset has a Large data fee of $1,123.00')
+              expect(page).to have_content('This 123.2 GB dataset has a Large Data Fee of $1,123.00')
               expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
               expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
             end
@@ -130,7 +130,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
               let(:paid_ldf) { 700 }
 
               it 'sponsored user does not pay anything' do
-                expect(page).not_to have_content('Large data fee')
+                expect(page).not_to have_content('Large Data Fee')
                 expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
                 expect(page).to have_css('button', exact_text: 'Submit for publication')
               end
@@ -140,7 +140,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
               let(:paid_ldf) { 800 }
 
               it 'user pays for the entire amount' do
-                expect(page).to have_content('This 13.2 GB dataset has a Large data fee overage of $259.00')
+                expect(page).to have_content('This 13.2 GB dataset has a Large Data Fee of $259.00')
                 expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
                 expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
               end
@@ -150,7 +150,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
               let(:paid_ldf) { 1_001 }
 
               it 'user pays for the entire amount' do
-                expect(page).to have_content('This 13.2 GB dataset has a Large data fee overage of $259.00')
+                expect(page).to have_content('This 13.2 GB dataset has a Large Data Fee of $259.00')
                 expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
                 expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
               end
@@ -164,7 +164,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
               let(:paid_ldf) { 100 }
 
               it 'user pays for the entire amount' do
-                expect(page).to have_content('This 51.2 GB dataset has a Large data fee overage of $205.00')
+                expect(page).to have_content('This 51.2 GB dataset has a Large Data Fee of $205.00')
                 expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
                 expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
               end
@@ -174,7 +174,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
               let(:paid_ldf) { 800 }
 
               it 'user pays for the entire amount' do
-                expect(page).to have_content('This 51.2 GB dataset has a Large data fee overage of $464.00')
+                expect(page).to have_content('This 51.2 GB dataset has a Large Data Fee of $464.00')
                 expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
                 expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
               end
@@ -184,7 +184,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
               let(:paid_ldf) { 1_001 }
 
               it 'user pays for the entire amount' do
-                expect(page).to have_content('This 51.2 GB dataset has a Large data fee overage of $464.00')
+                expect(page).to have_content('This 51.2 GB dataset has a Large Data Fee of $464.00')
                 expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
                 expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
               end
@@ -202,7 +202,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
           let(:resource_file_size) { 151_200_000_000 }
 
           it 'sponsored user does not pay anything' do
-            expect(page).not_to have_content('Large data fee')
+            expect(page).not_to have_content('Large Data Fee')
             expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
             expect(page).to have_css('button', exact_text: 'Submit for publication')
           end

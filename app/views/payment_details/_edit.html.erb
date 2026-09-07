@@ -1,0 +1,36 @@
+<h1 id="dialog-title"><%= @sponsor_details.name %></h1>
+<%= form_with(url: payment_details_update_path(id: @sponsor.id, type: @sponsor_details.type), method: :post, local: false) do |form| -%>
+
+  <% if @sponsor.has_attribute?(:sponsor_id) && @sponsor.sponsor_id.present? %>
+    <div id="payment_notice" role="status" class="callout warn">
+      <p>Payment information must be set at the sponsor level.</p>
+    </div>
+  <% else %>
+    <% if @sponsor.has_attribute?(:parent_org_id) %>
+      <% if @sponsor.parent_org_id.present? %>
+      <div id="payment_notice" role="status" class="callout warn">
+        <p>The payment plan must be selected for the top level organization.</p>
+      </div>
+      <% else %>
+      <div id="limits_notice" role="status" class="callout warn">
+        <p>Payment limits can also be set on each lowest level organization.</p>
+      </div>
+      <% end %>
+    <% end %>
+
+    <%
+      plan_options = [['', 'None']] + @sponsor.class::PAYMENT_PLANS.map { |p| [p, p.capitalize] }
+      sponsor_id = @sponsor.has_attribute?(:parent_org_id) ? @sponsor.parent_org_id : nil
+    %>
+
+    <%= render '/stash_engine/payment_configuration/form', format: :html,
+      sponsor_id: sponsor_id,
+      payment_configuration: @sponsor.payment_configuration,
+      plan_options: plan_options
+    %>
+  <% end %>
+  <div class="c-modal__buttons-right">
+    <%= submit_tag 'Submit', class: 'o-button__plain-text2' %>
+    <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog', class: 'o-button__plain-text7' %>
+  </div>
+<% end %>

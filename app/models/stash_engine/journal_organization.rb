@@ -13,6 +13,8 @@
 module StashEngine
   class JournalOrganization < ApplicationRecord
     self.table_name = 'stash_engine_journal_organizations'
+    PAYMENT_PLANS = %w[SUBSCRIPTION PREPAID DEFERRED TIERED 2025].freeze
+
     validates :name, presence: true
     validates :parent_org_id, exclusion: { in: ->(org) {
       org.orgs_included.map(&:id).reject(&:blank?)

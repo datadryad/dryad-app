@@ -1,9 +1,11 @@
+<?xml version="1.0"?>
 <OpenSearchDescription
   xmlns="http://a9.com/-/spec/opensearch/1.1/"
   xmlns:moz="http://www.mozilla.org/2006/browser/search/">
   <ShortName>Dryad</ShortName>
-  <Description>Search Dryad, an open respository of scientific data</Description>
-  <InputEncoding>UTF-8</InputEncoding>
+  <Description>Dryad data</Description>
   <Image width="16" height="16" type="image/x-icon"><%= ROOT_URL %>/images/favicon-16x16.png</Image>
-  <Url type="text/html" template="<%= ROOT_URL %>/search?q={searchTerms}"/>
+  <Url type="text/html" method="get" template="<%= ROOT_URL %>/search?q={searchTerms}"/>
+  <Url type="application/opensearchdescription+xml" rel="self" template="<%= ROOT_URL %>/search/description.xml" />
+  <moz:SearchForm><%= ROOT_URL %>/search</moz:SearchForm>
 </OpenSearchDescription>

@@ -1,7 +1,7 @@
 <td>
   <div class="c-lined-table__with-actions">
     <div class="c-lined-table__data" id="name_<%= o.id %>"><%= o.name %></div>
-    <% if policy([:stash_engine, :journal_organization]).edit? %>
+    <% if policy(o).edit? %>
     <div class="c-lined-table__actions">
       <%= form_with(url: publisher_edit_path(id: o.id), method: :get, local: false) do %>
         <button class="c-admin-edit-icon" aria-label="Edit publisher" aria-haspopup="dialog" id="edit_button_<%= o.id %>">
@@ -23,10 +23,12 @@
         (Up to <%= filesize(ESTIMATED_FILES_SIZE.find{|tier| tier[:tier] == o.payment_configuration.ldf_limit }[:range].max) %>)
       <% end %>
       <% if o.payment_configuration.yearly_ldf_limit.present? %>
-        <br/><b>Remaining LDF commitment:</b> <%= o.payment_configuration.yearly_ldf_limit - SponsoredPaymentLog.for_current_year.where(payer: o.payers_sponsored).sum(:ldf) %>
+        <br/><b>Remaining LDF commitment:</b> $<%= o.payment_configuration.yearly_ldf_limit - SponsoredPaymentLog.for_current_year.where(payer: o.payers_sponsored).sum(:ldf) %>
       <% end %>
     <% end %>
+    <%= payer_payment_details_debugger(o) %>
+  <% else %>
+    <span style="color: rgb(209, 44, 29)">Disabled</span>
   <% end %>
-  <%= payer_payment_details_debugger(o) %>
 </td>
 <td><%= o.parent_org&.name %></td>

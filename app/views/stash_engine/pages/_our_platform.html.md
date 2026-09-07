@@ -2,6 +2,8 @@
 
 ### Architecture and implementation
 
+<p><a href="/images/aws_architecture_diagram.png" target="_blank" style="display: block;"><img src="/images/aws_architecture_diagram.png" alt="AWS Architecture Diagram"></a></p>
+
 Dryad is completely open source. Our code is made publicly available [on GitHub](https://github.com/datadryad/dryad-app). Dryad is based on an underlying Ruby-on-Rails data publication platform called Stash. Stash encompasses three main functional components: Store, Harvest, and Share.
 
 - Store: The Store component is responsible for the selection of datasets; their description in terms of configurable metadata schemas, including specification of ORCID and Fundref identifiers for researcher and funder disambiguation; the assignment of DOIs for stable citation and retrieval; designation of an optional limited time embargo; and packaging and submission to the integrated repository

@@ -1,0 +1,10 @@
+// open a modal dialog
+document.getElementById('genericModalContent').innerHTML = '';
+document.getElementById('genericModalContent').append(document.createRange().createContextualFragment("<%= escape_javascript(render partial: 'edit') %>"));
+document.getElementById('genericModalDialog').showModal();
+document.getElementById('cancel_dialog').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('genericModalDialog').close();
+});
+
+<%= render '/stash_engine/payment_configuration/js_form', format: :js %>

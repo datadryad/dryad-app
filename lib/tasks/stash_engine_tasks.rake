@@ -192,7 +192,7 @@ namespace :identifiers do
 
       # Only remove the files if two years have passed since the last user activity
       if last_user_activity.present? && last_user_activity < 2.years.ago
-        log "ABANDONED #{i.identifier} -- #{i.id} -- size #{i.latest_resource.size}"
+        log "ABANDONED #{i.identifier} -- #{i.id} -- size #{i.latest_resource.size} -- at #{Time.current}"
 
         if dry_run
           log ' -- skipping deletion due to DRY_RUN setting'
@@ -241,7 +241,7 @@ namespace :identifiers do
             status: 'withdrawn',
             note: 'remove_abandoned_datasets CRON - mark files as deleted'
           )
-          PubStateService.new(i).update_for_ca_status('withdrawn')
+          PubStateService.new(i.reload).update_for_ca_status('withdrawn')
         end
       end
     end

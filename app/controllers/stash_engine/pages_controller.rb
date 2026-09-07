@@ -29,7 +29,14 @@ module StashEngine
 
     # an application 404 page to make it look nicer
     def app_404
-      render status: 404, template: 'stash_engine/pages/app_404'
+      respond_to do |format|
+        format.any(:js, :json) do
+          render json: { error: 'The dataset you are trying to view does not exist.' }, status: 404
+        end
+        format.any(:html, :xml) do
+          render status: 404, template: 'stash_engine/pages/app_404'
+        end
+      end
     end
 
     def helpdesk

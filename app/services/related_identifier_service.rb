@@ -31,8 +31,8 @@ class RelatedIdentifierService
   private
 
   def set_primary_article
+    check_resource_payment(resource.reload)
     release_resource(resource)
-    check_resource_payment(resource)
     PrimaryArticleJob.perform_async(primary_article.id)
   end
 end

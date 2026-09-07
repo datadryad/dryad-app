@@ -12,10 +12,6 @@ module Stash
 
       attr_reader :resource
 
-      # Settings used by all Stripe services
-      Stripe.api_key = APP_CONFIG.payments.key
-      Stripe.api_version = '2026-05-27.dahlia'
-
       def initialize(resource)
         @resource = resource
       end

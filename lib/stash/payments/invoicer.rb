@@ -12,10 +12,6 @@ module Stash
 
       attr_reader :resource, :curator
 
-      # Settings used by all Stripe services
-      Stripe.api_key = APP_CONFIG.payments.key
-      Stripe.api_version = '2026-05-27.dahlia'
-
       def self.find_recent_voids
         d = Date.today - 2.months
         Stripe::Invoice.list({ created: { gt: d.to_time.to_i }, status: 'void' }).data

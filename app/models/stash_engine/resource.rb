@@ -50,6 +50,7 @@ require 'cgi'
 
 module StashEngine
   class Resource < ApplicationRecord # rubocop:disable Metrics/ClassLength
+    STATUSES = %i[in_progress queued curation peer_review awaiting_payment published to_be_published embargoed action_required retracted].freeze
     include StashEngine::Statuses
 
     self.table_name = 'stash_engine_resources'

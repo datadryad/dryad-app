@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ClassLength
 module FeeCalculator
   class BaseService
     attr_reader :options, :resource
@@ -11,8 +12,8 @@ module FeeCalculator
       @payer = PayersService.new(@payer_record).payment_sponsor if @payer_record
 
       @payment_plan_is_2025 = resource ? resource.identifier.payer_2025?(@payer) : false
-      @covers_ldf = resource ? PayersService.new(@payer_record).sponsored_limits&.covers_ldf : false
-      @ldf_limit = resource ? PayersService.new(@payer_record).sponsored_limits&.ldf_limit : nil
+      @covers_ldf = resource ? sponsored_limits&.covers_ldf : false
+      @ldf_limit = resource ? sponsored_limits&.ldf_limit : nil
     end
 
     def call
@@ -20,10 +21,14 @@ module FeeCalculator
       verify_new_payment_system
 
       if resource.present?
+        # add any ldf to indicate ppr warning should be shown
+        ppr_warning(resource.total_file_size) if resource.hold_for_peer_review
         return no_payment_required if resource.identifier.old_system_valid_payer? || resource.hold_for_peer_review
 
         add_zero_fee(:service_tier)
         add_zero_fee(:dpc_tier)
+        # add approximate sponsored amount to json for display
+        @sum_options[:dpc_sponsored] = base_dpc_cost
 
         if @covers_ldf
           @limits_service = PaymentLimitsService.new(resource, @payer_record, ldf_sponsored_amount: ldf_sponsored_amount)
@@ -31,21 +36,20 @@ module FeeCalculator
           if @ldf_limit.nil? && @limits_service.payment_allowed?
             # if no limit is hit,
             # the user pays no storage fee
-            verify_max_storage_size
+            # add sponsored amount to json for display
+            @sum_options[:storage_sponsored] = verify_max_storage_size
             add_zero_fee(:storage_size)
           elsif @limits_service.amount_limits_exceeded?
             # if the yearly amount limit is hit,
             # the user needs to pay the full storage difference
-            add_storage_fee_difference
-            add_invoice_fee
+            add_sponsored_amount
           else
             # if the amount by adding sponsored storage fee is not exceeded
             # user mult pay the difference between sponsored size and resource size
             handle_ldf_limit
           end
         else
-          add_storage_fee_difference
-          add_invoice_fee
+          add_sponsored_amount
         end
       else
         add_service_fee
@@ -69,8 +73,20 @@ module FeeCalculator
       tier = get_tier_by_value(storage_fee_tiers, @ldf_limit)
       paid_for = [tier[:range].max, resource.identifier.last_invoiced_file_size.to_i].max
 
-      add_storage_fee_difference(paid_for)
+      add_sponsored_amount(paid_for)
+    end
+
+    def add_sponsored_amount(amount = nil)
+      add_storage_fee_difference(amount)
+      @sum_options[:storage_sponsored] = sponsored_limits&.covers_ldf ? ldf_sponsored_amount : 0
       add_invoice_fee
+    end
+
+    def ppr_warning(amount = nil)
+      return unless sponsored_limits&.ldf_limit || sponsored_limits&.yearly_ldf_limit
+
+      add_storage_fee_difference(amount)
+      @sum_options[:ppr_warning] = ldf_sponsored_amount > 0
     end
 
     def ldf_sponsored_amount(paid_storage_size: nil)
@@ -104,6 +120,10 @@ module FeeCalculator
     end
 
     private
+
+    def sponsored_limits
+      @sponsored_limits ||= PayersService.new(@payer_record).sponsored_limits
+    end
 
     def verify_new_payment_system
       return if resource.blank? || !resource.identifier.old_payment_system?
@@ -215,6 +235,10 @@ module FeeCalculator
       tier[:price]
     end
 
+    def base_dpc_cost
+      get_tier_by_value(INDIVIDUAL_ESTIMATED_FILES_SIZE, 1)[:price]
+    end
+
     def get_tier_by_range(tier_definition, value)
       tier = tier_definition.find { |t| t[:range].include?(value.to_i) }
       raise ActionController::BadRequest, OUT_OF_RANGE_MESSAGE if tier.nil?
@@ -254,3 +278,4 @@ module FeeCalculator
     end
   end
 end
+# rubocop:enable Metrics/ClassLength

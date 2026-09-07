@@ -4,10 +4,5 @@ module StashEngine
     def show?
       @user.superuser?
     end
-
-    def auth_failures?
-      @user.superuser?
-    end
-
   end
 end

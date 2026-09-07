@@ -6,11 +6,13 @@ class TimeInStatus
   #  :hours => hours
   #  :days  => days
   #  nil    => seconds
-  def initialize(identifier: :nil, resource: nil, return_in: nil)
+  def initialize(identifier: nil, resource: nil, return_in: nil)
     @activities = if resource.present?
                     resource.curation_activities
-                  else
+                  elsif identifier.present?
                     identifier.curation_activities
+                  else
+                    StashEngine::CurationActivity.none
                   end
     @return_in = return_in
   end

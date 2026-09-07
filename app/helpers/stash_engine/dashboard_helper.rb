@@ -64,5 +64,11 @@ module StashEngine
       end
       str
     end
+
+    def withdraw_check(id)
+      identifier = StashEngine::Identifier.find_by(id: id)
+      cases = Stash::Salesforce.find_cases_by_doi(identifier.identifier) || []
+      cases.any? { |c| c.subject == 'Withdraw my dataset' && c.status == 'Open' }
+    end
   end
 end
