@@ -19,7 +19,7 @@ module StashDatacite
         @author = StashEngine::Author.create(author_params)
         @author.reload
         format.js
-        format.json { render json: @author.as_json(include: :affiliations) }
+        format.json { render json: @author.as_json(include: %i[affiliations credit_roles]) }
       end
     end
 
