@@ -6,7 +6,7 @@ import Authors from './Authors'
 import Affiliations from './Affiliations'
 import Contributions from './Contributions'
 
-export default function AuthorSteps({resource, setResource, current, user, error}) {
+export default function AuthorSteps({resource, setResource, current, review, user, error}) {
   const errRef = useRef(null);
   const [errNum, setErrNum] = useState(null);
   const [authors, setAuthors] = useState(resource.authors);
@@ -70,7 +70,7 @@ export default function AuthorSteps({resource, setResource, current, user, error
   }, [error])
 
   useEffect(() => {
-    if (current && error) {
+    if (review && current && error) {
       if (error.props.id === 'author_aff_error') setStep(2)
       if (error.props.id === 'author_role_error') setStep(3)
     }

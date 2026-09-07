@@ -41,7 +41,7 @@ Only one collaborator may actively work on a submission at a time. To save your 
 
 Different authors play different roles in the generation, curation, and publication of a dataset. To accurately recognize and share these varied contributions, we use an adapted list of [CRediT](https://credit.niso.org) roles that incorporates a [GREI-recommended subset for generalist repositories](https://zenodo.org/records/16953589). We ask that each author select one or more from a list of possible options.
 
-While we encourage use of this functionality, we do not mandate it. However, should a role for any author be selected, then at least one role is required for each author of the same dataset. It is the submitter's responsibility to ensure the accuracy of all authors' roles.
+While we encourage use of this functionality, we do not mandate it. However, should a role for any author be selected, then at least one role is required for each author of the same dataset. Co-authors and contributors should discuss and agree upon the roles that individuals have played. It is the submitter's responsibility to ensure the accuracy of all authors' roles.
 
 Where supplied, contribution roles are then presented in the "Author information" section on the dataset landing page.
 
