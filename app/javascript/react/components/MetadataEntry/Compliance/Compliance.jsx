@@ -5,11 +5,12 @@ import {ExitIcon} from '../../ExitButton';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
 export default function Compliance({
-  resource, setResource, current, error,
+  resource, setResource, creditCheck, current, error,
 }) {
   const [hsi, setHSI] = useState(null);
   const [desc, setDesc] = useState('');
   const [license, setLicense] = useState(resource.identifier.license_id);
+  const [credit, setCredit] = useState(null);
   const [disclaimer, setDisclaimer] = useState(resource.descriptions.find((d) => d.description_type === 'hsi_statement'));
   const submitted = !!resource.identifier.process_date.processing;
 
@@ -26,6 +27,21 @@ export default function Compliance({
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     )
       .then(() => {
+        showSavedMsg();
+      });
+  };
+
+  const creditConfirm = (e) => {
+    const val = e.target.checked ? true : false;
+    showSavingMsg();
+    setCredit(val);
+    axios.patch(
+      `/resources/${resource.id}/credit_agree`,
+      {authenticity_token, agree: val},
+      {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
+    )
+      .then((data) => {
+        setResource((r) => ({...r, authors: data.data}));
         showSavedMsg();
       });
   };
@@ -85,17 +101,47 @@ export default function Compliance({
 
   useEffect(() => {
     if (hsi === false) submit(null);
+    const checked = document.getElementById('hsi_fieldset').querySelector('input[checked]')
+    if (checked) checked.checked = true;
   }, [hsi]);
+
+  useEffect(() => {
+    const checked = document.querySelector('input[name="credit"]')
+    checked.checked = checked.hasAttribute('checked')
+  }, [credit]);
 
   useEffect(() => {
     if (current) {
       setHSI(disclaimer ? disclaimer?.description !== null : null);
       setDesc(`${disclaimer?.description || ''}`);
+      setCredit(!resource.authors.some(a => !a.credit_confirmed))
     }
   }, [current]);
 
   return (
     <>
+      {creditCheck && (
+        <>
+          <h3>Are author CRediT roles correct?</h3>
+          <p>
+            Co-authors and contributors should discuss and agree upon the roles that individuals have played in this data submission.
+            It is the submitter&apos;s responsibility to ensure the accuracy of all authors&apos; roles.
+          </p>
+          <p className="radio_choice">
+            <label>
+              <input
+                name="credit"
+                type="checkbox"
+                value="1"
+                defaultChecked={credit}
+                onChange={creditConfirm}
+                aria-errormessage="credit_confirm_error"
+              />
+              By checking this box, I confirm all co-authors have approved the accuracy of the author contribution roles
+            </label>
+          </p>
+        </>
+      )}
       <h3>Can your data be shared in the public domain?</h3>
       <p>All data deposited at Dryad must comply with a CC0 license waiver.{' '}
         <a href="https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/" target="_blank" rel="noreferrer">
@@ -124,7 +170,7 @@ export default function Compliance({
               name="license"
               type="checkbox"
               value="cc0"
-              defaultChecked={license === 'cc0' ? 'checked' : null}
+              defaultChecked={license === 'cc0'}
               onChange={licenseChange}
               aria-errormessage="license_error"
             />
@@ -137,8 +183,8 @@ export default function Compliance({
           Does your data contain information on human subjects?
         </h3>
         <p className="radio_choice">
-          <label><input name="hsi" type="radio" value="yes" defaultChecked={hsi === true ? 'checked' : null} />Yes</label>
-          <label><input name="hsi" type="radio" value="no" required defaultChecked={hsi === false ? 'checked' : null} />No</label>
+          <label><input name="hsi" type="radio" value="yes" defaultChecked={hsi === true} />Yes</label>
+          <label><input name="hsi" type="radio" value="no" required defaultChecked={hsi === false} />No</label>
         </p>
       </fieldset>
       {hsi && (

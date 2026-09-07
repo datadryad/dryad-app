@@ -233,6 +233,12 @@ module StashEngine
       render json: { license_id: params[:license] }, status: :ok
     end
 
+    def credit_agree
+      agree = ActiveModel::Type::Boolean.new.cast(params[:agree])
+      @resource.authors.update(credit_confirmed: agree)
+      render json: @resource.authors.as_json(include: %i[affiliations credit_roles]), status: :ok
+    end
+
     def payer_check
       render json: {
         new_upload_size_limit: @resource.identifier.new_upload_size_limit,
