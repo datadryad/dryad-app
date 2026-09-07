@@ -49,7 +49,7 @@
       <%= hidden_field_tag :id, @identifier.id, id: "identifier_id_#{@identifier.id}" %>
     <% end %>
   <% elsif policy(r).delete? %>
-    <%= form_with(url: stash_url_helpers.resource_path(r), method: :delete,) do -%>
+    <%= form_with(url: stash_url_helpers.resource_path(r), method: :delete) do -%>
       <p>
         <button class="o-button__plain-text7 prevent-click" data-confirm="Are you sure you want to delete the latest version of this dataset? This action cannot be undone."><i class="fas fa-trash" aria-hidden="true"></i> Revert dataset to previous version</button>
         &nbsp;Note: This action will destroy the latest, in progress version of the dataset.
