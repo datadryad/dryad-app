@@ -85,6 +85,8 @@ export default function Compliance({
 
   useEffect(() => {
     if (hsi === false) submit(null);
+    const checked = document.getElementById('hsi_fieldset').querySelector('input[checked]')
+    if (checked) checked.checked = true;
   }, [hsi]);
 
   useEffect(() => {
@@ -137,8 +139,8 @@ export default function Compliance({
           Does your data contain information on human subjects?
         </h3>
         <p className="radio_choice">
-          <label><input name="hsi" type="radio" value="yes" defaultChecked={hsi === true ? 'checked' : null} />Yes</label>
-          <label><input name="hsi" type="radio" value="no" required defaultChecked={hsi === false ? 'checked' : null} />No</label>
+          <label><input name="hsi" type="radio" value="yes" defaultChecked={hsi === true} />Yes</label>
+          <label><input name="hsi" type="radio" value="no" required defaultChecked={hsi === false} />No</label>
         </p>
       </fieldset>
       {hsi && (
