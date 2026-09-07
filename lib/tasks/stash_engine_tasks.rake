@@ -242,6 +242,8 @@ namespace :identifiers do
             note: 'remove_abandoned_datasets CRON - mark files as deleted'
           )
           PubStateService.new(i.reload).update_for_ca_status('withdrawn')
+          # Update resource_state to show file changes are reflected in storage
+          new_res.resource_states.last.update_columns(resource_state: 'submitted')
         end
       end
     end
