@@ -107,7 +107,7 @@ export default function Compliance({
 
   useEffect(() => {
     const checked = document.querySelector('input[name="credit"]')
-    checked.checked = checked.hasAttribute('checked')
+    if (checked) checked.checked = checked.hasAttribute('checked')
   }, [credit]);
 
   useEffect(() => {
