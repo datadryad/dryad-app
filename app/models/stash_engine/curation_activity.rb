@@ -78,8 +78,8 @@ module StashEngine
       queued: %w[queued peer_review curation withdrawn],
       curation: (enum_vals - %w[in_progress processing queued to_be_published retracted]),
       action_required: (enum_vals - %w[in_progress processing queued to_be_published retracted]),
-      withdrawn: %w[withdrawn curation],
-      embargoed: %w[embargoed curation withdrawn published retracted],
+      withdrawn: %w[withdrawn],
+      embargoed: %w[embargoed curation published retracted],
       to_be_published: %w[embargoed curation withdrawn to_be_published published],
       published: %w[curation action_required embargoed published retracted],
       retracted: %w[retracted]
@@ -120,10 +120,9 @@ module StashEngine
       end
     end
 
-    def self.allowed_states(current_state, pub_state, current_user)
+    def self.allowed_states(current_state, pub_state)
       statuses = CURATOR_ALLOWED_STATES[current_state].dup
-      statuses << 'withdrawn' if current_user.min_manager? # data managers can withdraw a datasets from any status
-      statuses.delete('withdrawn') if %w[published embargoed retracted].include?(pub_state) # if the dataset has not been published
+      statuses.delete('withdrawn') if %w[published embargoed retracted].include?(pub_state) # if the dataset has been published
       statuses.uniq
     end
 
