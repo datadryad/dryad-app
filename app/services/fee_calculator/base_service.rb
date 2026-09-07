@@ -126,10 +126,11 @@ module FeeCalculator
     end
 
     def verify_new_payment_system
-      raise ActionController::BadRequest, 'Not a dataset' if @resource.payment_type.payment_type != 'dataset'
+      return if resource.blank?
 
-      return if resource.blank? || !resource.identifier.old_payment_system?
-      return if resource.identifier.old_system_valid_payer?
+      raise ActionController::BadRequest, 'Not a dataset' if resource.resource_type.resource_type != 'dataset'
+
+      return if !resource.identifier.old_payment_system? || resource.identifier.old_system_valid_payer?
 
       raise ActionController::BadRequest, OLD_PAYMENT_SYSTEM_MESSAGE
     end
