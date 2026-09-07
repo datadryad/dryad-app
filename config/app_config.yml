@@ -128,6 +128,7 @@ test:
   solr_url: <%= ENV['SOLR_URL'] || "http://localhost:8984/solr/dryad" %>
   ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://localhost:8984/solr/rors" %>
   stripe_payment_url: https://dashboard.stripe.com/acc_123456/test
+  stripe_ic_webhook_secret: whsec_some_secret_key
 
 <% else %>
 
@@ -275,6 +276,7 @@ defaults: &DEFAULTS
     app_url: 'redis://localhost:6380/0'
     rack_attack_url: 'redis://localhost:6381/0'
   stripe_payment_url: <%= "https://dashboard.stripe.com/#{Rails.application.credentials[Rails.env.to_sym][:stripe_account_key]}/test" %>
+  stripe_ic_webhook_secret: <%= Rails.application.credentials[Rails.env.to_sym][:stripe_ic_webhook_secret] %>
 
 dev: &DEV
   <<: *DEFAULTS

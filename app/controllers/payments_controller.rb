@@ -3,6 +3,12 @@ class PaymentsController < ApplicationController
   include StashEngine::SharedController
   include StashEngine::SharedSecurityController
 
+  STRIPE_EVENT_HANDLERS = {
+    'invoice.paid' => Stripe::Handlers::InvoicePaid,
+    'invoice.voided' => Stripe::Handlers::InvoiceVoided,
+    'charge.refunded' => Stripe::Handlers::ChargeRefunded
+  }.freeze
+
   skip_before_action :verify_authenticity_token
   before_action :resource, except: %i[invoice_callback]
   before_action :ajax_require_unsubmitted, only: :create
@@ -61,24 +67,27 @@ class PaymentsController < ApplicationController
     update_payment_details(payment)
   end
 
+  # rubocop:disable Lint/NoReturnInBeginEndBlocks
   def invoice_callback
-    render json: {}, status: :ok and return unless params[:type] == 'invoice.paid'
+    payload = request.body.read
+    signature = request.headers['Stripe-Signature']
 
-    invoice_id = params[:data][:object][:id]
-    payment = ResourcePayment.where(pay_with_invoice: true, invoice_id: invoice_id).last
-    if payment && !payment.paid?
-      payment.update(
-        status: :paid,
-        paid_at: Time.at(params[:data][:object][:status_transitions][:paid_at].to_i)
-      )
-      CurationService.new(resource: payment.resource, user_id: 0, status: 'queued', note: 'Invoice has been paid').process
-    else
-      message = "No payment record for Invoice with ID #{invoice_id} flagged as unpaid."
-      Rails.logger.warn(message)
+    event = begin
+      Stripe::Webhook.construct_event(payload, signature, APP_CONFIG.stripe_ic_webhook_secret)
+    rescue JSON::ParserError, Stripe::SignatureVerificationError
+      return head :ok
     end
 
-    render json: {}, status: :ok
+    return head :ok unless event.type.in?(HANDLERS.keys)
+
+    STRIPE_EVENT_HANDLERS[event.type].new(event).call
+
+    head :ok
+  rescue StandardError => e
+    Rails.logger.error("Stripe webhook error: #{e.message}")
+    head :ok # still 200 so Stripe doesn't retry-storm on your bug
   end
+  # rubocop:enable Lint/NoReturnInBeginEndBlocks
 
   def reset_payment
     identifier = StashEngine::Identifier.find(params[:identifier_id])
