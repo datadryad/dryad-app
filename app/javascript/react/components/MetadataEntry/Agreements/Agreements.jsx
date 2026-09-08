@@ -10,7 +10,6 @@ import SubmitterAgreement from './SubmitterAgreement';
 function PaymentMessage({resource, fees}) {
   if (fees.dpc_sponsored) {
     const partner = resource.identifier.display_payer
-    const partner_name = Object.hasOwn(partner, 'name') && partner.name || Object.hasOwn(partner, 'title') && partner.title || partner.long_name
     return (
       <>
         <p>
@@ -21,11 +20,13 @@ function PaymentMessage({resource, fees}) {
         </p>
         <p>
           The total fees are {formatCost(fees.dpc_sponsored + fees.storage_sponsored + fees.storage_fee)}.
-          The {partner_name} has sponsored the base Data Publishing Charge ({formatCost(fees.dpc_sponsored)}){
+          The {partner.name} has sponsored the base Data Publishing Charge ({formatCost(fees.dpc_sponsored)}){
             fees.storage_sponsored ? ` and Large Data Fee (${formatCost(fees.storage_sponsored)})` : ''}.
+          {partner.contact && 
+            <> For questions about your sponsorship, please contact <a href={`mailto:${partner.contact}`}>{partner.contact}</a>.</>
+          }
         </p>
       </>
-      // if (Object.hasOwn(partner, 'long_name')) <p>For questions about your sponsorship, please contact {?}</p>
     )
   }
 
@@ -95,23 +96,14 @@ export default function Agreements({
       {preview ? <h2>Do you agree to Dryad’s terms?</h2> : <h3 style={{marginTop: '3rem'}}>Do you agree to Dryad’s terms?</h3>}
       {subType !== 'collection' && (
         <>
-          {Object.hasOwn(resource.identifier.display_payer, 'name') && (
-            <div className="callout">
-              <p>Payment for this submission is sponsored by <b>{resource.identifier.display_payer.name}</b></p>
-            </div>
-          )}
-          {Object.hasOwn(resource.identifier.display_payer, 'long_name') && (
+          {resource.identifier.display_payer.name && (
             <>
               <div className="callout">
-                <p>Payment for this submission is sponsored by <b>{resource.identifier.display_payer.long_name}</b></p>
+                <p>Payment for this submission is sponsored by <b>{resource.identifier.display_payer.name}</b></p>
               </div>
-              {previous && resource.tenant_id !== previous.tenant_id && <p className="del ins">Partner institution changed</p>}
+              {resource.identifier.display_payer.type === 'StashEngine::Tenant' && 
+              (previous && resource.tenant_id !== previous.tenant_id) && <p className="del ins">Partner institution changed</p>}
             </>
-          )}
-          {Object.hasOwn(resource.identifier.display_payer, 'title') && (
-            <div className="callout">
-              <p>Payment for this submission is sponsored by <b>{resource.identifier.display_payer.title}</b></p>
-            </div>
           )}
           {resource.identifier.old_payment_system
             ? userMustPay && (
