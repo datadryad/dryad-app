@@ -23,7 +23,7 @@ Our process is dedicated exclusively to research data. We work in concert with [
 
 We make it easy and affordable for researchers to curate, publish, and preserve research data by providing robust infrastructure, services, and expertise to meet your needs for public release of data, as well as for fulfilling funder mandates.
 
-We are a nonprofit organization and exist to promote an environment where research data are openly available, managed, preserved, integrated with publications, and routinely reused to create knowledge. [We operate on a cost-recovery, *not* profit-maximizing, basis](/requirements/#cost).
+We are a nonprofit organization and exist to promote an environment where research data are openly available, managed, preserved, integrated with publications, and routinely reused to create knowledge. [We operate on a cost-recovery, *not* profit-maximizing, basis](/help/requirements/costs).
 
 When you publish your data with Dryad, you join a community of researchers committed to leading in best practices for open data publishing. 
 
