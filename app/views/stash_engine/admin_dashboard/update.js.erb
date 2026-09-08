@@ -21,6 +21,13 @@ if (document.getElementById('dataset_first_published_<%= @identifier.id %>')) {
 if (document.getElementById('dataset_pub_state_<%= @identifier.id %>')){
   document.getElementById('dataset_pub_state_<%= @identifier.id %>').innerHTML = "<%= @identifier.calculated_pub_state.upcase_first %>"
 }
+if (document.getElementById('notification_date_<%= @identifier.id %>')) {
+  document.getElementById('notification_date_<%= @identifier.id %>').innerHTML = '<%= formatted_date(@resource.process_date.notification_date) %>';
+}
+if (document.getElementById('activity-log')) {
+  document.getElementById('status_update-status').innerHTML = '<%= @resource.last_curation_activity.readable_status %>';
+  document.getElementById('status_update-date').innerHTML = '<%= formatted_datetime(@resource.last_curation_activity.created_at) %>';
+}
 document.getElementById('genericModalDialog').close();
 <% if @field == 'curation_activity' %>
   document.getElementById('curation_activity_button_<%=@identifier.id%>').focus()
