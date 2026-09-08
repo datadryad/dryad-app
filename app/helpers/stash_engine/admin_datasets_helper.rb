@@ -18,7 +18,7 @@ module StashEngine
     end
 
     def filter_status_select(current_status, pub_state)
-      statuses = StashEngine::CurationActivity.allowed_states(current_status, pub_state, current_user).sort
+      statuses = StashEngine::CurationActivity.allowed_states(current_status, pub_state).sort
 
       statuses.delete(current_status) unless current_status == 'retracted'
       # because we don't show the current state as an option, it is implied by leaving state blank

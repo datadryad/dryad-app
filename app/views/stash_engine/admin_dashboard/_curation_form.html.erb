@@ -15,7 +15,12 @@
         </div>
       <% end %>
     <% else %>
-      <p>Due to the state of the files, the submission status cannot be changed.<br/> Notes may be added.</p>
+      <% if @resource.current_curation_status == 'withdrawn' %>
+        <p>Withdrawn datasets must be reinstated with a new version. Click <b>Forcibly edit dataset</b> (in Dangerous actions) to create one.</p>
+      <% else %>
+        <p>Due to the state of the files, the submission status cannot be changed. To adjust the status, the dataset must first be submitted, or the in progress version can be deleted by a data manager. </p>
+      <% end %> 
+      <p>Notes may be added.</p>
     <% end %>
     <%# User can add a publication date if the resource is published or embargoed %>
     <div class="c-input" id="c-input_publication_date" hidden>

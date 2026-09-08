@@ -157,7 +157,7 @@ function Submission({
         setResource={setResource}
         error={worksCheck(resource)}
       />,
-      help: <WorksHelp setTitleStep={() => setStep(steps().find((l) => l.name === 'Title'))} />,
+      help: <WorksHelp setConnectStep={() => setStep(steps().find((l) => l.name === 'Connect'))} />,
       preview: <WorksPreview resource={resource} previous={previous} curator={user.curator} />,
     },
     {

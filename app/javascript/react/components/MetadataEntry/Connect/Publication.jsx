@@ -59,6 +59,11 @@ export default function Publication({
   );
 
   useEffect(() => {
+    const checked = document.getElementById('assoc-fieldset').querySelector('input[checked]')
+    if (checked) checked.checked = true;
+  }, [assoc])
+
+  useEffect(() => {
     const {manuscript_number} = resource.resource_publication;
     const primary_article = resource.related_identifiers.find((r) => r.work_type === 'primary_article')?.related_identifier;
     if (manuscript_number || primary_article) {
@@ -89,13 +94,13 @@ export default function Publication({
           <p><i className="fas fa-circle-info" /> If your data is connected to a journal, the Data Publishing Charge may be sponsored</p>
         </div>
       )}
-      <fieldset onChange={setImport}>
+      <fieldset onChange={setImport} id="assoc-fieldset">
         <legend>
           Is your {subType} associated with a preprint, an article, or a manuscript submitted to a journal?
         </legend>
         <p className="radio_choice">
-          <label><input name="assoc" type="radio" value="yes" defaultChecked={assoc === true ? 'checked' : null} />Yes</label>
-          <label><input name="assoc" type="radio" value="no" required defaultChecked={assoc === false ? 'checked' : null} />No</label>
+          <label><input name="assoc" type="radio" value="yes" defaultChecked={assoc === true} />Yes</label>
+          <label><input name="assoc" type="radio" value="no" defaultChecked={assoc === false} />No</label>
         </p>
       </fieldset>
 

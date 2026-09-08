@@ -184,7 +184,7 @@ export function ReadMeHelp() {
   );
 }
 
-export function WorksHelp({setTitleStep}) {
+export function WorksHelp({setConnectStep}) {
   return (
     <p>
       The primary publication associated with your submission can be entered on the{' '}
@@ -192,13 +192,13 @@ export function WorksHelp({setTitleStep}) {
         role="button"
         tabIndex="0"
         className="o-link__primary"
-        onClick={setTitleStep}
+        onClick={setConnectStep}
         onKeyDown={(e) => {
           if (['Enter', 'Space'].includes(e.key)) {
-            setTitleStep();
+            setConnectStep();
           }
         }}
-      >Title screen
+      >Connect screen
       </span>.
     </p>
   );
