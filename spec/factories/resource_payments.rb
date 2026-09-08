@@ -15,6 +15,7 @@
 #  payment_type                :string(191)
 #  ppr_fee_paid                :boolean          default(FALSE)
 #  status                      :integer
+#  status_time                 :datetime
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
 #  checkout_session_id         :string(191)
