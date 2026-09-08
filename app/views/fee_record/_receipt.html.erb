@@ -1,0 +1,24 @@
+<div class="table-wrapper" style="text-align: center">
+  <table style="margin: 0 auto">
+    <thead>
+      <tr><td></td><th scope="col">Data Publishing Charge</th><th scope="col">Large Data Fee</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Dryad fees</th>
+        <td>$<%= receipt.fees[:dpc_sponsored].to_i %></td>
+        <% if receipt.fees[:dpc_sponsored]%><td>$<%= receipt.fees[:storage_fee].to_i + receipt.fees[:storage_sponsored].to_i %></td><% end %>
+      </tr>
+      <tr>
+        <th scope="row">Sponsor credit</th>
+        <td>-$<%= receipt.fees[:dpc_sponsored].to_i %></td>
+        <% if receipt.fees[:dpc_sponsored]%><td>-$<%= receipt.fees[:storage_sponsored].to_i %></td><% end %>
+      </tr>
+      <tr>
+        <th scope="row">Submitter total</th>
+        <td><% unless receipt.fees[:dpc_sponsored]%>$<%= receipt.fees[:storage_fee].to_i %> %><% end %></td>
+        <% if receipt.fees[:dpc_sponsored]%><td>$<%= receipt.fees[:storage_fee].to_i %></td><% end %>
+      </tr>
+    </tbody>
+  </table>
+</div>

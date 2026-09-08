@@ -17,10 +17,13 @@ class FeeCalculatorController < ApplicationController
 
   def calculate_resource_fee
     resource = StashEngine::Resource.find(params[:id])
+    fees = ResourceFeeCalculatorService.new(resource).calculate(resource_options)
+    record = resource.fee_record || resource.build_fee_record
+    record.update(fees: fees.to_json)
 
     render json: {
       options: resource_options,
-      fees: ResourceFeeCalculatorService.new(resource).calculate(resource_options)
+      fees: fees
     }
   end
 
