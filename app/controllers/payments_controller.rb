@@ -84,7 +84,7 @@ class PaymentsController < ApplicationController
     identifier = StashEngine::Identifier.find(params[:identifier_id])
     identifier.update(last_invoiced_file_size: nil, payment_type: 'unknown', payment_id: nil)
     payment = identifier.payments.last
-    payment.resource.fee_record.update(status: :invoice)
+    payment.resource.fee_record&.update(status: :invoice)
     payment.void_invoice
     payment.destroy
 
@@ -105,7 +105,7 @@ class PaymentsController < ApplicationController
     return if @resource.payment.ppr_fee_paid?
     return if SponsoredPaymentsService.new(@resource).loggable?
 
-    @resource.fee_record.update(status: :receipt)
+    @resource.fee_record&.update(status: :receipt)
     identifier.update(last_invoiced_file_size: [identifier.last_invoiced_file_size.to_i, @resource.total_file_size.to_i].max)
   end
 
