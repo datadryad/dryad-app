@@ -1,16 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import {isEqual} from 'lodash';
 import DragonDropList, {DragonListItem, orderedItems} from '../DragonDropList';
 import {showSavedMsg, showSavingMsg, showModalYNDialog} from '../../../../lib/utils';
 import AuthorForm from './AuthorForm';
 
 export default function Authors({
-  resource, setResource, user, current, error,
+  authors, setAuthors, user, users, setUsers, updateItem, resource_id
 }) {
-  const [users, setUsers] = useState(resource.users);
-  const [authors, setAuthors] = useState(resource.authors);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const lastOrder = () => (authors.length ? Math.max(...authors.map((auth) => auth.author_order)) + 1 : 0);
@@ -21,7 +18,7 @@ export default function Authors({
     author_org_name: null,
     author_email: '',
     author_orcid: null,
-    resource_id: resource.id,
+    resource_id: resource_id,
   };
 
   const addNewAuthor = (org) => {
@@ -36,21 +33,6 @@ export default function Authors({
         console.log('Response failure from authors create');
       }
       setAuthors((a) => [...a, data.data]);
-    });
-  };
-
-  const updateItem = (author) => {
-    showSavingMsg();
-    return axios.patch(
-      '/stash_datacite/authors/update',
-      {authenticity_token, author},
-      {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
-    ).then((data) => {
-      if (data.status !== 200) {
-        console.log('Response failure not a 200 response from author save');
-      }
-      setAuthors((as) => as.map((a) => (a.id === author.id ? data.data : a)));
-      showSavedMsg();
     });
   };
 
@@ -92,19 +74,6 @@ export default function Authors({
       }
     });
   };
-
-  useEffect(() => {
-    if (!isEqual(resource.authors, authors) || !isEqual(resource.users, users)) {
-      setResource((r) => ({...r, authors, users}));
-    }
-  }, [authors, users]);
-
-  useEffect(() => {
-    if (current) {
-      setAuthors(resource.authors);
-      setUsers(resource.users);
-    }
-  }, [current]);
 
   return (
     <>
@@ -153,7 +122,6 @@ export default function Authors({
           + Add group author
         </button>
       </div>
-      <div role="alert">{error}</div>
       {authors.length === 1 && (
         <div className="callout warn">
           <p>

@@ -82,6 +82,7 @@ RSpec.feature 'NewDataset', type: :feature do
       company = Faker::Company.name
       res_id = page.current_path.match(%r{submission/(\d+)})[1].to_i
       click_button 'Authors'
+      click_button 'Author list'
       click_button '+ Add group author'
       fill_in 'Organization or group name', with: company
       page.send_keys(:tab)
@@ -93,6 +94,7 @@ RSpec.feature 'NewDataset', type: :feature do
 
     it 'reorders authors with keyboard' do
       click_button 'Authors'
+      click_button 'Author list'
       first_author = { first: Faker::Name.unique.first_name, last: Faker::Name.unique.last_name, email: Faker::Internet.email }
       second_author = { first: Faker::Name.unique.first_name, last: Faker::Name.unique.last_name, email: Faker::Internet.email }
 
@@ -100,6 +102,7 @@ RSpec.feature 'NewDataset', type: :feature do
       fill_in_author(first_name: first_author[:first], last_name: first_author[:last], email: first_author[:email], has_orcid: true)
 
       # fill second
+      click_button 'Author list'
       click_button 'Add author'
       expect(page).to have_content('Second author name is required. Fill in or delete the entry')
       within(:css, '.dd-list-item:nth-child(2)') do

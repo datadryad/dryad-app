@@ -70,6 +70,7 @@ function Submission({
       fail: (review || step.index > 1) && authorCheck(resource),
       component: <Authors
         current={step.name === 'Authors'}
+        review={review}
         resource={resource}
         setResource={setResource}
         user={user}
@@ -117,8 +118,13 @@ function Submission({
       name: 'Compliance',
       pass: !complianceCheck(resource),
       fail: (review || step.index > 5) && complianceCheck(resource),
-      component: <Compliance current={step.name === 'Compliance'} resource={resource} setResource={setResource} error={complianceCheck(resource)} />,
-      help: <CompHelp />,
+      component: <Compliance {...{resource, setResource}} 
+        current={step.name === 'Compliance'} 
+        creditCheck={resource.authors.some(a => a.credit_roles.length)} 
+        error={complianceCheck(resource)} />,
+      help: <CompHelp 
+        creditCheck={resource.authors.some(a => a.credit_roles.length)} 
+        setAuthorStep={() => setStep(steps().find((l) => l.name === 'Authors'))} />,
       preview: <CompPreview resource={resource} previous={previous} />,
     },
     {

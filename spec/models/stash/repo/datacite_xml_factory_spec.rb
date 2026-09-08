@@ -26,6 +26,8 @@ module Datacite
         @resource = create(:resource_published,
                            user: user,
                            tenant_id: 'dataone')
+
+        @resource.authors.each { |a| a.credit_role = create(:credit_role) }
         Timecop.return
         @xml_factory = DataciteXMLFactory.new(
           se_resource_id: @resource.id,
@@ -171,7 +173,18 @@ module Datacite
             .to eql('ROR')
         end
 
-        it 'adds funding affiliations to XML' do
+        it 'adds contributors to XML' do
+          actual_string = @xml_factory.build_datacite_xml
+          actual = Hash.from_xml(actual_string)['resource']
+
+          # adds CRediT role and contact person
+          expect(actual['contributors']['contributor'].length).to be(2)
+          expect(actual['contributors']['contributor'][0]['contributorName']).to eq(@resource.authors.first.author_full_name)
+          expect(actual['contributors']['contributor'][0]['nameIdentifier']).to eq(@resource.authors.first.author_orcid)
+          expect(actual['contributors']['contributor'][1]['contributorType']).to eq('ContactPerson')
+        end
+
+        it 'adds funding to XML' do
           builder = Stash::Repo::MerrittDataciteBuilder.new(@xml_factory)
           contents = builder.contents
           doc = Nokogiri::XML(contents)

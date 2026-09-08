@@ -1,18 +1,29 @@
 .steps-wrapper {
   margin: 1.5rem auto 2rem;
+  padding: 0;
+  list-style: '';
   display: flex;
   justify-content: space-between;
 
   .step {
     position: relative;
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    flex: 1;
-    cursor: pointer;
-    &:hover .step-name {
-      text-decoration: underline;
+
+    button {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      border: none;
+      background: transparent;
+      &:hover .step-name {
+        text-decoration: underline;
+      }
     }
 
     .bar {
@@ -42,6 +53,14 @@
       margin-bottom: .5rem;
     }
 
+    .error-step .step-counter {
+      background-color: $lightest-red;
+    }
+
+    .error-step .step-name {
+      color: $red;
+    }
+
     &.completed {
       .bar {
         border-color: $medium-blue;
@@ -49,6 +68,13 @@
       .step-counter {
         background-color: $medium-blue;
         color: white;
+      }
+      .error-step .step-counter {
+        background-color: $red;
+        color: white;
+      }
+      .error-step .step-name {
+        color: $red;
       }
     }
     &.current {

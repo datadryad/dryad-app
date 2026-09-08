@@ -53,7 +53,7 @@ export function TitleHelp() {
 export function AuthHelp() {
   return (
     <>
-      <p>All authors must include their name and at least one affiliation. Author affiliations are imported from <a href="https://ror.org/" target="_blank" rel="noreferrer">ROR<ExitIcon /></a> and can be searched by name or by ROR ID URL.</p>
+      <p>All authors must include their name and at least one affiliation. Author affiliations are imported from <a href="https://ror.org/" target="_blank" rel="noreferrer">ROR<ExitIcon /></a> and can be searched by name or by ROR ID URL. Author contribution roles from <a href="https://credit.niso.org/" target="_blank" rel="noreferrer">CRediT<ExitIcon /></a> may also be listed.</p>
       <p>Authors may be invited to edit this submission. One author must be the submitter. The submitter will be the point of contact for Dryad, and must approve this submission for curation and publication.</p>
       <p>An email address is required for the submitter and any other authors invited to edit the submission.</p>
       <p>Check <b>Publish email</b> to display an author&apos;s email address on the public dataset. At least one published email is required.</p>
@@ -96,9 +96,25 @@ export function SuppHelp({type}) {
   );
 }
 
-export function CompHelp() {
+export function CompHelp({creditCheck, setAuthorStep}) {
   return (
     <>
+      {creditCheck && (
+        <p>Author contributions can be checked in the Contributions step of the{' '}
+          <span
+            role="button"
+            tabIndex="0"
+            className="o-link__primary"
+            onClick={setAuthorStep}
+            onKeyDown={(e) => {
+              if (['Enter', 'Space'].includes(e.key)) {
+                setAuthorStep();
+              }
+            }}
+          >Authors screen
+          </span>.
+        </p>
+      )}
       <p>
         Dryad data is licensed as{' '}
         <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noreferrer">

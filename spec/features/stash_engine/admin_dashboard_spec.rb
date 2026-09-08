@@ -329,6 +329,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
             @resource.identifier.update(last_invoiced_file_size: @resource.total_file_size)
             click_button 'Edit dataset'
             click_button 'Authors'
+            click_button 'Affiliations'
             all('[id^=instit_affil_]').last.set('test institution')
             page.send_keys(:tab)
             page.has_css?('.use-text-entered')

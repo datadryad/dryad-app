@@ -29,7 +29,7 @@ export default function RorAutocomplete({
       if (prevText.current !== acText || prevID.current !== acID) {
         // from the ref, submit the Formik form above me
         // give some time for affiliation state to update
-        setTimeout(() => formRef.current.handleSubmit(), 300);
+        setTimeout(() => formRef.current?.handleSubmit(), 300);
       }
       prevText.current = acText;
       prevID.current = acID;

@@ -64,6 +64,7 @@ module DatasetHelper
     click_button 'Title'
     fill_in_title
     click_button 'Authors'
+    click_button 'Affiliations'
     fill_in_affiliation
     expect(find_button('Authors')).to match_selector('[aria-describedby="step-complete"')
     click_button 'Description'
@@ -161,17 +162,14 @@ module DatasetHelper
     page.send_keys(:tab)
     click_button 'Add email' if has_orcid
     expect(page.document).to have_content('All progress saved')
-    fill_in_affiliation
   end
 
   def fill_in_affiliation(name: Faker::Educator.university)
-    while page.has_css?('[aria-invalid="true"]')
-      fill_in 'Institutional affiliation', with: name
-      page.send_keys(:tab)
-      expect(page).to have_css('.use-text-entered')
-      find('.use-text-entered').set(true)
-      page.send_keys(:tab)
-    end
+    find_field('Institutional affiliation').send_keys(name)
+    page.send_keys(:tab)
+    expect(page).to have_css('.use-text-entered')
+    find('.use-text-entered').set(true)
+    page.send_keys(:tab)
   end
 
   def fill_in_validation
@@ -311,6 +309,7 @@ module DatasetHelper
     fill_in_title
 
     click_button 'Authors'
+    click_button 'Affiliations'
     fill_in_affiliation(name: tenant_name)
     expect(find_button('Authors')).to match_selector('[aria-describedby="step-complete"')
 

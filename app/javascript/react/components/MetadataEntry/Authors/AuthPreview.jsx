@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react';
 import {orcidURL} from './OrcidInfo';
+import {upCase} from '../../../../lib/utils';
 
 const affName = (aff) => {
   if (!aff || (!aff.short_name && !aff.long_name)) return '';
@@ -13,7 +14,18 @@ const getAffs = (ar) => ar.map((a) => a.affiliations).flat().reduce((arr, aff) =
   return arr;
 }, []);
 
-const fullname = (author) => [author?.author_first_name, author?.author_last_name].filter(Boolean).join(' ');
+const getRoles = (ar) => ar.reduce((arr, a) => {
+  if (a.credit_roles.length) {
+    const list = a.credit_roles.flat().map((r) => r.credit_role).join(', ')
+    arr.push([fullname(a), upCase(list.toLowerCase())])
+  }
+  return arr
+}, []);
+
+const fullname = (author) => {
+  if (author?.author_org_name) return author.author_org_name;
+  return [author?.author_first_name, author?.author_last_name].filter(Boolean).join(' ');
+};
 const citename = (author) => {
   if (author?.author_org_name) return author.author_org_name;
   return [author?.author_last_name, author?.author_first_name].filter(Boolean).join(', ');
@@ -24,8 +36,12 @@ export default function AuthPreview({resource, previous, curator}) {
   const prev_auth = previous?.authors || [];
   const affs = getAffs(authors);
   const prev_affs = getAffs(prev_auth);
+  const roles = getRoles(authors);
+  const prev_roles = getRoles(prev_auth);
   const del_auth = prev_auth?.slice(authors?.length);
   const del_affs = prev_affs?.slice(affs?.length);
+  const del_roles = prev_roles?.slice(roles?.length);
+
   return (
     <>
       <p className="o-metadata__author-list">
@@ -105,7 +121,7 @@ export default function AuthPreview({resource, previous, curator}) {
       {affs.length > 0 && (
         <div className="o-metadata__aff-list">
           <p role="heading" aria-level="2" style={{marginTop: '1em', fontSize: '1rem'}}>
-            Author affiliations
+            <b>Affiliations</b>
           </p>
           <ol id="affiliation-list">
             {affs.map((aff, i) => (
@@ -128,11 +144,39 @@ export default function AuthPreview({resource, previous, curator}) {
       {previous && del_affs.length > 0 && (
         <div className="o-metadata__aff-list del">
           <p role="heading" aria-level="2" style={{marginTop: '1em', fontSize: '1rem'}}>
-            <del>Author affiliations</del>
+            <del>Affiliations</del>
           </p>
           <ol style={{listStyle: ''}}>
             {del_affs.map((aff) => <li key={aff[0]}><del>{aff[1]}</del></li>)}
           </ol>
+        </div>
+      )}
+      {Object.keys(roles).length > 0 && (
+        <div className="o-metadata__aff-list">
+          <p role="heading" aria-level="2" style={{marginTop: '1em', fontSize: '1rem'}}><b>Contributions</b></p>
+          <p>
+            {roles.map((r, i) => (
+              <>
+                {previous && roles[i] !== prev_roles?.[i] ? (
+                  <ins><em>{r[0]}:</em> {r[1]}</ins> 
+                ) : ( 
+                  <><em>{r[0]}:</em> {r[1]}</>
+                )}
+                {previous && r[1] !== prev_roles[i]?.[1] && prev_roles[i]?.[1] && <del><em>{prev_roles[i][0]}:</em> {prev_roles[i][1]}</del>}
+                {'. '}
+              </>
+            ))}
+          </p>
+        </div>
+      )}
+      {previous && del_roles.length > 0 && (
+        <div className="o-metadata__aff-list del">
+          <p role="heading" aria-level="2" style={{marginTop: '1em', fontSize: '1rem'}}>
+            <del>Contributions</del>
+          </p>
+          <p>
+            {del_roles.map((r) => <><del key={r}><em>{r[0]}:</em> {r[1]}</del>{'. '}</>)}
+          </p>
         </div>
       )}
     </>

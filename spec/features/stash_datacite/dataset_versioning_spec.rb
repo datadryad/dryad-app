@@ -321,6 +321,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   def update_dataset(curator: false)
     # Add a value to the dataset, submit it and then mock a successful submission
     click_button 'Authors'
+    click_button 'Affiliations'
     all('[id^=instit_affil_]').last.set(Faker::Company.name)
     page.send_keys(:tab)
     find('.use-text-entered').set(true) if page.has_css?('.use-text-entered')
