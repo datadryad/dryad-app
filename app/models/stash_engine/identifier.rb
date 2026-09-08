@@ -73,6 +73,7 @@ module StashEngine
     has_many :curation_activities, class_name: 'StashEngine::CurationActivity', through: :resources
     has_many :payments, class_name: 'ResourcePayment', through: :resources
     has_many :sponsored_payment_logs, through: :resources
+    has_many :receipts, -> { receipt }, class_name: 'FeeRecord', through: :resources
     has_one :research_integrity_case
 
     after_create :create_process_date, unless: :process_date
@@ -594,6 +595,7 @@ module StashEngine
       res = resources.files_published.order(total_file_size: :desc).first
       return if res.nil? || res.total_file_size.nil?
 
+      res.fee_record&.update(status: :receipt)
       update(last_invoiced_file_size: res.total_file_size)
       res.total_file_size
     end

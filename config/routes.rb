@@ -509,6 +509,8 @@ Rails.application.routes.draw do
   # Endpoint for LinkOut
   get :discover, to: 'search#discover'
 
+  get 'receipt/:id', to: 'fee_record#show', as: 'receipt'
+  
   get :fee_calculator, to: 'fee_calculator#calculate_fee', format: :json
   get :fee_estimator, to: 'fee_calculator#calculate_estimate', format: :json
   get 'resource_fee_calculator/:id', to: 'fee_calculator#calculate_resource_fee', format: :json, as: :resource_fee_calculator
@@ -574,7 +576,9 @@ Rails.application.routes.draw do
 
   # Routing to redirect old Dryad URLs to their correct locations in this system
   get '/pages/faq', to: redirect('/requirements')
-  get '/pages/jdap', to: redirect('docs/JointDataArchivingPolicy.pdf')
+  get '/pages/jdap', to: redirect('/docs/JointDataArchivingPolicy.pdf')
+  get '/pages/endangeredSpecies', to: redirect('/docs/EndangeredSpeciesData.pdf')
+  get '/pages/humanSubjectsData', to: redirect('/docs/HumanSubjectsData.pdf')
   get '/pages/membershipOverview', to: redirect('/join_us#our-membership')
   get '/stash/our_membership', to: redirect('/join_us#our-membership')
   get '/stash/our_community', to: redirect('/join_us#our-membership')

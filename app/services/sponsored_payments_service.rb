@@ -61,6 +61,7 @@ class SponsoredPaymentsService
   private
 
   def update_identifier_files_size
+    resource.fee_record&.update(status: :receipt)
     identifier.update(last_invoiced_file_size: resource.total_file_size)
   end
 

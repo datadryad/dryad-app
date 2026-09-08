@@ -22,17 +22,17 @@ function Receipt({fees}) {
           </thead>
           <tbody>
             <tr>
-              <th scope="row>">Dryad fees</th>
+              <th scope="row">Dryad fees</th>
               <td>{formatCost(fees.dpc_sponsored)}</td>
               <td>{formatCost(fees.storage_fee + fees.storage_sponsored)}</td>
             </tr>
             <tr>
-              <th scope="row>">Sponsor credit</th>
+              <th scope="row">Sponsor credit</th>
               <td>-{formatCost(fees.dpc_sponsored)}</td>
               <td>-{formatCost(fees.storage_sponsored)}</td>
             </tr>
             <tr>
-              <th scope="row>">Amount due</th>
+              <th scope="row">Amount due</th>
               <td></td>
               <td>{formatCost(fees.storage_fee)}</td>
             </tr>
