@@ -1,18 +1,23 @@
 class ResourceFeeCalculatorService
-  attr_reader :resource, :identifier
+  attr_reader :resource, :identifier, :payer_record
 
-  def initialize(resource)
+  def initialize(resource, payer_record = nil)
     @resource = resource
+    @payer_record = payer_record
   end
 
   def calculate(options)
-    FeeCalculatorService.new(type).calculate(options, resource: resource)
+    FeeCalculatorService.new(type).calculate(options, resource: resource, payer_record: payer_record)
   rescue ActionController::BadRequest => e
     { error: true, message: e.message, old_payment_system: e.message == OLD_PAYMENT_SYSTEM_MESSAGE }
   end
 
   def storage_fee_tier
     FeeCalculatorService.new(type).storage_fee_tier(resource: resource)
+  end
+
+  def sponsored_tier
+    FeeCalculatorService.new(type).sponsored_tier(resource, payer_record)
   end
 
   private

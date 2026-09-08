@@ -67,6 +67,7 @@
     const select = ({label, value}) => {
       v.value = value
       l.value = label
+      v.dispatchEvent(new Event('change'));
     }
     <% if local_assigns.key?(:save_text) %>
       textbox.addEventListener('blur', () => {
