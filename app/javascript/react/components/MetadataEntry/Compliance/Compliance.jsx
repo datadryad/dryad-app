@@ -170,7 +170,7 @@ export default function Compliance({
               name="license"
               type="checkbox"
               value="cc0"
-              defaultChecked={license === 'cc0'}
+              defaultChecked={license === 'cc0' ? 'checked' : null}
               onChange={licenseChange}
               aria-errormessage="license_error"
             />
