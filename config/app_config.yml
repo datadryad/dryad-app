@@ -78,6 +78,7 @@ test:
     region: us-west-2
     bucket: a-test-bucket
     merritt_bucket: a-merritt-test-bucket
+    reports_bucket: reports-bucket
     key: abcdefg
     secret: HIJKLMNOP
     sns_arn: some:arn
@@ -343,6 +344,7 @@ stage:
     region: us-west-2
     bucket: dryad-s3-stg
     merritt_bucket: dryad-assetstore-merritt-stage
+    reports_bucket: dryad-reports
     key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
   solr_url: <%= ENV['SOLR_URL'] || "http://34.215.143.38:8983/solr/dryad" %>
@@ -396,6 +398,7 @@ production:
     region: us-west-2
     bucket: dryad-s3-prd
     merritt_bucket: dryad-assetstore-merritt-west
+    reports_bucket: dryad-reports
     key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
   google_analytics_id: G-6CWE0T05CC

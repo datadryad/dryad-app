@@ -183,14 +183,6 @@ module StashEngine
       pub.update(publication_name: new_title, publication_issn: new_issn)
     end
 
-    def as_json(_options = {})
-      super(
-        include: {
-          payment_configuration: { only: %i[payment_plan covers_dpc covers_ldf ldf_limit yearly_ldf_fee_limit] }
-        }
-      )
-    end
-
     def sponsored_identifiers
       StashEngine::Identifier.where("payment_type like 'journal-%'").where(payment_id: issn_array).distinct
     end
