@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Stripe::Handlers::ChargeRefunded do
-  subject(:subject) { described_class.new(event) }
+  subject(:subject) { described_class.new(event: event) }
 
   let(:payment_intent) { 'pi_123' }
   let!(:payment) { create(:resource_payment, pay_with_invoice: false, payment_intent: payment_intent, status: 'paid') }

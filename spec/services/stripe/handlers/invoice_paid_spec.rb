@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Stripe::Handlers::InvoicePaid do
-  subject(:subject) { described_class.new(event) }
+  subject(:subject) { described_class.new(event: event) }
 
   let(:invoice_id) { 'in_123' }
   let(:resource) { create(:resource) }
@@ -99,10 +99,10 @@ RSpec.describe Stripe::Handlers::InvoicePaid do
     end
   end
 
-  describe '#status_time' do
+  describe '#paid_at' do
     context 'when the refund has a created timestamp' do
       it 'returns the refund creation time' do
-        expect(subject.send(:status_time)).to eq(Time.at(1_700_000_000))
+        expect(subject.send(:paid_at, invoice)).to eq(Time.at(1_700_000_000))
       end
     end
 
@@ -115,13 +115,13 @@ RSpec.describe Stripe::Handlers::InvoicePaid do
         current_time = Time.zone.parse('2026-01-01 12:00:00')
         allow(Time).to receive(:current).and_return(current_time)
 
-        expect(subject.send(:status_time)).to eq(current_time)
+        expect(subject.send(:paid_at, invoice)).to eq(current_time)
       end
 
       it 'logs an error' do
         expect(Rails.logger).to receive(:error).with('Stripe - invoice.paid - Could not get status_time for Invoice with ID in_123.')
 
-        subject.send(:status_time)
+        subject.send(:paid_at, invoice)
       end
     end
   end

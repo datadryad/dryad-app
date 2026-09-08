@@ -3,7 +3,7 @@ module Stripe
     class ChargeRefunded
       attr_reader :event, :payment_intent, :payment
 
-      def initialize(event)
+      def initialize(event: nil)
         @event = event
         @payment_intent = event.data.object.payment_intent
         @payment = ResourcePayment.where(pay_with_invoice: false, payment_intent: payment_intent).last

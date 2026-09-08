@@ -29,7 +29,7 @@ namespace :payments do
       payment = ResourcePayment.find_by(invoice_id: invoice.id)
       if payment.present?
         puts "Updating payment for invoice #{invoice.id}"
-        payment.update(status: :voided, status_time: Time.at(invoice.status_transitions.voided_at.to_i))
+        Stripe::Handlers::InvoiceVoided.new(invoice: invoice).call
       else
         puts "No payment found for invoice #{invoice.id}"
       end

@@ -13,19 +13,10 @@ module Stripe
 
         payment.update(
           status: :paid,
-          paid_at: status_time,
-          status_time: status_time
+          paid_at: paid_at(invoice),
+          status_time: paid_at(invoice)
         )
         CurationService.new(resource: payment.resource, user_id: 0, status: 'queued', note: 'Invoice has been paid').process
-      end
-
-      private
-
-      def status_time
-        Time.at(@event.data.object.status_transitions.paid_at.to_i)
-      rescue StandardError
-        log_status_time_error('invoice.paid')
-        Time.current
       end
     end
   end

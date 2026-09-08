@@ -78,9 +78,9 @@ class PaymentsController < ApplicationController
       return head :ok
     end
 
-    return head :ok unless event.type.in?(HANDLERS.keys)
+    return head :ok unless event.type.in?(STRIPE_EVENT_HANDLERS.keys)
 
-    STRIPE_EVENT_HANDLERS[event.type].new(event).call
+    STRIPE_EVENT_HANDLERS[event.type].new(event: event).call
 
     head :ok
   rescue StandardError => e
