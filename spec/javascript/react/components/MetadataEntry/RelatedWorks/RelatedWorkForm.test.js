@@ -25,9 +25,9 @@ describe('RelatedWorkForm', () => {
 
   // relatedIdentifier, workTypes, removeFunction, updateWork,
   beforeEach(() => {
-    const resourceId = faker.datatype.number();
+    const resourceId = faker.number.int();
     relatedIdentifier = {
-      id: faker.datatype.number(),
+      id: faker.number.int(),
       related_identifier: faker.internet.url(),
       related_identifier_type: 'url',
       relation_type: 'cites',

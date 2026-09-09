@@ -15,6 +15,7 @@
 #  payment_type                :string(191)
 #  ppr_fee_paid                :boolean          default(FALSE)
 #  status                      :integer
+#  status_time                 :datetime
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
 #  checkout_session_id         :string(191)
@@ -38,7 +39,7 @@ class ResourcePayment < ApplicationRecord
 
   belongs_to :resource, class_name: 'StashEngine::Resource'
 
-  enum :status, { created: 1, paid: 2, failed: 3 }
+  enum :status, { created: 1, paid: 2, failed: 3, voided: 4, refunded: 5 }
 
   scope :with_discount, -> { where(has_discount: true) }
   scope :ppr_paid, -> { where(ppr_fee_paid: true) }

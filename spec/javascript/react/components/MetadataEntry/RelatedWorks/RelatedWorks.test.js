@@ -22,13 +22,13 @@ describe('RelatedWorks', () => {
   ];
 
   beforeEach(() => {
-    const resourceId = faker.datatype.number();
+    const resourceId = faker.number.int();
     works = [];
     // add 3 works
     for (let i = 0; i < 3; i += 1) {
       works.push(
         {
-          id: faker.datatype.number(),
+          id: faker.number.int(),
           related_identifier: faker.internet.url(),
           related_identifier_type: 'url',
           relation_type: 'cites',
@@ -83,7 +83,7 @@ describe('RelatedWorks', () => {
     const data = {
       status: 200,
       data: {
-        id: faker.datatype.number(),
+        id: faker.number.int(),
         related_identifier: '',
         resource_id: resource.id,
         work_type: 'article',
@@ -107,7 +107,7 @@ describe('RelatedWorks', () => {
     const data = {
       status: 200,
       data: {
-        id: faker.datatype.number(),
+        id: faker.number.int(),
         related_identifier: '',
         resource_id: resource.id,
         work_type: 'article',

@@ -95,40 +95,22 @@ module StashEngine
 
     context 'self.allowed_states(current_state)' do
       context 'when user is an admin' do
-        let(:user) { create(:user, role: 'admin') }
 
         it 'indicates the states that are allowed from each' do
-          expect(CurationActivity.allowed_states('in_progress', 'unpublished', user)).to eq(%w[in_progress])
+          expect(CurationActivity.allowed_states('in_progress', 'unpublished')).to eq(%w[in_progress])
 
-          expect(CurationActivity.allowed_states('curation', 'unpublished', user)).to \
-            eq(%w[awaiting_payment peer_review curation action_required withdrawn embargoed published])
+          expect(CurationActivity.allowed_states('curation', 'unpublished'))
+            .to eq(%w[awaiting_payment peer_review curation action_required withdrawn embargoed published])
 
-          expect(CurationActivity.allowed_states('curation', 'published', user)).to \
-            eq(%w[awaiting_payment peer_review curation action_required embargoed published])
+          expect(CurationActivity.allowed_states('curation', 'published'))
+            .to eq(%w[awaiting_payment peer_review curation action_required embargoed published])
 
-          expect(CurationActivity.allowed_states('withdrawn', 'unpublished', user)).to \
-            eq(%w[withdrawn curation])
+          expect(CurationActivity.allowed_states('withdrawn', 'unpublished')).to eq(%w[withdrawn])
 
-          expect(CurationActivity.allowed_states('withdrawn', 'published', user)).to \
-            eq(%w[curation])
-
-          expect(CurationActivity.allowed_states('retracted', 'unpublished', user)).to \
-            eq(%w[retracted])
+          expect(CurationActivity.allowed_states('retracted', 'unpublished')).to eq(%w[retracted])
         end
       end
 
-      context 'when user is a data manager' do
-        let(:user) { create(:user, role: 'manager') }
-
-        CurationActivity::CURATOR_ALLOWED_STATES.each_key do |status|
-          it "allows withdrawn for #{status} status" do
-            expect(CurationActivity.allowed_states(status, 'unpublished', user)).to include('withdrawn')
-          end
-          it "does not allow withdrawn for #{status} status when published" do
-            expect(CurationActivity.allowed_states(status, 'published', user)).not_to include('withdrawn')
-          end
-        end
-      end
     end
 
     it_should_behave_like 'soft delete record', :curation_activity

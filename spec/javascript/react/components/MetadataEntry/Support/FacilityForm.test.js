@@ -12,14 +12,14 @@ describe('FacilityForm', () => {
   const setResource = () => {};
 
   beforeEach(() => {
-    const resourceId = faker.datatype.number();
+    const resourceId = faker.number.int();
     info = {
       setResource,
       resource: {
         id: resourceId,
         contributors: [{
           resource_id: resourceId,
-          name: faker.company.companyName(),
+          name: faker.company.name(),
           contributor_type: 'sponsor',
           identifier_type: 'ror',
           name_identifier_id: 'https://ror.org/1323',

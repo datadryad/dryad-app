@@ -1,0 +1,6 @@
+document.getElementById('genericModalContent').innerHTML = "<%= escape_javascript(render partial: 'show') %>";
+document.getElementById('genericModalDialog').showModal();
+document.getElementById('cancel_dialog').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('genericModalDialog').close();
+});

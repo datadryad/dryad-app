@@ -1,4 +1,6 @@
 class FeeCalculatorController < ApplicationController
+  include StashEngine::ApplicationHelper
+
   respond_to :json
 
   def calculate_fee
@@ -17,10 +19,35 @@ class FeeCalculatorController < ApplicationController
 
   def calculate_resource_fee
     resource = StashEngine::Resource.find(params[:id])
+    fees = ResourceFeeCalculatorService.new(resource).calculate(resource_options)
+    record = resource.fee_record || resource.build_fee_record
+    record.update(fees: fees.to_json)
 
     render json: {
       options: resource_options,
-      fees: ResourceFeeCalculatorService.new(resource).calculate(resource_options)
+      fees: fees
+    }
+  end
+
+  def calculate_estimate
+    resource = StashEngine::Temp::Resource.new
+    resource.total_file_size = params[:storage_size]
+
+    payer = params[:payer_type].present? ? params[:payer_type].constantize.find(params[:payer_id]) : nil
+
+    resource.tenant = StashEngine::Tenant.find(params[:institution_id])
+    resource.journal = payer if params[:payer_type] == 'StashEngine::Journal'
+
+    service = ResourceFeeCalculatorService.new(resource, payer)
+    limits = service.sponsored_tier
+    render json: {
+      options: resource_options,
+      fees: service.calculate(resource_options),
+      limits: {
+        tier: limits[:tier],
+        limit: filesize(limits[:range].to_s.split('..')[1].to_i),
+        contact: payer ? PayerDetailsService.new(payer).details.contact : nil
+      }
     }
   end
 

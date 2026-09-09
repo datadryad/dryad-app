@@ -18,7 +18,8 @@ module StashEngine
     end
 
     def delete?
-      @record.creator == @user || @record.submitter == @user
+      @record.current_resource_state&.resource_state == 'in_progress' &&
+      (@record.creator == @user || @record.submitter == @user || @user.min_manager?)
     end
 
     def curate?

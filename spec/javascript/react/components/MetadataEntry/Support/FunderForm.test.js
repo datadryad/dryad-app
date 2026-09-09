@@ -12,19 +12,19 @@ describe('FunderForm', () => {
   let resourceId; let
     info;
   beforeEach(() => {
-    resourceId = faker.datatype.number();
+    resourceId = faker.number.int();
     info = {
       current: true,
       resourceId,
       contributor: {
-        id: faker.datatype.number(),
-        contributor_name: faker.company.companyName(),
+        id: faker.number.int(),
+        contributor_name: faker.company.name(),
         contributor_type: 'funder',
         identifier_type: null,
         name_identifier_id: null,
         resourceId,
-        award_number: faker.datatype.string(5),
-        award_description: faker.datatype.string(10),
+        award_number: faker.string.alphanumeric(5),
+        award_description: faker.string.alphanumeric(10),
         funder_order: null,
       },
       updateFunder: jest.fn(),
@@ -69,7 +69,7 @@ describe('FunderForm', () => {
     await waitFor(() => options);
 
     const newFunder = {
-      id: faker.datatype.number(),
+      id: faker.number.int(),
       contributor_name: 'Wellcome Trust',
       contributor_type: 'funder',
       identifier_type: 'ror',

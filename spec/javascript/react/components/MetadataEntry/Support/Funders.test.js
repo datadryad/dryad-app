@@ -12,20 +12,20 @@ describe('Funders', () => {
   const setResource = () => {};
 
   beforeEach(() => {
-    const resourceId = faker.datatype.number();
+    const resourceId = faker.number.int();
     contributors = [];
     // add 3 contributors
     for (let i = 0; i < 3; i += 1) {
       contributors.push(
         {
-          id: faker.datatype.number(),
-          contributor_name: faker.company.companyName(),
+          id: faker.number.int(),
+          contributor_name: faker.company.name(),
           contributor_type: 'funder',
           identifier_type: null,
           name_identifier_id: null,
           resource_id: resourceId,
-          award_number: faker.datatype.string(5),
-          award_description: faker.datatype.string(10),
+          award_number: faker.string.alphanumeric(5),
+          award_description: faker.string.alphanumeric(10),
           funder_order: i,
         },
       );
@@ -78,7 +78,7 @@ describe('Funders', () => {
     const promise = Promise.resolve({
       status: 200,
       data: {
-        id: faker.datatype.number(),
+        id: faker.number.int(),
         contributor_name: '',
         contributor_type: 'funder',
         identifier_type: 'ror',
@@ -105,7 +105,7 @@ describe('Funders', () => {
     const promise = Promise.resolve({
       status: 200,
       data: {
-        id: faker.datatype.number(),
+        id: faker.number.int(),
         contributor_name: '',
         contributor_type: 'funder',
         identifier_type: 'ror',
@@ -116,7 +116,7 @@ describe('Funders', () => {
     const nofunder = Promise.resolve({
       status: 200,
       data: {
-        id: faker.datatype.number(),
+        id: faker.number.int(),
         contributor_name: 'N/A',
         contributor_type: 'funder',
         identifier_type: 'ror',

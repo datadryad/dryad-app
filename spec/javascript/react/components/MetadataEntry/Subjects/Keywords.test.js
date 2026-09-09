@@ -20,7 +20,7 @@ describe('Keywords', () => {
     for (let i = 0; i < 3; i += 1) {
       subjects.push(
         {
-          id: faker.datatype.number(),
+          id: faker.number.int(),
           subject: words[i],
           subject_scheme: null,
           scheme_uri: null,
@@ -28,7 +28,7 @@ describe('Keywords', () => {
       );
     }
     resource = {
-      id: faker.datatype.number(),
+      id: faker.number.int(),
       subjects,
     };
   });
@@ -106,7 +106,7 @@ describe('Keywords', () => {
 
   it('adds a keyword to the document', async () => {
     const extraSubj = {
-      id: faker.datatype.number(),
+      id: faker.number.int(),
       subject: faker.lorem.words(2),
       subject_scheme: null,
       scheme_uri: null,

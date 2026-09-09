@@ -18,15 +18,15 @@ jest.mock('../../../../../../app/javascript/react/shared/store', () => ({
 jest.mock('axios');
 
 const makeAuthor = (resource_id, myOrder) => {
-  const sect = () => faker.datatype.number({min: 1000, max: 9999});
+  const sect = () => faker.number.int({min: 1000, max: 9999});
   return {
-    id: faker.datatype.number({min: 1, max: 32767}),
-    author_first_name: faker.name.firstName(),
-    author_last_name: faker.name.lastName(),
+    id: faker.number.int({min: 1, max: 32767}),
+    author_first_name: faker.person.firstName(),
+    author_last_name: faker.person.lastName(),
     author_org_name: null,
     author_email: faker.internet.email(),
     author_orcid: `${sect()}-${sect()}-${sect()}-${sect()}`,
-    resource_id: resource_id || faker.datatype.number({min: 1, max: 32767}),
+    resource_id: resource_id || faker.number.int({min: 1, max: 32767}),
     author_order: myOrder,
     orcid_invite_path: faker.internet.url(),
     affiliations: [],
@@ -38,7 +38,7 @@ describe('AuthorSteps', () => {
   let resource; let user; let dryadAuthors;
   const setResource = (item) => { resource = item; };
   beforeEach(() => {
-    const rid = faker.datatype.number();
+    const rid = faker.number.int();
     dryadAuthors = (new Array(3).fill(null)).map((_item, idx) => makeAuthor(rid, (2 - idx)));
     resource = {
       id: rid,
@@ -135,7 +135,7 @@ describe('AuthorSteps', () => {
     const promise = Promise.resolve({
       status: 200,
       data: {
-        id: faker.datatype.number({min: 1, max: 32767}),
+        id: faker.number.int({min: 1, max: 32767}),
         author_first_name: '',
         author_last_name: '',
         author_email: '',

@@ -14,14 +14,14 @@ describe('Publication', () => {
   const setResource = () => {};
 
   beforeEach(() => {
-    const makeIssn = () => `${faker.datatype.number({min: 1000, max: 9999})}-${faker.datatype.number({min: 1000, max: 9999})}`;
+    const makeIssn = () => `${faker.number.int({min: 1000, max: 9999})}-${faker.number.int({min: 1000, max: 9999})}`;
     api_journals = (new Array(3).fill(null)).map(() => makeIssn());
     journals = {data: {api_journals}};
     info = {
       current: true,
       setResource,
       resource: {
-        id: faker.datatype.number(),
+        id: faker.number.int(),
         identifier: {
           import_type: 'other',
         },

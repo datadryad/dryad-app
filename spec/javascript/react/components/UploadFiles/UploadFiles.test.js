@@ -71,7 +71,7 @@ describe('UploadFiles', () => {
     HTMLDialogElement.prototype.close = jest.fn(function mock() { this.open = false; });
     document.body.innerHTML = '<div id="aria-info" class="screen-reader-only" aria-live="polite" aria-atomic="true"></div>';
 
-    const resourceId = faker.datatype.number(9999);
+    const resourceId = faker.number.int(9999);
 
     files = [
       new File(['data1'], 'data.csv', {type: 'text/csv'}),
@@ -80,7 +80,7 @@ describe('UploadFiles', () => {
     Object.defineProperty(files[0], 'size', {value: 180000});
 
     datafile = {
-      id: faker.datatype.number(999),
+      id: faker.number.int(999),
       download_filename: 'data.csv',
       upload_file_name: '383cd2f9-49a7-4d3e-a8cb-2393fda58ba2.csv',
       upload_content_type: 'text/csv',
@@ -363,7 +363,7 @@ describe('UploadFiles', () => {
 
     const note = faker.lorem.sentence();
     const data = {
-      id: faker.datatype.number(),
+      id: faker.number.int(),
       note: '',
     };
     axios.get.mockResolvedValueOnce({data});
