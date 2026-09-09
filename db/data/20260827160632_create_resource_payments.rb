@@ -7,6 +7,8 @@ class CreateResourcePayments < ActiveRecord::Migration[8.0]
       next if id.payments.where(invoice_id: id.payment_id).exists?
 
       res = id.resources.with_public_metadata.first
+      next unless res.present?
+      
       ResourcePayment.create(
         resource_id: res.id,
         payment_type: id.payment_type,
