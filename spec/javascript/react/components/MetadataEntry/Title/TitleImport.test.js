@@ -12,21 +12,21 @@ describe('TitleImport', () => {
   const setResource = () => {};
 
   beforeEach(() => {
-    const makeIssn = () => `${faker.datatype.number({min: 1000, max: 9999})}-${faker.datatype.number({min: 1000, max: 9999})}`;
+    const makeIssn = () => `${faker.number.int({min: 1000, max: 9999})}-${faker.number.int({min: 1000, max: 9999})}`;
     api_journals = (new Array(3).fill(null)).map(() => makeIssn());
     journals = {data: {api_journals}};
     info = {
       current: true,
       setResource,
       resource: {
-        id: faker.datatype.number(),
+        id: faker.number.int(),
         identifier: {
           import_type: 'other',
         },
         resource_type: {resource_type: 'dataset'},
         resource_publication: {
-          publication_name: faker.company.companyName(),
-          publication_issn: `${faker.datatype.number({min: 1000, max: 9999})}-${faker.datatype.number({min: 1000, max: 9999})}`,
+          publication_name: faker.company.name(),
+          publication_issn: `${faker.number.int({min: 1000, max: 9999})}-${faker.number.int({min: 1000, max: 9999})}`,
           manuscript_number: 'TEST-MAN-0001',
         },
         related_identifiers: [],

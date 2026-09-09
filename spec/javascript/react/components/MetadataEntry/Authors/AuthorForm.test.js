@@ -14,15 +14,15 @@ jest.mock('../../../../../../app/javascript/react/shared/store', () => ({
 jest.mock('axios');
 
 const makeAuthor = (resource_id = null, author_order = null) => {
-  const sect = () => faker.datatype.number({min: 1000, max: 9999});
+  const sect = () => faker.number.int({min: 1000, max: 9999});
   return {
-    author_first_name: faker.name.firstName(),
-    author_last_name: faker.name.lastName(),
+    author_first_name: faker.person.firstName(),
+    author_last_name: faker.person.lastName(),
     author_org_name: null,
     author_email: faker.internet.email(),
     author_orcid: `${sect()}-${sect()}-${sect()}-${sect()}`,
-    resource_id: resource_id || faker.datatype.number({min: 1, max: 32767}),
-    author_order: author_order || faker.datatype.number({min: 1, max: 32767}),
+    resource_id: resource_id || faker.number.int({min: 1, max: 32767}),
+    author_order: author_order || faker.number.int({min: 1, max: 32767}),
     orcid_invite_path: faker.internet.url(),
     affiliations: [],
   };
