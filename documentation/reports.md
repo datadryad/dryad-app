@@ -218,12 +218,11 @@ Statistics for the annual report
 ================================
 
 For the annual report, we rely on these high-level numbers:
-- data publications: go to the search page and see how many publications we
-  currently have
-- authors: `select count(distinct author_first_name, author_last_name) from stash_engine_authors;`
-- institutions: `select count(distinct long_name) from dcs_affiliations;`
-- journals: `select count(distinct publication_issn) from stash_engine_resource_publications;`
-- funders: `select distinct name_identifier_id from dcs_contributors where contributor_type="funder";`
+- data publications: `select count(id) from stash_engine_identifiers where pub_state='published' and created_at < '2026-07-01';`
+- authors: `select count(distinct author_first_name, author_last_name) from stash_engine_authors where created_at < '2026-07-01';`
+- institutions: `select count(distinct long_name) from dcs_affiliations where created_at < '2026-07-01';`
+- journals: `select count(distinct publication_issn) from stash_engine_resource_publications where created_at < '2026-07-01';` 
+- funders: `select distinct name_identifier_id from dcs_contributors where contributor_type="funder" and created_at < '2026-07-01';`
 - top journals: `select publication_name, count(publication_name) from stash_engine_resource_publications where resource_id in (select latest_resource_id from stash_engine_identifiers where pub_state = 'published' and publication_date > '2024-07-01' and publication_date < '2025-07-01') group by publication_name order by count(publication_name) desc limit 11;`
 
 Top institutions:
@@ -259,7 +258,7 @@ RAILS_ENV=production bundle exec rake identifiers:file_info_report --
 
 Container file details:
 - Export the contents of the table `stash_engine_container_files`
-- Since MySQL exports as TSV by default, it is kind to conver it to CSV
+- Since MySQL exports as TSV by default, it is kind to convert it to CSV
 
 
 Datasets affiliated with an institution
