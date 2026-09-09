@@ -14,10 +14,10 @@ describe('PublicationFormPublished', () => {
   const setSponsored = () => {};
 
   beforeEach(() => {
-    const resourceId = faker.datatype.number();
-    const makeIssn = () => `${faker.datatype.number({min: 1000, max: 9999})}-${faker.datatype.number({min: 1000, max: 9999})}`;
+    const resourceId = faker.number.int();
+    const makeIssn = () => `${faker.number.int({min: 1000, max: 9999})}-${faker.number.int({min: 1000, max: 9999})}`;
     resource_publication = {
-      publication_name: faker.company.companyName(),
+      publication_name: faker.company.name(),
       publication_issn: makeIssn(),
       manuscript_number: '',
     };
@@ -79,10 +79,10 @@ describe('PublicationFormManuscript', () => {
   const setSponsored = () => {};
 
   beforeEach(() => {
-    const resourceId = faker.datatype.number();
-    const makeIssn = () => `${faker.datatype.number({min: 1000, max: 9999})}-${faker.datatype.number({min: 1000, max: 9999})}`;
+    const resourceId = faker.number.int();
+    const makeIssn = () => `${faker.number.int({min: 1000, max: 9999})}-${faker.number.int({min: 1000, max: 9999})}`;
     resource_publication = {
-      publication_name: faker.company.companyName(),
+      publication_name: faker.company.name(),
       publication_issn: makeIssn(),
       manuscript_number: 'TEST-MAN-NUM',
     };
