@@ -5,6 +5,12 @@ export {default} from './Compliance';
 export const complianceCheck = (resource) => {
   const {license_id} = resource.identifier;
   const disclaimer = resource.descriptions.find((d) => d.description_type === 'hsi_statement');
+  const creditCheck = resource.authors.some(a => a.credit_roles.length)
+  if (creditCheck) {
+    if (resource.authors.some(a => !a.credit_confirmed)) {
+      return <p className="error-text" id="credit_confirm_error">Completion of the compliance questionnaire is required</p>
+    }
+  }
   if (!license_id) {
     return (
       <p className="error-text" id="license_error">Completion of the compliance questionnaire is required</p>

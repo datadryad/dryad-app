@@ -23,7 +23,7 @@ describe('ReadMeWizard', () => {
     info = {
       resource: {
         title: 'Test Dataset Title',
-        descriptions: [{id: faker.datatype.number(), description_type: 'technicalinfo', description: null}],
+        descriptions: [{id: faker.number.int(), description_type: 'technicalinfo', description: null}],
         identifier: {identifier: '10.5555/12345678'},
       },
       setResource,

@@ -53,6 +53,14 @@
       margin-bottom: .5rem;
     }
 
+    .error-step .step-counter {
+      background-color: $lightest-red;
+    }
+
+    .error-step .step-name {
+      color: $red;
+    }
+
     &.completed {
       .bar {
         border-color: $medium-blue;
@@ -60,6 +68,13 @@
       .step-counter {
         background-color: $medium-blue;
         color: white;
+      }
+      .error-step .step-counter {
+        background-color: $red;
+        color: white;
+      }
+      .error-step .step-name {
+        color: $red;
       }
     }
     &.current {

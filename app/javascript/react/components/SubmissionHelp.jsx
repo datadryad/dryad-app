@@ -96,9 +96,25 @@ export function SuppHelp({type}) {
   );
 }
 
-export function CompHelp() {
+export function CompHelp({creditCheck, setAuthorStep}) {
   return (
     <>
+      {creditCheck && (
+        <p>Author contributions can be checked in the Contributions step of the{' '}
+          <span
+            role="button"
+            tabIndex="0"
+            className="o-link__primary"
+            onClick={setAuthorStep}
+            onKeyDown={(e) => {
+              if (['Enter', 'Space'].includes(e.key)) {
+                setAuthorStep();
+              }
+            }}
+          >Authors screen
+          </span>.
+        </p>
+      )}
       <p>
         Dryad data is licensed as{' '}
         <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noreferrer">

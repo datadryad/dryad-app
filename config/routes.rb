@@ -106,6 +106,7 @@ Rails.application.routes.draw do
         get 'show_files'
         patch 'import_type'
         patch 'license_agree'
+        patch 'credit_agree'
         post 'logout'
         get :payer_check
       end

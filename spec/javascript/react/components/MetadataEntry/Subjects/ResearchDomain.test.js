@@ -14,11 +14,11 @@ describe('ResearchDomain', () => {
     subjectList = [];
     // make fake list of names
     for (let i = 0; i < 30; i += 1) {
-      subjectList.push({subject: faker.company.companyName(), subject_scheme: 'fos'});
+      subjectList.push({subject: faker.company.name(), subject_scheme: 'fos'});
     }
     subject = subjectList[10];  
     resource = {
-      id: faker.datatype.number(),
+      id: faker.number.int(),
       subjects: [
         subject,
       ],

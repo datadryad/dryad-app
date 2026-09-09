@@ -8,8 +8,8 @@ describe('Description', () => {
   let dcsDescription; let mceLabel;
   beforeEach(() => {
     dcsDescription = {
-      id: faker.datatype.number(),
-      resource_id: faker.datatype.number(),
+      id: faker.number.int(),
+      resource_id: faker.number.int(),
       description_type: 'abstract',
       description: null,
     };

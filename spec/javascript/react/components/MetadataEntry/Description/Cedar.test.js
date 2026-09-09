@@ -15,7 +15,7 @@ describe('Cedar', () => {
     HTMLDialogElement.prototype.showModal = jest.fn(function mock() { this.open = true; });
     HTMLDialogElement.prototype.close = jest.fn(function mock() { this.open = false; });
     resource = {
-      id: faker.datatype.number(),
+      id: faker.number.int(),
       title: faker.lorem.sentence(),
       cedar_json: null,
     };

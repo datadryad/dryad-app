@@ -14,8 +14,8 @@
         <tr>
           <td><%= resource.stash_version.version %></td>
           <td><%= resource.id %></td>
-          <td><%= resource.last_curation_activity.readable_status %></td>
-          <td><%= formatted_datetime(resource.last_curation_activity.created_at) %></td>
+          <td <% if resource.id == @identifier.latest_resource_id %>id="status_update-status"<% end %>><%= resource.last_curation_activity.readable_status %></td>
+          <td <% if resource.id == @identifier.latest_resource_id %>id="status_update-date"<% end %>><%= formatted_datetime(resource.last_curation_activity.created_at) %></td>
           <td><%= formatted_datetime(resource.updated_at) %></td>
           <td><%= resource.editor ? "<a href=\"#{user_admin_profile_path(id: resource.editor.id)}\">#{resource.editor.name}</a>".html_safe : '' %></td>
           <td>
