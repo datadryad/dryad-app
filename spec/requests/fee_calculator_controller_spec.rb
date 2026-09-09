@@ -362,7 +362,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
     end
   end
 
-  describe '#fee_estimator_url(resource)' do
+  describe '#fee_estimator_url' do
     let!(:dryad) { create(:tenant_dryad) }
     let(:json) do
       { dpc_fee: 0, dpc_sponsored: 150, service_fee: 0, storage_fee: 0, storage_fee_label: 'Large Data Fee', storage_sponsored: 0,
