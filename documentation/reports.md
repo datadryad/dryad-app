@@ -224,6 +224,7 @@ For the annual report, we rely on these high-level numbers:
 - journals: `select count(distinct publication_issn) from stash_engine_resource_publications where created_at < '2026-07-01';` 
 - funders: `select distinct name_identifier_id from dcs_contributors where contributor_type="funder" and created_at < '2026-07-01';`
 - top journals: `select publication_name, count(publication_name) from stash_engine_resource_publications where resource_id in (select latest_resource_id from stash_engine_identifiers where pub_state = 'published' and publication_date > '2024-07-01' and publication_date < '2025-07-01') group by publication_name order by count(publication_name) desc limit 11;`
+- journals in FY: `select count(distinct publication_name) from stash_engine_resource_publications where resource_id in (select latest_resource_id from stash_engine_identifiers where pub_state = 'published' and publication_date > '2025-07-01' and publication_date < '2026-07-01');`
 
 Top institutions:
 ```
