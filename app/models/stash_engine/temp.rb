@@ -3,6 +3,10 @@ module StashEngine
     class Resource
       attr_accessor :id, :total_file_size, :tenant, :payment_type, :payment_id, :journal
 
+      def resource_type
+        OpenStruct.new(resource_type: 'dataset')
+      end
+
       def hold_for_peer_review
         false
       end
