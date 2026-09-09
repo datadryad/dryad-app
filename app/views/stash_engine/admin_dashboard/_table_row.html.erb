@@ -92,6 +92,11 @@
         dpc = dataset.identifier.payment_id.split("funder:").last.split("|").first if dataset.identifier.payment_id&.starts_with?('funder')
       %>
       <%= dpc %>
+      <% if dataset.identifier.receipts.present? && policy(dataset.identifier.receipts.last).show? %>
+        <%= form_with(url: receipt_path(dataset.identifier.receipts.last), method: :get, local: false) do %>
+          <button class="c-admin-edit-icon" id="d<%=dataset.identifier.id%>_receipt" aria-labelledby="d<%=dataset.identifier.id%>_title d<%=dataset.identifier.id%>_receipt"><i class="fas fa-receipt" aria-hidden="true"></i> Fees</button>
+        <% end %>
+      <% end %>
     </td>
   <% end %>
   <% if @fields.include?('curator') %>

@@ -23,13 +23,13 @@
       <p class="c-user-dataset-details">
         <span>DOI: <%= dataset.identifier.identifier %></span>
         <span><%= time_ago_in_words(dataset.updated_at, include_seconds: true) %> since last update</span>
+        <% if dataset&.resource_type&.resource_type == 'collection' %>
+          <span class="callout">Collection</span>
+        <% end %>
         <% if dataset.identifier.published? %>
           <span>Published: <%= formatted_date(dataset.identifier.date_last_published) %></span><% if dataset.sort_order != 3 %>
             <span class="prev-published"><i class="fa fa-check" aria-hidden="true"></i> Previous version published</span>
           <% end %>
-        <% end %>
-        <% if dataset&.resource_type&.resource_type == 'collection' %>
-          <span class="callout">Collection</span>
         <% end %>
       </p>
     </div>
@@ -52,11 +52,11 @@
           <% if dataset.last_curation_activity&.status == 'in_progress' %>
             <% if dataset.current_editor_id.nil? || dataset.current_editor_id == current_user&.id %>
               <%= button_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: dataset.id), name: 'resume', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', id: "d#{dataset.identifier.id}_resume", 'aria-labelledby': "d#{dataset.identifier.id}_resume d#{dataset.identifier.id}_title", method: :post do %>
-                <i class="fas fa-pencil" aria-hidden="true"></i><%= dataset.current_editor_id.nil? ? "Edit" : "Resume" %></span>
+                <i class="fas fa-pencil" aria-hidden="true"></i><%= dataset.current_editor_id.nil? ? "Edit" : "Resume" %>
               <% end %>
               <% if dataset.current_editor_id == current_user&.id %>
                 <%= button_to stash_url_helpers.logout_resource_path(dataset), name: 'exit', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', id: "d#{dataset.identifier.id}_exit", 'aria-labelledby': "d#{dataset.identifier.id}_exit d#{dataset.identifier.id}_title", method: :post do %>
-                  <i class="fas fa-floppy-disk" aria-hidden="true"></i>Save & exit</span>
+                  <i class="fas fa-floppy-disk" aria-hidden="true"></i>Save & exit
                 <% end %>
               <% end %>
               <% if policy(dataset).delete? %>
@@ -77,6 +77,11 @@
           <% if dataset.sort_order == 4 && dataset.identifier.publication_article_doi.nil? %>
             <%= form_with(url: primary_article_path(resource_id: dataset.id), method: :get, local: false, class: 'o-button__inline-form', id: "#{dataset.id}_pub_form") do %>
               <button class="o-button__plain-text7" id="d<%=dataset.identifier.id%>_link" aria-labelledby="d<%=dataset.identifier.id%>_title d<%=dataset.identifier.id%>_link"><i class="fas fa-newspaper" aria-hidden="true"></i>Link article</button>
+            <% end %>
+          <% end %>
+          <% if dataset.identifier.receipts.present? && policy(dataset.identifier.receipts.last).show? %>
+            <%= form_with(url: receipt_path(dataset.identifier.receipts.last), method: :get, local: false, class: 'o-button__inline-form') do %>
+              <button class="o-button__plain-text7" id="d<%=dataset.identifier.id%>_receipt" aria-labelledby="d<%=dataset.identifier.id%>_title d<%=dataset.identifier.id%>_receipt"><i class="fas fa-receipt" aria-hidden="true"></i>Fee breakdown</button>
             <% end %>
           <% end %>
         </div>

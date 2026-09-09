@@ -510,6 +510,8 @@ Rails.application.routes.draw do
   # Endpoint for LinkOut
   get :discover, to: 'search#discover'
 
+  get 'receipt/:id', to: 'fee_record#show', as: 'receipt'
+  
   get :fee_calculator, to: 'fee_calculator#calculate_fee', format: :json
   get :fee_estimator, to: 'fee_calculator#calculate_estimate', format: :json
   get 'resource_fee_calculator/:id', to: 'fee_calculator#calculate_resource_fee', format: :json, as: :resource_fee_calculator
