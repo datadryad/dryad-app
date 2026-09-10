@@ -5,7 +5,7 @@
 #  id                 :bigint           not null, primary key
 #  contributor_name   :text(65535)
 #  group_label        :string(191)
-#  identifier_type    :integer          default("crossref_funder_id")
+#  identifier_type    :integer          default(2)
 #  json_contains      :json
 #  required           :boolean
 #  created_at         :datetime         not null

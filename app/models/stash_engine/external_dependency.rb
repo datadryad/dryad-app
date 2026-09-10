@@ -7,8 +7,8 @@
 #  id                 :integer          not null, primary key
 #  abbreviation       :string(191)
 #  description        :string(191)
-#  documentation      :text(65535)
-#  error_message      :text(65535)
+#  documentation      :text(16777215)
+#  error_message      :text(16777215)
 #  internally_managed :boolean          default(FALSE)
 #  name               :string(191)
 #  status             :integer          default(1)

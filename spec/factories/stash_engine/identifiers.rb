@@ -12,17 +12,17 @@
 #  issues                  :json
 #  last_invoiced_file_size :bigint
 #  old_payment_system      :boolean          default(FALSE)
-#  payment_type            :string(191)
 #  pub_state               :string
 #  publication_date        :datetime
-#  search_words            :text(65535)
+#  search_words            :text(16777215)
 #  storage_size            :bigint
 #  waiver_basis            :string(191)
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  latest_resource_id      :integer
 #  license_id              :string(191)
-#  payment_id              :text(65535)
+#  payment_id              :text(16777215)
+#  payment_type            :string(191)
 #  software_license_id     :integer
 #
 # Indexes

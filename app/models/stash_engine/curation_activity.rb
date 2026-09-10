@@ -5,7 +5,7 @@
 #  id            :integer          not null, primary key
 #  deleted_at    :datetime
 #  keywords      :string(191)
-#  note          :text(65535)
+#  note          :text(16777215)
 #  status        :string(191)      default("in_progress")
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
