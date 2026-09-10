@@ -3,7 +3,7 @@
 # Table name: dcs_related_identifiers
 #
 #  id                      :integer          not null, primary key
-#  added_by                :integer          default("default")
+#  added_by                :integer          default(0)
 #  hidden                  :boolean          default(FALSE)
 #  related_identifier      :text(65535)
 #  related_identifier_type :string
@@ -12,7 +12,7 @@
 #  scheme_URI              :text(65535)
 #  scheme_type             :text(65535)
 #  verified                :boolean          default(FALSE)
-#  work_type               :integer          default("undefined")
+#  work_type               :integer          default(0)
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  fixed_id                :text(16777215)

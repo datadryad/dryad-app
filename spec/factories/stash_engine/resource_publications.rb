@@ -4,7 +4,7 @@
 #
 #  id                :bigint           not null, primary key
 #  manuscript_number :string(191)
-#  pub_type          :integer          default("primary_article")
+#  pub_type          :integer          default(0)
 #  publication_issn  :string(191)
 #  publication_name  :string(191)
 #  created_at        :datetime         not null

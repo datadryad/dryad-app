@@ -5,11 +5,11 @@
 # Table name: dcs_resource_types
 #
 #  id                    :integer          not null, primary key
-#  resource_type         :text(16777215)
 #  resource_type_general :string(191)      default("dataset")
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  resource_id           :integer
+#  resource_type         :text(16777215)
 #
 # Indexes
 #

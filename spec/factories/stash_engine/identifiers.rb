@@ -12,7 +12,6 @@
 #  issues                  :json
 #  last_invoiced_file_size :bigint
 #  old_payment_system      :boolean          default(FALSE)
-#  payment_type            :string(191)
 #  pub_state               :string
 #  publication_date        :datetime
 #  search_words            :text(16777215)
@@ -23,6 +22,7 @@
 #  latest_resource_id      :integer
 #  license_id              :string(191)
 #  payment_id              :text(16777215)
+#  payment_type            :string(191)
 #  software_license_id     :integer
 #
 # Indexes
