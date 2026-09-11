@@ -5,7 +5,7 @@ module StashEngine
 
     before_action :require_login
     before_action :assign_resource, only: %i[logout display_readme display_collection dupe_check file_pub_dates]
-    before_action :require_modify_permission, except: %i[index new logout display_collection display_readme dupe_check file_pub_dates]
+    before_action :require_modify_permission, except: %i[index new logout destroy display_collection display_readme dupe_check file_pub_dates]
 
     attr_writer :resource
 
@@ -84,6 +84,7 @@ module StashEngine
     # DELETE /resources/1
     # DELETE /resources/1.json
     def destroy
+      authorize resource
       StashEngine::DeleteDatasetsService.new(resource, current_user: current_user).call
 
       respond_to do |format|
