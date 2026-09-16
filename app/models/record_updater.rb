@@ -4,12 +4,12 @@
 #
 #  id          :bigint           not null, primary key
 #  data_type   :string(191)
-#  record_type :string(191)
-#  status      :integer          default("pending")
+#  status      :integer          default(0)
 #  update_data :json
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  record_id   :integer
+#  record_type :string(191)
 #  user_id     :integer
 #
 # Indexes

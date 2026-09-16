@@ -2,20 +2,12 @@
 #
 # Table name: stash_engine_frictionless_reports
 #
-#  id              :bigint           not null, primary key
+#  id              :integer          not null, primary key
 #  report          :text(4294967295)
 #  status          :string
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  created_at      :datetime
+#  updated_at      :datetime
 #  generic_file_id :integer
-#
-# Indexes
-#
-#  index_stash_engine_frictionless_reports_on_generic_file_id  (generic_file_id)
-#
-# Foreign Keys
-#
-#  fk_rails_...  (generic_file_id => stash_engine_generic_files.id)
 #
 module StashEngine
   class FrictionlessReport < ApplicationRecord

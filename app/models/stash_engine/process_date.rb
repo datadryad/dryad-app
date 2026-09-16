@@ -10,7 +10,6 @@
 #  deleted_at              :datetime
 #  last_status_date        :datetime
 #  peer_review             :datetime
-#  processable_type        :string(191)
 #  processing              :datetime
 #  queued                  :datetime
 #  retracted               :datetime
@@ -18,6 +17,7 @@
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  processable_id          :integer
+#  processable_type        :string(191)
 #
 # Indexes
 #
