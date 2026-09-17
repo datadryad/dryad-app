@@ -635,4 +635,7 @@ Rails.application.routes.draw do
   get '/resource/:doi_prefix/:doi_suffix*file',
       constraints: { doi_prefix: /doi:10.\d{4,9}/i, doi_suffix: /[A-Z0-9]+\.[A-Z0-9]+/i },
       to: redirect{ |p, req| "/dataset/#{p[:doi_prefix]}/#{p[:doi_suffix]}" }
+
+  get '/scolarone/notification', to: 'scholar_one#notification'
+  get '/scholarone/notification', to: 'scholar_one#notification'
 end
