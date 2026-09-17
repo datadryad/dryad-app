@@ -638,7 +638,7 @@ namespace :identifiers do
 
     if alert_list.present?
       log "Sending alert for identifiers #{alert_list.map(&:id)}"
-      StashEngine::UserMailer.voided_invoices(alert_list).deliver_now
+      StashEngine::NotificationsMailer.voided_invoices(alert_list).deliver_now
     end
   end
 
@@ -1601,7 +1601,7 @@ namespace :journal_email do
   desc 'Check dates of journal integrations'
   task check_integrations: :environment do
     journals = StashEngine::Journal.where('integrated_at BETWEEN ? AND ?', 6.months.ago, 1.month.ago)
-    StashEngine::UserMailer.integration_paused(journals).deliver_now unless journals.empty?
+    StashEngine::NotificationsMailer.integration_paused(journals).deliver_now unless journals.empty?
   end
 end
 

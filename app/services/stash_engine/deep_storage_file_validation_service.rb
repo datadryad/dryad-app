@@ -55,7 +55,7 @@ module StashEngine
         puts ' File validated successfully.'
       else
         puts ' File cannot be validated; possible corruption!'
-        StashEngine::UserMailer.deep_archive_file_validation_error(file, @bucket).deliver_now
+        StashEngine::NotificationsMailer.deep_archive_file_validation_error(file, @bucket).deliver_now
         false
       end
     end
