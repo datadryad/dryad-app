@@ -1,9 +1,18 @@
 var urlparams = new URL(window.location.href).searchParams
 var stopReload = <%= @stop_reload.to_json %>
 urlparams.set('page', '<%= params[:page] %>')
-<% if params[:sort].present? %>urlparams.set('sort', '<%= params[:sort] %>')<% end %>
-<% if params[:direction].present? %>urlparams.set('direction', '<%= params[:direction] %>')<% end %>
-<% if params[:page_size].present? %>urlparams.set('page_size', '<%= params[:page_size] %>')<% end %>
+<% if params[:sort].present? %>
+urlparams.set('sort', '<%= params[:sort] %>')
+document.getElementById('save_sort').value = '<%= params[:sort] %>'
+<% end %>
+<% if params[:direction].present? %>
+urlparams.set('direction', '<%= params[:direction] %>')
+document.getElementById('save_direction').value = '<%= params[:direction] %>'
+<% end %>
+<% if params[:page_size].present? %>
+urlparams.set('page_size', '<%= params[:page_size] %>')
+document.getElementById('save_page_size').value = '<%= params[:page_size] %>'
+<% end %>
 window.history.pushState({}, null, `${window.location.pathname}?${urlparams.toString()}`)
 document.getElementById('search_results').innerHTML = "<%= escape_javascript(render(partial: 'results')) %>";
 document.getElementById('search_results').setAttribute('aria-busy', false);
