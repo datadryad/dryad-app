@@ -317,6 +317,10 @@
 .c-second__nav-item {
   position: relative;
   @include c-header__nav-item;
+
+  a[aria-current] {
+    color: black;
+  }
 }
 
 #mobile-nav-bar .c-header__nav-item,
