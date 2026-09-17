@@ -50,6 +50,11 @@
     e.currentTarget.firstElementChild.classList.toggle('fa-chart-pie')
     e.currentTarget.firstElementChild.classList.toggle('fa-square-caret-up')
   })
+  const reloadResults = (e) => {
+    const results = document.getElementById('search_results')
+    results.setAttribute('aria-busy', true)
+    results.innerHTML = '<p><i class="fas fa-spin fa-spinner" aria-hidden="true"></i></p>';
+  }
   const cancelClick = (e) => {
     e.preventDefault();
     document.getElementById('genericModalDialog').close();
