@@ -165,19 +165,19 @@ describe CurationService do
 
   context :email_status_change_notices do
     before(:each) do
-      allow_any_instance_of(StashEngine::UserMailer).to receive(:status_change).and_return(true)
-      allow_any_instance_of(StashEngine::UserMailer).to receive(:journal_published_notice).and_return(true)
+      allow_any_instance_of(StashEngine::ResourceMailer).to receive(:status_change).and_return(true)
+      allow_any_instance_of(StashEngine::JournalMailer).to receive(:journal_published_notice).and_return(true)
     end
 
     StashEngine::CurationActivity.statuses.each_key do |state|
       if %w[published embargoed peer_review queued withdrawn].include?(state)
         it "sends email when '#{state}'" do
-          expect_any_instance_of(StashEngine::UserMailer).to receive(:status_change)
+          expect_any_instance_of(StashEngine::ResourceMailer).to receive(:status_change)
           CurationService.new(resource: resource, user: user, status: state).process
         end
       else
         it "does not send email when '#{state}'" do
-          expect_any_instance_of(StashEngine::UserMailer).not_to receive(:status_change)
+          expect_any_instance_of(StashEngine::ResourceMailer).not_to receive(:status_change)
           CurationService.new(resource: resource, user: curator, status: state).process
         end
       end
@@ -186,13 +186,13 @@ describe CurationService do
     it "does not send email when resource is 'queued' a second time" do
       CurationService.new(resource: resource, user: user, status: 'queued').process
       CurationService.new(resource: resource, user: curator, status: 'peer_review').process
-      expect_any_instance_of(StashEngine::UserMailer).not_to receive(:status_change)
+      expect_any_instance_of(StashEngine::ResourceMailer).not_to receive(:status_change)
       CurationService.new(resource: resource, user: user, status: 'queued').process
     end
 
     it "does not send email when identifier is 'published' a second time" do
       CurationService.new(resource: resource, user: curator, status: 'published').process
-      expect_any_instance_of(StashEngine::UserMailer).not_to receive(:status_change)
+      expect_any_instance_of(StashEngine::ResourceMailer).not_to receive(:status_change)
       Timecop.travel(1.minute) do
         new_version = create(:resource, identifier: identifier)
         CurationService.new(user: curator, resource: new_version, status: 'published').process
@@ -200,7 +200,7 @@ describe CurationService do
     end
 
     it "does not send email when 'queued' by a curator" do
-      expect_any_instance_of(StashEngine::UserMailer).not_to receive(:status_change)
+      expect_any_instance_of(StashEngine::ResourceMailer).not_to receive(:status_change)
       CurationService.new(resource: resource, user: curator, status: 'queued').process
     end
   end
@@ -208,7 +208,7 @@ describe CurationService do
   context :email_orcid_invitations do
     before(:each) do
       @author = create(:author, author_orcid: nil, resource: resource)
-      allow_any_instance_of(StashEngine::UserMailer).to receive(:status_change).and_return(true)
+      allow_any_instance_of(StashEngine::ResourceMailer).to receive(:status_change).and_return(true)
       allow_any_instance_of(StashEngine::UserMailer).to receive(:orcid_invitation).and_return(true)
       allow_any_instance_of(StashEngine::Author).to receive(:affiliation).and_return(
         { long_name: 'Western New Mexico University', ror_id: 'https://ror.org/00r5mr697' }.to_ostruct
@@ -239,8 +239,8 @@ describe CurationService do
     let(:mock_cost_reporting_service) { instance_double(CostReportingService) }
 
     before do
-      allow_any_instance_of(StashEngine::UserMailer).to receive(:journal_published_notice).and_return(true)
-      allow_any_instance_of(StashEngine::UserMailer).to receive(:status_change).and_return(true)
+      allow_any_instance_of(StashEngine::JournalMailer).to receive(:journal_published_notice).and_return(true)
+      allow_any_instance_of(StashEngine::ResourceMailer).to receive(:status_change).and_return(true)
       allow(CostReportingService).to receive(:new).with(resource).and_return(mock_cost_reporting_service)
     end
 

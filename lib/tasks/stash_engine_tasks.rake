@@ -323,7 +323,7 @@ namespace :identifiers do
       next if i.latest_resource.nil?
 
       log "Inviting DOI link. Identifier: #{i.id}, Resource: #{i.latest_resource&.id} updated #{i.latest_resource&.updated_at}"
-      StashEngine::UserMailer.doi_invitation(i.latest_resource).deliver_now
+      StashEngine::ResourceMailer.doi_invitation(i.latest_resource).deliver_now
       CurationService.new(
         resource_id: i.latest_resource&.id,
         user_id: 0,

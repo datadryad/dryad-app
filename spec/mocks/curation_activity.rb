@@ -16,9 +16,9 @@ module Mocks
     def neuter_emails!
       allow_any_instance_of(CurationService).to receive(:email_status_change_notices).and_return(true)
       allow_any_instance_of(CurationService).to receive(:email_orcid_invitations).and_return(true)
-      allow_any_instance_of(StashEngine::UserMailer).to receive(:status_change).and_return(true)
-      allow_any_instance_of(StashEngine::UserMailer).to receive(:journal_published_notice).and_return(true)
-      allow_any_instance_of(StashEngine::UserMailer).to receive(:status_change).and_return(true)
+      allow_any_instance_of(StashEngine::ResourceMailer).to receive(:status_change).and_return(true)
+      allow_any_instance_of(StashEngine::JournalMailer).to receive(:journal_published_notice).and_return(true)
+      allow_any_instance_of(StashEngine::ResourceMailer).to receive(:status_change).and_return(true)
       allow_any_instance_of(StashEngine::UserMailer).to receive(:orcid_invitation).and_return(true)
       allow_any_instance_of(StashEngine::ResourceMailer).to receive(:ld_submission).and_return(true)
     end

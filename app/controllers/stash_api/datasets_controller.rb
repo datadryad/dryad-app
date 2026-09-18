@@ -155,7 +155,7 @@ module StashApi
           if @resource.identifier.payment_needed?
             status = 'awaiting_payment'
             note = 'received API request to change status to queued, but submission needs further payment'
-            StashEngine::UserMailer.peer_review_payment_needed(@resource).deliver_now
+            StashEngine::ResourceMailer.peer_review_payment_needed(@resource).deliver_now
           end
           CurationService.new(user_id: @user.id, resource: @resource, status: status, note: note).process
         else
@@ -451,7 +451,7 @@ module StashApi
       if new_status == 'queued' && @resource.identifier.payment_needed?
         note = "received API request to change status to #{new_status}, but submission needs further payment"
         new_status = 'awaiting_payment'
-        StashEngine::UserMailer.peer_review_payment_needed(@resource).deliver_now
+        StashEngine::ResourceMailer.peer_review_payment_needed(@resource).deliver_now
       end
       # and certainly don't withdraw something that was previously published
       if (new_status == 'withdrawn') && @resource.previously_public?

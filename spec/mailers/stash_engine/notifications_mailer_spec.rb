@@ -1,4 +1,8 @@
 RSpec.describe StashEngine::NotificationsMailer, type: :mailer do
+  include Mocks::Aws
+
+  let(:identifier) { create(:identifier) }
+  let(:resource) { create(:resource, identifier: identifier) }
 
   let(:health_status) do
     {

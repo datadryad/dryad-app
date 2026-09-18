@@ -6,8 +6,37 @@ include StashEngine::ApplicationHelper
 # rubocop:enable Style/MixinUsage
 
 module StashEngine
-  # Mails users about submissions
   class ResourceMailer < ApplicationMailer
+
+    # Called from CurationActivity when the status is queued, peer_review, published, embargoed or withdrawn
+    def status_change(resource, status)
+      return unless %w[queued peer_review published embargoed withdrawn].include?(status)
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      @feedback_url = feedback_url(m: 5, l: status)
+      mail(to: user_email(@user),
+           bcc: @resource&.tenant&.campus_contacts,
+           template_name: status,
+           subject: "#{rails_env}Dryad Submission \"#{@title}\"")
+
+      update_activities(resource: resource, message: 'Status change', status: status)
+    end
+
+    def in_progress_reminder(resource)
+      logger.warn('Unable to send in_progress_reminder; nil resource') unless resource.present?
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      mail(to: user_email(@user),
+           subject: "#{rails_env}REMINDER: Dryad Submission \"#{@title}\"")
+
+      # activity updated by rake task
+      # update_activities(resource: resource, message: 'In progress reminder', status: 'in_progress')
+    end
 
     def in_progress_delete_notification(resource)
       logger.warn('Unable to send in_progress_delete_notification; nil resource') unless resource.present?
@@ -21,8 +50,21 @@ module StashEngine
 
       mail(to: user_email(@user),
            subject: "#{rails_env}REMINDER: Dryad submission \"#{@title}\"",
-           template_path: 'stash_engine/user_mailer',
            template_name: template_name)
+    end
+
+    def peer_review_reminder(resource)
+      logger.warn('Unable to send peer_review_reminder; nil resource') unless resource.present?
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      mail(to: user_email(@user),
+           subject: "#{rails_env}REMINDER: Dryad Submission \"#{@title}\"")
+
+      # activity updated by rake task
+      # update_activities(resource: resource, message: 'Peer review reminder', status: 'peer_review')
     end
 
     def peer_review_delete_notification(resource)
@@ -34,8 +76,45 @@ module StashEngine
 
       mail(to: user_email(@user),
            subject: "#{rails_env}REMINDER: Dryad submission \"#{@title}\"",
-           template_path: 'stash_engine/user_mailer',
            template_name: 'peer_review_reminder')
+    end
+
+    def peer_review_payment_needed(resource)
+      logger.warn('Unable to send peer_review_payment_needed; nil resource') unless resource.present?
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      @invoice = resource&.payment&.invoice_id&.present?
+      @costs_url = Rails.application.routes.url_helpers.costs_url
+      @submission_url = Rails.application.routes.url_helpers.metadata_entry_pages_find_or_create_url(resource_id: resource.id)
+      mail(to: user_email(@user),
+           subject: "#{rails_env}Dryad Submission \"#{@resource.title}\"")
+    end
+
+    def peer_review_pub_linked(resource)
+      logger.warn('Unable to send peer_review_pub_linked; nil resource') unless resource.present?
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      mail(to: user_email(@user),
+           subject: "#{rails_env}Dryad Submission \"#{@title}\"")
+    end
+
+    def payment_needed(resource)
+      logger.warn('Unable to send peer_review_payment_needed; nil resource') unless resource.present?
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      @costs_url = Rails.application.routes.url_helpers.costs_url
+      @submission_url = Rails.application.routes.url_helpers.metadata_entry_pages_find_or_create_url(resource_id: resource.id)
+      mail(to: user_email(@user),
+           subject: "#{rails_env}Dryad Submission \"#{@resource.title}\"")
     end
 
     def awaiting_payment_delete_notification(resource)
@@ -51,8 +130,17 @@ module StashEngine
 
       mail(to: user_email(@user),
            subject: "#{rails_env}REMINDER: Dryad submission \"#{@title}\"",
-           template_path: 'stash_engine/user_mailer',
            template_name: 'awaiting_payment_reminder')
+    end
+
+    def chase_action_required1(resource)
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      mail(to: user_email(@user),
+           subject: "#{rails_env}Action required: Dryad data submission (#{resource&.identifier})")
     end
 
     def action_required_delete_notification(resource)
@@ -64,7 +152,6 @@ module StashEngine
 
       mail(to: user_email(@user),
            subject: "#{rails_env}REMINDER: Dryad submission \"#{@title}\"",
-           template_path: 'stash_engine/user_mailer',
            template_name: 'chase_action_required1')
     end
 
@@ -99,6 +186,31 @@ module StashEngine
 
       mail(to: user_email(@user),
            subject: "#{rails_env}DELETE NOTIFICATION: Dryad submission was deleted \"#{@title}\"")
+    end
+
+    def doi_invitation(resource)
+      logger.warn('Unable to send doi_invitation; nil resource') unless resource.present?
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      mail(to: user_email(@user),
+           subject: "#{rails_env}Connect your data to your research on Dryad!")
+
+      # activity updated by rake task
+      # update_activities(resource: resource, message: 'DOI linking reminder', status: resource.current_curation_status)
+    end
+
+    def related_work_updated(resource)
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      bc_email = Rails.env.include?('production') ? @helpdesk_email : nil
+      mail(to: user_email(@user), bcc: bc_email,
+           subject: "#{rails_env}Related work updated for \"#{@title}\"")
     end
 
     def ld_submission(resource)
