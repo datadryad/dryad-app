@@ -78,7 +78,7 @@
   }
   const fieldsHelp = (e) => {
     e.preventDefault()
-    e.target.parentElement.nextElementSibling.classList.toggle('show-help')
+    e.currentTarget.parentElement.nextElementSibling.classList.toggle('show-help')
   }
   const formSubmit = () => {
     const params = new URL(window.location.href).searchParams
