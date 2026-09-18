@@ -43,11 +43,13 @@ module StashDatacite
 
       it 'has the correct ROR affiliation' do
         expect(@actual['creator']['affiliation']['sameAs']).to eq(@resource.authors.first.affiliation.ror_id)
+        expect(@actual['creator']['affiliation']['identifier']).to eq(@resource.authors.first.affiliation.ror_id)
       end
 
       it 'has the correct username and ORCID' do
         expect(@actual['creator']['name']).to eq(@resource.authors.first.author_standard_name)
         expect(@actual['creator']['sameAs']).to eq("http://orcid.org/#{@resource.authors.first.author_orcid}")
+        expect(@actual['creator']['identifier']).to eq("http://orcid.org/#{@resource.authors.first.author_orcid}")
       end
 
       it 'has the correct download link' do
