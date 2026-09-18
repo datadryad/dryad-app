@@ -30,11 +30,12 @@ module StashEngine
       if params[:sort].present? || @search_string.present?
         order_string = 'relevance desc'
         if params[:sort].present?
-          order_list = %w[title author_string status total_file_size view_count curator_name editor_name
+          order_list = %w[title author_string status total_file_size view_count curator_name editor_name pub_state
                           created_at updated_at submit_date publication_date first_sub_date first_pub_date queue_date last_status_date]
           order_string = helpers.sortable_table_order(whitelist: order_list)
           order_string = "stash_engine_curation_activities.#{order_string}" if @sort == 'updated_at'
           order_string = "stash_engine_identifiers.#{order_string}" if @sort == 'created_at'
+          order_string = "stash_engine_identifiers.#{order_string}" if @sort == 'pub_state'
           order_string = "stash_engine_process_dates.#{order_string}" if @sort == 'last_status_date'
           order_string += ', relevance desc' if @search_string.present?
         end
@@ -182,6 +183,7 @@ module StashEngine
       @datasets = @datasets.select('stash_engine_curation_activities.status') if @sort == 'status'
       @datasets = @datasets.select('stash_engine_curation_activities.updated_at') if @sort == 'updated_at'
       @datasets = @datasets.select('stash_engine_identifiers.created_at') if @sort == 'created_at'
+      @datasets = @datasets.select('stash_engine_identifiers.pub_state') if @sort == 'pub_state'
       return unless @search_string.present?
 
       search_string = %r{^10.\S+/\S+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string
@@ -246,6 +248,7 @@ module StashEngine
       funder_filter
 
       @datasets = @datasets.joins(:flag).where(flag: { flag: @filters[:flag].to_sym }) if StashEngine::Flag.flags.key?(@filters[:flag])
+      @datasets = @datasets.where('stash_engine_identifiers.pub_state': @filters[:pub_state]) if @filters[:pub_state].present?
       @datasets = @datasets.where('stash_engine_curation_activities.status': @filters[:status]) if @filters[:status].present?
       @datasets = @datasets.joins(authors: :affiliations).where('dcs_affiliations.ror_id': @filters.dig(:affiliation, :value)) if @filters.dig(
         :affiliation, :value
