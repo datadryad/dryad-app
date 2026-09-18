@@ -124,11 +124,11 @@
 }
 .o-admin-form-pair.half-width {
   flex-basis: 50%;
-  max-width: calc(50% - 2ch);
+  max-width: calc(50% - 1ch);
 }
 .o-admin-form-pair.quarter-width {
   flex-basis: 25%;
-  max-width: calc(25% - 2ch);
+  max-width: calc(25% - 1.5ch);
 }
 .o-admin-form-pair.half-width,
 .o-admin-form-pair.quarter-width {
@@ -206,7 +206,7 @@
       margin-top: 1ch;
       display: flex;
       justify-content: space-between;
-      gap: 3ch;
+      row-gap: 3ch;
       flex-wrap: wrap;
       fieldset {
         border: 0;
