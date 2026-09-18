@@ -23,7 +23,7 @@ module Submission
         StashEngine::RepoQueueState.create(resource_id: queue.resource_id, state: 'errored')
         exception = StandardError.new(message)
         exception.set_backtrace(caller)
-        StashEngine::UserMailer.error_report(queue.resource, exception).deliver_now
+        StashEngine::NotificationsMailer.error_report(queue.resource, exception).deliver_now
         raise exception
       rescue StandardError => e
         handle_failure(
