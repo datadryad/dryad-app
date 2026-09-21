@@ -58,7 +58,7 @@ module StashEngine
       pd = ActiveRecord::Base.connection.select_all(
         "select DATE_FORMAT(first_pub_date, '%Y-%m-%d') AS period, count(*) as count from (#{params[:sql]}) subquery GROUP BY period ORDER BY period"
       )
-      @queue_date_query = pd.to_a.reject { |h| h['period'].nil? }
+      @publication_date_query = pd.to_a.reject { |h| h['period'].nil? }
     end
 
     def date_range
