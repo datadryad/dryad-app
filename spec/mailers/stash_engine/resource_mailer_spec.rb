@@ -205,19 +205,6 @@ describe StashEngine::ResourceMailer, type: :mailer do
     include_examples 'does not send email for missing resource or user email'
   end
 
-  describe '#peer_review_reminder' do
-    let(:mail) { described_class.peer_review_reminder(resource).deliver_now }
-
-    it 'sends an error report email' do
-      expect(mail.to).to eq([author.author_email])
-      expect(mail.subject).to eq("[test] REMINDER: Dryad Submission \"#{resource.title}\"")
-      expect(mail.body.to_s).to include('As a reminder, your Dryad dataset is currently in "Private for Peer Review" (PPR) status')
-      expect(mail.body.to_s).to include("DOI: #{identifier.identifier}")
-    end
-
-    include_examples 'does not send email for missing resource or user email'
-  end
-
   describe '#peer_review_payment_needed' do
     let(:mail) { described_class.peer_review_payment_needed(resource).deliver_now }
 

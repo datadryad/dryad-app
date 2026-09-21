@@ -53,20 +53,6 @@ module StashEngine
            template_name: template_name)
     end
 
-    def peer_review_reminder(resource)
-      logger.warn('Unable to send peer_review_reminder; nil resource') unless resource.present?
-      return unless resource.present?
-
-      assign_variables(resource)
-      return unless @user.present? && user_email(@user).present?
-
-      mail(to: user_email(@user),
-           subject: "#{rails_env}REMINDER: Dryad Submission \"#{@title}\"")
-
-      # activity updated by rake task
-      # update_activities(resource: resource, message: 'Peer review reminder', status: 'peer_review')
-    end
-
     def peer_review_delete_notification(resource)
       logger.warn('Unable to send peer_review_delete_notification; nil resource') unless resource.present?
       return unless resource.present?
@@ -75,8 +61,7 @@ module StashEngine
       return unless @user.present? && user_email(@user).present?
 
       mail(to: user_email(@user),
-           subject: "#{rails_env}REMINDER: Dryad submission \"#{@title}\"",
-           template_name: 'peer_review_reminder')
+           subject: "#{rails_env}REMINDER: Dryad submission \"#{@title}\"")
     end
 
     def peer_review_payment_needed(resource)
@@ -104,18 +89,18 @@ module StashEngine
            subject: "#{rails_env}Dryad Submission \"#{@title}\"")
     end
 
-    def payment_needed(resource)
-      logger.warn('Unable to send peer_review_payment_needed; nil resource') unless resource.present?
-      return unless resource.present?
-
-      assign_variables(resource)
-      return unless @user.present? && user_email(@user).present?
-
-      @costs_url = Rails.application.routes.url_helpers.costs_url
-      @submission_url = Rails.application.routes.url_helpers.metadata_entry_pages_find_or_create_url(resource_id: resource.id)
-      mail(to: user_email(@user),
-           subject: "#{rails_env}Dryad Submission \"#{@resource.title}\"")
-    end
+    # def payment_needed(resource)
+    #   logger.warn('Unable to send peer_review_payment_needed; nil resource') unless resource.present?
+    #   return unless resource.present?
+    #
+    #   assign_variables(resource)
+    #   return unless @user.present? && user_email(@user).present?
+    #
+    #   @costs_url = Rails.application.routes.url_helpers.costs_url
+    #   @submission_url = Rails.application.routes.url_helpers.metadata_entry_pages_find_or_create_url(resource_id: resource.id)
+    #   mail(to: user_email(@user),
+    #        subject: "#{rails_env}Dryad Submission \"#{@resource.title}\"")
+    # end
 
     def awaiting_payment_delete_notification(resource)
       logger.warn('Unable to send awaiting_payment_delete_notification; nil resource') unless resource.present?
@@ -129,8 +114,7 @@ module StashEngine
       @submission_url = Rails.application.routes.url_helpers.metadata_entry_pages_find_or_create_url(resource_id: resource.id)
 
       mail(to: user_email(@user),
-           subject: "#{rails_env}REMINDER: Dryad submission \"#{@title}\"",
-           template_name: 'awaiting_payment_reminder')
+           subject: "#{rails_env}REMINDER: Dryad submission \"#{@title}\"")
     end
 
     def chase_action_required1(resource)
