@@ -5,11 +5,15 @@ tiers = ts.map { |t| t[:range].to_s.split('..').map {|n| filesize(n.to_i) }.join
 pieces = [pie[:tier0], pie[:tier1], pie[:tier2], pie[:tier3], pie[:tier4], pie[:tier5], pie[:tier6]]
 pie_desc = pieces.map.with_index { |pi,i| pi.nil? || pi.zero? ? nil : "#{tiers[i]}: #{pi}" }.reject(&:blank?).join(', ')
 
+status = charts[1].reject { |k,v| v.zero? }
+status_desc = status.map {|k,v| "#{k.to_s.humanize}: #{v}" }.join(', ')
+
 time = charts.last
 time_desc = time[:dates].map.with_index { |d,i| "#{d}: #{time[:subs][i]} submitted, #{time[:qs][i]} queued, #{time[:pubs][i]} published" }.join('; ')
 %>
 <div>
   <div><canvas id="size-chart" role="img" aria-label="Pie chart counting datasets in size ranges. <%= pie_desc %>"></canvas></div>
+  <div <% if status.length < 2 %>hidden<% end %>><canvas id="status-chart" role="img" aria-label="Bar chart counting datasets based on publication and workflow status. <%= status_desc %>"></canvas></div>
   <div><canvas id="datasets-monthly-chart" role="img" aria-label="Line chart showing counts of datasets submitted and published by date. <%= time_desc %>"></canvas></div>
 </div>
 <script>
@@ -40,21 +44,41 @@ time_desc = time[:dates].map.with_index { |d,i| "#{d}: #{time[:subs][i]} submitt
     }
   })
 
+  new Chart(document.getElementById('status-chart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: <%= status.keys.map{|k| k.to_s.humanize}.to_json.html_safe %>,
+      datasets: [{ 
+        data: <%= status.values.to_json.html_safe %>,
+        backgroundColor: ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)']
+      }]
+    },
+    options: {
+      //indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        title: { display: true, text: 'Dataset states', font: { size: 20 } }
+      }
+    }
+  })
+
   new Chart(document.getElementById('datasets-monthly-chart').getContext('2d'), {
     type: 'line',
     data: { 
       labels: <%= time[:dates].to_json.html_safe %>,
       datasets: [
         {
-          label: 'First submitted',
+          label: 'Submitted',
           data: <%= time[:subs].to_json.html_safe %>
         },
         {
-          label: 'First queued',
+          label: 'Queued',
           data: <%= time[:qs].to_json.html_safe %>
         },
         {
-          label: 'First published',
+          label: 'Published',
           data: <%= time[:pubs].to_json.html_safe %>
         },
       ]

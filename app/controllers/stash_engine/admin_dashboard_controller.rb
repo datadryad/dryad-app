@@ -67,7 +67,7 @@ module StashEngine
     end
 
     def charts
-      @charts = JSON.parse((helpers.size_chart + helpers.datasets_by_date).to_json, symbolize_names: true)
+      @charts = JSON.parse((helpers.size_chart + helpers.status_chart + helpers.datasets_by_date).to_json, symbolize_names: true)
       respond_to(&:js)
     end
 
@@ -171,19 +171,16 @@ module StashEngine
 
     def add_fields
       view_field if @sort == 'view_count'
-      if @filters[:status].present? || %w[status updated_at].include?(@sort) || @filters[:updated_at]&.values&.any?(&:present?)
-        @datasets = @datasets.joins(:last_curation_activity)
-      end
+      @datasets = @datasets.select('stash_engine_identifiers.pub_state')
+      @datasets = @datasets.joins(:last_curation_activity).select('stash_engine_curation_activities.status')
       if current_user.min_app_admin?
         curator_field if @fields.include?('curator') || @filters[:curator].present?
         editor_field if @fields.include?('editor') || @filters[:editor].present?
       end
       author_field if @fields.include?('authors') || @sort == 'author_string'
       date_fields
-      @datasets = @datasets.select('stash_engine_curation_activities.status') if @sort == 'status'
       @datasets = @datasets.select('stash_engine_curation_activities.updated_at') if @sort == 'updated_at'
       @datasets = @datasets.select('stash_engine_identifiers.created_at') if @sort == 'created_at'
-      @datasets = @datasets.select('stash_engine_identifiers.pub_state') if @sort == 'pub_state'
       return unless @search_string.present?
 
       search_string = %r{^10.\S+/\S+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string

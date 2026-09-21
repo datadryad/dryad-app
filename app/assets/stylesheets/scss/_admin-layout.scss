@@ -343,8 +343,9 @@
     flex-wrap: wrap;
     div {
       height: 300px;
+      width: 200px;
       &:first-child {
-        width: 300px;
+        width: 280px;
       }
       &:last-child {
         min-width: 600px;
