@@ -112,10 +112,7 @@ module StashEngine
       end
 
       id = resource.identifier
-      total_dataset_size = 0
-      resource.data_files.each do |data_file|
-        total_dataset_size += data_file.upload_file_size unless data_file.file_state == 'deleted'
-      end
+      total_dataset_size = id.resources.sum { |r| r.data_files.created.sum(&:upload_file_size) }
       id.update(storage_size: total_dataset_size)
       resource_submission_service.cleanup_files
       true
