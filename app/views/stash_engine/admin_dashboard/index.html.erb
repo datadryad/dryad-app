@@ -18,7 +18,11 @@
     <%= render partial: 'search_form' %>
   </div>
   <div id="search_charts" aria-busy="true" <% if unaltered %>hidden<% end %>>
-    <i class="fas fa-spin fa-spinner" aria-hidden="true"></i>
+    <div>
+      <div id="chart-size-chart" aria-busy="true"></div>
+      <div id="chart-status-chart" aria-busy="true"></div>
+      <div id="chart-date-chart" aria-busy="true"></div>
+    </div>
   </div>
   <div class="admin-dashboard-results">
     <button type="button" class="o-button__plain-text7" id="charts_open" aria-controls="search_charts" aria-expanded="<%= !unaltered %>"><i class="fas fa-square-caret-up" aria-hidden="true"></i>Charts and graphs</button>
@@ -42,8 +46,8 @@
     e.currentTarget.firstElementChild.classList.toggle('fa-square-caret-up')
   })
   document.getElementById('charts_open').addEventListener('click', (e) => {
-    if (e.currentTarget.getAttribute('aria-expanded') !== 'true' && document.getElementById('charts_form_button')) {
-      document.getElementById('charts_form_button').click();
+    if (e.currentTarget.getAttribute('aria-expanded') !== 'true' && document.querySelector('charts_form_button')) {
+      Array.from(document.getElementsByClassName('charts_form_button')).forEach(b => b.click());
     }
     document.getElementById('search_charts').toggleAttribute('hidden')
     e.currentTarget.setAttribute('aria-expanded', e.currentTarget.getAttribute('aria-expanded') !== 'true')
@@ -81,7 +85,7 @@
     window.history.pushState({}, null, `${window.location.pathname}?${params.toString()}`);
     document.getElementById('count_and_export').innerHTML = '<i class="fas fa-spin fa-spinner" aria-hidden="true"></i>'
     document.getElementById('count_and_export').setAttribute('aria-busy', true)
-    document.getElementById('search_charts').innerHTML = '<i class="fas fa-spin fa-spinner" aria-hidden="true"></i>'
+    document.getElementById('chart-date-chart').innerHTML = '<i class="fas fa-spin fa-spinner" aria-hidden="true"></i>'
     document.getElementById('search_charts').setAttribute('aria-busy', true)
   }
   const checkForm = () => {
@@ -126,4 +130,7 @@
 
     checkForm()
   }
+
+  Chart.defaults.font.family = 'KievitWeb';
+  Chart.defaults.font.size = 14;
 </script>

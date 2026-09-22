@@ -1,0 +1,6 @@
+document.getElementById('chart-status-chart').innerHTML = ''
+document.getElementById('chart-status-chart').append(document.createRange().createContextualFragment("<%= escape_javascript(render partial: 'status_chart') %>"));
+document.getElementById('chart-status-chart').setAttribute('aria-busy', false)
+if (!Array.from(document.querySelector('#search_charts div').children).some(d => d.getAttribute('aria-busy') == 'true')) {
+  document.getElementById('search_charts').setAttribute('aria-busy', false)
+}

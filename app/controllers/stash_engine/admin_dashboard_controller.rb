@@ -6,7 +6,6 @@ module StashEngine
     helper SortableTableHelper
     helper AdminHelper
     helper AdminDashboardHelper
-    helper AdminChartsHelper
     before_action :require_user_login
     before_action :require_admin
     protect_from_forgery except: :results
@@ -63,11 +62,6 @@ module StashEngine
         session[:admin_search_count] = res.to_a.first['total']
       end
       @count = session[:admin_search_count]
-      respond_to(&:js)
-    end
-
-    def charts
-      @charts = JSON.parse((helpers.size_chart + helpers.status_chart + helpers.datasets_by_date).to_json, symbolize_names: true)
       respond_to(&:js)
     end
 
