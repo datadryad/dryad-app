@@ -66,8 +66,8 @@ RSpec.feature 'PublicationUpdater', type: :feature, js: true do
 
     before(:each) do
       neuter_curation_callbacks!
-      allow_any_instance_of(StashEngine::UserMailer).to receive(:peer_review_pub_linked).and_return(true)
-      allow_any_instance_of(StashEngine::UserMailer).to receive(:peer_review_payment_needed).and_return(true)
+      allow_any_instance_of(StashEngine::ResourceMailer).to receive(:peer_review_pub_linked).and_return(true)
+      allow_any_instance_of(StashEngine::ResourceMailer).to receive(:peer_review_payment_needed).and_return(true)
       resources.each { |r| r.identifier.reload }
       proposed_changes.each(&:reload)
       sign_in(create(:user, role: 'manager'))

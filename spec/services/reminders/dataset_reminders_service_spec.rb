@@ -23,14 +23,14 @@ module Reminders
       let!(:curation_activity) { create(:curation_activity, :in_progress, resource: resource) }
 
       before do
-        allow(StashEngine::UserMailer).to receive_message_chain(:in_progress_reminder, :deliver_now).and_return(true)
+        allow(StashEngine::ResourceMailer).to receive_message_chain(:in_progress_reminder, :deliver_now).and_return(true)
       end
 
       context 'with 1 day' do
         context 'when status date is less than 1 day' do
           it 'does not send any email' do
             Timecop.travel(23.hours.from_now)
-            expect(StashEngine::UserMailer).to receive(:in_progress_reminder).never
+            expect(StashEngine::ResourceMailer).to receive(:in_progress_reminder).never
             expect(subject).to receive(:create_activity).never
 
             subject.send_in_progress_reminders_by_day(1)
@@ -40,7 +40,7 @@ module Reminders
         context 'when status date is older then one day' do
           it 'sends in_progress_reminder notification email' do
             Timecop.travel(25.hours.from_now)
-            expect(StashEngine::UserMailer).to receive(:in_progress_reminder).with(resource).once
+            expect(StashEngine::ResourceMailer).to receive(:in_progress_reminder).with(resource).once
             expect(subject).to receive(:create_activity).once
 
             subject.send_in_progress_reminders_by_day(1)
@@ -48,7 +48,7 @@ module Reminders
 
           it 'sends only in_progress_reminder notification email for current days number' do
             Timecop.travel(25.hours.from_now)
-            expect(StashEngine::UserMailer).to receive(:in_progress_reminder).with(resource).once
+            expect(StashEngine::ResourceMailer).to receive(:in_progress_reminder).with(resource).once
 
             subject.send_in_progress_reminders_by_day(1)
             subject.send_in_progress_reminders_by_day(1)
@@ -56,7 +56,7 @@ module Reminders
 
           it 'does not send in_progress_reminder if is more than 2 days ago' do
             Timecop.travel(4.days.from_now)
-            expect(StashEngine::UserMailer).to receive(:in_progress_reminder).with(resource).never
+            expect(StashEngine::ResourceMailer).to receive(:in_progress_reminder).with(resource).never
             expect(subject).to receive(:create_activity).never
 
             subject.send_in_progress_reminders_by_day(1)
@@ -68,7 +68,7 @@ module Reminders
         context 'when status date is less than 3 days' do
           it 'does not send any email' do
             Timecop.travel((3.days - 1.minute).from_now)
-            expect(StashEngine::UserMailer).to receive(:in_progress_reminder).never
+            expect(StashEngine::ResourceMailer).to receive(:in_progress_reminder).never
             expect(subject).to receive(:create_activity).never
 
             subject.send_in_progress_reminders_by_day(3)
@@ -78,7 +78,7 @@ module Reminders
         context 'when status date is older then 3 days' do
           it 'sends in_progress_reminder notification email' do
             Timecop.travel((3.days + 1.minute).from_now)
-            expect(StashEngine::UserMailer).to receive(:in_progress_reminder).with(resource).once
+            expect(StashEngine::ResourceMailer).to receive(:in_progress_reminder).with(resource).once
             expect(subject).to receive(:create_activity).once
 
             subject.send_in_progress_reminders_by_day(3)
@@ -86,7 +86,7 @@ module Reminders
 
           it 'sends only in_progress_reminder notification email for current days number' do
             Timecop.travel((3.days + 1.minute).from_now)
-            expect(StashEngine::UserMailer).to receive(:in_progress_reminder).with(resource).once
+            expect(StashEngine::ResourceMailer).to receive(:in_progress_reminder).with(resource).once
 
             subject.send_in_progress_reminders_by_day(3)
             subject.send_in_progress_reminders_by_day(3)
@@ -94,7 +94,7 @@ module Reminders
 
           it 'does not send in_progress_reminder if is more than 4 days ago' do
             Timecop.travel(6.days.from_now)
-            expect(StashEngine::UserMailer).to receive(:in_progress_reminder).with(resource).never
+            expect(StashEngine::ResourceMailer).to receive(:in_progress_reminder).with(resource).never
             expect(subject).to receive(:create_activity).never
 
             subject.send_in_progress_reminders_by_day(3)
@@ -118,13 +118,13 @@ module Reminders
           create(:curation_activity, resource: resource, status: 'in_progress')
         end
         create(:curation_activity, resource: resource, status: 'action_required')
-        allow(StashEngine::UserMailer).to receive_message_chain(:chase_action_required1, :deliver_now).and_return(true)
+        allow(StashEngine::ResourceMailer).to receive_message_chain(:chase_action_required1, :deliver_now).and_return(true)
       end
 
       context 'when status date is less than 2 weeks' do
         it 'does not send any email' do
           Timecop.travel((2.weeks - 1.hour).from_now)
-          expect(StashEngine::UserMailer).to receive(:in_progress_reminder).never
+          expect(StashEngine::ResourceMailer).to receive(:in_progress_reminder).never
           expect(subject).to receive(:create_activity).never
 
           subject.action_required_reminder
@@ -135,7 +135,7 @@ module Reminders
         it 'sends in_progress_reminder notification email' do
           Timecop.travel((2.weeks + 1.hour).from_now)
 
-          expect(StashEngine::UserMailer).to receive(:chase_action_required1).with(resource).once
+          expect(StashEngine::ResourceMailer).to receive(:chase_action_required1).with(resource).once
           expect(subject).to receive(:create_activity).once
 
           subject.action_required_reminder
@@ -143,7 +143,7 @@ module Reminders
 
         it 'sends only in_progress_reminder notification email for current days number' do
           Timecop.travel((2.months + 1.hour).from_now)
-          expect(StashEngine::UserMailer).to receive(:chase_action_required1).with(resource).once
+          expect(StashEngine::ResourceMailer).to receive(:chase_action_required1).with(resource).once
 
           subject.action_required_reminder
           subject.action_required_reminder
