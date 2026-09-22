@@ -435,6 +435,15 @@ describe CurationService do
         expect_any_instance_of(SponsoredPaymentsService).to receive(:remove_logs)
         CurationService.new(resource: resource, user: curator, status: 'withdrawn').process
       end
+
+      context 'when identifier is old payment system' do
+        let(:identifier) { create(:identifier, old_payment_system: true) }
+
+        it 'removes old payment system flag' do
+          CurationService.new(resource: resource, user: curator, status: 'withdrawn').process
+          expect(identifier.reload.old_payment_system).to eq(false)
+        end
+      end
     end
 
     describe 'retractions' do

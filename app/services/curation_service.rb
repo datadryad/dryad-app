@@ -159,6 +159,7 @@ class CurationService
       service.log_payment
     elsif @status == 'withdrawn'
       service.remove_logs
+      @resource.identifier.update(old_payment_system: false)
     end
   end
 
