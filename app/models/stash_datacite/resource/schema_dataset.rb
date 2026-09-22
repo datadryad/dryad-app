@@ -128,10 +128,12 @@ module StashDatacite
             'familyName' => i.author_last_name
           }.compact
           author_hash[:sameAs] = "http://orcid.org/#{orcid}" if orcid
+          author_hash[:identifier] = "http://orcid.org/#{orcid}" if orcid
           if affiliation
             author_hash[:affiliation] = {
               '@type' => 'Organization',
               'sameAs' => affiliation.ror_id,
+              'identifier' => affiliation.ror_id,
               'name' => affiliation.smart_name
             }.compact
           end
