@@ -149,7 +149,7 @@ module Stash
       rescue Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
         Stash::ZenodoReplicate::ZenodoConnection.log_to_database(item: "Zenodo final failure: #{e.class}\n#{e}", zen_copy: @copy)
         @copy.update(state: 'error')
-        StashEngine::NotificationsMailer.zenodo_error(@copy).deliver_now
+        StashEngine::NotificationMailer.zenodo_error(@copy).deliver_now
       end
       # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 

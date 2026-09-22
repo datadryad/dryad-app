@@ -1,4 +1,4 @@
-RSpec.describe StashEngine::NotificationsMailer, type: :mailer do
+RSpec.describe StashEngine::NotificationMailer, type: :mailer do
   include Mocks::Aws
 
   let(:identifier) { create(:identifier) }

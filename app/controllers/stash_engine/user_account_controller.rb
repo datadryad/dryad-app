@@ -29,7 +29,7 @@ module StashEngine
 
     def request_merge
       existing_user = StashEngine::User.find_by(id: params[:merge])
-      StashEngine::NotificationsMailer.merge_request(current_user, existing_user).deliver_now
+      StashEngine::NotificationMailer.merge_request(current_user, existing_user).deliver_now
       respond_to(&:js)
     end
 

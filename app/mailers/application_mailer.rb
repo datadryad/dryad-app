@@ -53,6 +53,6 @@ class ApplicationMailer < ActionMailer::Base
     Rails.logger.error(
       "Email delivery failed with error: #{error.class}, and message: #{error.message}"
     )
-    StashEngine::NotificationsMailer.error_report(@resource, error).deliver_now
+    StashEngine::NotificationMailer.error_report(@resource, error).deliver_now
   end
 end

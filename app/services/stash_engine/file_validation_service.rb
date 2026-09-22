@@ -24,7 +24,7 @@ module StashEngine
         file.save
       else
         p ' File cannot be validated; possible corruption! '
-        StashEngine::NotificationsMailer.file_validation_error(file).deliver_now
+        StashEngine::NotificationMailer.file_validation_error(file).deliver_now
       end
     end
 
@@ -40,7 +40,7 @@ module StashEngine
         file.save
       else
         p ' Error generating file checksum; possible corruption! '
-        StashEngine::NotificationsMailer.file_validation_error(file).deliver_now
+        StashEngine::NotificationMailer.file_validation_error(file).deliver_now
       end
     end
 

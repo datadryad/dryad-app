@@ -1,7 +1,7 @@
 module StashEngine
 
   # Mails users about submissions
-  class NotificationsMailer < ApplicationMailer
+  class NotificationMailer < ApplicationMailer
 
     def health_status_change(status_code, health_status)
       @status_code = status_code

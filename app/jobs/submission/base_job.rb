@@ -18,7 +18,7 @@ module Submission
       update_submission_log(result)
       resource.update_repo_queue_state(state: 'errored')
       resource = StashEngine::Resource.find(result.resource_id)
-      StashEngine::NotificationsMailer.error_report(resource, result.error).deliver_now
+      StashEngine::NotificationMailer.error_report(resource, result.error).deliver_now
     rescue StandardError => e
       Rails.logger.error(e.full_message)
       # raising the error so that the job remains stored in "Dead" queue
