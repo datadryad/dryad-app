@@ -3,7 +3,7 @@
 # Table name: noid_states
 #
 #  id         :integer          not null, primary key
-#  state      :text(65535)
+#  state      :text(16777215)
 #  created_at :datetime
 #  updated_at :datetime
 #
