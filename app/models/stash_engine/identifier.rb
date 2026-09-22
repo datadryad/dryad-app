@@ -79,7 +79,7 @@ module StashEngine
     after_create :create_process_date, unless: :process_date
     after_create :create_share
 
-    enum :pub_state, { unpublished: 'unpublished', published: 'published', embargoed: 'embargoed', retracted: 'retracted', withdrawn: 'withdrawn' }
+    enum :pub_state, %w[unpublished published embargoed retracted withdrawn].index_by(&:to_sym)
 
     # See https://medium.com/rubyinside/active-records-queries-tricks-2546181a98dd for some good tricks
     # returns the identifiers that have resources with that *latest* curation state you specify (for any of the resources)
