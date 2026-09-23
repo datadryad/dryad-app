@@ -1,5 +1,10 @@
 <% 
-time = @data
+time = {
+  dates: @data[:dates].reject.each_with_index { |d,i| [@data[:subs][i], @data[:qs][i], @data[:pubs][i]].sum == 0 },
+  subs: @data[:subs].reject.each_with_index { |d,i| [@data[:subs][i], @data[:qs][i], @data[:pubs][i]].sum == 0 },
+  qs: @data[:qs].reject.each_with_index { |d,i| [@data[:subs][i], @data[:qs][i], @data[:pubs][i]].sum == 0 },
+  pubs: @data[:pubs].reject.each_with_index { |d,i| [@data[:subs][i], @data[:qs][i], @data[:pubs][i]].sum == 0 }
+}
 time_desc = time[:dates].map.with_index { |d,i| "#{d}: #{time[:subs][i]} submitted, #{time[:qs][i]} queued, #{time[:pubs][i]} published" }.join('; ')
 %>
 <canvas id="datasets-monthly-chart" role="img" aria-label="Line chart showing counts of datasets submitted and published by date. <%= time_desc %>"></canvas>
@@ -7,23 +12,24 @@ time_desc = time[:dates].map.with_index { |d,i| "#{d}: #{time[:subs][i]} submitt
   new Chart(document.getElementById('datasets-monthly-chart').getContext('2d'), {
     type: 'line',
     data: { 
-      labels: <%= time[:dates].to_json.html_safe %>,
+      labels: <%= @data[:dates].to_json.html_safe %>,
       datasets: [
         {
           label: 'Submitted',
-          data: <%= time[:subs].to_json.html_safe %>
+          data: <%= @data[:subs].map{ |v| v.zero? ? nil : v }.to_json.html_safe %>
         },
         {
           label: 'Queued',
-          data: <%= time[:qs].to_json.html_safe %>
+          data: <%= @data[:qs].map{ |v| v.zero? ? nil : v }.to_json.html_safe %>
         },
         {
           label: 'Published',
-          data: <%= time[:pubs].to_json.html_safe %>
+          data: <%= @data[:pubs].map{ |v| v.zero? ? nil : v }.to_json.html_safe %>
         },
       ]
     },
     options: {
+      spanGaps: true,
       responsive: true,
       maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
