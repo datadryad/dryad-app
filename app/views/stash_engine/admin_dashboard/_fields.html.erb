@@ -1,6 +1,6 @@
 <%
 def check(id, indent = false)
-  h = {funders: 'Grant funders', awards: 'Award IDs', sponsor: 'Journal sponsor', dpc: 'DPC paid by', updated_at: 'Last modified', submit_date: 'Submitted', publication_date: 'Published', first_sub_date: 'First submitted', first_pub_date: 'First published', queue_date: 'First queued', created_at: 'First created', identifiers: 'Publication IDs', status_date: 'Entered status'}
+  h = {pub_state: 'Publication status', status: 'Workflow status', funders: 'Grant funders', awards: 'Award IDs', sponsor: 'Journal sponsor', dpc: 'DPC paid by', updated_at: 'Last modified', submit_date: 'Submitted', publication_date: 'Published', first_sub_date: 'First submitted', first_pub_date: 'First published', queue_date: 'First queued', created_at: 'First created', identifiers: 'Publication IDs', status_date: 'Entered status'}
   label = h[id.to_sym]
   label ||= id.length < 4 ? id.upcase : id.humanize.capitalize
 
@@ -12,7 +12,7 @@ end
 %>
 <div class="admin-dashboard-buttons">
   <b role="heading" aria-level="3" id="edit_fields">Display fields</b>
-  <button type="button" class="o-button__plain-text7" id="edit_fields-help"><i aria-hidden="true" class="fa fa-info-circle"></i> Display field help</button>
+  <button type="button" class="o-button__plain-text7" id="edit_fields-help"><i aria-hidden="true" class="fa fa-info-circle"></i>Display field help</button>
 </div>
 <fieldset id="edit_fields-form" <% if @role_object.blank? || @user_role.role == 'curator' %>class="curator"<% end %> aria-labelledby="edit_fields">
   <div>Description</div>
@@ -45,10 +45,6 @@ end
     <span class="help" id="countries-desc">Up to 6 countries associated with author affiliations. Appear with Affiliations.</span>
   </div>
   <div>
-    <%= check('status').html_safe %>
-    <span class="help" id="status-desc">Status of the submission in Dryad processing.</span>
-  </div>
-  <div>
     <%= check('size').html_safe %>
     <span class="help" id="size-desc">Total size of the current uploaded data files.</span>
   </div>
@@ -63,6 +59,14 @@ end
   <div>
     <%= check('metrics').html_safe %>
     <span class="help" id="metrics-desc">View, download, and citation statistics.</span>
+  </div>
+  <div>
+    <%= check('pub_state').html_safe %>
+    <span class="help" id="pub_state-desc">Whether or not the dataset&apos;s metadata and files are public available on Dryad.</span>
+  </div>
+  <div>
+    <%= check('status').html_safe %>
+    <span class="help" id="status-desc">The status of the current revision in Dryad&apos;s processing and curation workflow.</span>
   </div>
   <div>
     <%= check('funders').html_safe %>

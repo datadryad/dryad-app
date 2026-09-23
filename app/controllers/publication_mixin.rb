@@ -10,7 +10,7 @@ module PublicationMixin
 
     if resource.identifier.payment_needed?
       CurationService.new(resource: resource, status: 'awaiting_payment', note: 'Full DPC payment required').process
-      StashEngine::UserMailer.peer_review_payment_needed(resource).deliver_now
+      StashEngine::ResourceMailer.peer_review_payment_needed(resource).deliver_now
     else
       resource.update(user_id: nil) unless resource.curator&.curator?
       CurationService.new(
@@ -19,7 +19,7 @@ module PublicationMixin
         status: 'queued',
         note: 'Release from peer review through publication information'
       ).process
-      StashEngine::UserMailer.peer_review_pub_linked(resource).deliver_now
+      StashEngine::ResourceMailer.peer_review_pub_linked(resource).deliver_now
     end
   end
 

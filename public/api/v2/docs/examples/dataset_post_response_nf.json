@@ -24,14 +24,22 @@ value: {
       "firstName": "Matilda",
       "lastName": "Swinton",
       "email": "matilda.swinton@example.com",
-      "affiliation": "Example Organization"
+      "affiliations": [
+        {
+          "organization": "Example Organization"
+        }
+      ]
     },
     {
       "firstName": "Norah",
       "lastName": "Moraga",
       "email": "Norah.Moraga@example.com",
-      "affiliation": "University of California, Davis",
-      "affiliationROR": "https://ror.org/05rrcem69"
+      "affiliations": [
+        {
+          "organization": "University of California, Davis",
+          "identifier": "https://ror.org/05rrcem69"
+        }
+      ]
     }
   ],
   "abstract": "<p>Information theorists agree that \"fuzzy\" models are an interesting new topic in the field of machine learning.</p>\r\n",

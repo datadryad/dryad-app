@@ -1,0 +1,35 @@
+<% 
+time = @data
+time_desc = time[:dates].map.with_index { |d,i| "#{d}: #{time[:subs][i]} submitted, #{time[:qs][i]} queued, #{time[:pubs][i]} published" }.join('; ')
+%>
+<canvas id="datasets-monthly-chart" role="img" aria-label="Line chart showing counts of datasets submitted and published by date. <%= time_desc %>"></canvas>
+<script>
+  new Chart(document.getElementById('datasets-monthly-chart').getContext('2d'), {
+    type: 'line',
+    data: { 
+      labels: <%= time[:dates].to_json.html_safe %>,
+      datasets: [
+        {
+          label: 'Submitted',
+          data: <%= time[:subs].to_json.html_safe %>
+        },
+        {
+          label: 'Queued',
+          data: <%= time[:qs].to_json.html_safe %>
+        },
+        {
+          label: 'Published',
+          data: <%= time[:pubs].to_json.html_safe %>
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        title: { display: true, text: 'Datasets over time', font: { size: 20 } },
+      }
+    }
+  })
+</script>

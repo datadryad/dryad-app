@@ -6,7 +6,6 @@ module StashEngine
     helper SortableTableHelper
     helper AdminHelper
     helper AdminDashboardHelper
-    helper AdminChartsHelper
     before_action :require_user_login
     before_action :require_admin
     protect_from_forgery except: :results
@@ -30,11 +29,12 @@ module StashEngine
       if params[:sort].present? || @search_string.present?
         order_string = 'relevance desc'
         if params[:sort].present?
-          order_list = %w[title author_string status total_file_size view_count curator_name editor_name
+          order_list = %w[title author_string status total_file_size view_count curator_name editor_name pub_state
                           created_at updated_at submit_date publication_date first_sub_date first_pub_date queue_date last_status_date]
           order_string = helpers.sortable_table_order(whitelist: order_list)
           order_string = "stash_engine_curation_activities.#{order_string}" if @sort == 'updated_at'
           order_string = "stash_engine_identifiers.#{order_string}" if @sort == 'created_at'
+          order_string = "stash_engine_identifiers.#{order_string}" if @sort == 'pub_state'
           order_string = "stash_engine_process_dates.#{order_string}" if @sort == 'last_status_date'
           order_string += ', relevance desc' if @search_string.present?
         end
@@ -62,11 +62,6 @@ module StashEngine
         session[:admin_search_count] = res.to_a.first['total']
       end
       @count = session[:admin_search_count]
-      respond_to(&:js)
-    end
-
-    def charts
-      @charts = JSON.parse((helpers.size_chart + helpers.datasets_by_date).to_json, symbolize_names: true)
       respond_to(&:js)
     end
 
@@ -170,16 +165,14 @@ module StashEngine
 
     def add_fields
       view_field if @sort == 'view_count'
-      if @filters[:status].present? || %w[status updated_at].include?(@sort) || @filters[:updated_at]&.values&.any?(&:present?)
-        @datasets = @datasets.joins(:last_curation_activity)
-      end
+      @datasets = @datasets.select('stash_engine_identifiers.pub_state')
+      @datasets = @datasets.joins(:last_curation_activity).select('stash_engine_curation_activities.status')
       if current_user.min_app_admin?
         curator_field if @fields.include?('curator') || @filters[:curator].present?
         editor_field if @fields.include?('editor') || @filters[:editor].present?
       end
       author_field if @fields.include?('authors') || @sort == 'author_string'
       date_fields
-      @datasets = @datasets.select('stash_engine_curation_activities.status') if @sort == 'status'
       @datasets = @datasets.select('stash_engine_curation_activities.updated_at') if @sort == 'updated_at'
       @datasets = @datasets.select('stash_engine_identifiers.created_at') if @sort == 'created_at'
       return unless @search_string.present?
@@ -246,6 +239,7 @@ module StashEngine
       funder_filter
 
       @datasets = @datasets.joins(:flag).where(flag: { flag: @filters[:flag].to_sym }) if StashEngine::Flag.flags.key?(@filters[:flag])
+      @datasets = @datasets.where('stash_engine_identifiers.pub_state': @filters[:pub_state]) if @filters[:pub_state].present?
       @datasets = @datasets.where('stash_engine_curation_activities.status': @filters[:status]) if @filters[:status].present?
       @datasets = @datasets.joins(authors: :affiliations).where('dcs_affiliations.ror_id': @filters.dig(:affiliation, :value)) if @filters.dig(
         :affiliation, :value

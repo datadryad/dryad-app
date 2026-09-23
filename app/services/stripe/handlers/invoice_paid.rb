@@ -16,7 +16,16 @@ module Stripe
           paid_at: paid_at(invoice),
           status_time: paid_at(invoice)
         )
-        CurationService.new(resource: payment.resource, user_id: 0, status: 'queued', note: 'Invoice has been paid').process
+        CurationService.new(resource: payment.resource, user_id: 0, status: new_status, note: 'Invoice has been paid').process
+      end
+
+      private
+
+      def new_status
+        resource = payment.resource.reload
+        return 'queued' if resource.current_curation_status == 'awaiting_payment'
+
+        resource.current_curation_status
       end
     end
   end
