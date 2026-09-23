@@ -51,7 +51,7 @@ class ChartsController < StashEngine::ApplicationController
       "SUM(CASE WHEN pub_state in ('published', 'embargoed', 'retracted') THEN 1 ELSE 0 END) as published",
       "SUM(CASE WHEN pub_state = 'unpublished' and status in ('peer_review', 'to_be_published') THEN 1 ELSE 0 END) as kept_private",
       "SUM(CASE WHEN pub_state = 'unpublished' and status in ('queued', 'curation') THEN 1 ELSE 0 END) as curation",
-      "SUM(CASE WHEN pub_state = 'unpublished' and status in ('in_progress', 'action_required') THEN 1 ELSE 0 END) as edits_needed",
+      "SUM(CASE WHEN pub_state = 'unpublished' and status in ('in_progress','action_required','awaiting_payment') THEN 1 ELSE 0 END) as edits_needed",
       "SUM(CASE WHEN pub_state = 'withdrawn' THEN 1 ELSE 0 END) as withdrawn"
     ]
     data = ActiveRecord::Base.connection.select_all(
