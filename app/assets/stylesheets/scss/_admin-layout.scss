@@ -336,25 +336,45 @@
 
 #search_charts {
   width: 100%;
-  & > div {
-    display: flex;
-    gap: 2ch;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    div {
-      height: 300px;
-      width: 200px;
-      &:first-child {
-        width: 280px;
-      }
-      &:last-child {
-        min-width: 600px;
-        max-width: 100%;
-        display: flex;
-        justify-content: flex-end;
-        @media screen and (max-width: 631px) {
-          min-width: 0;
-          width: 100%;
+  &[aria-busy='true'] {
+    & > div {
+      height: 0;
+      overflow: hidden;
+      visibility: hidden;
+      transition: height 0s 0.2s, visibility 0s 0.25s;
+    }
+    & > p {
+      text-align: center;
+      display: block;
+    }
+  }
+  &[aria-busy='false'] {
+    & > p {
+      display: none;
+    }
+    & > div {
+      height: auto;
+      visibility: visible;
+      transition: height 0s 0.2s, visibility 0s 0.25s;
+      display: flex;
+      gap: 2ch;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      div {
+        height: 300px;
+        width: 200px;
+        &:first-child {
+          width: 280px;
+        }
+        &:last-child {
+          min-width: 600px;
+          max-width: 100%;
+          display: flex;
+          justify-content: flex-end;
+          @media screen and (max-width: 631px) {
+            min-width: 0;
+            width: 100%;
+          }
         }
       }
     }

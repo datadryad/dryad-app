@@ -18,6 +18,7 @@
     <%= render partial: 'search_form' %>
   </div>
   <div id="search_charts" aria-busy="true" <% if unaltered %>hidden<% end %>>
+    <p><i class="fas fa-spin fa-spinner" aria-hidden="true"></i></p>
     <div>
       <div id="chart-size-chart" aria-busy="true"></div>
       <div id="chart-status-chart" aria-busy="true"></div>
@@ -85,7 +86,6 @@
     window.history.pushState({}, null, `${window.location.pathname}?${params.toString()}`);
     document.getElementById('count_and_export').innerHTML = '<i class="fas fa-spin fa-spinner" aria-hidden="true"></i>'
     document.getElementById('count_and_export').setAttribute('aria-busy', true)
-    document.getElementById('chart-date-chart').innerHTML = '<i class="fas fa-spin fa-spinner" aria-hidden="true"></i>'
     document.getElementById('search_charts').setAttribute('aria-busy', true)
   }
   const checkForm = () => {
