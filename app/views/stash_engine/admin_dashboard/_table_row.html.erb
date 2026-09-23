@@ -48,11 +48,6 @@
         arr }.map { |aff| ([@fields.include?('affiliations') ? aff.smart_name : nil] + [@fields.include?('countries') ? aff.country_name : nil]).reject(&:blank?).join(', ') }%>
         <%= ([dataset.tenant_id == 'dryad' ? nil : ([@fields.include?('affiliations') ? dataset.tenant&.short_name : nil] + [@fields.include?('countries') ? dataset.tenant&.country_name : nil]).reject(&:blank?).join(', ')].flatten).concat(affs).uniq.reject(&:blank?).first(6).join('; ') %></td>
   <% end %>
-  <% if @fields.include?('status') %>
-    <td id="dataset_status_<%= dataset.identifier_id %>">
-      <%= render partial: 'table_status', locals: {dataset: dataset} %>
-    </td>
-  <% end %>
   <% if @fields.include?('size') || @fields.include?('invoiced_size') || @fields.include?('versioned_size')%>
     <td class="c-lined-table__digits">
       <% if @fields.include?('size') %>
@@ -70,6 +65,14 @@
     <td class="c-lined-table__digits"><%= dataset.identifier.counter_stat.unique_investigation_count.to_i %> views<br/>
       <%= dataset.identifier.counter_stat.unique_request_count.to_i %> downloads<br/>
       <%= dataset.identifier.counter_stat.citation_count.to_i %> citations
+    </td>
+  <% end %>
+  <% if @fields.include?('pub_state') %>
+    <td id="dataset_pub_state_<%= dataset.identifier_id %>"><%= dataset.identifier.pub_state.upcase_first %></td>
+  <% end %>
+  <% if @fields.include?('status') %>
+    <td id="dataset_status_<%= dataset.identifier_id %>">
+      <%= render partial: 'table_status', locals: {dataset: dataset} %>
     </td>
   <% end %>
   <% if @fields.include?('funders') || @fields.include?('awards') %>
