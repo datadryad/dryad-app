@@ -26,14 +26,22 @@ value: {
       "firstName": "Scott",
       "lastName": "Fisher",
       "email": "Scott.Fisher@datadryad.org",
-      "affiliation": "UC Office of the President",
+      "affiliations": [
+        {
+          "organization": "UC Office of the President"
+        }
+      ],
       "orcid": "0000-0001-6422-6998"
     },
     {
       "firstName": "Norah",
       "lastName": "Moraga",
       "email": "Norah.Moraga@example.com",
-      "affiliation": "UC Davis",
+      "affiliations": [
+        {
+          "organization": "UC Davis"
+        }
+      ]
     }
   ],
   "abstract": "<p>Information theorists agree that \"fuzzy\" models are an interesting new topic in the field of machine learning, and hackers worldwide concur. In fact, few electrical engineers would disagree with the emulation of replication, which embodies the compelling principles of cryptoanalysis. Weight, our new method for journaling file systems, is the solution to all of these grand challenges.</p>\r\n",

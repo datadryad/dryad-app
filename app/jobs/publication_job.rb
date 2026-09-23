@@ -23,7 +23,7 @@ class PublicationJob < BaseJob
   rescue Datacite::DoiGenError => e
     Rails.logger.error "Datacite::DoiGen - Unable to submit metadata changes for : '#{resource&.identifier}'"
     Rails.logger.error e.message
-    StashEngine::UserMailer.error_report(resource, e).deliver_now
+    StashEngine::NotificationMailer.error_report(resource, e).deliver_now
     raise e
   end
 

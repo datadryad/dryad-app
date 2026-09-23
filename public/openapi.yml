@@ -164,7 +164,7 @@ paths:
           application/json:
             schema:
               allOf:
-                - $ref: '#/components/schemas/dc_metadata'
+                - $ref: '#/components/schemas/dc_metadata_req'
                 - $ref: '#/components/schemas/admin_values'
             examples:
               Post:
@@ -241,7 +241,7 @@ paths:
           application/json:
             schema:
               allOf:
-                - $ref: '#/components/schemas/dc_metadata'
+                - $ref: '#/components/schemas/dc_metadata_req'
                 - properties:
                     identifier:
                       type: string
@@ -1299,13 +1299,35 @@ components:
 
     dc_metadata:
       type: object
+      allOf:
+        - $ref: '#/components/schemas/response_metadata'
+        - $ref: '#/components/schemas/universal_metadata'
+      
+    dc_metadata_req:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/request_metadata'
+        - $ref: '#/components/schemas/universal_metadata'
+      required:
+        - title
+        - authors
+        - abstract
+
+    response_metadata:
       properties:
-        title:
-          type: string
         authors:
           type: array
           items:
             $ref: '#/components/schemas/author'
+    request_metadata:
+      properties:
+        authors:
+          type: array
+          items:
+            $ref: '#/components/schemas/simple_author'
+    universal_metadata:
+      properties:
+        title: string
         abstract:
           type: string
           description: An abstract introducing the dataset.
@@ -1337,10 +1359,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/relatedWork'
-      required:
-        - title
-        - authors
-        - abstract
 
     admin_values:
       properties:
@@ -1394,20 +1412,39 @@ components:
           type: string
         affiliation:
           type: string
+          deprecated: true
         affiliationROR:
           type: string
           description: Preferred identifier for the author affiliation.
+          deprecated: true
         affiliations:
           type: array
           items:
-            name: string
-            ror_id: string
+            type: object
+            properties:
+              organization: 
+                type: string
+              identifier: 
+                type: string
+                description: The organization identifier, for example a ROR ID.
+                example: 'https://ror.org/00x6h5n95'
         affiliationISNI:
           type: string
         orcid:
           type: string
         order:
           type: integer
+        roles:
+          type: array
+          items:
+            type: object
+            properties:
+              role: 
+                type: string
+              identifier: 
+                type: string
+                description: The the CRediT identifier, a link to the CRediT description of the role.
+                example: https://credit.niso.org/contributor-roles/conceptualization
     simple_author:
       properties:
         firstName:
@@ -1418,6 +1455,9 @@ components:
           type: string
         affiliation:
           type: string
+        affiliationROR:
+          type: string
+          description: Preferred identifier for the author affiliation.
     funder:
       properties:
         organization:

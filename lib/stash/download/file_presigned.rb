@@ -35,7 +35,7 @@ module Stash
                        "\n" \
                        "File id: #{file.id}\n" \
                        "Filename: #{file.download_filename}\n"
-          StashEngine::UserMailer.general_error(file&.resource, error_text).deliver_now
+          StashEngine::NotificationMailer.general_error(file&.resource, error_text).deliver_now
         else
           file&.resource&.identifier&.update_columns(downloaded_at: Time.now.utc)
           cc.redirect_to url, allow_other_host: true
@@ -65,7 +65,7 @@ module Stash
                        "\n" \
                        "File id: #{file.id}\n" \
                        "Filename: #{file.download_filename}\n"
-          StashEngine::UserMailer.general_error(file&.resource, error_text).deliver_now
+          StashEngine::NotificationMailer.general_error(file&.resource, error_text).deliver_now
         else
           cc.redirect_to url, allow_other_host: true
         end

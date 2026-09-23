@@ -323,7 +323,7 @@ namespace :identifiers do
       next if i.latest_resource.nil?
 
       log "Inviting DOI link. Identifier: #{i.id}, Resource: #{i.latest_resource&.id} updated #{i.latest_resource&.updated_at}"
-      StashEngine::UserMailer.doi_invitation(i.latest_resource).deliver_now
+      StashEngine::ResourceMailer.doi_invitation(i.latest_resource).deliver_now
       CurationService.new(
         resource_id: i.latest_resource&.id,
         user_id: 0,
@@ -638,7 +638,7 @@ namespace :identifiers do
 
     if alert_list.present?
       log "Sending alert for identifiers #{alert_list.map(&:id)}"
-      StashEngine::UserMailer.voided_invoices(alert_list).deliver_now
+      StashEngine::NotificationMailer.voided_invoices(alert_list).deliver_now
     end
   end
 
@@ -1601,7 +1601,7 @@ namespace :journal_email do
   desc 'Check dates of journal integrations'
   task check_integrations: :environment do
     journals = StashEngine::Journal.where('integrated_at BETWEEN ? AND ?', 6.months.ago, 1.month.ago)
-    StashEngine::UserMailer.integration_paused(journals).deliver_now unless journals.empty?
+    StashEngine::NotificationMailer.integration_paused(journals).deliver_now unless journals.empty?
   end
 end
 

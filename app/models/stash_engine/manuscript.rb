@@ -115,7 +115,7 @@ module StashEngine
 
       return unless target_status
 
-      StashEngine::UserMailer.peer_review_payment_needed(@new_res).deliver_now if target_status == 'awaiting_payment'
+      StashEngine::ResourceMailer.peer_review_payment_needed(@new_res).deliver_now if target_status == 'awaiting_payment'
 
       # once we receive a notification from the journal, we know that the manuscript is no longer in
       # review, so remove the hold_for_peer_review setting
