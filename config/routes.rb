@@ -506,7 +506,7 @@ Rails.application.routes.draw do
 
   get 'metrics_chart', to: 'charts#metrics_chart', as: 'metrics_chart'
   match 'size_chart', to: 'charts#size_chart', via: %i[get post], as: 'size_chart'
-  match 'date_chart', to: 'charts#datasets_by_date', via: %i[get post], as: 'date_chart'
+  match 'date_chart', to: 'charts#date_chart', via: %i[get post], as: 'date_chart'
   match 'status_chart', to: 'charts#status_chart', via: %i[get post], as: 'status_chart'
 
 

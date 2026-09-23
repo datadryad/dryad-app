@@ -1,6 +1,0 @@
-document.getElementById('chart-date-chart').innerHTML = ''
-document.getElementById('chart-date-chart').append(document.createRange().createContextualFragment("<%= escape_javascript(render partial: 'datasets_by_date') %>"));
-document.getElementById('chart-date-chart').setAttribute('aria-busy', false)
-if (!Array.from(document.querySelector('#search_charts div').children).some(d => d.getAttribute('aria-busy') == 'true')) {
-  document.getElementById('search_charts').setAttribute('aria-busy', false)
-}

@@ -43,7 +43,7 @@ class ChartsController < StashEngine::ApplicationController
       "select #{query} from (#{params[:sql]}) subquery"
     )
     @data = JSON.parse(data.first.to_json, symbolize_names: true)
-    respond_to(&:js)
+    render template: 'charts/admin_charts', formats: [:js]
   end
 
   def status_chart
@@ -58,10 +58,10 @@ class ChartsController < StashEngine::ApplicationController
       "select #{query.join(', ')} from (#{params[:sql]}) subquery"
     )
     @data = JSON.parse(data.first.to_json, symbolize_names: true)
-    respond_to(&:js)
+    render template: 'charts/admin_charts', formats: [:js]
   end
 
-  def datasets_by_date
+  def date_chart
     return [{ dates: [Date.today.strftime('%F')], subs: [0], qs: [0], pubs: [0] }] if submission_query.first.blank? || publication_query.first.blank?
 
     range = date_range
@@ -72,7 +72,7 @@ class ChartsController < StashEngine::ApplicationController
       pubs: range.map { |d| publication_query.sum { |h| h['period'].start_with?(d) ? h['count'] : 0 } }
     }
     @data = JSON.parse(data.to_json, symbolize_names: true)
-    respond_to(&:js)
+    render template: 'charts/admin_charts', formats: [:js]
   end
 
   private
