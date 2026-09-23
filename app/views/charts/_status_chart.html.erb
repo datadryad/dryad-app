@@ -1,5 +1,5 @@
 <%
-status = @data.reject { |k,v| v.zero? }
+status = @data.reject { |k,v| v.to_i.zero? }
 status_desc = status.map {|k,v| "#{k.to_s.humanize}: #{v}" }.join(', ')
 %>
 <canvas <% if status.length < 2 %>hidden<% end %> id="status-chart" role="img" aria-label="Bar chart counting datasets based on publication and workflow status. <%= status_desc %>"></canvas>
