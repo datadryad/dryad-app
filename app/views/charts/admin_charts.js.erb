@@ -1,0 +1,6 @@
+document.getElementById('chart-<%= params[:action] %>').innerHTML = ''
+document.getElementById('chart-<%= params[:action] %>').append(document.createRange().createContextualFragment("<%= escape_javascript(render partial: params[:action]) %>"));
+document.getElementById('chart-<%= params[:action] %>').setAttribute('aria-busy', false)
+if (!Array.from(document.querySelector('#search_charts div').children).some(d => d.getAttribute('aria-busy') == 'true')) {
+  document.getElementById('search_charts').setAttribute('aria-busy', false)
+}
