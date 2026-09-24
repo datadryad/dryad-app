@@ -175,7 +175,7 @@ class CurationService
   end
 
   def update_publication_flags
-    return unless @activity.can_update_flags?(@status)
+    return unless @activity.can_update_flags?
 
     case @status
     when 'withdrawn'
@@ -208,7 +208,7 @@ class CurationService
   end
 
   def update_pub_state
-    return if @resource.identifier.published? && !@activity.can_update_pub_state?(@status)
+    return if @resource.identifier.published? && !@activity.can_update_pub_state?
 
     PubStateService.new(@resource.identifier).update_for_ca_status(@status)
   end

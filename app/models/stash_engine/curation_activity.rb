@@ -195,11 +195,11 @@ module StashEngine
       resource.previous_published_resource.present?
     end
 
-    def can_update_pub_state?(status)
+    def can_update_pub_state?
       %w[published embargoed retracted].include?(status)
     end
 
-    def can_update_flags?(status)
+    def can_update_flags?
       %w[published embargoed peer_review withdrawn retracted].include?(status)
     end
 
