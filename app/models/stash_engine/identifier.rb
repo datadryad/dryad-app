@@ -72,6 +72,7 @@ module StashEngine
     belongs_to :software_license, class_name: 'StashEngine::SoftwareLicense', optional: true
     has_many :curation_activities, class_name: 'StashEngine::CurationActivity', through: :resources
     has_many :payments, class_name: 'ResourcePayment', through: :resources
+    has_many :payment_records, class_name: 'PaymentRecord'
     has_many :sponsored_payment_logs, through: :resources
     has_many :receipts, -> { receipt }, class_name: 'FeeRecord', through: :resources
     has_one :research_integrity_case

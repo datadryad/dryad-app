@@ -23,6 +23,7 @@ module StashEngine
     has_many :users, through: :roles
     has_one :payment_configuration, as: :partner, dependent: :destroy
     has_many :payment_logs, class_name: 'SponsoredPaymentLog', as: :payer
+    has_many :payment_records, class_name: 'PaymentRecord', as: :payment
 
     scope :exemptions, -> { joins(:payment_configuration).where(enabled: true, payment_configurations: { covers_dpc: true }) }
   end

@@ -38,6 +38,7 @@ class ResourcePayment < ApplicationRecord
   has_paper_trail
 
   belongs_to :resource, class_name: 'StashEngine::Resource'
+  has_many :payment_records, class_name: 'PaymentRecord', as: :payment
 
   enum :status, { created: 1, paid: 2, failed: 3, voided: 4, refunded: 5 }
 

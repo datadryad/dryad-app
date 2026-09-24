@@ -43,6 +43,7 @@ module StashEngine
     has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
     has_one :payment_configuration, as: :partner, dependent: :destroy
     has_many :payment_logs, class_name: 'SponsoredPaymentLog', as: :payer
+    has_many :payment_records, class_name: 'PaymentRecord', as: :payment
 
     accepts_nested_attributes_for :flag, allow_destroy: true
     accepts_nested_attributes_for :payment_configuration
