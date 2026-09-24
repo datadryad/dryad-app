@@ -103,11 +103,11 @@ Rails.application.config.content_security_policy do |policy|
   policy.font_src :self,
                   :data,
                   'https://fonts.gstatic.com',
-                  'https://fontsgstatic.cn',
                   'https://*.googleapis.com',
                   'chrome-extension:',
                   'moz-extension:',
                   'safari-web-extension:',
+                  'ms-browser-extension:',
                   'https://*.proxy.hfzk.net.cn',
                   'https://cdn.scite.ai',
                   main_domain
