@@ -196,6 +196,10 @@ module StashEngine
     end
 
     def can_update_pub_state?(status)
+      %w[published embargoed retracted].include?(status)
+    end
+
+    def can_update_flags?(status)
       %w[published embargoed peer_review withdrawn retracted].include?(status)
     end
 
