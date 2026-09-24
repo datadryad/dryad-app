@@ -208,7 +208,7 @@ class CurationService
   end
 
   def update_pub_state
-    return if @resource.identifier.published? && !@activity.can_update_pub_state?
+    return if @resource.identifier.published? && !@activity.can_update_pub_state?(@status)
 
     PubStateService.new(@resource.identifier).update_for_ca_status(@status)
   end
