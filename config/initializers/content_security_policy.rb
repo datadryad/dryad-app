@@ -20,7 +20,7 @@ Rails.application.config.content_security_policy do |policy|
   # CONNECT (XHR, fetch, websockets)
   # --------------------
   policy.connect_src :self,
-                     :https,
+                     :data,
                      'https://blog.datadryad.org',
                      'https://*.google-analytics.com',
                      'https://cdn.jsdelivr.net',
@@ -28,6 +28,9 @@ Rails.application.config.content_security_policy do |policy|
                      'https://*.datacite.org',
                      'https://*.amazonaws.com',
                      'https://doi.org',
+                     'https://doubleclick.net',
+                     'http://localhost:3000',
+                     'http://127.0.0.1:3000',
                      main_domain
 
   # --------------------
@@ -42,10 +45,13 @@ Rails.application.config.content_security_policy do |policy|
                     'https://www.google.com',
                     'https://www.recaptcha.net',
                     'https://www.gstatic.com',
+                    'https://*.awswaf.com',
+                    'https://cdn.jsdelivr.net',
                     main_domain
 
   policy.script_src_elem :self,
                          :unsafe_inline,
+                         :blob,
                          'https://www.googletagmanager.com',
                          'https://*.google-analytics.com',
                          'https://*.awswaf.com',
@@ -53,9 +59,19 @@ Rails.application.config.content_security_policy do |policy|
                          'https://cdn.jsdelivr.net',
                          'https://cdnjs.cloudflare.com',
                          'https://js.stripe.com',
-                         'https://www.google.com',
+                         'https://google.com',
+                         'https://*.google.com',
                          'https://www.recaptcha.net',
                          'https://www.gstatic.com',
+                         'https://www.gstatic.cn',
+                         'https://*.googleapis.com',
+                         'https://unpkg.com',
+                         'https://altmetric.com',
+                         'https://*.cloudfront.net',
+                         'https://cdn.mathjax.org',
+                         'https://doi.org',
+                         'http://localhost:3000',
+                         'http://127.0.0.1:3000',
                          main_domain
 
   policy.script_src_attr :unsafe_inline
@@ -67,12 +83,16 @@ Rails.application.config.content_security_policy do |policy|
                    :unsafe_inline,
                    'https://fonts.googleapis.com',
                    'https://*.googleapis.com',
+                   'https://www.gstatic.com',
                    main_domain
 
   policy.style_src_elem :self,
+                        :blob,
+                        :data,
                         :unsafe_inline,
-                        'https://fonts.googleapis.com',
                         'https://*.googleapis.com',
+                        'https://www.gstatic.com',
+                        'https://altmetric.com',
                         main_domain
 
   policy.style_src_attr :unsafe_inline
@@ -83,7 +103,7 @@ Rails.application.config.content_security_policy do |policy|
   policy.font_src :self,
                   :data,
                   'https://fonts.gstatic.com',
-                  'https://fonts.gstatic.cn',
+                  'https://fontsgstatic.cn',
                   'https://*.googleapis.com',
                   'chrome-extension:',
                   'moz-extension:',
@@ -95,7 +115,7 @@ Rails.application.config.content_security_policy do |policy|
   # --------------------
   # IMAGES
   # --------------------
-  policy.img_src :self, :https, :data
+  policy.img_src :self, :https, :data, :blob
 
   # --------------------
   # MEDIA
@@ -107,7 +127,12 @@ Rails.application.config.content_security_policy do |policy|
   # --------------------
   policy.worker_src :self, :blob, 'https://cdnjs.cloudflare.com', main_domain
   policy.child_src :blob
-  policy.frame_src :self, :https
+  policy.frame_src :self,
+                   'https://www.google.com',
+                   'https://www.recaptcha.net',
+                   'https://js.stripe.com',
+                   'https://hooks.stripe.com',
+                   main_domain
   # policy.frame_ancestors :none
 
   # --------------------
