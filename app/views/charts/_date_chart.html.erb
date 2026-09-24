@@ -33,6 +33,9 @@ time_desc = time[:dates].map.with_index { |d,i| "#{d}: #{time[:subs][i]} submitt
       responsive: true,
       maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
+      ticks: {
+        precision: 0
+      },
       plugins: {
         title: { display: true, text: 'Datasets over time', font: { size: 20 } },
       }
