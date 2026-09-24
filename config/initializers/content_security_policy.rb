@@ -114,6 +114,7 @@ Rails.application.config.content_security_policy do |policy|
   # SECURITY
   # --------------------
   policy.object_src :none
+  # policy.require_trusted_types_for :script
 
   # --------------------
   # REPORTING
