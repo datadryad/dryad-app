@@ -72,15 +72,17 @@ class ChartsController < StashEngine::ApplicationController
     @q_result = queue_query
     @pub_result = publication_query
     @connection.execute("DROP TEMPORARY TABLE IF EXISTS ads_table#{@uid}")
-    return [{ dates: [Date.today.strftime('%F')], subs: [0], qs: [0], pubs: [0] }] if @sub_result.first.blank? || @pub_result.first.blank?
-
-    range = date_range
-    data = {
-      dates: range.map { |d| label_format(d) },
-      subs: range.map { |d| @sub_result.sum { |h| h['period'].start_with?(d) ? h['count'] : 0 } },
-      qs: range.map { |d| @q_result.sum { |h| h['period'].start_with?(d) ? h['count'] : 0 } },
-      pubs: range.map { |d| @pub_result.sum { |h| h['period'].start_with?(d) ? h['count'] : 0 } }
-    }
+    if @sub_result.first.blank?
+      data = { dates: [Date.today.strftime('%F')], subs: [0], qs: [0], pubs: [0] }
+    else
+      range = date_range
+      data = {
+        dates: range.map { |d| label_format(d) },
+        subs: range.map { |d| @sub_result.sum { |h| h['period'].start_with?(d) ? h['count'] : 0 } },
+        qs: range.map { |d| @q_result.sum { |h| h['period'].start_with?(d) ? h['count'] : 0 } },
+        pubs: range.map { |d| @pub_result.sum { |h| h['period'].start_with?(d) ? h['count'] : 0 } }
+      }
+    end
     @data = JSON.parse(data.to_json, symbolize_names: true)
     render template: 'charts/admin_charts', formats: [:js]
   end
@@ -122,7 +124,8 @@ class ChartsController < StashEngine::ApplicationController
   end
 
   def date_range
-    range = (Date.parse(@sub_result.first['period'])..Date.parse(@pub_result.last['period'])).map { |d| d.strftime('%F') }.uniq
+    last = [@pub_result&.last&.[]('period'), @q_result&.last&.[]('period'), @sub_result&.last&.[]('period')].reject(&:blank?).max
+    range = (Date.parse(@sub_result.first['period'])..Date.parse(last)).map { |d| d.strftime('%F') }.uniq
     if range.length > 62
       range = range.map { |d| d[0..6] }.uniq
       range = range.map { |d| d[0..3] }.uniq if range.length > 36
