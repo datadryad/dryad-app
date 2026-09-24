@@ -72,7 +72,7 @@ class CspViolationReportsController < ApplicationController
     'chrome-extension://',           # Random local Google Chrome user extensions
     'safari-extension://',           # Random local Apple Safari user extensions
     'moz-extension://',              # Random local Mozilla Firefox user extensions
-    'ms-browser-extension',          # Random local Microsoft Edge user extensions
+    'ms-browser-extension'           # Random local Microsoft Edge user extensions
   ].freeze
 
   def create
@@ -80,7 +80,8 @@ class CspViolationReportsController < ApplicationController
 
     blocked_uri = report.dig('csp-report', 'blocked-uri').to_s
     if IGNORED_EXTENSIONS.any? { |ext| blocked_uri.include?(ext) }
-      Rails.logger.warn("CSP ignored report for #{report['csp-report']['effective-directive']}: '#{report['csp-report']['blocked-uri']}' - #{report['csp-report']['document-uri']} ")
+      Rails.logger.warn("CSP ignored report for #{report['csp-report']['effective-directive']}: '#{
+        report['csp-report']['blocked-uri']}' - #{report['csp-report']['document-uri']} ")
       head :no_content and return
     end
 
