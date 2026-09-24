@@ -2,7 +2,7 @@
 status = @data.reject { |k,v| v.to_i.zero? }
 status_desc = status.map {|k,v| "#{k.to_s.humanize}: #{v}" }.join(', ')
 %>
-<canvas <% if status.length < 2 %>hidden<% end %> id="status-chart" role="img" aria-label="Bar chart counting datasets based on publication and workflow status. <%= status_desc %>"></canvas>
+<canvas id="status-chart" role="img" aria-label="Bar chart counting datasets based on publication and workflow status. <%= status_desc %>"></canvas>
 <script>
   new Chart(document.getElementById('status-chart').getContext('2d'), {
     type: 'bar',
@@ -17,6 +17,9 @@ status_desc = status.map {|k,v| "#{k.to_s.humanize}: #{v}" }.join(', ')
       //indexAxis: 'y',
       responsive: true,
       maintainAspectRatio: false,
+      ticks: {
+        precision: 0
+      },
       plugins: {
         legend: { display: false },
         title: { display: true, text: 'Dataset states', font: { size: 20 } }
