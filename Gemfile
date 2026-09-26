@@ -90,7 +90,7 @@ gem 'rest-client', '~> 2.1.0'
 gem 'restforce', '~> 8.0.1'
 gem 'rinku', '~> 2.0.6' # we used this one, creates links from text but not sure if we still use it
 gem 'rsolr', '~> 2.6.0'
-gem 'rubyzip', '~> 2.3', '>= 2.3.2'
+gem 'rubyzip', '~> 3.4'
 gem 'serrano', '~> 1.7'
 gem 'sidekiq', '~> 8.1.6'
 gem 'sidekiq-limit_fetch'
