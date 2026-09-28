@@ -35,7 +35,11 @@ class ApplicationController < ActionController::Base
   def log_auth_failure(type: :unauthorized)
     return if controller_name == 'csp_violation_reports'
 
-    user = current_user rescue nil
+    user = begin
+      current_user
+    rescue StandardError
+      nil
+    end
     AuthFailureService.new(request, user, params).create(type)
   end
 end
