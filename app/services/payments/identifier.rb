@@ -17,17 +17,12 @@ module Payments
         .sum(:ldf)
     end
 
-    def total_dpc
-      identifiers.where(payment_id: sponsor.id).count * sponsor.dpc_fee
-    end
-
     def update_payment_details(payment)
-      payment_type = identifier.payment_type == 'waiver' ? 'waiver' : 'stripe'
-
       return if identifier.old_system_valid_payer?
       return if identifier.sponsored?
+      return if identifier.waiver?
 
-      identifier.update(payment_type: payment_type, payment_id: payment.payment_id)
+      PaymentRecord.find_or_create_by(payment: payment, resource: payment.resource, identifier: identifier)
     end
   end
 end

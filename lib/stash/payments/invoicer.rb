@@ -41,10 +41,9 @@ module Stash
 
         invoice = create_invoice(customer_id)
         create_invoice_items_for_dpc(customer_id, invoice.id)
-        resource.identifier.payment_id = invoice.id
-        resource.identifier.payment_type = stripe_user_waiver? ? 'waiver' : 'stripe'
-        resource.identifier.save
         res = invoice.send_invoice
+        payment = resource.create_payment(payment_type: 'stripe', pay_with_invoice: true, invoice_id: invoice.id)
+        PaymentRecord.create(payment: payment, resource: resource, identifier: resource.identifier) unless resource.identifier.waiver?
 
         resource.identifier.update(last_invoiced_file_size: ds_size) if @has_overage_line_item
         res
@@ -69,10 +68,10 @@ module Stash
       end
 
       def external_service_online?
-        latest = StashEngine::Identifier.where.not(payment_id: nil).order(updated_at: :desc).first
+        latest = StashEngine::Identifier.joins(:dpc_payment).order(updated_at: :desc).first
         return false unless latest.present?
 
-        Stripe::Charge.retrieve(latest.payment_id).present?
+        Stripe::Charge.retrieve(latest.old_payment_id).present?
       end
 
       def create_customer(name, email)
@@ -172,7 +171,7 @@ module Stash
       end
 
       def stripe_user_waiver?
-        resource.identifier.payment_type == 'waiver'
+        resource.identifier.waiver?
       end
 
       def stripe_user_customer_id

@@ -45,12 +45,13 @@ class SponsoredPaymentsService
       update_identifier_files_size
       return if should_skip_log
 
-      SponsoredPaymentLog.create(
+      log = SponsoredPaymentLog.create(
         resource: resource,
         payer: payer,
         ldf: amount,
         sponsor_id: PayersService.new(payer).payment_sponsor&.id
       )
+      PaymentRecord.create(payment: log, resource: resource, identifier: identifier, fee_type: :ldf)
     end
   end
 

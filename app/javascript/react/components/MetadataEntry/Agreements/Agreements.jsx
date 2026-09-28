@@ -123,7 +123,7 @@ export default function Agreements({
       {isSubmitter && (
         <>
           {(subType !== 'collection'
-            && (!resource.identifier.payment_type || resource.identifier.payment_type === 'unknown')
+            && !resource.identifier.display_payer.name
             && (userMustPay || (!dpc.funder_will_pay && dpc.institution_will_pay))) && (
             <>
               {dpc.institution_will_pay && !!dpc.aff_tenant && dpc.aff_tenant.id !== resource.tenant_id && (

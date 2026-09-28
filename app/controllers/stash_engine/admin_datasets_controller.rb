@@ -40,7 +40,7 @@ module StashEngine
     end
 
     def waiver_add
-      if @identifier.payment_type == 'stripe' && !@identifier.payments.last.ppr_fee_paid?
+      if @identifier.user_paid_dpc? && !@identifier.payments.last.ppr_fee_paid?
         # if it's already invoiced, and last payment is not the PPR fee
         # show a warning
         @error_message = 'Unable to apply a waiver to a dataset that was already invoiced.'
@@ -59,7 +59,8 @@ module StashEngine
       else
         basis = params[:waiver_basis]
       end
-      @identifier.update(payment_type: 'waiver', payment_id: '', waiver_basis: basis)
+      identifier.dpc_payment.update(active: false)
+      PaymentRecord.create(resource: @resource, identifier: @identifier, payment_type: 'StashEngine::Waiver', payment_id: basis)
       respond_to(&:js)
     end
 

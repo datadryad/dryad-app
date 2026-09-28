@@ -51,9 +51,6 @@ module StashApi
     end
 
     def save_identifier
-      @resource.identifier.payment_type = @hash['paymentType']
-      @resource.identifier.payment_id = @hash['paymentId']
-      @resource.identifier.waiver_basis = @hash['waiverBasis']
       @resource.identifier.save
       @resource.identifier
     end

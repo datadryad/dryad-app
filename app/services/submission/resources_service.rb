@@ -68,7 +68,7 @@ module Submission
 
       payment = resource.payment
       if payment.nil?
-        if resource.identifier.waiver? && resource.identifier.payment_id.blank?
+        if resource.identifier.waiver? && resource.identifier.dpc_payment.nil?
           payment = create_missing_invoice
           return if payment.nil?
         else

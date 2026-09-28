@@ -11,9 +11,9 @@ module Reports
       CSV.open(File.join(REPORTS_DIR, @filename), 'w') do |csv|
         csv << ['DOI', 'Status', 'Paid Amount', 'Paid With', 'Stripe link']
         StashEngine::Identifier
-          .joins(:payments)
+          .joins(:payments, :dpc_payment)
           .where(payments: { created_at: time_period })
-          .where(payment_type: 'stripe')
+          .where(dpc_payment: { payment_type: 'ResourcePayment' })
           .where.not(pub_state: 'published')
           .distinct
           .each do |identifier|
