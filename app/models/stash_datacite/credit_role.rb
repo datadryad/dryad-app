@@ -46,5 +46,12 @@ module StashDatacite
       CreditRole.contributor_type_mapping_obj(contributor_type_friendly)
     end
 
+    def as_api_json
+      {
+        role: credit_role,
+        identifier: "https://credit.niso.org/contributor-roles/#{credit_role.parameterize(separator: '-')}"
+      }
+    end
+
   end
 end

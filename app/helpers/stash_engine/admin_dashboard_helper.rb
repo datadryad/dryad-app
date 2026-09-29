@@ -13,11 +13,12 @@ module StashEngine
         head << (@fields.include?('affiliations') ? 'Affiliations' : 'Countries')
       end
       head << 'Submitter' if @fields.include?('submitter')
-      head << 'Status' if @fields.include?('status')
       head << 'Current Size' if @fields.include?('size')
       head << 'Invoiced Size' if @fields.include?('invoiced_size')
       head << 'Total Versioned Size' if @fields.include?('versioned_size')
       head << 'Views' << 'Downloads' << 'Citations' if @fields.include?('metrics')
+      head << 'Publication status' if @fields.include?('pub_state')
+      head << 'Workflow status' if @fields.include?('status')
       if @fields.include?('funders') || @fields.include?('awards')
         head << (@fields.include?('funders') ? 'Grant funders' : 'Award IDs')
       end
@@ -70,7 +71,6 @@ module StashEngine
           " ORCID: #{dataset.submitter.orcid}" if dataset.submitter.orcid.present?
         }"
       end
-      row << StashEngine::CurationActivity.readable_status(dataset.last_curation_activity.status) if @fields.include?('status')
       row << dataset.total_file_size if @fields.include?('size')
       row << dataset.identifier.last_invoiced_file_size.to_i if @fields.include?('invoiced_size')
       row << dataset.identifier.storage_size if @fields.include?('versioned_size')
@@ -79,6 +79,8 @@ module StashEngine
         row << dataset.identifier.counter_stat.unique_request_count.to_i
         row << dataset.identifier.counter_stat.citation_count.to_i
       end
+      row << dataset.identifier.pub_state.upcase_first if @fields.include?('pub_state')
+      row << StashEngine::CurationActivity.readable_status(dataset.last_curation_activity.status) if @fields.include?('status')
       if @fields.include?('funders') || @fields.include?('awards')
         row << dataset.funders.map do |f|
           ([@fields.include?('funders') ? f.contributor_name : nil] + [@fields.include?('awards') ? f.award_number : nil]).reject(&:blank?).join(', ')

@@ -97,8 +97,8 @@ module StashDatacite
 
     def as_api_json
       {
-        name: smart_name,
-        ror_id: ror_id
+        organization: smart_name,
+        identifier: ror_id
       }
     end
 

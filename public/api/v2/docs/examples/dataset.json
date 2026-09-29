@@ -30,16 +30,36 @@ value: {
       "firstName": "Scott",
       "lastName": "Fisher",
       "email": "Scott.Fisher@datadryad.org",
-      "affiliation": "University of California Office of the President",
-      "affiliationROR": "https://ror.org/00dmfq477",
-      "orcid": "0000-0001-6422-6998"
+      "affiliations": [
+        {
+          "organization": "University of California Office of the President",
+          "identifier": "https://ror.org/00dmfq477",
+        }
+      ],
+      "orcid": "0000-0001-6422-6998",
+      "roles": [
+        {
+          "role": "Investigation",
+          "identifier": "https://credit.niso.org/contributor-roles/investigation"
+        }
+      ]
     },
     {
       "firstName": "Norah",
       "lastName": "Moraga",
       "email": "Norah.Moraga@example.com",
-      "affiliation": "University of California, Davis",
-      "affiliationROR": "https://ror.org/05rrcem69"
+      "affiliations": [
+        {
+          "organization": "University of California, Davis",
+          "identifier": "https://ror.org/05rrcem69"
+        }
+      ],
+      "roles": [
+        {
+          "role": "Conceptualization",
+          "identifier": "https://credit.niso.org/contributor-roles/conceptualization"
+        }
+      ]
     }
   ],
   "abstract": "<p>Information theorists agree that \"fuzzy\" models are an interesting new topic in the field of machine learning, and hackers worldwide concur. In fact, few electrical engineers would disagree with the emulation of replication, which embodies the compelling principles of cryptoanalysis. Weight, our new method for journaling file systems, is the solution to all of these grand challenges.</p>\r\n",

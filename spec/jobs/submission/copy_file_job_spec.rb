@@ -12,7 +12,7 @@ RSpec.describe Submission::CopyFileJob, type: :job do
     allow(Submission::FilesService).to receive(:new).with(data_file).and_return(files_service)
     allow(files_service).to receive(:copy_file)
     allow(Submission::CheckStatusJob).to receive(:perform_in)
-    allow(StashEngine::UserMailer).to receive_message_chain(:error_report, :deliver_now)
+    allow(StashEngine::NotificationMailer).to receive_message_chain(:error_report, :deliver_now)
     allow(Sidekiq).to receive(:redis).and_yield(double('Redis', decr: 2))
   end
 
@@ -60,7 +60,7 @@ RSpec.describe Submission::CopyFileJob, type: :job do
           expect { perform_job }.to raise_error(StandardError, /processing for more than a day/)
         end.to change { StashEngine::RepoQueueState.where(resource_id: resource.id, state: 'errored').count }.by(1)
 
-        expect(StashEngine::UserMailer).to have_received(:error_report).with(resource, instance_of(StandardError))
+        expect(StashEngine::NotificationMailer).to have_received(:error_report).with(resource, instance_of(StandardError))
       end
     end
   end

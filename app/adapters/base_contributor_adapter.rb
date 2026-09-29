@@ -39,7 +39,7 @@ class BaseContributorAdapter
     return @ror if @ror.present?
 
     # alert devs of missing info in children list
-    StashEngine::NotificationsMailer.nih_child_missing(@contributor_id, @response).deliver_now
+    StashEngine::NotificationMailer.nih_child_missing(@contributor_id, @response).deliver_now
 
     # user existing ror information
     @ror = StashDatacite::Contributor.find(@contributor_id).attributes.slice(:name_identifier_id, :contributor_name)

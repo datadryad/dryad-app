@@ -45,16 +45,40 @@ RSpec.describe Stripe::Handlers::InvoicePaid do
 
   describe '#call' do
     context 'when a payment exists' do
-      before { subject.call }
-
       it 'marks the payment as paid' do
+        subject.call
+
         expect(payment.reload.status).to eq('paid')
         expect(payment.paid_at).to eq(Time.at(1_700_000_000))
         expect(payment.status_time).to eq(Time.at(1_700_000_000))
       end
 
-      it 'creates a curation log' do
-        expect(resource.reload.curation_activities.where(note: 'Invoice has been paid')).to exist
+      context 'when the resource is in awaiting_payment' do
+        before do
+          create(:curation_activity, :awaiting_payment, resource: resource)
+        end
+
+        it 'creates a curation log and submits the dataset' do
+          expect(resource.reload.current_curation_status).to eq 'awaiting_payment'
+          subject.call
+
+          expect(resource.curation_activities.where(note: 'Invoice has been paid')).to exist
+          expect(resource.current_curation_status).to eq 'queued'
+        end
+      end
+
+      context 'when the resource is not in awaiting_payment' do
+        before do
+          create(:curation_activity, :published, resource: resource)
+        end
+
+        it 'create a curation log and does not change the status' do
+          expect(resource.reload.current_curation_status).to eq 'published'
+          subject.call
+
+          expect(resource.curation_activities.where(note: 'Invoice has been paid')).to exist
+          expect(resource.current_curation_status).to eq 'published'
+        end
       end
     end
 

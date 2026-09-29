@@ -170,7 +170,7 @@ module StashEngine
     end
 
     def delete_calculation_date_value
-      existing_date = resource.identifier.process_date[:delete_calculation_date]
+      existing_date = resource.identifier.process_date.delete_calculation_date
       return created_at if existing_date.blank?
 
       [created_at, existing_date].max

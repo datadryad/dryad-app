@@ -87,7 +87,7 @@ describe AwardMetadataService do
 
           it 'sends email related to missing ROR information' do
             VCR.use_cassette('nih_api/award_one_result_found') do
-              expect(StashEngine::NotificationsMailer).to receive(:nih_child_missing).with(contrib.id, nih_api_response)
+              expect(StashEngine::NotificationMailer).to receive(:nih_child_missing).with(contrib.id, nih_api_response)
                 .once.and_return(double(deliver_now: true))
 
               expect(subject).not_to be_nil
@@ -172,7 +172,7 @@ describe AwardMetadataService do
 
           it 'sends email related to missing ROR information' do
             VCR.use_cassette('nih_api/award_one_result_found') do
-              expect(StashEngine::NotificationsMailer).to receive(:nih_child_missing).with(contrib.id, nih_api_response)
+              expect(StashEngine::NotificationMailer).to receive(:nih_child_missing).with(contrib.id, nih_api_response)
                 .once.and_return(double(deliver_now: true))
 
               expect(subject).not_to be_nil

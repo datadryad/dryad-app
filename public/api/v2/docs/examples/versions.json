@@ -42,7 +42,11 @@ value: {
             "firstName": "Scott",
             "lastName": "Fisher",
             "email": "scott.fisher@datadryad.org",
-            "affiliation": "UC Office of the President",
+            "affiliations": [
+              {
+                "organization": "UC Office of the President",
+              }
+            ],
             "orcid": null
           }
         ],
@@ -80,7 +84,11 @@ value: {
             "firstName": "Scott",
             "lastName": "Fisher",
             "email": "scott.fisher@datadryad.org",
-            "affiliation": "UC Office of the President",
+            "affiliations": [
+              {
+                "organization": "UC Office of the President",
+              }
+            ],
             "orcid": null
           }
         ],
@@ -118,7 +126,11 @@ value: {
             "firstName": "Scott",
             "lastName": "Fisher",
             "email": "scott.fisher@datadryad.org",
-            "affiliation": "UC Office of the President",
+            "affiliations": [
+              {
+                "organization": "UC Office of the President",
+              }
+            ],
             "orcid": null
           }
         ],

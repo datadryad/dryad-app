@@ -24,7 +24,7 @@ namespace :certbot do
 
       if days_left <= threshold
         puts "[WARNING] #{domains} expires in #{days_left} days (#{expiry_str})"
-        StashEngine::NotificationsMailer.certbot_expiration(days_left).deliver_now
+        StashEngine::NotificationMailer.certbot_expiration(days_left).deliver_now
 
         sns = Aws::SNS::Client.new(
           region: APP_CONFIG[:s3][:region],

@@ -83,7 +83,7 @@ namespace :s3_policies do
     # valid << validate_deletion(s3_backup, v3_path)
     # valid << validate_deletion(s3_backup, ark_path)
 
-    StashEngine::NotificationsMailer.s3_lifetime_policy.deliver_now unless valid.all?
+    StashEngine::NotificationMailer.s3_lifetime_policy.deliver_now unless valid.all?
   end
 
   def validate_presence(s3, path, log: true)

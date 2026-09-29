@@ -10,6 +10,12 @@ module StashEngine
       StashEngine::JournalOrganization.all.map { |item| [item.name, item.id] }.sort_by { |i| i[0].downcase }
     end
 
+    def pub_state_select
+      StashEngine::Identifier.pub_states.keys.map do |state|
+        [state.upcase_first, state]
+      end
+    end
+
     def status_select(statuses = [])
       statuses = StashEngine::CurationActivity.statuses.keys if statuses.empty?
       statuses.map do |status|

@@ -76,11 +76,11 @@ class CurationService
     case @status
     when 'published', 'embargoed'
       CostReportingService.new(@resource).notify_partner_of_large_data_submission
-      StashEngine::UserMailer.status_change(@resource, @status).deliver_now
-      StashEngine::UserMailer.journal_published_notice(@resource, @status).deliver_now
+      StashEngine::ResourceMailer.status_change(@resource, @status).deliver_now
+      StashEngine::JournalMailer.journal_published_notice(@resource, @status).deliver_now
     when 'peer_review'
-      StashEngine::UserMailer.status_change(@resource, @status).deliver_now
-      StashEngine::UserMailer.journal_review_notice(@resource, @status).deliver_now
+      StashEngine::ResourceMailer.status_change(@resource, @status).deliver_now
+      StashEngine::JournalMailer.journal_review_notice(@resource, @status).deliver_now
     when 'queued'
       CostReportingService.new(@resource).notify_partner_of_large_data_submission
       # Don't send multiple emails for the same resource, or for submission made by curator
@@ -88,15 +88,15 @@ class CurationService
 
       # Trigger sponsored payment log for resources that were in PPR are released (not going through processing state)
       SponsoredPaymentsService.new(@resource).log_payment
-      StashEngine::UserMailer.status_change(@resource, @status).deliver_now unless @user.min_curator?
+      StashEngine::ResourceMailer.status_change(@resource, @status).deliver_now unless @user.min_curator?
     when 'withdrawn'
       return if @note&.include?('final action required reminder') # this has already gotten a special withdrawal email
       return if @note&.include?('notification that this item was set to `withdrawn`') # is automatic withdrawal action, no email required
 
       if @user.id == 0
-        StashEngine::UserMailer.user_journal_withdrawn(@resource, @status).deliver_now
+        StashEngine::JournalMailer.user_journal_withdrawn(@resource, @status).deliver_now
       else
-        StashEngine::UserMailer.status_change(@resource, @status).deliver_now
+        StashEngine::ResourceMailer.status_change(@resource, @status).deliver_now
       end
     end
   end
@@ -159,6 +159,7 @@ class CurationService
       service.log_payment
     elsif @status == 'withdrawn'
       service.remove_logs
+      @resource.identifier.update(old_payment_system: false)
     end
   end
 

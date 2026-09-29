@@ -41,18 +41,18 @@ module StashEngine
 
       it 'sends error mail when checksum mismatch' do
         allow(sums).to receive(:get_checksum).and_return('wrong')
-        allow(StashEngine::UserMailer).to receive_message_chain(:file_validation_error, :deliver_now)
+        allow(StashEngine::NotificationMailer).to receive_message_chain(:file_validation_error, :deliver_now)
         service.validate_file
 
-        expect(StashEngine::UserMailer).to have_received(:file_validation_error).with(file)
+        expect(StashEngine::NotificationMailer).to have_received(:file_validation_error).with(file)
       end
 
       it 'sends error mail when checksum mismatch' do
         allow(sums).to receive(:input_size).and_return(11)
-        allow(StashEngine::UserMailer).to receive_message_chain(:file_validation_error, :deliver_now)
+        allow(StashEngine::NotificationMailer).to receive_message_chain(:file_validation_error, :deliver_now)
         service.validate_file
 
-        expect(StashEngine::UserMailer).to have_received(:file_validation_error).with(file)
+        expect(StashEngine::NotificationMailer).to have_received(:file_validation_error).with(file)
       end
     end
 
@@ -72,10 +72,10 @@ module StashEngine
         let(:sums) { double('Checksums', get_checksum: 'other', input_size: 11) }
 
         it 'sends error mail when checksum mismatch' do
-          allow(StashEngine::UserMailer).to receive_message_chain(:file_validation_error, :deliver_now)
+          allow(StashEngine::NotificationMailer).to receive_message_chain(:file_validation_error, :deliver_now)
 
           expect { service.recreate_digests }.not_to(change { file })
-          expect(StashEngine::UserMailer).to have_received(:file_validation_error).with(file)
+          expect(StashEngine::NotificationMailer).to have_received(:file_validation_error).with(file)
         end
       end
     end

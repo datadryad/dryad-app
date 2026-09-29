@@ -52,7 +52,7 @@
 </div>
 <div class="bio">
   <img src="/images/mulvany.jpg" alt="Headshot of Ian Mulvany">
-  <h5>Ian Mulvany (2021-2026)</h5><p> is CTO at BMJ where he leads
+  <h5>Ian Mulvany (2021-2027)</h5><p> is CTO at BMJ where he leads
   teams that deliver the technologies and features that underpin new products as
   well as underlying publishing systems. He is responsible for leading on
   technology strategy for the company and understanding the implications of new

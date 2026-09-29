@@ -35,10 +35,7 @@ namespace :dev_ops do
       next if lsr.nil? || lsr.download_uri.blank? || lsr.update_uri.blank?
 
       puts "Adding size to #{i}"
-      total_dataset_size = 0
-      resource.data_files.each do |data_file|
-        total_dataset_size += data_file.upload_file_size unless data_file.file_state == 'deleted'
-      end
+      total_dataset_size = i.resources.sum { |r| r.data_files.created.sum(&:upload_file_size) }
       i.update(storage_size: total_dataset_size)
     end
   end

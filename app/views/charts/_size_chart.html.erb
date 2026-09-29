@@ -1,0 +1,33 @@
+<% 
+pie = @data
+ts = FeeCalculator::InstitutionService.new.storage_fee_tiers
+tiers = ts.map { |t| t[:range].to_s.split('..').map {|n| filesize(n.to_i) }.join('-') }
+pieces = [pie[:tier0], pie[:tier1], pie[:tier2], pie[:tier3], pie[:tier4], pie[:tier5], pie[:tier6]]
+pie_desc = pieces.map.with_index { |pi,i| pi.nil? || pi.zero? ? nil : "#{tiers[i]}: #{pi}" }.reject(&:blank?).join(', ')
+%>
+<canvas id="size-chart" role="img" aria-label="Pie chart counting datasets in size ranges. <%= pie_desc %>"></canvas>
+<script>
+  new Chart(document.getElementById('size-chart').getContext('2d'), {
+    type: 'pie',
+    data: { 
+      labels: <%= tiers.to_json.html_safe %>,
+      datasets: [{ data: <%= pieces.to_json.html_safe %> }]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        title: { display: true, text: 'Dataset sizes', font: { size: 20 } },
+        legend: {
+          labels: {
+            filter: (item, chart) => {
+              const ind = item.index
+              const val = chart.datasets[0].data[ind]
+              return val > 0
+            }
+          }
+        }
+      }
+    }
+  })
+</script>

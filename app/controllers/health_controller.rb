@@ -66,6 +66,6 @@ class HealthController < ApplicationController
     Rails.cache.write('health_status', simple_response_hash, expires_in: 10.minute)
     return if old_statuses == simple_response_hash
 
-    StashEngine::NotificationsMailer.health_status_change(status_code, health_status).deliver_now
+    StashEngine::NotificationMailer.health_status_change(status_code, health_status).deliver_now
   end
 end

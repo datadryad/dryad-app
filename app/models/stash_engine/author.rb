@@ -155,7 +155,8 @@ module StashEngine
         affiliationROR: affiliation&.ror_id,
         affiliations: affiliations.map(&:as_api_json),
         orcid: author_orcid,
-        order: author_order
+        order: author_order,
+        roles: credit_roles.map(&:as_api_json)
       }
     end
 

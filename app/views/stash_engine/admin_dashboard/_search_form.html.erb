@@ -1,6 +1,9 @@
-<%= form_with(url: stash_url_helpers.admin_dashboard_results_path(format: :js, search: params[:search], share: params[:share], sort: params[:sort], direction: params[:direction], page_size: params[:page_size]), method: :post, local: false, id: 'admin_search_form', class: 'admin-dashboard-form') do %>
+<%= form_with(url: stash_url_helpers.admin_dashboard_results_path(format: :js, search: params[:search], share: params[:share]), method: :post, local: false, id: 'admin_search_form', class: 'admin-dashboard-form') do %>
   <%= render partial: 'fields' %>
   <%= render partial: 'filters' %>
+  <input type="hidden" name="page_size" id="save_page_size" value="<%= params[:page_size] %>">
+  <input type="hidden" name="sort" id="save_sort" value="<%= params[:sort] %>">
+  <input type="hidden" name="direction" id="save_direction" value="<%= params[:direction] %>">
   <div class="admin-dashboard-buttons" style="border: 0; padding: 0; column-gap: 3ch; row-gap: 2ch">
     <div class="o-admin-form-pair" style="flex-grow: 2;">
       <span>

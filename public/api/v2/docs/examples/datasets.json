@@ -51,7 +51,11 @@ value: {
             "firstName": "Helga",
             "lastName": "Smuin",
             "email": "scott.fisher@datadryad.org",
-            "affiliation": "UC Merced"
+            "affiliations": [
+              {
+                "organization": "UC Merced"
+              }
+            ]
           }
         ],
         "abstract": "<p>Many futurists would agree that, had it not been for write-back caches, the understanding of public-private key pairs might never have occurred. In fact, few cyberinformaticians would disagree with the construction of hierarchical databases, which embodies the typical principles of robotics [13]. KeyEdgebone, our new application for homogeneous theory, is the solution to all of these grand challenges. This technique at first glance seems unexpected but is derived from known results.</p>",
@@ -101,7 +105,11 @@ value: {
             "firstName": "Scott",
             "lastName": "Fisher",
             "email": "scott.fisher@datadryad.org",
-            "affiliation": "UC Berkeley"
+            "affiliations": [
+              {
+                "organization": "UC Berkeley"
+              }
+            ]
           }
         ],
         "abstract": "<p>The robotics approach to massive multiplayer online role-playing games is defined not only by the simulation of SMPs, but also by the structured need for replication. In fact, few cryptographers would disagree with the improvement of operating systems. In this paper, we verify that write-back caches can be made electronic, psychoacoustic, and embedded.</p>",
@@ -241,7 +249,11 @@ value: {
             "firstName": "Scott",
             "lastName": "Fisher",
             "email": "scott.fisher@datadryad.org",
-            "affiliation": "UC Davis",
+            "affiliations": [
+              {
+                "organization": "UC Davis"
+              }
+            ],
             "orcid": null
           }
         ],
@@ -293,7 +305,11 @@ value: {
             "firstName": "Scott",
             "lastName": "Fisher",
             "email": "scott.fisher@datadryad.org",
-            "affiliation": "UC Office of the President"
+            "affiliations": [
+              {
+                "organization": "UC Office of the President"
+              }
+            ]
           }
         ],
         "abstract": "<p>test</p>",
@@ -348,7 +364,11 @@ value: {
             "firstName": "Yves",
             "lastName": "Thuries",
             "email": "yves.thuries@mailinator.com",
-            "affiliation": "UC Office of the President"
+            "affiliations": [
+              {
+                "organization": "UC Office of the President"
+              }
+            ]
           }
         ],
         "abstract": "<p>I like my chocolate cat.  His name is Thurber Jones.</p>",
@@ -417,7 +437,11 @@ value: {
             "firstName": "Testy",
             "lastName": "McTestface",
             "email": "test@example.edu",
-            "affiliation": "Test University"
+            "affiliations": [
+              {
+                "organization": "Test University"
+              }
+            ]
           }
         ],
         "abstract": "<p>Test</p>",
@@ -473,7 +497,11 @@ value: {
             "firstName": "Kathryn",
             "lastName": "Cats",
             "email": "kathryncats@mailinator.com",
-            "affiliation": "UC Office of the President"
+            "affiliations": [
+              {
+                "organization": "UC Office of the President"
+              }
+            ]
           }
         ],
         "abstract": "<p>test</p>",
@@ -523,7 +551,11 @@ value: {
             "firstName": "Gloria",
             "lastName": "Arnand",
             "email": "gloria.arnand@mailinator.com",
-            "affiliation": "UC Davis"
+            "affiliations": [
+              {
+                "organization": "UC Davis"
+              }
+            ]
           }
         ],
         "abstract": "<p>The measurements for Glo-ball the Elephant.</p>",
