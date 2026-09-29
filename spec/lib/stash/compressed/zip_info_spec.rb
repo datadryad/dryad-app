@@ -256,7 +256,7 @@ module Stash
                          headers: { 'Content-Type' => 'application/zip' })
 
             zi = Stash::Compressed::ZipInfo.new(presigned_url: 'https://example.com/zipfile.zip')
-            expect{zi.fallback_file_entries1}.to raise_error(Zip::StreamingError)
+            expect { zi.fallback_file_entries1 }.to raise_error(Zip::StreamingError)
           end
         end
       end
