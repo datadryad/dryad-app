@@ -170,7 +170,7 @@ module Stash
 
               f_path = File.join(destination, entry.name)
               FileUtils.mkdir_p(File.dirname(f_path))
-              files.extract(entry, f_path) unless File.exist?(f_path)
+              files.extract(entry, destination_directory: destination) unless File.exist?(f_path)
             end
           end
           true
