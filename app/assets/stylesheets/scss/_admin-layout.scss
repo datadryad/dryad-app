@@ -553,3 +553,21 @@
     }
   }  
 }
+
+.payment-log {
+  li {
+    display: flex;
+    row-gap: 1ch;
+    column-gap: 2ch;
+    align-items: baseline;
+  }
+  span:first-child {
+    font-size: .98rem;
+    flex-basis: 180px;
+  }
+  &:nth-of-type(2) {
+    span:nth-of-type(2) {
+      font-style: italic;
+    }
+  }
+}

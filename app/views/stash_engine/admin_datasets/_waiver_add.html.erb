@@ -1,29 +1,17 @@
 <h1 id="dialog-title">Add fee discount</h1>
 <%= form_with(url: ds_admin_waiver_path(@identifier.id), method: :post, local: false) do |form| -%>
-  <% pr = @identifier.resources.by_version_desc.find {|r| r.payment} %>
-  <% payment = pr&.payment %>
-  <% if payment&.status == 'paid' && !payment&.ppr_fee_paid? %>
+  <% if @identifier.user_paid_dpc? && @identifier.dpc_payment.payment.paid? %>
     <p class="c-alert--notification">The DPC for this dataset has been paid</p>
     <p>The DPC for this dataset has already been paid. Payment will need to be refunded in order to apply a discount.</p>
-  <% elsif @identifier.payment_type == 'stripe' && @identifier.payment_id&.starts_with?("in_") %>
+  <% elsif @identifier.user_paid_dpc? && @identifier.dpc_payment.payment.invoice_id.present? %>
     <p class="c-alert--notification">An invoice has been sent</p>
-    <p>The submitter has already received an invoice. Please ensure invoice <b><%= @identifier.payment_id %></b> is voided.</p>
+    <p>The submitter has already received an invoice. Please ensure invoice <b><%= @identifier.dpc_payment.payment.invoice_id %></b> is voided.</p>
   <% else %>
     <p>The fee waiver discount covers the DPC for datasets up to 10 GB</p>
     <div class="c-input">
       <div id="select_div" class="c-input">
         <label class="c-input__label" for="waiver_basis">Please provide a reason for applying a waiver</label>
-        <select name="waiver_basis" id="waiver_basis" class="c-input__select">
-          <option value="">- Select a reason -</option>
-          <option value="country_not_detected">Waiver country, but not detected automatically</option>
-          <option value="unaware_of_dpc">Author unaware of DPC</option>
-          <option value="no_funds">Author/Institution no funds</option>
-          <option value="sponsoring_entity_updated">Sponsoring entity updated</option>
-          <option value="political_economic_situation">Political/Economic situation</option>
-          <option value="fee_increase">Fee increase</option>
-          <option value="temporary">Temporary waiver (to be replaced)</option>
-          <option value="other">Other</option>
-        </select>
+        <%= form.select :waiver_basis, options_for_select([['- Select a reason -','']] + StashEngine::Waiver.basis_ids.map {|id| [StashEngine::Waiver.readable(id), id]}), {}, {class: 'c-input__select'} %>
       </div>  
       <div id="other_div" class="c-input" hidden>
         <label class="c-input__label" for="other">Other reason</label>

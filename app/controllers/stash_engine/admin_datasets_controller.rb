@@ -59,7 +59,7 @@ module StashEngine
       else
         basis = params[:waiver_basis]
       end
-      identifier.dpc_payment.update(active: false)
+      @identifier.dpc_payment.update(active: false)
       PaymentRecord.create(resource: @resource, identifier: @identifier, payment_type: 'StashEngine::Waiver', payment_id: basis)
       respond_to(&:js)
     end
@@ -112,9 +112,6 @@ module StashEngine
 
     def payment_log
       @identifier = Identifier.find(params[:id])
-      payments = @identifier.payments.where.not(status: 'created', pay_with_invoice: false)
-      sponsors = @identifier.versions.where("json_contains_path(`object_changes`, 'all', '$.payment_id')")
-      @logs = (payments + sponsors).sort_by { |log| log.has_attribute?(:updated_at) ? log.updated_at : log.created_at }
       respond_to(&:js)
     end
 

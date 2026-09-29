@@ -5,7 +5,7 @@
 </td>
 <td>
   <%= existing_pubname %>
-  <% if resource.identifier.payment_id && StashEngine::Journal.find_by_issn(existing_pubissn)&.issn_array&.include?(resource.identifier.payment_id)%>
+  <% if resource.identifier.dpc_payment&.payment && resource.identifier.dpc_payment.payment == StashEngine::Journal.find_by_issn(existing_pubissn) %>
     <p class="error-text"><i class="fas fa-triangle-exclamation" aria-hidden="true"></i> Payment journal</p>
   <% end %> 
 </td>

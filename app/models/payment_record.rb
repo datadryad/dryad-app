@@ -37,10 +37,45 @@ class PaymentRecord < ApplicationRecord
   }, foreign_key: 'payment_id', optional: true
   belongs_to :payment_log, -> {
     where(payment_records: { payment_type: 'SponsoredPaymentLog' }).includes(:payment_records)
-  }, foreign_key: 'payment_id', optional: true
+  }, class_name: 'SponsoredPaymentLog', foreign_key: 'payment_id', optional: true
 
   scope :active, -> { where(active: true) }
+  scope :inactive, -> { where(active: false) }
 
   vals = %w[ppr dpc ldf]
   enum :fee_type, vals.index_by(&:to_sym), default: 'dpc', validate: true
+
+  def payment
+    return nil if payment_type == 'StashEngine::Waiver'
+
+    super
+  end
+
+  def readable_type
+    return 'stripe' if payment_type == 'ResourcePayment'
+
+    type = payment_type == 'SponsoredPaymentLog' ? payment.payer_type : payment_type
+    type.parameterize.sub('stashengine-', '').sub('tenant', 'institution')
+  end
+
+  def link
+    return nil if payment_type == 'StashEngine::Waiver'
+
+    if payment_type == 'ResourcePayment'
+      str = payment.payment_id.presence ? 'payment' : 'invoice'
+      id = payment.payment_id.presence || payment.invoice_id
+      url = "#{ResourcePayment::STRIPE_LINK}/#{str.pluralize}/#{id}"
+      text = str.upcase_first
+    else
+      case payment_type
+      when 'StashEngine::Journal'
+        url = Rails.application.routes.url_helpers.journal_admin_path(id: payment_id)
+        text = payment.title
+      when 'StashEngine::Tenant'
+        url = Rails.application.routes.url_helpers.tenant_admin_path(id: payment_id)
+        text = payment.short_name
+      end
+    end
+    ActionController::Base.helpers.link_to text, url, target: '_blank'
+  end
 end

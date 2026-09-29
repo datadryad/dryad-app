@@ -1,0 +1,21 @@
+<li>
+  <span><%= formatted_datetime(log.created_at) %></span>
+  <span>
+    <%= log.readable_type.upcase_first %>
+    <% if log.readable_type == 'waiver' %> for <% end %>
+    <%= log.fee_type.upcase %>
+    <% if !['waiver', 'stripe'].include?(log.readable_type) %> sponsored by <% end %>
+    <%= log.link %>
+    <% if log.readable_type == 'stripe' %>(<%= log.payment.status %>)<% end %>
+  </span>
+  <% if log.resource_payment || log.payment_log %>
+    <span>
+      $<%= log.resource_payment&.amount || log.payment_log&.ldf %>
+    </span>
+  <% elsif log.readable_type == 'waiver' && policy([:stash_engine, :admin_datasets]).waiver_add? %>
+    <span>
+      (<%= StashEngine::Waiver.readable(log.payment_id) %>)
+    </span>
+  <% end %>
+  <span>
+</li>

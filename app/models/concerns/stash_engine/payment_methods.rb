@@ -179,11 +179,7 @@ module StashEngine
     def old_payment_type
       return nil unless dpc_payment
 
-      type = if user_paid_dpc?
-               'stripe'
-             else
-               dpc_payment.payment_type.parameterize.sub('stashengine-', '').sub('tenant', 'institution')
-             end
+      type = dpc_payment.readable_type
       type += "-#{dpc_payment.payment_plan}" if dpc_payment&.payment_plan
       type
     end

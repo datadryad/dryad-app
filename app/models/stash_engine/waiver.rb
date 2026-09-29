@@ -4,19 +4,20 @@ module StashEngine
     include ActiveModel::Attributes
 
     attribute :id
-
-    BASIS_IDS = %w[
-      country_not_detected
-      unaware_of_dpc
-      no_funds
-      sponsoring_entity_updated
-      political_economic_situation
-      fee_increase
-      temporary
-      other
-    ].freeze
-
     has_many :payment_records, class_name: 'PaymentRecord', as: :payment
+
+    def self.basis_ids
+      %w[
+        country_not_detected
+        unaware_of_dpc
+        no_funds
+        sponsoring_entity_updated
+        political_economic_situation
+        fee_increase
+        temporary
+        other
+      ]
+    end
 
     def self.readable(basis)
       case basis

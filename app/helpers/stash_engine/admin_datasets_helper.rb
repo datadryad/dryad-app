@@ -2,7 +2,6 @@ require 'net/http'
 require 'json'
 require 'stash/salesforce'
 
-# rubocop:disable Metrics/ModuleLength
 module StashEngine
   module AdminDatasetsHelper
 
@@ -46,19 +45,17 @@ module StashEngine
     end
 
     def display_payment(identifier)
-      pr = identifier.resources.by_version_desc.includes(:payment).find(&:payment)
-      if identifier.user_must_pay? && (identifier.payment_type.blank? || identifier.payment_type == 'unknown')
-        str = ''
-        str += "$#{pr.payment.amount}" if pr&.payment
-        str += pr&.payment&.status.present? ? "bill #{pr&.payment&.status}" : 'Unknown'
-      else
-        str = identifier.payment_type
-      end
-      str
+      return 'Unknown' if identifier.dpc_payment.nil?
+      return 'Waiver' if identifier.waiver?
+
+      str = identifier.user_paid_dpc? ? 'Unsponsored: ' : 'Sponsored: '
+      str += identifier.dpc_payment.link
+      str.html_safe
     end
 
     def display_payment_err(resource)
-      return unless resource.submitted? && resource.identifier.payment_type == 'unknown'
+      return unless resource.submitted?
+      return unless resource.identifier.dpc_payment.nil?
       return if resource.identifier.old_payment_system?
 
       "<span class=\"child-details error-text\" id=\"payment_desc_err\">
@@ -103,17 +100,6 @@ module StashEngine
       render inline: matchdata[1] + link_to("SF #{matchdata[2]}", sf_link, target: :_blank) + matchdata[3]
     end
 
-    def link_to_account(type, id)
-      href = if type&.start_with?('institution')
-               tenant_admin_path(id: id)
-             elsif type&.start_with?('journal')
-               journal_admin_path(q: id)
-             end
-      return format_external_references(id) if href.nil?
-
-      link_to id, href, target: '_blank'
-    end
-
     def aar_resource(identifier)
       return identifier.latest_resource.id if %w[curation action_required].include?(identifier.latest_resource.current_curation_status)
 
@@ -142,4 +128,3 @@ module StashEngine
     end
   end
 end
-# rubocop:enable Metrics/ModuleLength
