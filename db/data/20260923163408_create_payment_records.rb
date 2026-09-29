@@ -10,6 +10,8 @@ class CreatePaymentRecords < ActiveRecord::Migration[8.0]
         change_to = id.versions.find_by("JSON_EXTRACT(object_changes, '$.payment_type') like '[%\"waiver\"]'")
         res_id = change_to&.object&.[]('latest_resource_id') || id.latest_resource_id
         PaymentRecord.find_or_create_by(identifier: id, resource_id: res_id, payment_type: 'StashEngine::Waiver', payment_id: id.waiver_basis, fee_type: 'dpc', created_at: change_to&.created_at || id.latest_resource.created_at)
+      elsif ['dryad-v1', 'classic-dryad', 'manual', 'voucher', 'no_data'].include?(id.payment_type)
+        PaymentRecord.find_or_create_by(identifier: id, resource_id: res_id, payment_type: 'StashEngine::Waiver', payment_id: id.payment_type, payment_plan: id.payment_id, fee_type: 'dpc', created_at: change_to&.created_at || id.latest_resource.created_at)
       elsif id.payment_type.start_with?('journal')
         journal = StashEngine::Journal.find_by_issn(id.payment_id)
         PaymentRecord.find_or_create_by(identifier: id, resource_id: res_id, payment: journal, payment_plan: id.payment_type.sub('journal-', ''), fee_type: 'dpc', created_at: change_to&.created_at || id.latest_resource.created_at)

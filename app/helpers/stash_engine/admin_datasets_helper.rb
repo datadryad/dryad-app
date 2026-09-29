@@ -46,7 +46,12 @@ module StashEngine
 
     def display_payment(identifier)
       return 'Unknown' if identifier.dpc_payment.nil?
-      return 'Waiver' if identifier.waiver?
+
+      if identifier.waiver?
+        return 'Waiver' if StashEngine::Waiver.basis_ids.include?(identifier.dpc_payment.payment_id)
+
+        return identifier.dpc_payment.payment_id.humanize
+      end
 
       str = identifier.user_paid_dpc? ? 'Unsponsored: ' : 'Sponsored: '
       str += identifier.dpc_payment.link
