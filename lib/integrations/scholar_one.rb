@@ -26,6 +26,49 @@ module Integrations
       parsed_response
     end
 
+    def relay_notification(resource)
+      url = "#{BASE_URL}/api/s1m/v2/system/addJSONData"
+
+      document_id = submission_document_id(resource)
+      return if document_id.blank?
+
+      args = {
+        site_name: @site_name,
+        locale_id: 1,
+        external_id: resource.identifier.identifier,
+        _type: 'json',
+        data: {
+          type: 2,
+          payload: {
+            documentId: document_id,
+            content: resource.title,
+            checkType: 1111,
+            url: resource.identifier&.shares&.first&.sharing_link,
+            effectiveDate: 1.year.from_now.to_date.to_s,
+            score: resource.stash_version.version,
+            alert: 'false'
+          }
+        }
+      }
+
+      @response = @http.post(url, args)
+      parsed_response
+    end
+
+    def submission_document_id(resource)
+      manuscript_number = resource.resource_publication.manuscript_number
+      manu = StashEngine::Manuscript.where(manuscript_number: manuscript_number, identifier_id: resource.identifier_id).first
+      manu ||= StashEngine::Manuscript.where(manuscript_number: manuscript_number, journal_id: resource.journal.id).first
+
+      if manu.blank?
+        metadata = manuscript_metadata(manuscript_number)
+        manu = Manuscript::ScholarOneService.new(metadata, resource.identifier).create
+      end
+      return if manu.blank?
+
+      manu.metadata[:documentId]
+    end
+
     private
 
     def request_args(submission_id)

@@ -2,11 +2,14 @@ module Manuscript
   class ScholarOneService
     attr_reader :metadata
 
-    def initialize(metadata)
+    def initialize(metadata, identifier = nil)
       @metadata = metadata
+      @identifier = identifier
     end
 
     def create
+      return false if metadata.blank?
+
       status = metadata.dig(:submissionStatus, :documentStatusName).downcase
       return unless %w[submitted accepted].include?(status)
       return if journal.blank?
@@ -22,6 +25,7 @@ module Manuscript
 
       StashEngine::Manuscript.update_existing_dataset_status(manu)
       journal&.update(integrated_at: manu.created_at)
+      manu
     end
 
     private
@@ -35,7 +39,8 @@ module Manuscript
     end
 
     def identifier
-      StashEngine::Identifier.find_by_identifier metadata[:doi]
+      # TODO: metadata[:doi] may not exist or may be a different key
+      @identifier || StashEngine::Identifier.find_by_identifier(metadata[:doi])
     end
 
     def manuscript_number
