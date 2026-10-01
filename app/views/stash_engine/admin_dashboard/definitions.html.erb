@@ -1,0 +1,86 @@
+<% @page_title = "Status definitions" %>
+<div class="admin-dashboard-header">
+<h1 class="o-heading__level1" id="pubupdate-label">Status definitions</h1>
+<a href="<%= admin_dashboard_path %>">Admin dashboard</a>
+</div>
+<div id="page-columns">
+<div id="page-content">
+
+<h2>Publication status</h2>
+<dl>
+  <div>
+  <dt>Unpublished</dt>
+  <dd>The dataset is in process in the Dryad workflow. It has not been published, and the DOI is not active.</dd>
+  </div>
+  <div>
+  <dt>Published</dt>
+  <dd>The dataset is publicly available on Dryad, with an active DOI.</dd>
+  </div>
+  <div>
+  <dt>Embargoed</dt>
+  <dd>The dataset DOI is active, and its metadata is publicly available on Dryad. The data files are not listed or downloadable until the publication date.</dd>
+  </div>
+  <div>
+  <dt>Retracted</dt>
+  <dd>The dataset DOI is active, and its metadata is publicly available on Dryad. The metadata includes an explanatory retraction notice. The data files may have been hidden, depending on the reason for retraction. Revisions will not be accepted.</dd>
+  </div>
+  <div>
+  <dt>Withdrawn</dt>
+  <dd>The dataset has been withdrawn from consideration at Dryad. It has not been published, and the DOI is not active. Revisions reinstating the submission can be accepted.</dd>
+  </div>
+</dl>
+
+<h2>Workflow status</h2>
+<dl>
+  <div>
+  <dt>In progress</dt>
+  <dd>The current version of the dataset is being edited and has not yet been submitted to Dryad.</dd>
+  </div>
+  <div>
+  <dt>Preparing data</dt>
+  <dd>Data files are being managed in Dryad storage.</dd>
+  </div>
+  <div>
+  <dt>Awaiting payment</dt>
+  <dd>Curation of the dataset is held until full payment of the DPC.</dd>
+  </div>
+  <div>
+  <dt>Private for Peer Review</dt>
+  <dd>Curation of the dataset is held while the associated manuscript is under consideration at a journal. The dataset is available to manuscript reviewers via a private sharing link.</dd>
+  </div>
+  <div>
+  <dt>Queued for curation</dt>
+  <dd>The dataset is ready for curation. Datasets are curated in the order in which they are received.</dd>
+  </div>
+  <div>
+  <dt>Curation</dt>
+  <dd>The dataset is being curated.</dd>
+  </div>
+  <div>
+  <dt>Action required</dt>
+  <dd>The dataset has been returned to the authors with changes or clarifications needed.</dd>
+  </div>
+  <div>
+  <dt>Withdrawn</dt>
+  <dd>The dataset has been withdrawn from consideration at Dryad. Revisions reinstating the submission can be accepted.</dd>
+  </div>
+  <div>
+  <dt>Embargoed</dt>
+  <dd>The dataset metadata has been published, but the files will be made available at a future date.</dd>
+  </div>
+  <div>
+  <dt>To be published</dt>
+  <dd>The dataset has been approved for publication, but will not be made public until a future date.</dd>
+  </div>
+  <div>
+  <dt>Published</dt>
+  <dd>The dataset is publicly available on Dryad, with an active DOI.
+</dd>
+  </div>
+  <div>
+  <dt>Retracted</dt>
+  <dd>The dataset has previously been published, and has now been retracted. A retraction notice is provided. Revisions will not be accepted.</dd>
+  </div>
+</dl>
+</div>
+</div>
