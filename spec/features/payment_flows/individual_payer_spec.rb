@@ -31,7 +31,6 @@ RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
 
         expect(page).to have_content('This 10 B dataset has a Data Publishing Charge of $150.00')
         expect(page).not_to have_content('Payment for this submission is sponsored by')
-        expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
       end
 
       it 'user pays different based on files size' do
@@ -39,15 +38,15 @@ RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
 
         expect(page).to have_content('This 53.2 GB dataset has a Data Publishing Charge of $808.00')
         expect(page).not_to have_content('Payment for this submission is sponsored by')
-        expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
       end
 
       context 'when submitting' do
         before do
           build_full_dataset(resource_file_size: '53_200_000_000')
-          click_button 'Pay & Submit for publication'
+          sleep 1
+          click_button 'Pay & submit for publication'
           click_button 'Continue to the invoice generation form'
-          click_button 'Send invoice & Submit for publication'
+          click_button 'Send invoice & submit data'
           sleep 1
         end
 

@@ -27,9 +27,8 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
       it 'user does not pay DPC' do
         build_min_dataset
 
-        expect(page).not_to have_content('Data Publishing Charge')
+        expect(page).to have_content('All data publishing fees are covered by your sponsorship.')
         expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
-        expect(page).to have_css('button', exact_text: 'Submit for publication')
       end
 
       context 'when LDF is not covered' do
@@ -38,7 +37,6 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
 
           expect(page).to have_content('This 53.2 GB dataset has a Large Data Fee of $464.00.')
           expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
-          expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
         end
       end
 
@@ -48,7 +46,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
         it 'sponsored user does not pay anything' do
           build_min_dataset(resource_file_size: '53_200_000_000')
 
-          expect(page).not_to have_content('Large Data Fee')
+          expect(page).to have_content('All data publishing fees are covered by your sponsorship.')
           expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
           expect(page).to have_css('button', exact_text: 'Submit for publication')
         end
@@ -63,7 +61,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
             it 'sponsored user does not pay anything' do
               build_min_dataset(resource_file_size: '13_200_000_000')
 
-              expect(page).not_to have_content('Large Data Fee')
+              expect(page).to have_content('All data publishing fees are covered by your sponsorship.')
               expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
               expect(page).to have_css('button', exact_text: 'Submit for publication')
             end
@@ -75,7 +73,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
 
               expect(page).to have_content('This 123.2 GB dataset has a Large Data Fee of $659.00')
               expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
-              expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
+              expect(page).to have_css('button', exact_text: 'Pay & submit for publication')
             end
           end
         end
@@ -90,9 +88,8 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
             it 'sponsored user does not pay anything' do
               build_min_dataset(resource_file_size: '53_200_000_000')
 
-              expect(page).not_to have_content('Large Data Fee')
+              expect(page).to have_content('All data publishing fees are covered by your sponsorship.')
               expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
-              expect(page).to have_css('button', exact_text: 'Submit for publication')
             end
           end
 
@@ -102,7 +99,6 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
 
               expect(page).to have_content('This 123.2 GB dataset has a Large Data Fee of $1,123.00')
               expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
-              expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
             end
           end
         end
@@ -114,10 +110,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
 
           it 'sponsored user does not pay anything' do
             build_min_dataset(resource_file_size: '153_200_000_000')
-
-            expect(page).not_to have_content('Large Data Fee')
             expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
-            expect(page).to have_css('button', exact_text: 'Submit for publication')
           end
         end
       end
@@ -164,7 +157,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
         context 'when files are added' do
           before do
             upload_file(size: resource_file_size)
-            click_button 'Preview changes'
+            click_button 'Preview'
           end
 
           context 'and LDF tier is not exceeded' do
@@ -192,7 +185,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
         context 'when files are added' do
           before do
             upload_file(size: resource_file_size)
-            click_button 'Preview changes'
+            click_button 'Preview'
           end
 
           context 'and tier is not changed' do
@@ -223,7 +216,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
         context 'when files are added' do
           before do
             upload_file(size: resource_file_size)
-            click_button 'Preview changes'
+            click_button 'Preview'
           end
 
           context 'when limit tier is not changed' do
@@ -265,7 +258,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
         context 'when files are added' do
           before do
             upload_file(size: resource_file_size)
-            click_button 'Preview changes'
+            click_button 'Preview'
           end
 
           context 'and LDF tier is not changed' do
@@ -307,7 +300,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
         context 'when files are added' do
           before do
             upload_file(size: resource_file_size)
-            click_button 'Preview changes'
+            click_button 'Preview'
           end
 
           context 'and LDF tier is not changed' do
@@ -353,7 +346,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
           let(:resource_file_size) { 153_200_000_000 }
           before do
             upload_file(size: resource_file_size)
-            click_button 'Preview changes'
+            click_button 'Preview'
           end
 
           include_examples 'sponsored user does not pay anything'

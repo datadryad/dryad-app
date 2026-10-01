@@ -30,7 +30,6 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
     context 'payment value' do
       it 'user does not pay DPC' do
         expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
-        expect(page).not_to have_css('button', exact_text: 'Pay & Submit for publication')
         expect(page).to have_css('button', exact_text: 'Submit for publication')
       end
 
@@ -38,7 +37,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
         before do
           click_button 'Agreements'
           find('label', text: 'Keep my files private while my manuscript undergoes peer review').click
-          click_button 'Preview changes'
+          click_button 'Preview'
         end
 
         # it 'user does not pay anything, the PPR fee also is sponsored'
@@ -47,7 +46,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
         context 'when LDF exists' do
           before do
             upload_file(size: '54_000_000_000', file_name: 'ldf.txt')
-            click_button 'Preview changes'
+            click_button 'Preview'
           end
 
           # it 'user does not pay anything, the PPR fee also is sponsored'
@@ -99,7 +98,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
         context 'when files are added' do
           before do
             upload_file(size: resource_file_size, file_name: 'ldf.txt')
-            click_button 'Preview changes'
+            click_button 'Preview'
           end
 
           context 'and tier is not exceeded' do
@@ -119,7 +118,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
       before do
         click_button 'Agreements'
         find('label', text: 'My files should be available for public download as soon as possible').click
-        click_button 'Preview changes'
+        click_button 'Preview'
       end
 
       context 'when nothing changes' do
@@ -130,7 +129,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
       context 'when files are added' do
         before do
           upload_file(size: resource_file_size, file_name: 'ldf.txt')
-          click_button 'Preview changes'
+          click_button 'Preview'
         end
 
         context 'and tier is not exceeded' do

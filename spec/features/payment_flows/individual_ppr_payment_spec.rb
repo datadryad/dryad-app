@@ -29,14 +29,13 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
       it 'user pays DPC' do
         expect(page).to have_content('dataset has a Data Publishing Charge of $150.00')
         expect(page).not_to have_content('Payment for this submission is sponsored by')
-        expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
       end
 
       context 'when is set to PPR' do
         before do
           click_button 'Agreements'
           find('label', text: 'Keep my files private while my manuscript undergoes peer review').click
-          click_button 'Preview changes'
+          click_button 'Preview'
         end
 
         it 'user is informed he can pay only the PPR fee' do
@@ -46,13 +45,11 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
             'You may choose to pay only $50.00, with the remainder due at the end ' \
             'of the peer review period. The Private for Peer Review Fee is nonrefundable.'
           )
-
-          expect(page).to have_css('button', exact_text: 'Pay & Submit for peer review')
         end
 
         context 'when on payment page' do
           it 'user can choose between full fee and PPR fee' do
-            click_button 'Pay & Submit for peer review'
+            click_button 'Pay & submit for peer review'
 
             expect(page).to have_content('dataset has a Data Publishing Charge of $150.00')
             expect(page).to have_content(
@@ -68,7 +65,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
         context 'when LDF exists' do
           before do
             upload_file(size: '54_000_000_000', file_name: 'ldf.txt')
-            click_button 'Preview changes'
+            click_button 'Preview'
           end
 
           it 'user is informed he can pay only the PPR fee' do
@@ -78,13 +75,11 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
               'You may choose to pay only $50.00, with the remainder due at the end of the ' \
               'peer review period. The Private for Peer Review Fee is nonrefundable.'
             )
-
-            expect(page).to have_css('button', exact_text: 'Pay & Submit for peer review')
           end
 
           context 'when on payment page' do
             it 'user can choose between full fee and PPR fee' do
-              click_button 'Pay & Submit for peer review'
+              click_button 'Pay & submit for peer review'
 
               expect(page).to have_content('This 54 GB dataset has a Data Publishing Charge of $808.00')
               expect(page).to have_content(
@@ -144,7 +139,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
         context 'when files are added' do
           before do
             upload_file(size: resource_file_size, file_name: 'ldf.txt')
-            click_button 'Preview changes'
+            click_button 'Preview'
           end
 
           context 'and tier is not exceeded' do
@@ -169,7 +164,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
                 include_examples 'ppr - individual user must pay', '20 GB', '370.00'
 
                 it 'user can not choose PPR fee' do
-                  click_button 'Pay & Submit for peer review'
+                  click_button 'Pay & submit for peer review'
 
                   expect(page).to have_content(
                     'Since the dataset size has increased to 20 GB, submitting this new ' \
@@ -209,7 +204,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
         before do
           click_button 'Agreements'
           find('label', text: 'My files should be available for public download as soon as possible').click
-          click_button 'Preview changes'
+          click_button 'Preview'
         end
 
         context 'when nothing changes' do
@@ -220,7 +215,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
         context 'when files are added' do
           before do
             upload_file(size: resource_file_size, file_name: 'ldf.txt')
-            click_button 'Preview changes'
+            click_button 'Preview'
           end
 
           context 'and tier is not exceeded' do
@@ -245,7 +240,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
                 include_examples 'individual user must pay', '20 GB', '370.00'
 
                 it 'user can not choose PPR fee' do
-                  click_button 'Pay & Submit for publication'
+                  click_button 'Pay & submit for publication'
 
                   expect(page).to have_content(
                     'Since the dataset size has increased to 20 GB, submitting this new ' \

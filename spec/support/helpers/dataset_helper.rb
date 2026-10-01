@@ -288,7 +288,7 @@ module DatasetHelper
 
     click_button 'Agreements'
     find('span', text: 'I agree').click
-    click_button 'Preview submission'
+    click_button 'Preview'
   end
 
   def upload_file(size: '10', file_name: 'funbar.txt')
@@ -337,6 +337,6 @@ module DatasetHelper
 
     click_button 'Agreements'
     find('span', text: 'I agree').click
-    click_button 'Preview submission'
+    click_button 'Preview'
   end
 end
