@@ -4,10 +4,10 @@
 #
 #  id               :bigint           not null, primary key
 #  role             :string(191)
-#  role_object_type :string(191)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  role_object_id   :string(191)
+#  role_object_type :string(191)
 #  user_id          :integer
 #
 # Indexes

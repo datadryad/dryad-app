@@ -6,10 +6,10 @@
 #  deleted_at  :datetime
 #  dpc         :integer
 #  ldf         :integer
-#  payer_type  :string(191)
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  payer_id    :string(191)
+#  payer_type  :string(191)
 #  resource_id :integer
 #  sponsor_id  :string(191)
 #

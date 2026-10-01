@@ -2,7 +2,7 @@
 #
 # Table name: stash_engine_curation_stats
 #
-#  id                          :bigint           not null, primary key
+#  id                          :integer          not null, primary key
 #  aar_size                    :integer
 #  author_revised              :integer
 #  author_versioned            :integer
@@ -19,12 +19,8 @@
 #  new_datasets_to_queued      :integer
 #  ppr_size                    :integer
 #  ppr_to_curation             :integer
-#  created_at                  :datetime         not null
-#  updated_at                  :datetime         not null
-#
-# Indexes
-#
-#  index_stash_engine_curation_stats_on_date  (date) UNIQUE
+#  created_at                  :datetime
+#  updated_at                  :datetime
 #
 module StashEngine
   describe CurationStats do

@@ -108,7 +108,9 @@ GEM
       tins (~> 1)
     amoeba (3.3.0)
       activerecord (>= 5.2.0)
-    annotaterb (4.13.0)
+    annotaterb (4.24.0)
+      activerecord (>= 6.0.0)
+      activesupport (>= 6.0.0)
     ansi (1.5.0)
     ast (2.4.3)
     auth-sanitizer (0.2.3)
@@ -794,7 +796,7 @@ DEPENDENCIES
   acts_as_paranoid (~> 0.11.0)
   amatch (~> 0.6.0)
   amoeba (~> 3.3.0)
-  annotaterb (~> 4.13.0)
+  annotaterb
   aws-sdk-lambda
   aws-sdk-s3 (~> 1.228.2)
   aws-sdk-sns
