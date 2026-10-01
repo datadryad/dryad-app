@@ -72,6 +72,25 @@ pre {
   }
 }
 
+dl div {
+  margin-bottom: 1em;
+  padding-left: 3em;
+  text-indent: -3em;
+  line-height: 150%;
+}
+dt {
+  display: inline;
+  font-weight: 600;
+  &:after {
+    content: ':'
+  }
+}
+dd {
+  margin: 0;
+  padding-left: 1ch;
+  display: inline;
+}
+
 p:has(.fa-spinner) {
   text-align: center;
 }
