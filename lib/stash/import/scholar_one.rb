@@ -6,14 +6,15 @@ module Stash
         @resource = resource
         @manuscript_number = manuscript_number
         @journal = journal
+        @metadata = Integrations::ScholarOne.new(journal.scholar_one_site_name).manuscript_metadata(@manuscript_number)
       end
 
       def populate
-        @metadata = Integrations::ScholarOne.new(journal.scholar_one_site_name).manuscript_metadata(@manuscript_number)
         return unless @metadata.present? && resource.present?
 
         populate_abstract
         populate_authors
+        populate_publication_name
         populate_funders
         populate_title
         populate_subjects
@@ -34,7 +35,7 @@ module Stash
       end
 
       def populate_authors
-        authors_metadata = Integrations::ScholarOne.new.authors_metadata(@manuscript_number)
+        authors_metadata = Integrations::ScholarOne.new(journal.scholar_one_site_name).authors_metadata(@manuscript_number)
         return unless authors_metadata.present?
 
         authors_metadata = [authors_metadata] unless authors_metadata.is_a?(Array)
@@ -69,6 +70,18 @@ module Stash
         affiliation = StashDatacite::Affiliation.from_long_name(long_name: affiliation_name, check_ror: true)
         affiliation.save
         affiliation.authors << author unless affiliation.authors.include?(author)
+      end
+
+      def populate_publication_name(pub_type: 'primary_article')
+        # We do not want to overwrite correct journal names with nonstandardized names
+        # only update the journal name if the dataset is not already set with this journal ISSN
+        return if @metadata['journalName'].present? && @metadata['journalDigitalIssn'].present? && @resource.journal.present? &&
+          @resource.journal.id == StashEngine::Journal.find_by_issn(@metadata['journalDigitalIssn'])&.id
+
+        datum = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @resource.id, pub_type: pub_type)
+        datum.publication_name = @metadata['journalName']
+        datum.publication_issn = @metadata['journalDigitalIssn']
+        datum.save
       end
 
       def populate_subjects
