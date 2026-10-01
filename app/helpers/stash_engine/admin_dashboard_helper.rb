@@ -104,7 +104,7 @@ module StashEngine
       end
       row << dataset.last_curation_activity.updated_at if @fields.include?('updated_at')
       row << dataset.identifier.created_at if @fields.include?('created_at')
-      row << dataset.identifier.process_date.processing if @fields.include?('first_sub_date')      
+      row << dataset.identifier.process_date.processing if @fields.include?('first_sub_date')
       row << dataset.identifier.process_date.queued if @fields.include?('queue_date')
       row << dataset.identifier.publication_date if @fields.include?('first_pub_date')
       row << dataset.submitted_date if @fields.include?('submit_date')
