@@ -171,33 +171,47 @@ module StashDatacite
     end
 
     def update_manuscript_metadata
-      if @pub_name.blank? && @pub_issn.blank?
-        @error = 'Please select your journal from the autocomplete list.'
-        return
-      end
-      if @msid.blank?
-        @error = 'Please enter your manuscript number.'
-        return
-      end
-      if @pub_issn.blank?
-        @error = 'Journal not integrated with Dryad. Please fill in your title manually.'
-        return
-      end
       journal = StashEngine::Journal.find_by_issn(@pub_issn)
-      if journal.blank?
-        @error = 'Journal not integrated with Dryad. Please fill in your title manually.'
+      return unless valid_import_data?(journal)
+
+      if journal.scholar_one_site_name.present?
+        dryad_import = Stash::Import::ScholarOne.new(resource: @resource, manuscript_number: @msid, journal: journal)
+        @error = 'Could not import metadata from ScholarOne.' if dryad_import.populate.nil?
         return
       end
+
       manu = StashEngine::Manuscript.where(journal: journal, manuscript_number: @msid).last
       if manu.blank?
         @error = 'We could not find metadata to import for this manuscript. Please fill in your title manually.'
         return
       end
+
       dryad_import = Stash::Import::DryadManuscript.new(resource: @resource, manuscript: manu)
       dryad_import.populate
     rescue HTTParty::Error, SocketError => e
       logger.error("Dryad manuscript API returned a HTTParty/Socket error for ISSN: #{@pub_issn}, MSID: #{@msid}\r\n #{e}")
       @error = 'We could not find metadata to import for this manuscript. Please fill in your title manually.'
+    end
+
+    def valid_import_data?(journal)
+      if @pub_name.blank? && @pub_issn.blank?
+        @error = 'Please select your journal from the autocomplete list.'
+        return false
+      end
+      if @msid.blank?
+        @error = 'Please enter your manuscript number.'
+        return false
+      end
+      if @pub_issn.blank?
+        @error = 'Journal not integrated with Dryad. Please fill in your title manually.'
+        return false
+      end
+      if journal.blank?
+        @error = 'Journal not integrated with Dryad. Please fill in your title manually.'
+        return false
+      end
+
+      true
     end
 
     def update_doi_metadata
