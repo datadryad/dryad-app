@@ -13,7 +13,7 @@
       <%= search_field_tag(:q, @search_string, class: "c-input__text#{@search_string.present? ? ' selected' : ''}", id: 'search-string', 'aria-labelledby': 'searchlabel searchlabel1', style: 'flex-grow: 2' ) %>
     </div>
     <div class="o-admin-form-pair" style="flex-grow: 2;">
-      <span id="searchlabel2">Publication IDs: </span>
+      <span id="searchlabel2">Related work IDs: </span>
       <%= search_field_tag('filters[identifiers]', @filters[:identifiers], class: "c-input__text#{@filters[:identifiers].present? ? ' selected' : ''}", 'aria-labelledby': 'searchlabel searchlabel2', style: 'flex-grow: 2' ) %>
     </div>
     <div class="o-admin-form-pair" style="flex-grow: 2;">
