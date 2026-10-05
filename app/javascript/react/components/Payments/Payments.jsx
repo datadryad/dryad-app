@@ -11,7 +11,7 @@ import {useStore} from '../../shared/store';
 
 function Receipt({fees, resource}) {
   if (!fees.dpc_sponsored) return null
-  if(!!resource.identifier.last_invoiced_file_size) return null
+  if(resource.identifier.last_invoiced_file_size) return null
 
   return (
     <>
