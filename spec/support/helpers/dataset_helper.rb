@@ -29,6 +29,7 @@ module DatasetHelper
     # e.g. `it 'should test this amazing thing', js: true do`
     # page.find('#checklist-button').click unless page.has_button?('Files')
     click_button 'Files'
+    sleep 1
     expect(page).to have_content('Choose files')
     expect(page).to have_content('Enter URLs')
   end
