@@ -43,7 +43,6 @@ RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
       context 'when submitting' do
         before do
           build_full_dataset(resource_file_size: '53_200_000_000')
-          sleep 1
           click_button 'Pay & submit for publication'
           click_button 'Continue to the invoice generation form'
           click_button 'Send invoice & submit data'

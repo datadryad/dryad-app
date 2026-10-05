@@ -272,7 +272,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
             include_examples 'sponsored user must pay', '20 GB', '259.00'
             include_examples 'no LDF sponsored payment log is created'
-            # include_examples 'user has sponsored LDF', 0
           end
         end
       end

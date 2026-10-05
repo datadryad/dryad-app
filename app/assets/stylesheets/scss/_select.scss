@@ -134,7 +134,10 @@ select:has(option[value='']:checked) {
 
 .c-ac__error_message {
   background-color: $red;
-  color: white !important;
+  color: white;  
+  .error-text {
+  	color: white;
+  }
   &:not(:empty) {
   	padding: 5px;
   }

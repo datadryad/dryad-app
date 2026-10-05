@@ -29,9 +29,8 @@ module DatasetHelper
     # e.g. `it 'should test this amazing thing', js: true do`
     # page.find('#checklist-button').click unless page.has_button?('Files')
     click_button 'Files'
-    sleep 1
-    expect(page).to have_content('Choose files')
-    expect(page).to have_content('Enter URLs')
+    expect(page).to have_content('Files may be uploaded from your computer')
+    expect(page).to have_button('Enter URLs')
   end
 
   def navigate_to_review
@@ -263,34 +262,11 @@ module DatasetHelper
       find(:label, 'Yes').click
     end
     find(:label, 'Submitted manuscript').click
-    fill_in 'Journal name', with: journal.title
+
+    find('#publication_ms').send_keys(journal.title)
     page.send_keys(:tab)
     fill_in 'Manuscript number', with: 'ASD-1234'
     page.send_keys(:tab)
-  end
-
-  def build_min_dataset(resource_file_size: '10')
-    navigate_to_metadata
-    within_fieldset('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?') do
-      find(:label, 'No').click
-    end
-    click_button 'Title'
-    fill_in_title
-
-    navigate_to_upload
-    build_valid_stub_request('http://example.org/funbar.txt')
-    click_button('data_manifest')
-    fill_in('location_urls', with: 'http://example.org/funbar.txt')
-    click_on('validate_files')
-    expect(page.has_css?('i[aria-label="complete"]')).to be true
-
-    resource = StashEngine::Resource.last
-    resource.data_files.first.update(upload_file_size: resource_file_size)
-    resource.reload
-
-    click_button 'Agreements'
-    find('span', text: 'I agree').click
-    click_button 'Preview'
   end
 
   def upload_file(size: '10', file_name: 'funbar.txt')
@@ -302,6 +278,27 @@ module DatasetHelper
     expect(page.has_css?('i[aria-label="complete"]')).to be true
   end
 
+  def build_min_dataset(resource_file_size: '10')
+    navigate_to_metadata
+    within_fieldset('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?') do
+      find(:label, 'No').click
+    end
+    click_button 'Title'
+    fill_in_title
+
+    upload_file(size: resource_file_size)
+
+    resource = StashEngine::Resource.last
+    resource.data_files.first.update(upload_file_size: resource_file_size)
+    resource.reload
+
+    click_button 'Agreements'
+    find('span', text: 'I agree').click
+    click_button 'Preview'
+    expect(page).to have_content('Dataset submission preview', wait: 8)
+  end
+
+  # rubocop:disable Metrics/AbcSize
   def build_full_dataset(resource_file_size: '10', tenant_name: Faker::Educator.university)
     navigate_to_metadata
     within_fieldset('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?') do
@@ -340,5 +337,7 @@ module DatasetHelper
     click_button 'Agreements'
     find('span', text: 'I agree').click
     click_button 'Preview'
+    expect(page).to have_content('Dataset submission preview', wait: 8)
   end
+  # rubocop:enable Metrics/AbcSize
 end
