@@ -285,6 +285,7 @@ module DatasetHelper
 
     resource = StashEngine::Resource.last
     resource.data_files.first.update(upload_file_size: resource_file_size)
+    resource.reload
 
     click_button 'Agreements'
     find('span', text: 'I agree').click

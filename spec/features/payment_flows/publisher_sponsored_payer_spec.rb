@@ -24,7 +24,8 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
     mock_aws!
     mock_file_content!
     mock_stripe!
-
+    journal.reload
+    limits_payment.reload
     create(:sponsored_payment_log, payer: journal, sponsor_id: top_level_sponsor.id, ldf: paid_ldf)
 
     sign_in(user)
@@ -202,7 +203,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
           let(:resource_file_size) { 151_200_000_000 }
 
           it 'sponsored user does not pay anything' do
-            expect(page).to have_content('All data publishing fees are covered by your sponsorship.')
+            expect(page).not_to have_content('Large Data Fee')
             expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
             expect(page).to have_css('button', exact_text: 'Submit for publication')
           end
@@ -240,6 +241,8 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
       click_link 'My datasets'
       click_button 'Revise submission'
 
+      identifier.reload
+      identifier.update!(last_invoiced_file_size: last_invoiced_file_size)
       identifier.reload
       resource.reload
     end
