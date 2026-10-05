@@ -27,9 +27,8 @@ module DatasetHelper
   def navigate_to_upload
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    # page.find('#checklist-button').click unless page.has_button?('Files')
+    expect(page).to have_button('Files', wait: 8)
     click_button 'Files'
-    expect(page).to have_content('Files may be uploaded from your computer')
     expect(page).to have_button('Enter URLs', wait: 8)
   end
 
@@ -327,7 +326,6 @@ module DatasetHelper
     fill_in_validation
     expect(find_button('Compliance')).to match_selector('[aria-describedby="step-complete"')
 
-    click_button 'Files'
     upload_file(size: resource_file_size)
 
     click_button 'README'
