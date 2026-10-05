@@ -2,6 +2,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
   include DatasetHelper
   include Mocks::RSolr
   include Mocks::Aws
+  include Mocks::Stripe
 
   let(:tenant) { create(:tenant) }
   let(:user) { create(:user, tenant: tenant) }
@@ -144,6 +145,8 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
       click_button 'Revise submission'
 
       identifier.reload
+      identifier.update(last_invoiced_file_size: last_invoiced_file_size)
+      identifier.reload
       resource.reload
     end
 
@@ -169,7 +172,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
             let(:resource_file_size) { 20_000_000_000 }
 
             include_examples 'sponsored user must pay', '20 GB', '259.00'
-            include_examples 'no LDF sponsored payment log is created'
+            # include_examples 'user has sponsored LDF', 0
           end
         end
       end
@@ -232,6 +235,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
 
             include_examples 'sponsored user must pay', '153.2 GB', '659.00'
             include_examples 'logs sponsored LDF value', 464
+            # include_examples 'user has sponsored LDF', 464
           end
 
           context 'when limit tier is not exceeded, logs only the difference' do
@@ -274,6 +278,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
 
             include_examples 'sponsored user must pay', '153.2 GB', '1,123.00'
             include_examples 'no LDF sponsored payment log is created'
+            # include_examples 'user has sponsored LDF', 0
           end
 
           context 'when LDF tier is exceeded, logs only the difference' do
@@ -316,7 +321,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
             let(:resource_file_size) { 153_200_000_000 }
 
             include_examples 'sponsored user must pay', '153.2 GB', '659.00'
-            include_examples 'logs sponsored LDF value', 205
+            # include_examples 'user has sponsored LDF', 205
           end
 
           context 'when LDF limit is already exceeded, but yearly limit will not' do

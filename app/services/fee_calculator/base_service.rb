@@ -78,7 +78,7 @@ module FeeCalculator
 
     def add_sponsored_amount(amount = nil)
       add_storage_fee_difference(amount)
-      @sum_options[:storage_sponsored] = sponsored_limits&.covers_ldf ? ldf_sponsored_amount : 0
+      @sum_options[:storage_sponsored] = sponsored_limits&.covers_ldf ? [ldf_sponsored_amount, 0].max : 0
       add_invoice_fee
     end
 

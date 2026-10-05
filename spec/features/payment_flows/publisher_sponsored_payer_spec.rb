@@ -272,6 +272,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
             include_examples 'sponsored user must pay', '20 GB', '259.00'
             include_examples 'no LDF sponsored payment log is created'
+            # include_examples 'user has sponsored LDF', 0
           end
         end
       end
@@ -331,6 +332,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
             include_examples 'sponsored user must pay', '153.2 GB', '659.00'
             include_examples 'logs sponsored LDF value', 464
+            # include_examples 'user has sponsored LDF', 464
           end
 
           context 'when limit tier is not exceeded, logs only the difference' do
@@ -370,6 +372,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
             include_examples 'sponsored user must pay', '153.2 GB', '1,123.00'
             include_examples 'no LDF sponsored payment log is created'
+            # include_examples 'user has sponsored LDF', 0
           end
 
           context 'when LDF tier is exceeded, logs only the difference' do
@@ -413,6 +416,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
             include_examples 'sponsored user must pay', '153.2 GB', '659.00'
             include_examples 'logs sponsored LDF value', 205
+            # include_examples 'user has sponsored LDF', 205
           end
 
           context 'when LDF limit is already exceeded, but yearly limit not' do
@@ -432,6 +436,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
             include_examples 'sponsored user must pay', '153.2 GB', '864.00'
             include_examples 'no LDF sponsored payment log is created'
+            # include_examples 'user has sponsored LDF', 0
           end
         end
       end
