@@ -37,6 +37,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
       build_min_dataset(resource_file_size: resource_file_size)
 
       connect_journal(journal)
+      expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
       click_button 'Preview'
     end
 

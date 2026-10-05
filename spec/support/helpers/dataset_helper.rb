@@ -30,7 +30,7 @@ module DatasetHelper
     # page.find('#checklist-button').click unless page.has_button?('Files')
     click_button 'Files'
     expect(page).to have_content('Files may be uploaded from your computer')
-    expect(page).to have_button('Enter URLs')
+    expect(page).to have_button('Enter URLs', wait: 8)
   end
 
   def navigate_to_review
