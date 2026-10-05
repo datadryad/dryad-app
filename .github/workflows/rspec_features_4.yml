@@ -8,7 +8,7 @@ concurrency:
 
 jobs:
   rspec-features:
-    name: RSpec Feature Tests 3
+    name: RSpec Payment Flows
     runs-on: ubuntu-22.04
     timeout-minutes: 20
 
