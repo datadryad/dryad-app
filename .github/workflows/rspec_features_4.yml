@@ -1,4 +1,4 @@
-name: RSpec Feature Tests 3
+name: RSpec Payment Flows
 
 on: pull_request
 
