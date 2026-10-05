@@ -24,7 +24,7 @@ RSpec.shared_examples('logs sponsored LDF value') do |amount|
   it 'logs sponsored ldf value' do
     find('[name="submit_button"]').click
 
-    expect(page).to have_text('Your dataset with the DOI')
+    expect(page).to have_text('Your dataset with the DOI', wait: 8)
     expect(identifier.reload.latest_resource.sponsored_payment_log&.ldf).to eq(amount)
   end
 end
@@ -42,7 +42,7 @@ RSpec.shared_examples('no LDF sponsored payment log is created') do
   it 'no LDF sponsored payment log is created' do
     find('[name="submit_button"]').click
 
-    expect(page).to have_text('Your dataset with the DOI')
+    expect(page).to have_text('Your dataset with the DOI', wait: 8)
     expect(identifier.reload.latest_resource.sponsored_payment_log).to be_nil
   end
 end
@@ -51,7 +51,7 @@ RSpec.shared_examples('ppr - no LDF sponsored payment log is created') do
   it 'no LDF sponsored payment log is created' do
     find('[name="submit_button"]').click
 
-    expect(page).to have_text('Your dataset with the DOI')
+    expect(page).to have_text('Your dataset with the DOI', wait: 8)
     expect(identifier.reload.latest_resource.sponsored_payment_log).to be_nil
   end
 end

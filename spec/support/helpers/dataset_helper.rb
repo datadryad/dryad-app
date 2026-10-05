@@ -27,8 +27,10 @@ module DatasetHelper
   def navigate_to_upload
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    expect(page).to have_button('Files', wait: 8)
+    expect(page).not_to have_css('#files-loading', wait: 8)
+    expect(page).to have_button('Files')
     click_button 'Files'
+    expect(page).to have_css('#submission-step-title')
     expect(page).to have_button('Enter URLs', wait: 8)
   end
 
