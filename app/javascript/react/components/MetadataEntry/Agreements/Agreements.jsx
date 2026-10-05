@@ -18,14 +18,16 @@ function PaymentMessage({resource, fees}) {
             <>All <a href="/costs" target="blank">data publishing fees<ExitIcon/></a> are covered by your sponsorship.</>
           }
         </p>
-        <p>
-          The total fees are {formatCost(fees.dpc_sponsored + fees.storage_sponsored + fees.storage_fee)}.
-          The {partner.name} has sponsored the base Data Publishing Charge ({formatCost(fees.dpc_sponsored)}){
-            fees.storage_sponsored ? ` and Large Data Fee (${formatCost(fees.storage_sponsored)})` : ''}.
-          {partner.contact && 
-            <> For questions about your sponsorship, please contact <a href={`mailto:${partner.contact}`}>{partner.contact}</a>.</>
-          }
-        </p>
+        {resource.identifier.last_invoiced_file_size &&
+          <p>
+            The total fees are {formatCost(fees.dpc_sponsored + fees.storage_sponsored + fees.storage_fee)}.
+            The {partner.name} has sponsored the base Data Publishing Charge ({formatCost(fees.dpc_sponsored)}){
+              fees.storage_sponsored ? ` and Large Data Fee (${formatCost(fees.storage_sponsored)})` : ''}.
+            {partner.contact &&
+              <> For questions about your sponsorship, please contact <a href={`mailto:${partner.contact}`}>{partner.contact}</a>.</>
+            }
+          </p>
+        }
       </>
     )
   }

@@ -28,6 +28,8 @@ RSpec.configure do |config|
       # under test that does *not* share a database connection with the
       # specs, so use truncation strategy.
       DatabaseCleaner.strategy = :truncation
+      DatabaseCleaner.clean
+      DatabaseCleaner.start
     end
   end
 
@@ -35,7 +37,7 @@ RSpec.configure do |config|
     DatabaseCleaner.start
   end
 
-  config.append_after(:each) do
+  config.after(:each) do
     DatabaseCleaner.clean
   end
 
