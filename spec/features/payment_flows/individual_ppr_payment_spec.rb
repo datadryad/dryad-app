@@ -19,7 +19,10 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
   end
 
   context 'on first version' do
-    before { build_full_dataset }
+    before do
+      build_full_dataset
+      expect(page).to have_button('submit_button', wait: 25)
+    end
 
     it 'payment is not sponsored' do
       expect(page).not_to have_text('Payment for this submission is sponsored by')
@@ -33,25 +36,27 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
 
       context 'when is set to PPR' do
         before do
-          click_button 'Agreements'
-          expect(page).to have_content('Do you agree to Dryad’s terms?')
+          find('button[data-slug="agreements"]').click
+          expect(page).to have_content('Dryad submissions are made publicly available')
           find('label', text: 'Keep my files private while my manuscript undergoes peer review').click
-          click_button 'Preview'
+          expect(page).to have_content('All progress saved')
         end
 
         it 'user is informed he can pay only the PPR fee' do
-          expect(page).not_to have_content('Payment for this submission is sponsored by')
           expect(page).to have_content('dataset has a Data Publishing Charge of $150.00')
           expect(page).to have_content(
             'You may choose to pay only $50.00, with the remainder due at the end ' \
             'of the peer review period. The Private for Peer Review Fee is nonrefundable.'
           )
+          expect(page).not_to have_content('Payment for this submission is sponsored by')
         end
 
         context 'when on payment page' do
           it 'user can choose between full fee and PPR fee' do
-            click_button 'Pay & submit for peer review'
+            click_button 'Preview'
+            expect(page).to have_content('These files will be kept private while your manuscript undergoes peer review')
 
+            click_button 'Pay & submit for peer review'
             expect(page).to have_content('dataset has a Data Publishing Charge of $150.00')
             expect(page).to have_content(
               'You may choose to pay only $50.00, with the remainder due at the end of the ' \
@@ -65,8 +70,10 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
 
         context 'when LDF exists' do
           before do
+            click_button 'Preview'
             upload_file(size: '54_000_000_000', file_name: 'ldf.txt')
             click_button 'Preview'
+            expect(page).to have_button('submit_button', wait: 15)
           end
 
           it 'user is informed he can pay only the PPR fee' do
@@ -152,7 +159,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
             let(:resource_file_size) { 20_000_000_000 }
 
             context 'when DPC was paid in full (not the PPR fee)' do
-              include_examples 'ppr - individual user must pay', '20 GB', '370.00'
+              include_examples 'individual user must pay', '20 GB', '370.00'
 
               it 'user is not prompted to pay the PPR fee' do
                 expect(page).not_to have_content(
@@ -162,7 +169,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
               end
 
               context 'when on payment page' do
-                include_examples 'ppr - individual user must pay', '20 GB', '370.00'
+                include_examples 'individual user must pay', '20 GB', '370.00'
 
                 it 'user can not choose PPR fee' do
                   click_button 'Pay & submit for peer review'
@@ -183,14 +190,14 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
             end
 
             context 'when only the ppr fee was paid' do
+              let(:last_invoiced_file_size) { nil }
               let!(:payment) do
                 create(:resource_payment, resource: resource, amount: 50, payment_type: 'stripe', status: :paid, ppr_fee_paid: true)
               end
 
               include_examples 'individual user does not pay anything'
 
-              xit 'notifies the user that the PPR fee was already paid' do
-                # works as expected when testing manual
+              it 'notifies the user that the PPR fee was already paid' do
                 expect(page).to have_content(
                   'The $50.00 Private for Peer Review Fee has been paid. ' \
                   'The remainder of the Data Publishing Charge is due at submission for curation and publication.'
@@ -203,9 +210,10 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
 
       context 'when removed from PPR' do
         before do
-          click_button 'Agreements'
-          expect(page).to have_content('Do you agree to Dryad’s terms?')
+          find('button[data-slug="agreements"]').click
+          expect(page).to have_content('Dryad submissions are made publicly available')
           find('label', text: 'My files should be available for public download as soon as possible').click
+          expect(page).to have_content('All progress saved')
           click_button 'Preview'
         end
 
@@ -260,11 +268,12 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
             end
 
             context 'when only the ppr fee was paid' do
+              let(:last_invoiced_file_size) { nil }
               let!(:payment) do
                 create(:resource_payment, resource: resource, amount: 50, payment_type: 'stripe', status: :paid, ppr_fee_paid: true)
               end
 
-              include_examples 'individual user must pay', '20 GB', '370.00'
+              include_examples 'ppr - individual user must pay', '20 GB', '470.00'
             end
           end
         end

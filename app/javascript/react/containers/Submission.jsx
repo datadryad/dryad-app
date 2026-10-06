@@ -175,7 +175,6 @@ function Submission({
       component: <Agreements
         resource={resource}
         setResource={setResource}
-        current={step.name === 'Agreements'}
         config={config_payments}
         form={change_tenant}
         user={user}
@@ -203,16 +202,13 @@ function Submission({
 
   useEffect(() => {
     if (!refreshDpcStatus) return;
-
     axios.get(`/resources/${resource.id}/dpc_status`).then((data) => {
-      const {user_must_pay, generated_files} = data.data;
-      updateStore({dpc: data.data, refreshDpcStatus: false, userMustPay: user_must_pay});
-      setResource((r) => ({...r, generated_files, total_file_size: data.data.total_file_size}));
+      updateStore({dpc: data.data, userMustPay: data.data.user_must_pay, refreshDpcStatus: false});
     });
   }, [refreshDpcStatus]);
 
   useEffect(() => {
-    if (!userMustPay && !refreshFees) return;
+    if (!refreshFees) return;
     if (resource.identifier.old_payment_system) {
       updateStore({refreshFees: false});
       return;
@@ -224,9 +220,9 @@ function Submission({
         }
         updateStore({refreshFees: false, fees: data.fees || {}});
       });
-  }, [userMustPay, resource.hold_for_peer_review, resource.total_file_size, resource.authors, invoice, refreshFees]);
+  }, [userMustPay, refreshFees, invoice]);
 
-  const recheckPayer = () => {
+  useEffect(() => {
     axios.get(`/resources/${resource.id}/payer_check`)
       .then(({data}) => {
         setResource((res) => ({
@@ -234,17 +230,13 @@ function Submission({
           identifier: {
             ...res.identifier,
             display_payer: data.display_payer,
-            'user_must_pay?': data.user_must_pay,
             new_upload_size_limit: data.new_upload_size_limit,
           },
         }));
-        updateStore({userMustPay: data.user_must_pay, refreshFees: true});
+        const refresh = (data.user_must_pay !== userMustPay) || (data.display_payer !== resource.identifier.display_payer);
+        updateStore({userMustPay: data.user_must_pay, refreshFees: refresh, refreshDpcStatus: refresh});
       });
-  };
-
-  useEffect(() => {
-    recheckPayer();
-  }, [resource.tenant, resource.authors, resource.journal, resource.contributors, resource.cedar_json, resource.descriptions]);
+  }, [resource.tenant, resource.authors, resource.journal, resource.contributors, resource.total_file_size]);
 
   const markInvalid = (el) => {
     const et = el.querySelector('.error-text');

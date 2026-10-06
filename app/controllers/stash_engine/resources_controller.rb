@@ -4,7 +4,7 @@ module StashEngine
     include StashEngine::DownloadsHelper
 
     before_action :require_login
-    before_action :assign_resource, only: %i[logout display_readme display_collection dupe_check file_pub_dates]
+    before_action :assign_resource, except: %i[index new create update destroy]
     before_action :require_modify_permission, except: %i[index new logout destroy display_collection display_readme dupe_check file_pub_dates]
 
     attr_writer :resource
@@ -19,21 +19,6 @@ module StashEngine
     # GET /resources.json
     def index
       @resources = policy_scope(Resource)
-    end
-
-    # GET /resources/1
-    # GET /resources/1.json
-    def show
-      respond_to do |format|
-        format.xml { render template: '/stash_datacite/resources/show' }
-        format.json
-      end
-    end
-
-    # the show_files is for refreshing the files lists to their default states for the resource
-    def show_files
-      @uploads = resource.latest_file_states
-      respond_to(&:js)
     end
 
     # GET /resources/new
@@ -70,6 +55,7 @@ module StashEngine
     # PATCH/PUT /resources/1
     # PATCH/PUT /resources/1.json
     def update
+      authorize resource
       respond_to do |format|
         if resource.update(resource_params)
           format.html { redirect_to edit_resource_path(resource), notice: 'Resource was successfully updated.' }
@@ -153,6 +139,15 @@ module StashEngine
       render partial: 'stash_datacite/descriptions/readme', locals: { review: review }
     end
 
+    def generate_files
+      @resource.check_add_readme_file
+      @resource.check_add_cedar_json
+      render json: {
+        total_file_size: @resource.total_file_size,
+        generated_files: @resource.generic_files.present_files.generated.validated.as_json(methods: %i[type])
+      }
+    end
+
     def dpc_status
       user_payer_aff = StashEngine::Tenant.connect_list.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id)
       aff_tenant = if @resource.tenant_id.in?(user_payer_aff.ids)
@@ -160,11 +155,7 @@ module StashEngine
                    else
                      user_payer_aff.first
                    end
-
-      @resource.check_add_readme_file
-      @resource.check_add_cedar_json
       dpc_checks = {
-        total_file_size: @resource.total_file_size,
         journal_will_pay: @resource.identifier.journal_will_pay?,
         institution_will_pay: @resource.identifier.institution_will_pay?,
         funder_will_pay: @resource.identifier.funder_will_pay?,
@@ -172,8 +163,7 @@ module StashEngine
         aff_tenant: aff_tenant,
         allow_review: @resource.identifier.allow_review?,
         automatic_ppr: @resource.identifier.automatic_ppr?,
-        man_decision_made: @resource.identifier.has_accepted_manuscript? || @resource.identifier.has_rejected_manuscript?,
-        generated_files: @resource.generic_files.present_files.generated.validated.as_json(methods: %i[type])
+        man_decision_made: @resource.identifier.has_accepted_manuscript? || @resource.identifier.has_rejected_manuscript?
       }
       dpc_checks[:can_pay_ppr_fee] = @resource.hold_for_peer_review &&
         !dpc_checks[:funder_will_pay] && !dpc_checks[:journal_will_pay] && !dpc_checks[:institution_will_pay] &&
@@ -282,11 +272,6 @@ module StashEngine
 
     def resource_params
       params.require(:resource).permit(:user_id, :current_resource_state_id)
-    end
-
-    # this is to be sure that our internal search index gets updated occasionally before full submission so search is better
-    def update_internal_search
-      @resource&.identifier&.update_search_words!
     end
   end
 end

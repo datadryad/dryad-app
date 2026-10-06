@@ -97,18 +97,18 @@ Rails.application.routes.draw do
 
     resources :resources do
       member do
-        get 'prepare_readme'
-        get 'display_readme'
-        get 'dpc_status'
-        get 'dupe_check'
-        get 'file_pub_dates'
-        get 'display_collection'
-        get 'show_files'
-        patch 'import_type'
-        patch 'license_agree'
-        patch 'credit_agree'
-        post 'logout'
+        get :prepare_readme
+        get :display_readme
+        get :dpc_status
+        get :dupe_check
+        get :file_pub_dates
+        get :display_collection
         get :payer_check
+        get :generate_files
+        patch :import_type
+        patch :license_agree
+        patch :credit_agree
+        post :logout
       end
     end
 

@@ -27,8 +27,9 @@ module DatasetHelper
     # e.g. `it 'should test this amazing thing', js: true do`
     expect(page).not_to have_css('#files-loading', wait: 8)
     expect(page).to have_button('Files')
-    find('button[data-slug="files"]').click
-    expect(page).to have_content('All progress saved')
+    click_button 'Files'
+    find('button[data-slug="files"]').click if page.has_css?('button[data-slug="files"]')
+    expect(page).to have_content('Files may be uploaded from your computer')
     expect(page).to have_button('Enter URLs', wait: 8)
   end
 
@@ -110,6 +111,7 @@ module DatasetHelper
     # page.scroll_to(find('#submission-heading'))
     expect(page).to have_content('submission preview')
     expect(page).to have_content('ready to publish?')
+    expect(page).to have_button('submit_button', wait: 25)
 
     find('[name="submit_button"]').click
     return unless page.has_content?('You must complete payment to submit your dataset')
@@ -200,7 +202,7 @@ module DatasetHelper
   end
 
   def agree_to_everything
-    find('#agreement').click
+    find('#agreement').set(true)
     page.send_keys(:tab)
     expect(page).to have_content('All progress saved')
   end

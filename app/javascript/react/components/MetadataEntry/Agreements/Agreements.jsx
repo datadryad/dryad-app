@@ -1,61 +1,13 @@
 import React, {useRef, useState, useEffect} from 'react';
-import {formatSizeUnits} from '../../../../lib/utils';
 import {useStore} from '../../../shared/store';
-import {ExitIcon} from '../../ExitButton';
-import CalculateFees, {formatCost} from '../../CalculateFees';
-import Calculations from './Calculations';
+import ShowCalculations from './ShowCalculations';
 import PPRSetting from './PPRSetting';
 import SubmitterAgreement from './SubmitterAgreement';
 
-function PaymentMessage({resource, fees}) {
-  if (fees.dpc_sponsored) {
-    const partner = resource.identifier.display_payer
-    return (
-      <>
-        <p>
-          {fees.total ? 
-            'You will be asked to pay this fee upon submission.' : 
-            <>All <a href="/costs" target="blank">data publishing fees<ExitIcon/></a> are covered by your sponsorship.</>
-          }
-        </p>
-        {!resource.identifier.last_invoiced_file_size &&
-          <p>
-            The total fees are {formatCost(fees.dpc_sponsored + fees.storage_sponsored + fees.storage_fee)}.
-            The {partner.name} has sponsored the base Data Publishing Charge ({formatCost(fees.dpc_sponsored)}){
-              fees.storage_sponsored ? ` and Large Data Fee (${formatCost(fees.storage_sponsored)})` : ''}.
-            {partner.contact &&
-              <> For questions about your sponsorship, please contact <a href={`mailto:${partner.contact}`}>{partner.contact}</a>.</>
-            }
-          </p>
-        }
-      </>
-    )
-  }
-
-  if (!fees.total) {
-    if (fees.ppr_warning) {
-      return (
-        <p>
-         There may be an additional <a href="/costs" target="blank">{
-            fees.storage_fee_label
-          }<ExitIcon /></a> to be paid when your {formatSizeUnits(resource.total_file_size)} dataset leaves Private for Peer Review status.
-        </p>
-      )
-    } else return null
-  }
-
-  return (
-    <p>
-      You will be asked to pay this fee upon submission.
-      If you require an invoice to be sent to another entity for payment, an additional administration fee will be charged.
-    </p>
-  );
-}
-
 export default function Agreements({
-  resource, setResource, user, form, previous, config, current, setAuthorStep, preview = false,
+  resource, setResource, user, form, previous, config, setAuthorStep, preview = false,
 }) {
-  const {updateStore, storeState: {dpc, fees, userMustPay}} = useStore();
+  const {updateStore, storeState: {dpc, userMustPay}} = useStore();
   const [ppr, setPPR] = useState(resource.hold_for_peer_review);
   const subType = resource.resource_type.resource_type;
   const {users} = resource;
@@ -79,11 +31,11 @@ export default function Agreements({
   }, [dpc, formRef.current]);
 
   useEffect(() => {
-    if (preview || current) updateStore({refreshDpcStatus: true});
-  }, [current, preview]);
+    updateStore({refreshDpcStatus: true})
+  }, [])
 
   useEffect(() => {
-    updateStore({refreshFees: true})
+    updateStore({refreshFees: true, refreshDpcStatus: true})
   }, [ppr])
 
   if (Object.keys(dpc).length === 0) {
@@ -107,19 +59,7 @@ export default function Agreements({
               (previous && resource.tenant_id !== previous.tenant_id) && <p className="del ins">Partner institution changed</p>}
             </>
           )}
-          {resource.identifier.old_payment_system
-            ? userMustPay && (
-              <>
-                <Calculations resource={resource} config={config} />
-                <p>The submitter may choose an invoice recipient upon submission of the dataset.</p>
-              </>
-            )
-            : (
-              <>
-                <CalculateFees resource={resource} fees={fees} ppr={ppr} />
-                <PaymentMessage resource={resource} fees={fees} />
-              </>
-            )}
+          <ShowCalculations {...{resource, ppr, config}} />
         </>
       )}
       {isSubmitter && (

@@ -15,6 +15,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
     it 'should disable submit button', js: true do
       start_new_dataset
       navigate_to_review
+      expect(page).to have_button('submit_button', wait: 25)
       submit = find_button('submit_button')
       expect(submit).not_to be_nil
       expect(submit['aria-disabled'])
@@ -33,6 +34,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
       start_new_dataset
       fill_required_fields
       navigate_to_review
+      expect(page).to have_button('submit_button', wait: 25)
       submit = find_button('submit_button')
       expect(submit).not_to be_nil
       expect(submit['aria-disabled']).to be(nil)
@@ -106,8 +108,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
       fill_in_funder(name: 'Happy Clown School')
 
       click_button 'Agreements'
-      sleep 15
-      expect(page).to have_text('Payment for this submission is sponsored by Happy Clown School')
+      expect(page).to have_text('Payment for this submission is sponsored by Happy Clown School', wait: 15)
     end
 
     it "doesn't waive the fee when funder won't pay" do

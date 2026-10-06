@@ -39,6 +39,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
       connect_journal(journal)
       expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
       click_button 'Preview'
+      expect(page).to have_button('submit_button', wait: 25)
     end
 
     it 'payment sponsored' do
@@ -274,7 +275,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
             let(:resource_file_size) { 20_000_000_000 }
 
             include_examples 'sponsored user must pay', '20 GB', '259.00'
-            include_examples 'no LDF sponsored payment log is created'
+            include_examples 'pays and no LDF sponsored payment log is created'
           end
         end
       end
@@ -333,7 +334,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
             let(:resource_file_size) { 153_200_000_000 }
 
             include_examples 'sponsored user must pay', '153.2 GB', '659.00'
-            include_examples 'logs sponsored LDF value', 464
+            include_examples 'pays and logs sponsored LDF value', 464
             # include_examples 'user has sponsored LDF', 464
           end
 
@@ -373,7 +374,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
             let(:resource_file_size) { 153_200_000_000 }
 
             include_examples 'sponsored user must pay', '153.2 GB', '1,123.00'
-            include_examples 'no LDF sponsored payment log is created'
+            include_examples 'pays and no LDF sponsored payment log is created'
             # include_examples 'user has sponsored LDF', 0
           end
 
@@ -417,7 +418,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
             let(:resource_file_size) { 153_200_000_000 }
 
             include_examples 'sponsored user must pay', '153.2 GB', '659.00'
-            include_examples 'logs sponsored LDF value', 205
+            include_examples 'pays and logs sponsored LDF value', 205
             # include_examples 'user has sponsored LDF', 205
           end
 
@@ -426,7 +427,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
             let(:resource_file_size) { 153_200_000_000 }
 
             include_examples 'sponsored user must pay', '153.2 GB', '659.00'
-            include_examples 'no LDF sponsored payment log is created'
+            include_examples 'pays and no LDF sponsored payment log is created'
           end
 
           context 'when LDF limit is exceeded, and yearly limit is exceeded' do
@@ -437,7 +438,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
             end
 
             include_examples 'sponsored user must pay', '153.2 GB', '864.00'
-            include_examples 'no LDF sponsored payment log is created'
+            include_examples 'pays and no LDF sponsored payment log is created'
             # include_examples 'user has sponsored LDF', 0
           end
         end

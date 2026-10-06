@@ -21,7 +21,10 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
   end
 
   context 'on first version' do
-    before { build_full_dataset }
+    before do
+      build_full_dataset
+      expect(page).to have_button('submit_button', wait: 25)
+    end
 
     it 'payment is sponsored' do
       expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
@@ -35,14 +38,15 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
 
       context 'when is set to PPR' do
         before do
-          click_button 'Agreements'
-          expect(page).to have_content('Do you agree to Dryad’s terms?')
+          find('button[data-slug="agreements"]').click
+          expect(page).to have_content('Dryad submissions are made publicly available')
           find('label', text: 'Keep my files private while my manuscript undergoes peer review').click
+          expect(page).to have_content('All progress saved')
           click_button 'Preview'
         end
 
         # it 'user does not pay anything, the PPR fee also is sponsored'
-        include_examples 'ppr - sponsored user does not pay anything'
+        include_examples 'sponsored user does not pay anything'
 
         context 'when LDF exists' do
           before do
@@ -51,7 +55,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
           end
 
           # it 'user does not pay anything, the PPR fee also is sponsored'
-          include_examples 'ppr - sponsored user does not pay anything'
+          include_examples 'sponsored user does not pay anything'
         end
       end
     end
@@ -91,12 +95,12 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
       resource.reload
     end
 
-    include_examples 'ppr - sponsored user does not pay anything'
+    include_examples 'sponsored user does not pay anything'
 
     context 'when kept in PPR' do
       context 'payment value' do
         context 'when nothing changes' do
-          include_examples 'ppr - sponsored user does not pay anything'
+          include_examples 'sponsored user does not pay anything'
         end
 
         context 'when files are added' do
@@ -106,13 +110,13 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
           end
 
           context 'and tier is not exceeded' do
-            include_examples 'ppr - sponsored user does not pay anything'
+            include_examples 'sponsored user does not pay anything'
           end
 
           context 'and tier is exceeded' do
             let(:resource_file_size) { 20_000_000_000 }
 
-            include_examples 'ppr - sponsored user does not pay anything'
+            include_examples 'sponsored user does not pay anything'
           end
         end
       end
@@ -120,9 +124,10 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
 
     context 'when removed from PPR' do
       before do
-        click_button 'Agreements'
-        expect(page).to have_content('Do you agree to Dryad’s terms?')
+        find('button[data-slug="agreements"]').click
+        expect(page).to have_content('Dryad submissions are made publicly available')
         find('label', text: 'My files should be available for public download as soon as possible').click
+        expect(page).to have_content('All progress saved')
         click_button 'Preview'
       end
 
@@ -146,7 +151,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
           let(:resource_file_size) { 20_000_000_000 }
 
           include_examples 'sponsored user must pay', '20 GB', '259.00'
-          include_examples 'no LDF sponsored payment log is created'
+          include_examples 'pays and no LDF sponsored payment log is created'
         end
       end
     end

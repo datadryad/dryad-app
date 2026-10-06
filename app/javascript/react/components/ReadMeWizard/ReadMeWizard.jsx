@@ -26,10 +26,19 @@ export default function ReadMeWizard({
     });
   };
 
+  const generateFiles = async () => {
+    axios.get(`/resources/${resource.id}/generate_files`).then((data) => {
+      const {generated_files, total_file_size} = data.data;
+      setResource((r) => ({...r, generated_files, total_file_size}))
+    });
+  }
+
   useEffect(() => {
     if (current) {
       getFiles();
       setDesc(JSON.parse(JSON.stringify(resource.descriptions.find((d) => d.description_type === 'technicalinfo'))));
+    } else {
+      generateFiles();
     }
   }, [current]);
 

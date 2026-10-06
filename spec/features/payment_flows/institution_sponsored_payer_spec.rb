@@ -2,51 +2,59 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
   include DatasetHelper
   include Mocks::RSolr
   include Mocks::Aws
+  include Mocks::DataFile
   include Mocks::Stripe
 
   let(:tenant) { create(:tenant) }
-  let(:user) { create(:user, tenant: tenant) }
   let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true) }
   let(:payer_name) { tenant.long_name }
+  let(:user) { create(:user, tenant: tenant) }
+  let(:resource_file_size) { 10 }
 
   before do
     mock_solr_frontend!
     mock_aws!
+    mock_file_content!
+    mock_stripe!
+
+    tenant.reload
+    payment_conf.reload
 
     sign_in(user)
-    start_new_dataset
   end
 
   describe 'on first version' do
-    it 'payment sponsored' do
-      build_min_dataset
+    before do
+      start_new_dataset
+      build_min_dataset(resource_file_size: resource_file_size)
+      expect(page).to have_button('submit_button', wait: 25)
+    end
 
+    it 'payment sponsored' do
       expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
     end
 
     context 'payment value' do
       it 'user does not pay DPC' do
-        build_min_dataset
-
         expect(page).to have_content('All data publishing fees are covered by your sponsorship.')
         expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
       end
 
       context 'when LDF is not covered' do
-        it 'user pays LDF value' do
-          build_min_dataset(resource_file_size: '53_200_000_000')
+        let(:resource_file_size) { 53_200_000_000 }
 
+        it 'user pays LDF value' do
           expect(page).to have_content('This 53.2 GB dataset has a Large Data Fee of $464.00.')
           expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
+          expect(page).to have_css('button', exact_text: 'Pay & submit for publication')
         end
       end
 
       context 'when LDF is covered' do
         let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true) }
+        let(:resource_file_size) { 53_200_000_000 }
 
         it 'sponsored user does not pay anything' do
-          build_min_dataset(resource_file_size: '53_200_000_000')
-
           expect(page).to have_content('All data publishing fees are covered by your sponsorship.')
           expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
           expect(page).to have_css('button', exact_text: 'Submit for publication')
@@ -59,9 +67,9 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
           end
 
           context 'dataset is under the limit' do
-            it 'sponsored user does not pay anything' do
-              build_min_dataset(resource_file_size: '13_200_000_000')
+            let(:resource_file_size) { 13_200_000_000 }
 
+            it 'sponsored user does not pay anything' do
               expect(page).to have_content('All data publishing fees are covered by your sponsorship.')
               expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
               expect(page).to have_css('button', exact_text: 'Submit for publication')
@@ -69,9 +77,9 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
           end
 
           context 'dataset is over the limit' do
-            it 'user pays only the difference' do
-              build_min_dataset(resource_file_size: '123_200_000_000')
+            let(:resource_file_size) { 123_200_000_000 }
 
+            it 'user pays only the difference' do
               expect(page).to have_content('This 123.2 GB dataset has a Large Data Fee of $659.00')
               expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
               expect(page).to have_css('button', exact_text: 'Pay & submit for publication')
@@ -86,18 +94,18 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
           end
 
           context 'dataset is under the limit' do
-            it 'sponsored user does not pay anything' do
-              build_min_dataset(resource_file_size: '53_200_000_000')
+            let(:resource_file_size) { 53_200_000_000 }
 
+            it 'sponsored user does not pay anything' do
               expect(page).to have_content('All data publishing fees are covered by your sponsorship.')
               expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
             end
           end
 
           context 'dataset is over the limit' do
-            it 'user pays the entire amount' do
-              build_min_dataset(resource_file_size: '123_200_000_000')
+            let(:resource_file_size) { 123_200_000_000 }
 
+            it 'user pays the entire amount' do
               expect(page).to have_content('This 123.2 GB dataset has a Large Data Fee of $1,123.00')
               expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
             end
@@ -108,10 +116,12 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
       context 'when payer is not on 2025' do
         context 'all is sponsored' do
           let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: 'TIERED', covers_dpc: true, covers_ldf: false) }
+          let(:resource_file_size) { 153_200_000_000 }
 
           it 'sponsored user does not pay anything' do
-            build_min_dataset(resource_file_size: '153_200_000_000')
+            expect(page).not_to have_content('Large Data Fee')
             expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
+            expect(page).to have_css('button', exact_text: 'Submit for publication')
           end
         end
       end
@@ -152,6 +162,8 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
       visit current_path
     end
 
+    include_examples 'sponsored user does not pay anything'
+
     context 'payment value' do
       context 'ldf is not covered' do
         context 'when nothing changes' do
@@ -174,7 +186,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
             let(:resource_file_size) { 20_000_000_000 }
 
             include_examples 'sponsored user must pay', '20 GB', '259.00'
-            include_examples 'no LDF sponsored payment log is created'
+            include_examples 'pays and no LDF sponsored payment log is created'
             # include_examples 'user has sponsored LDF', 0
           end
         end
@@ -237,7 +249,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
             let(:resource_file_size) { 153_200_000_000 }
 
             include_examples 'sponsored user must pay', '153.2 GB', '659.00'
-            include_examples 'logs sponsored LDF value', 464
+            include_examples 'pays and logs sponsored LDF value', 464
             # include_examples 'user has sponsored LDF', 464
           end
 
@@ -280,7 +292,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
             let(:resource_file_size) { 153_200_000_000 }
 
             include_examples 'sponsored user must pay', '153.2 GB', '1,123.00'
-            include_examples 'no LDF sponsored payment log is created'
+            include_examples 'pays and no LDF sponsored payment log is created'
             # include_examples 'user has sponsored LDF', 0
           end
 
@@ -324,6 +336,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
             let(:resource_file_size) { 153_200_000_000 }
 
             include_examples 'sponsored user must pay', '153.2 GB', '659.00'
+            include_examples 'pays and logs sponsored LDF value', 205
             # include_examples 'user has sponsored LDF', 205
           end
 
@@ -332,30 +345,37 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
             let(:resource_file_size) { 153_200_000_000 }
 
             include_examples 'sponsored user must pay', '153.2 GB', '659.00'
-            include_examples 'no LDF sponsored payment log is created'
+            include_examples 'pays and no LDF sponsored payment log is created'
           end
 
           context 'when LDF limit is exceeded, and yearly limit will be exceeded' do
             let(:last_invoiced_file_size) { 12_000_000_000 }
             let(:resource_file_size) { 153_200_000_000 }
             let!(:sponsored_payment_log) do
-              create(:sponsored_payment_log, ldf: 900, resource_id: resource.id, payer: tenant, sponsor_id: tenant.id)
+              create(:sponsored_payment_log, ldf: 900, resource: resource, payer: tenant, sponsor_id: tenant.id)
+            end
+
+            before do
+              tenant.reload
+              sponsored_payment_log.reload
+              visit current_path
             end
 
             include_examples 'sponsored user must pay', '153.2 GB', '864.00'
-            include_examples 'no LDF sponsored payment log is created'
+            include_examples 'pays and no LDF sponsored payment log is created'
           end
         end
       end
 
       context 'when payer is not on 2025' do
+        before do
+          upload_file(size: resource_file_size)
+          click_button 'Preview'
+        end
+
         context 'all is sponsored' do
           let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: 'TIERED', covers_dpc: true, covers_ldf: false) }
           let(:resource_file_size) { 153_200_000_000 }
-          before do
-            upload_file(size: resource_file_size)
-            click_button 'Preview'
-          end
 
           include_examples 'sponsored user does not pay anything'
           include_examples 'no LDF sponsored payment log is created'

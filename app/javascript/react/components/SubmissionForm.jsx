@@ -4,7 +4,7 @@ import {useStore} from '../shared/store';
 export default function SubmissionForm({
   steps, resource, previewRef, user, payment, setPayment,
 }) {
-  const {storeState: {fees, userMustPay}} = useStore();
+  const {storeState: {fees, userMustPay, refreshFees}} = useStore();
   const [hasChanges, setChanges] = useState(!resource.previous_curated_resource);
   const [showR, setShowR] = useState(resource.display_readme);
   const [userComment, setUserComment] = useState(resource?.edit_histories?.[0]?.user_comment);
@@ -29,7 +29,7 @@ export default function SubmissionForm({
     if (mustPay) setPayment(true);
   };
 
-  if (!resource.generic_files || !fees) {
+  if (refreshFees || !resource.generic_files || !fees) {
     return (
       <div id="submission-submit" role="status" aria-busy="true" hidden={payment || null}>
         <div><p><i className="fas fa-spinner fa-spin" role="img" aria-label="Loading..." /></p></div>
@@ -38,7 +38,7 @@ export default function SubmissionForm({
   }
 
   return (
-    <div id="submission-submit" role="status" hidden={payment || null}>
+    <div id="submission-submit" role="status" aria-busy="false" hidden={payment || null}>
       <div>
         {steps().some((s) => s.fail) && (
           <p>Edit sections and fix the errors above in order to complete your submission</p>
