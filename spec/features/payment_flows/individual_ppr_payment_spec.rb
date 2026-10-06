@@ -34,7 +34,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
       context 'when is set to PPR' do
         before do
           click_button 'Agreements'
-          expect(page).to have_content('Keep my files private while my manuscript undergoes peer review')
+          expect(page).to have_content('Do you agree to Dryad’s terms?')
           find('label', text: 'Keep my files private while my manuscript undergoes peer review').click
           click_button 'Preview'
         end
@@ -204,6 +204,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
       context 'when removed from PPR' do
         before do
           click_button 'Agreements'
+          expect(page).to have_content('Do you agree to Dryad’s terms?')
           find('label', text: 'My files should be available for public download as soon as possible').click
           click_button 'Preview'
         end
