@@ -156,7 +156,7 @@ export default function AuthPreview({resource, previous, curator}) {
           <p role="heading" aria-level="2" style={{marginTop: '1em', fontSize: '1rem'}}><b>Contributions</b></p>
           <p>
             {roles.map((r, i) => (
-              <>
+              <Fragment key={r[0]}>
                 {previous && roles[i] !== prev_roles?.[i] ? (
                   <ins><em>{r[0]}:</em> {r[1]}</ins> 
                 ) : ( 
@@ -164,7 +164,7 @@ export default function AuthPreview({resource, previous, curator}) {
                 )}
                 {previous && r[1] !== prev_roles[i]?.[1] && prev_roles[i]?.[1] && <del><em>{prev_roles[i][0]}:</em> {prev_roles[i][1]}</del>}
                 {'. '}
-              </>
+              </Fragment>
             ))}
           </p>
         </div>

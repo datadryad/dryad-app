@@ -131,7 +131,9 @@ function Submission({
       name: 'Files',
       pass: resource.generic_files?.length > 0,
       fail: (review || step.index > 6) && filesCheck(resource, pubDates, user.superuser, config_maximums),
-      component: resource.generic_files === undefined ? <p><i id="files-loading" className="fas fa-spinner fa-spin" role="img" aria-label="Loading"/></p> : (
+      component: resource.generic_files === undefined ? (
+        <p><i id="files-loading" className="fas fa-spinner fa-spin" role="img" aria-label="Loading"/></p>
+      ) : (
         <UploadFiles
           {...{
             resource, setResource, previous, s3_dir_name, config_s3, config_maximums, pubDates,
