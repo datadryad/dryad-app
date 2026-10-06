@@ -172,6 +172,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
             let(:resource_file_size) { 20_000_000_000 }
 
             include_examples 'sponsored user must pay', '20 GB', '259.00'
+            include_examples 'no LDF sponsored payment log is created'
             # include_examples 'user has sponsored LDF', 0
           end
         end

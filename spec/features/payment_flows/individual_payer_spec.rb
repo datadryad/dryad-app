@@ -107,6 +107,7 @@ RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
           let(:resource_file_size) { 20_000_000_000 }
 
           include_examples 'individual user must pay', '20 GB', '370.00'
+          include_examples 'no LDF sponsored payment log is created'
         end
       end
     end

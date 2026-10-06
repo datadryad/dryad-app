@@ -11,7 +11,6 @@ module DatasetHelper
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
     click_button 'Next'
-    page.find('#checklist-button').click unless page.has_button?('Connect')
     click_button 'Connect'
     expect(page).to have_content('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?')
   end
@@ -19,7 +18,6 @@ module DatasetHelper
   def navigate_to_readme
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    page.find('#checklist-button').click unless page.has_button?('README')
     click_button 'README'
     expect(page).to have_content('See these example READMES from previous Dryad submissions')
   end
@@ -29,15 +27,13 @@ module DatasetHelper
     # e.g. `it 'should test this amazing thing', js: true do`
     expect(page).not_to have_css('#files-loading', wait: 8)
     expect(page).to have_button('Files')
-    click_button 'Files'
-    expect(page).to have_css('#submission-step-title')
+    find('[data-slug="files"]').click
     expect(page).to have_button('Enter URLs', wait: 8)
   end
 
   def navigate_to_review
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    page.find('#checklist-button').click unless page.has_button?('Agreements')
     click_button 'Agreements'
     expect(page).to have_content('Are your files ready to publish')
     agree_to_everything
@@ -204,6 +200,7 @@ module DatasetHelper
 
   def agree_to_everything
     find('#agreement').click
+    page.send_keys(:tab)
   end
 
   def attach_files
@@ -289,17 +286,9 @@ module DatasetHelper
 
     upload_file(size: resource_file_size)
 
-    resource = StashEngine::Resource.last
-    resource.data_files.first.update(upload_file_size: resource_file_size)
-    resource.reload
-
-    click_button 'Agreements'
-    find('span', text: 'I agree').click
-    click_button 'Preview'
-    expect(page).to have_content('Dataset submission preview', wait: 8)
+    navigate_to_review
   end
 
-  # rubocop:disable Metrics/AbcSize
   def build_full_dataset(resource_file_size: '10', tenant_name: Faker::Educator.university)
     navigate_to_metadata
     within_fieldset('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?') do
@@ -334,10 +323,6 @@ module DatasetHelper
     add_required_readme
     expect(find_button('README')).to match_selector('[aria-describedby="step-complete"')
 
-    click_button 'Agreements'
-    find('span', text: 'I agree').click
-    click_button 'Preview'
-    expect(page).to have_content('Dataset submission preview', wait: 8)
+    navigate_to_review
   end
-  # rubocop:enable Metrics/AbcSize
 end
