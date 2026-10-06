@@ -213,9 +213,6 @@
         padding: 0;
         gap: 1ch;
         flex-wrap: wrap;
-        &:last-of-type {
-          margin-left: auto;
-        }
       }
       legend {
         display: inline;
