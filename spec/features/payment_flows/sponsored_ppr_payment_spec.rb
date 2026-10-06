@@ -81,6 +81,9 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
       CurationService.new(user: user, resource: resource, status: 'queued').process
       resource.current_state = :submitted
 
+      identifier.reload
+      resource.reload
+
       click_link 'My datasets'
       click_button 'Revise submission'
 

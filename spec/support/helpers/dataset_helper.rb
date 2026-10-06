@@ -201,6 +201,7 @@ module DatasetHelper
   def agree_to_everything
     find('#agreement').click
     page.send_keys(:tab)
+    expect(page).to have_content('All progress saved')
   end
 
   def attach_files
