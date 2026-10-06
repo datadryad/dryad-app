@@ -78,12 +78,12 @@ class CspViolationReportsController < ApplicationController
   def create
     report = JSON.parse(request.body.read)
 
-    blocked_uri = report.dig('csp-report', 'blocked-uri').to_s
-    if IGNORED_EXTENSIONS.any? { |ext| blocked_uri.include?(ext) }
-      Rails.logger.warn("CSP ignored report for #{report['csp-report']['effective-directive']}: '#{
-        report['csp-report']['blocked-uri']}' - #{report['csp-report']['document-uri']} ")
-      head :no_content and return
-    end
+    # blocked_uri = report.dig('csp-report', 'blocked-uri').to_s
+    # if IGNORED_EXTENSIONS.any? { |ext| blocked_uri.include?(ext) }
+    #   Rails.logger.warn("CSP ignored report for #{report['csp-report']['effective-directive']}: '#{
+    #     report['csp-report']['blocked-uri']}' - #{report['csp-report']['document-uri']} ")
+    #   head :no_content and return
+    # end
 
     CspReport.create(
       ip: request.remote_ip,
