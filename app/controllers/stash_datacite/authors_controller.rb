@@ -166,7 +166,7 @@ module StashDatacite
       affs.each do |aff|
         process_affiliation(aff['long_name'].squish, aff['ror_id'])
       end
-      del = @author.affiliations.map(&:long_name) - affs.map { |a| a['long_name'] }
+      del = @author.affiliations.map{|a| a.long_name.downcase} - affs.map { |a| a['long_name'].downcase }
       @author.affiliation_authors.joins(:affiliation).where(affiliation: { long_name: del }).destroy_all if del.present?
     end
 
