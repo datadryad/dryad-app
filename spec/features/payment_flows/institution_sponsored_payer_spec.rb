@@ -147,10 +147,9 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
       click_link 'My datasets'
       click_button 'Revise submission'
 
-      identifier.reload
-      identifier.update(last_invoiced_file_size: last_invoiced_file_size)
-      identifier.reload
-      resource.reload
+      expect(page).to have_content('Dataset submission')
+      identifier.update!(last_invoiced_file_size: last_invoiced_file_size)
+      visit current_path
     end
 
     context 'payment value' do

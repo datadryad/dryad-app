@@ -27,7 +27,8 @@ module DatasetHelper
     # e.g. `it 'should test this amazing thing', js: true do`
     expect(page).not_to have_css('#files-loading', wait: 8)
     expect(page).to have_button('Files')
-    find('[data-slug="files"]').click
+    find('button[data-slug="files"]').click
+    expect(page).to have_content('All progress saved')
     expect(page).to have_button('Enter URLs', wait: 8)
   end
 

@@ -245,10 +245,9 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
       click_link 'My datasets'
       click_button 'Revise submission'
 
-      identifier.reload
+      expect(page).to have_content('Dataset submission')
       identifier.update!(last_invoiced_file_size: last_invoiced_file_size)
-      identifier.reload
-      resource.reload
+      visit current_path
     end
 
     include_examples 'sponsored user does not pay anything'

@@ -134,7 +134,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
       context 'when kept in PPR' do
         context 'when nothing changes' do
           include_examples 'ppr - individual user does not pay anything'
-          include_examples 'ppr - no LDF sponsored payment log is created'
+          include_examples 'no LDF sponsored payment log is created'
         end
 
         context 'when files are added' do
@@ -145,7 +145,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
 
           context 'and tier is not exceeded' do
             include_examples 'ppr - individual user does not pay anything'
-            include_examples 'ppr - no LDF sponsored payment log is created'
+            include_examples 'no LDF sponsored payment log is created'
           end
 
           context 'and tier is exceeded' do
