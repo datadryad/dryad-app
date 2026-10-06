@@ -77,11 +77,11 @@ RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
       CurationService.new(user: user, resource: resource, status: 'queued').process
       resource.current_state = :submitted
 
-      click_link 'My datasets'
-      click_button 'Revise submission'
-
       identifier.reload
       resource.reload
+
+      click_link 'My datasets'
+      click_button 'Revise submission'
     end
 
     include_examples 'individual user does not pay anything'

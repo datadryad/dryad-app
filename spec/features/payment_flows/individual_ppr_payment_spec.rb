@@ -121,19 +121,19 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
       CurationService.new(user: user, resource: resource, status: 'queued').process
       resource.current_state = :submitted
 
-      click_link 'My datasets'
-      click_button 'Revise submission'
-
       identifier.reload
       resource.reload
+
+      click_link 'My datasets'
+      click_button 'Revise submission'
     end
 
-    include_examples 'ppr - individual user does not pay anything'
+    include_examples 'individual user does not pay anything'
 
     context 'payment value' do
       context 'when kept in PPR' do
         context 'when nothing changes' do
-          include_examples 'ppr - individual user does not pay anything'
+          include_examples 'individual user does not pay anything'
           include_examples 'no LDF sponsored payment log is created'
         end
 
@@ -144,7 +144,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
           end
 
           context 'and tier is not exceeded' do
-            include_examples 'ppr - individual user does not pay anything'
+            include_examples 'individual user does not pay anything'
             include_examples 'no LDF sponsored payment log is created'
           end
 
@@ -187,7 +187,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
                 create(:resource_payment, resource: resource, amount: 50, payment_type: 'stripe', status: :paid, ppr_fee_paid: true)
               end
 
-              include_examples 'ppr - individual user does not pay anything'
+              include_examples 'individual user does not pay anything'
 
               xit 'notifies the user that the PPR fee was already paid' do
                 # works as expected when testing manual
