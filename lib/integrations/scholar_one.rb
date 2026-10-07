@@ -42,14 +42,17 @@ module Integrations
         url,
         {
           query: params,
-          body: relay_call_body(resource, document_id).to_json,
+          body: relay_call_body(resource, document_id),
           header: {
             'Content-Type' => 'application/json',
             'Accept' => 'application/json'
           }
         }
       )
-      parsed_response
+
+      resp = parsed_response
+      Rails.logger.info("Relay API successfully called for #{resource.id}") if resp['returnCode'] == 'OK'
+      resp
     end
 
     def submission_document_id(resource)
@@ -78,7 +81,6 @@ module Integrations
     end
 
     def parsed_response
-      pp @response.body, @response
       JSON.parse(@response.body).to_h.with_indifferent_access.dig(:Response, :result)
     rescue JSON::ParserError => e
       Rails.logger.error("Error parsing ScholarOne response: #{e.message}")
