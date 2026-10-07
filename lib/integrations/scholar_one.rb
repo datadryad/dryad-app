@@ -27,31 +27,28 @@ module Integrations
     end
 
     def relay_notification(resource)
-      url = "#{BASE_URL}/api/s1m/v2/system/addJSONData"
-
       document_id = submission_document_id(resource)
       return if document_id.blank?
 
-      args = {
+      url = "#{BASE_URL}/api/s1m/v2/system/addJSONData"
+      params = {
         site_name: @site_name,
         locale_id: 1,
         external_id: resource.identifier.identifier,
-        _type: 'json',
-        data: {
-          type: 2,
-          payload: {
-            documentId: document_id,
-            content: resource.title,
-            checkType: 1111,
-            url: resource.identifier&.shares&.first&.sharing_link,
-            effectiveDate: 1.year.from_now.to_date.to_s,
-            score: resource.stash_version.version,
-            alert: 'false'
-          }
-        }
+        _type: 'json'
       }
 
-      @response = @http.post(url, args)
+      @response = @http.post(
+        url,
+        {
+          query: params,
+          body: relay_call_body(resource, document_id).to_json,
+          header: {
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json'
+          }
+        }
+      )
       parsed_response
     end
 
@@ -81,10 +78,28 @@ module Integrations
     end
 
     def parsed_response
+      pp @response.body, @response
       JSON.parse(@response.body).to_h.with_indifferent_access.dig(:Response, :result)
     rescue JSON::ParserError => e
       Rails.logger.error("Error parsing ScholarOne response: #{e.message}")
       {}
+    end
+
+    def relay_call_body(resource, document_id)
+      {
+        data: {
+          type: 2,
+          payload: {
+            documentId: document_id,
+            content: resource.title,
+            checkType: 1111,
+            url: resource.identifier&.shares&.first&.sharing_link,
+            effectiveDate: 1.year.from_now.to_date.to_s,
+            score: resource.stash_version.version,
+            alert: 'false'
+          }
+        }
+      }.to_json
     end
   end
 end

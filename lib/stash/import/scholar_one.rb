@@ -123,12 +123,13 @@ module Stash
         resource.contributors.where(contributor_type: 'funder', contributor_name: ['', nil]).destroy_all
 
         funders_metadata.each do |f|
+          grant_number = f['grants'].is_a?(Array) ? f['grants'].first['number'] : f['grants']['number']
           resource.contributors.find_or_initialize_by(
             contributor_type: 'funder',
             contributor_name: f.dig('fundRefInfo', 'name'),
             name_identifier_id: f.dig('fundRefInfo', 'identifier'),
             identifier_type: 'crossref_funder_id',
-            award_number: f['grants']['number'],
+            award_number: grant_number,
             award_title: f['name']
           )
         end
