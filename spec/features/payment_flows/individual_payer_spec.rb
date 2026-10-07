@@ -23,7 +23,6 @@ RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
     context 'payment value' do
       before do
         build_min_dataset(resource_file_size: resource_file_size)
-        expect(page).to have_button('submit_button', wait: 25)
       end
 
       it 'user pays DPC' do
@@ -44,7 +43,6 @@ RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
     context 'when submitting' do
       before do
         build_full_dataset(resource_file_size: '53_200_000_000')
-        expect(page).to have_button('submit_button', wait: 25)
       end
 
       let(:identifier) { StashEngine::Identifier.last }

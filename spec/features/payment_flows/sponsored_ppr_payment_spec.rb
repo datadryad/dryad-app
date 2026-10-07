@@ -23,7 +23,6 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
   context 'on first version' do
     before do
       build_full_dataset
-      expect(page).to have_button('submit_button', wait: 25)
     end
 
     it 'payment is sponsored' do

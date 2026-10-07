@@ -175,6 +175,7 @@ function Submission({
       component: <Agreements
         resource={resource}
         setResource={setResource}
+        current={step.name === 'Agreements'}
         config={config_payments}
         form={change_tenant}
         user={user}
@@ -203,7 +204,9 @@ function Submission({
   useEffect(() => {
     if (!refreshDpcStatus) return;
     axios.get(`/resources/${resource.id}/dpc_status`).then((data) => {
-      updateStore({dpc: data.data, userMustPay: data.data.user_must_pay, refreshDpcStatus: false});
+      updateStore(
+        {dpc: data.data, userMustPay: data.data.user_must_pay, refreshDpcStatus: false, refreshFees: data.data.user_must_pay !== userMustPay}
+      );
     });
   }, [refreshDpcStatus]);
 
@@ -220,7 +223,7 @@ function Submission({
         }
         updateStore({refreshFees: false, fees: data.fees || {}});
       });
-  }, [userMustPay, refreshFees, invoice]);
+  }, [refreshFees, invoice]);
 
   useEffect(() => {
     axios.get(`/resources/${resource.id}/payer_check`)
@@ -233,10 +236,9 @@ function Submission({
             new_upload_size_limit: data.new_upload_size_limit,
           },
         }));
-        const refresh = (data.user_must_pay !== userMustPay) || (data.display_payer !== resource.identifier.display_payer);
-        updateStore({userMustPay: data.user_must_pay, refreshFees: refresh, refreshDpcStatus: refresh});
+        updateStore({userMustPay: data.user_must_pay, refreshFees: true, refreshDpcStatus: true});
       });
-  }, [resource.tenant, resource.authors, resource.journal, resource.contributors, resource.total_file_size]);
+  }, [resource.tenant, resource.authors, resource.journal, resource.contributors, resource.total_file_size, resource.hold_for_peer_review]);
 
   const markInvalid = (el) => {
     const et = el.querySelector('.error-text');

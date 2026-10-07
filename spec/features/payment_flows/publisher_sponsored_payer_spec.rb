@@ -39,7 +39,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
       connect_journal(journal)
       expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
       click_button 'Preview'
-      expect(page).to have_button('submit_button', wait: 25)
     end
 
     it 'payment sponsored' do

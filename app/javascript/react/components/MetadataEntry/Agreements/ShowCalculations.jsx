@@ -39,7 +39,8 @@ function PaymentMessage({resource, fees}) {
           }<ExitIcon /></a> to be paid when your {formatSizeUnits(resource.total_file_size)} dataset leaves Private for Peer Review status.
         </p>
       )
-    } else return null
+    }
+    return null
   }
 
   return (
@@ -51,7 +52,7 @@ function PaymentMessage({resource, fees}) {
 }
 
 export default function ShowCalculations({resource, ppr, config}) {
-  const {storeState: {fees, refreshFees, userMustPay}} = useStore();
+  const {storeState: {fees, userMustPay}} = useStore();
   if (resource.identifier.old_payment_system) {
     if (userMustPay) {
       return (
@@ -62,12 +63,6 @@ export default function ShowCalculations({resource, ppr, config}) {
       )
     }
     return null
-  }
-
-  if (refreshFees) {
-    return (
-      <p><i className="fas fa-spinner fa-spin" role="img" aria-label="Loading..." /></p>
-    );
   }
 
   return (

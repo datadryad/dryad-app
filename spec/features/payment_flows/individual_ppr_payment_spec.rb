@@ -21,7 +21,6 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
   context 'on first version' do
     before do
       build_full_dataset
-      expect(page).to have_button('submit_button', wait: 25)
     end
 
     it 'payment is not sponsored' do

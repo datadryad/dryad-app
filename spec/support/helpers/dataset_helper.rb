@@ -111,7 +111,7 @@ module DatasetHelper
     # page.scroll_to(find('#submission-heading'))
     expect(page).to have_content('submission preview')
     expect(page).to have_content('ready to publish?')
-    expect(page).to have_button('submit_button', wait: 25)
+    expect(page).to have_button('submit_button')
 
     find('[name="submit_button"]').click
     return unless page.has_content?('You must complete payment to submit your dataset')

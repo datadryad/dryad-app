@@ -15,7 +15,6 @@ RSpec.feature 'ReviewDataset', type: :feature do
     it 'should disable submit button', js: true do
       start_new_dataset
       navigate_to_review
-      expect(page).to have_button('submit_button', wait: 25)
       submit = find_button('submit_button')
       expect(submit).not_to be_nil
       expect(submit['aria-disabled'])
@@ -34,7 +33,6 @@ RSpec.feature 'ReviewDataset', type: :feature do
       start_new_dataset
       fill_required_fields
       navigate_to_review
-      expect(page).to have_button('submit_button', wait: 25)
       submit = find_button('submit_button')
       expect(submit).not_to be_nil
       expect(submit['aria-disabled']).to be(nil)

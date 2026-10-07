@@ -27,7 +27,6 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
     before do
       start_new_dataset
       build_min_dataset(resource_file_size: resource_file_size)
-      expect(page).to have_button('submit_button', wait: 25)
     end
 
     it 'payment sponsored' do

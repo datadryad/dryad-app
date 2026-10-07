@@ -5,7 +5,7 @@ import PPRSetting from './PPRSetting';
 import SubmitterAgreement from './SubmitterAgreement';
 
 export default function Agreements({
-  resource, setResource, user, form, previous, config, setAuthorStep, preview = false,
+  resource, setResource, user, form, previous, config, setAuthorStep, current = false, preview = false,
 }) {
   const {updateStore, storeState: {dpc, userMustPay}} = useStore();
   const [ppr, setPPR] = useState(resource.hold_for_peer_review);
@@ -31,12 +31,8 @@ export default function Agreements({
   }, [dpc, formRef.current]);
 
   useEffect(() => {
-    updateStore({refreshDpcStatus: true})
-  }, [])
-
-  useEffect(() => {
-    updateStore({refreshFees: true, refreshDpcStatus: true})
-  }, [ppr])
+    if (current || preview) updateStore({refreshDpcStatus: true})
+  }, [current, preview])
 
   if (Object.keys(dpc).length === 0) {
     return (
