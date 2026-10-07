@@ -24,10 +24,13 @@ export default function License({
     async function getList() {
       axios.get(`/software_license_select?select=${license?.id || ''}`).then((data) => {
         if (divRef.current) {
-          const active_form = document.createRange().createContextualFragment(data.data);
-          divRef.current.append(active_form);
-          document.getElementById('searchselect-license__input').addEventListener('blur', submit);
-          submit();
+          const existing = divRef.current.querySelector('#searchselect-license')
+          if (!existing) {
+            const active_form = document.createRange().createContextualFragment(data.data);
+            divRef.current.append(active_form);
+            document.getElementById('searchselect-license__input').addEventListener('blur', submit);
+            submit();
+          }
         }
       });
     }
