@@ -14,7 +14,6 @@
 #  peer_review_custom_text :text(65535)
 #  preprint_server         :boolean          default(FALSE)
 #  review_contacts         :text(65535)
-#  scholar_one_site_name   :string(191)
 #  title                   :string(191)
 #  website                 :string(191)
 #  created_at              :datetime
