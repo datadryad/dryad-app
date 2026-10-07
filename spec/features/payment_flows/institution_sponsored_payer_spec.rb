@@ -1,5 +1,6 @@
 RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
   include DatasetHelper
+  include PaymentsHelper
   include Mocks::RSolr
   include Mocks::Aws
   include Mocks::DataFile
@@ -27,10 +28,6 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
     before do
       start_new_dataset
       build_min_dataset(resource_file_size: resource_file_size)
-    end
-
-    it 'payment sponsored' do
-      expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
     end
 
     context 'payment value' do
@@ -161,13 +158,13 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
       visit current_path
     end
 
-    include_examples 'sponsored user does not pay anything'
-
     context 'payment value' do
       context 'ldf is not covered' do
         context 'when nothing changes' do
-          include_examples 'sponsored user does not pay anything'
-          include_examples 'no LDF sponsored payment log is created'
+          it 'user pays nothing and no LDF log created' do
+            sponsored_no_fee
+            no_ldf
+          end
         end
 
         context 'when files are added' do
@@ -177,16 +174,19 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
           end
 
           context 'and LDF tier is not exceeded' do
-            include_examples 'sponsored user does not pay anything'
-            include_examples 'no LDF sponsored payment log is created'
+            it 'user pays nothing and no LDF log created' do
+              sponsored_no_fee
+              no_ldf
+            end
           end
 
           context 'and LDF tier is exceeded' do
             let(:resource_file_size) { 20_000_000_000 }
 
-            include_examples 'sponsored user must pay', '20 GB', '259.00'
-            include_examples 'pays and no LDF sponsored payment log is created'
-            # include_examples 'user has sponsored LDF', 0
+            it 'user pays and no LDF log created' do
+              sponsored_with_fee('20 GB', '259.00')
+              pays_and_no_ldf
+            end
           end
         end
       end
@@ -195,8 +195,10 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
         let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true) }
 
         context 'when nothing changes' do
-          include_examples 'sponsored user does not pay anything'
-          include_examples 'no LDF sponsored payment log is created'
+          it 'user pays nothing and no LDF log created' do
+            sponsored_no_fee
+            no_ldf
+          end
         end
 
         context 'when files are added' do
@@ -206,15 +208,19 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
           end
 
           context 'and tier is not changed' do
-            include_examples 'sponsored user does not pay anything'
-            include_examples 'no LDF sponsored payment log is created'
+            it 'user pays nothing and no LDF log created' do
+              sponsored_no_fee
+              no_ldf
+            end
           end
 
           context 'and tier is changed' do
             let(:resource_file_size) { 53_200_000_000 }
 
-            include_examples 'sponsored user does not pay anything'
-            include_examples 'logs sponsored LDF value', 464
+            it 'user pays nothing and LDF log is created' do
+              sponsored_no_fee
+              logs_ldf(464)
+            end
           end
         end
       end
@@ -226,8 +232,10 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
         end
 
         context 'when nothing changes' do
-          include_examples 'sponsored user does not pay anything'
-          include_examples 'no LDF sponsored payment log is created'
+          it 'user pays nothing and no LDF log created' do
+            sponsored_no_fee
+            no_ldf
+          end
         end
 
         context 'when files are added' do
@@ -240,24 +248,29 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
             let(:last_invoiced_file_size) { 20_000_000_000 }
             let(:resource_file_size) { 44_200_000_000 }
 
-            include_examples 'sponsored user does not pay anything'
-            include_examples 'no LDF sponsored payment log is created'
+            it 'user pays nothing and no LDF log created' do
+              sponsored_no_fee
+              no_ldf
+            end
           end
 
           context 'when limit tier is exceeded' do
             let(:resource_file_size) { 153_200_000_000 }
 
-            include_examples 'sponsored user must pay', '153.2 GB', '659.00'
-            include_examples 'pays and logs sponsored LDF value', 464
-            # include_examples 'user has sponsored LDF', 464
+            it 'user pays and LDF log is created' do
+              sponsored_with_fee('153.2 GB', '659.00')
+              pays_and_logs_ldf(464)
+            end
           end
 
           context 'when limit tier is not exceeded, logs only the difference' do
             let(:last_invoiced_file_size) { 12_000_000_000 }
             let(:resource_file_size) { 55_000_000_000 }
 
-            include_examples 'sponsored user does not pay anything'
-            include_examples 'logs sponsored LDF value', 205
+            it 'user pays nothing and LDF log is created' do
+              sponsored_no_fee
+              logs_ldf(205)
+            end
           end
         end
       end
@@ -269,8 +282,10 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
         end
 
         context 'when nothing changes' do
-          include_examples 'sponsored user does not pay anything'
-          include_examples 'no LDF sponsored payment log is created'
+          it 'user pays nothing and no LDF log created' do
+            sponsored_no_fee
+            no_ldf
+          end
         end
 
         context 'when files are added' do
@@ -283,24 +298,29 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
             let(:last_invoiced_file_size) { 20_000_000_000 }
             let(:resource_file_size) { 44_200_000_000 }
 
-            include_examples 'sponsored user does not pay anything'
-            include_examples 'no LDF sponsored payment log is created'
+            it 'user pays nothing and no LDF log created' do
+              sponsored_no_fee
+              no_ldf
+            end
           end
 
           context 'when yearly limit is exceeded' do
             let(:resource_file_size) { 153_200_000_000 }
 
-            include_examples 'sponsored user must pay', '153.2 GB', '1,123.00'
-            include_examples 'pays and no LDF sponsored payment log is created'
-            # include_examples 'user has sponsored LDF', 0
+            it 'user pays and no LDF log created' do
+              sponsored_with_fee('153.2 GB', '1,123.00')
+              pays_and_no_ldf
+            end
           end
 
           context 'when LDF tier is exceeded, logs only the difference' do
             let(:last_invoiced_file_size) { 12_000_000_000 }
             let(:resource_file_size) { 55_000_000_000 }
 
-            include_examples 'sponsored user does not pay anything'
-            include_examples 'logs sponsored LDF value', 205
+            it 'user pays nothing and LDF log is created' do
+              sponsored_no_fee
+              logs_ldf(205)
+            end
           end
         end
       end
@@ -312,8 +332,10 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
         end
 
         context 'when nothing changes' do
-          include_examples 'sponsored user does not pay anything'
-          include_examples 'no LDF sponsored payment log is created'
+          it 'user pays nothing and no LDF log created' do
+            sponsored_no_fee
+            no_ldf
+          end
         end
 
         context 'when files are added' do
@@ -326,25 +348,30 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
             let(:last_invoiced_file_size) { 20_000_000_000 }
             let(:resource_file_size) { 44_200_000_000 }
 
-            include_examples 'sponsored user does not pay anything'
-            include_examples 'no LDF sponsored payment log is created'
+            it 'user pays nothing and no LDF log created' do
+              sponsored_no_fee
+              no_ldf
+            end
           end
 
           context 'when LDF limit will be exceeded, but yearly limit not' do
             let(:last_invoiced_file_size) { 12_200_000_000 }
             let(:resource_file_size) { 153_200_000_000 }
 
-            include_examples 'sponsored user must pay', '153.2 GB', '659.00'
-            include_examples 'pays and logs sponsored LDF value', 205
-            # include_examples 'user has sponsored LDF', 205
+            it 'user pays and LDF log is created' do
+              sponsored_with_fee('153.2 GB', '659.00')
+              pays_and_logs_ldf(205)
+            end
           end
 
           context 'when LDF limit is already exceeded, but yearly limit will not' do
             let(:last_invoiced_file_size) { 53_200_000_000 }
             let(:resource_file_size) { 153_200_000_000 }
 
-            include_examples 'sponsored user must pay', '153.2 GB', '659.00'
-            include_examples 'pays and no LDF sponsored payment log is created'
+            it 'user pays and no LDF log created' do
+              sponsored_with_fee('153.2 GB', '659.00')
+              pays_and_no_ldf
+            end
           end
 
           context 'when LDF limit is exceeded, and yearly limit will be exceeded' do
@@ -360,8 +387,10 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
               visit current_path
             end
 
-            include_examples 'sponsored user must pay', '153.2 GB', '864.00'
-            include_examples 'pays and no LDF sponsored payment log is created'
+            it 'user pays and no LDF log created' do
+              sponsored_with_fee('153.2 GB', '864.00')
+              pays_and_no_ldf
+            end
           end
         end
       end
@@ -376,8 +405,10 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
           let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: 'TIERED', covers_dpc: true, covers_ldf: false) }
           let(:resource_file_size) { 153_200_000_000 }
 
-          include_examples 'sponsored user does not pay anything'
-          include_examples 'no LDF sponsored payment log is created'
+          it 'user pays nothing and no LDF log created' do
+            sponsored_no_fee
+            no_ldf
+          end
         end
       end
     end

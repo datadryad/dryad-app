@@ -1,5 +1,6 @@
 RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
   include DatasetHelper
+  include PaymentsHelper
   include Mocks::RSolr
   include Mocks::Aws
   include Mocks::DataFile
@@ -46,7 +47,10 @@ RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
       end
 
       let(:identifier) { StashEngine::Identifier.last }
-      include_examples 'pays and no LDF sponsored payment log is created'
+
+      it 'user pays and no LDF sponsored payment log is created' do
+        pays_and_no_ldf
+      end
     end
   end
 
@@ -78,12 +82,12 @@ RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
       click_button 'Revise submission'
     end
 
-    include_examples 'individual user does not pay anything'
-
     context 'payment value' do
       context 'when nothing changes' do
-        include_examples 'individual user does not pay anything'
-        include_examples 'no LDF sponsored payment log is created'
+        it 'individual user does not pay and no LDF sponsored payment log is created' do
+          unsponsored_no_fee
+          no_ldf
+        end
       end
 
       context 'when files are added' do
@@ -93,15 +97,19 @@ RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
         end
 
         context 'and tier is not exceeded' do
-          include_examples 'individual user does not pay anything'
-          include_examples 'no LDF sponsored payment log is created'
+          it 'individual user does not pay and no LDF sponsored payment log is created' do
+            unsponsored_no_fee
+            no_ldf
+          end
         end
 
         context 'and tier is exceeded' do
           let(:resource_file_size) { 20_000_000_000 }
 
-          include_examples 'individual user must pay', '20 GB', '370.00'
-          include_examples 'pays and no LDF sponsored payment log is created'
+          it 'individual user must pay and no LDF sponsored payment log is created' do
+            unsponsored_with_fee('20 GB', '370.00')
+            pays_and_no_ldf
+          end
         end
       end
     end

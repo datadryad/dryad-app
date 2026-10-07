@@ -1,5 +1,6 @@
 RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
   include DatasetHelper
+  include PaymentsHelper
   include Mocks::RSolr
   include Mocks::Aws
   include Mocks::DataFile
@@ -25,10 +26,6 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
       build_full_dataset
     end
 
-    it 'payment is sponsored' do
-      expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
-    end
-
     context 'payment value' do
       it 'user does not pay DPC' do
         expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
@@ -44,8 +41,9 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
           click_button 'Preview'
         end
 
-        # it 'user does not pay anything, the PPR fee also is sponsored'
-        include_examples 'sponsored user does not pay anything'
+        it 'user pays nothing' do
+          sponsored_no_fee
+        end
 
         context 'when LDF exists' do
           before do
@@ -53,8 +51,9 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
             click_button 'Preview'
           end
 
-          # it 'user does not pay anything, the PPR fee also is sponsored'
-          include_examples 'sponsored user does not pay anything'
+          it 'user pays nothing' do
+            sponsored_no_fee
+          end
         end
       end
     end
@@ -94,12 +93,12 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
       resource.reload
     end
 
-    include_examples 'sponsored user does not pay anything'
-
     context 'when kept in PPR' do
       context 'payment value' do
         context 'when nothing changes' do
-          include_examples 'sponsored user does not pay anything'
+          it 'user pays nothing' do
+            sponsored_no_fee
+          end
         end
 
         context 'when files are added' do
@@ -109,13 +108,17 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
           end
 
           context 'and tier is not exceeded' do
-            include_examples 'sponsored user does not pay anything'
+            it 'user pays nothing' do
+              sponsored_no_fee
+            end
           end
 
           context 'and tier is exceeded' do
             let(:resource_file_size) { 20_000_000_000 }
 
-            include_examples 'sponsored user does not pay anything'
+            it 'user pays nothing' do
+              sponsored_no_fee
+            end
           end
         end
       end
@@ -131,8 +134,10 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
       end
 
       context 'when nothing changes' do
-        include_examples 'sponsored user does not pay anything'
-        include_examples 'no LDF sponsored payment log is created'
+        it 'user pays nothing and no LDF log created' do
+          sponsored_no_fee
+          no_ldf
+        end
       end
 
       context 'when files are added' do
@@ -142,15 +147,19 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
         end
 
         context 'and tier is not exceeded' do
-          include_examples 'individual user does not pay anything'
-          include_examples 'no LDF sponsored payment log is created'
+          it 'user pays nothing and no LDF log created' do
+            sponsored_no_fee
+            no_ldf
+          end
         end
 
         context 'and tier is exceeded' do
           let(:resource_file_size) { 20_000_000_000 }
 
-          include_examples 'sponsored user must pay', '20 GB', '259.00'
-          include_examples 'pays and no LDF sponsored payment log is created'
+          it 'user pays nothing and no LDF log created' do
+            sponsored_with_fee('20 GB', '259.00')
+            pays_and_no_ldf
+          end
         end
       end
     end
