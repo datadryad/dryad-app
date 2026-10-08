@@ -314,7 +314,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     click_button 'Support'
     fill_in_funder
     click_button 'Preview changes'
-    expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"]', wait: 5)
     set_and_submit
   end
 
@@ -340,6 +340,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     expect(page).to have_text('All progress saved')
     click_button 'Preview changes'
     # Submit the changes
+    expect(page).to have_text('Describe edits made', wait: 5)
     fill_in('Describe edits made', with: Faker::Lorem.sentence) if curator
     set_and_submit
   end

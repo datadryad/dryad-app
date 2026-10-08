@@ -204,7 +204,7 @@ module DatasetHelper
   def agree_to_everything
     find('#agreement').set(true)
     page.send_keys(:tab)
-    expect(page).to have_content('All progress saved')
+    expect(find_button('Agreements')).to match_selector('[aria-describedby="step-complete"', wait: 5)
   end
 
   def attach_files
