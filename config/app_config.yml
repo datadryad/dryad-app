@@ -283,8 +283,6 @@ defaults: &DEFAULTS
   stripe_ic_webhook_secret: <%= Rails.application.credentials[Rails.env.to_sym][:stripe_ic_webhook_secret] %>
   scholar_one:
     api_base_url: https://mc-beta-api.manuscriptcentral.com
-    username: <%= Rails.application.credentials[Rails.env.to_sym][:scholar_one][:username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:scholar_one][:password] %>
 
 dev: &DEV
   <<: *DEFAULTS
@@ -446,6 +444,4 @@ production:
   stripe_payment_url: <%= "https://dashboard.stripe.com/#{Rails.application.credentials[Rails.env.to_sym][:stripe_account_key]}" %>
   scholar_one:
     api_base_url: https://mc-api.manuscriptcentral.com
-    username: <%= Rails.application.credentials[Rails.env.to_sym][:scholar_one][:username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:scholar_one][:password] %>
 <% end %>

@@ -44,9 +44,9 @@ class CurationService
     return unless status == 'queued'
 
     journal = @resource&.journal
-    return if journal&.scholar_one_site_name.blank?
+    return if journal&.has_integration?(:scholarone)
 
-    Integrations::ScholarOne.new(journal.scholar_one_site_name).relay_notification(resource)
+    Integrations::ScholarOne.new(journal).relay_notification(resource)
   end
 
   def copy_to_zenodo

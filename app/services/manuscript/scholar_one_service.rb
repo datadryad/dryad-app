@@ -9,15 +9,14 @@ module Manuscript
 
     def create
       return false if metadata.blank?
-
       status = metadata.dig(:submissionStatus, :documentStatusName).downcase
-      return unless %w[submitted accepted].include?(status)
+      return unless %w[submitted accepted rejected].include?(status)
       return if journal.blank?
 
-      manu = StashEngine::Manuscript.create!(
+      manu = StashEngine::Manuscript.find_or_initialize_by(manuscript_number: manuscript_number)
+      manu.update(
         journal: journal,
         identifier: identifier,
-        manuscript_number: manuscript_number,
         status: status,
         metadata: metadata
       )
@@ -41,6 +40,13 @@ module Manuscript
     def identifier
       # TODO: metadata[:doi] may not exist or may be a different key
       @identifier || StashEngine::Identifier.find_by_identifier(metadata[:doi])
+
+      return @identifier if @identifier
+
+      resource = StashEngine::Resource.latest_per_dataset.joins(:resource_publication)
+        .where(resource_publication: { manuscript_number: manuscript_number }).last
+      ident = resource&.identifier
+      @identifier = ident if ident&.journal == @journal
     end
 
     def manuscript_number

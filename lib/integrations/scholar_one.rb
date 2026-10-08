@@ -2,13 +2,12 @@ module Integrations
   class ScholarOne
     BASE_URL = APP_CONFIG.scholar_one.api_base_url
 
-    def initialize(scholar_one_site_name)
-      @username = APP_CONFIG.scholar_one.username
-      @password = APP_CONFIG.scholar_one.password
-      @site_name = scholar_one_site_name
+    def initialize(journal)
+      integration = journal.external_integrations.scholarone.first
+      @site_name = integration.details['site_name']
 
       @http = HTTPClient.new
-      @http.set_auth(BASE_URL, @username, @password)
+      @http.set_auth(BASE_URL, integration.username, integration.password)
       @response = nil
     end
 

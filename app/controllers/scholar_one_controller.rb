@@ -2,9 +2,12 @@ class ScholarOneController < ApplicationController
 
   def notification
     if params[:taskStatus].downcase == 'completed' && params[:subscriptionType].downcase == 'task_status_change'
-      status = metadata[:documentStatusName].downcase
+      status = params[:documentStatusName].downcase
       if status.in?(%w[accepted rejected])
-        metadata = Integrations::ScholarOne.new(params[:siteName]).manuscript_metadata(params[:submissionId])
+        journal = ExternalIntegration.where("details->'$.site_name' = ?", params[:siteName]).first.integrator
+        return if journal.nil?
+
+        metadata = Integrations::ScholarOne.new(journal).manuscript_metadata(params[:submissionId])
         Manuscript::ScholarOneService.new(metadata).create
       end
     end

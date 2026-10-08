@@ -1,0 +1,27 @@
+<h1 id="dialog-title"><%= @integration.integrator.title %> - ScholarOne integration</h1>
+<%= form_with(model: @integration, local: false) do |form| -%>
+
+  <%= form.hidden_field :id %>
+  <%= form.hidden_field :integration %>
+  <%= form.hidden_field :integrator_type %>
+  <%= form.hidden_field :integrator_id %>
+  <div class="c-input">
+    <%= form.label :details, 'SiteName:' %>
+    <%= form.fields :details, model: form.object.details do |field| %>
+      <%= field.text_field :site_name, value: field.object&.dig('site_name'), class: 'c-input__text', style: 'width:100%;' %>
+    <% end %>
+  </div>
+  <div class="c-input">
+    <%= form.label :username, "Username" %>
+    <%= form.text_field :username, required: true, class: 'c-input__text', style: 'width:100%' %>
+  </div>
+  <div class="c-input">
+    <%= form.label :password, "Password:" %>
+    <%= form.text_field :password, class: 'c-input__text', style: 'width:100%;' %>
+  </div>
+
+  <div class="c-modal__buttons-right">
+    <%= submit_tag 'Submit', class: 'o-button__plain-text2' %>
+    <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog', class: 'o-button__plain-text7' %>
+  </div>
+<% end %>

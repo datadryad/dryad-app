@@ -6,7 +6,7 @@ module Stash
         @resource = resource
         @manuscript_number = manuscript_number
         @journal = journal
-        @metadata = Integrations::ScholarOne.new(journal.scholar_one_site_name).manuscript_metadata(@manuscript_number)
+        @metadata = Integrations::ScholarOne.new(journal).manuscript_metadata(@manuscript_number)
       end
 
       def populate
@@ -35,7 +35,7 @@ module Stash
       end
 
       def populate_authors
-        authors_metadata = Integrations::ScholarOne.new(journal.scholar_one_site_name).authors_metadata(@manuscript_number)
+        authors_metadata = Integrations::ScholarOne.new(journal).authors_metadata(@manuscript_number)
         return unless authors_metadata.present?
 
         authors_metadata = [authors_metadata] unless authors_metadata.is_a?(Array)

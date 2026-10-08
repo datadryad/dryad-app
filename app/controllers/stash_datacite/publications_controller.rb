@@ -174,7 +174,7 @@ module StashDatacite
       journal = StashEngine::Journal.find_by_issn(@pub_issn)
       return unless valid_import_data?(journal)
 
-      if journal.scholar_one_site_name.present?
+      if journal.has_integration?(:scholarone)
         dryad_import = Stash::Import::ScholarOne.new(resource: @resource, manuscript_number: @msid, journal: journal)
         @error = 'Could not import metadata from ScholarOne.' if dryad_import.populate.nil?
         return
