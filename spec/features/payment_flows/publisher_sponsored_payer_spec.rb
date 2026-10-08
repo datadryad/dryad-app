@@ -40,7 +40,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
       connect_journal(journal)
       expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
       click_button 'Preview'
-      visit current_path
     end
 
     context 'payment value' do
@@ -261,7 +260,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
           before do
             upload_file(size: resource_file_size)
             click_button 'Preview'
-            visit current_path
           end
 
           context 'and tier is not exceeded' do
@@ -296,7 +294,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
           before do
             upload_file(size: resource_file_size)
             click_button 'Preview'
-            visit current_path
           end
 
           context 'and tier is not changed' do
@@ -331,7 +328,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
           before do
             upload_file(size: resource_file_size)
             click_button 'Preview'
-            visit current_path
           end
 
           context 'when limit tier is not changed' do
@@ -379,7 +375,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
           before do
             upload_file(size: resource_file_size)
             click_button 'Preview'
-            visit current_path
           end
 
           context 'and LDF tier is not changed' do
@@ -430,7 +425,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
           before do
             upload_file(size: resource_file_size)
             click_button 'Preview'
-            visit current_path
           end
 
           context 'and LDF tier is not changed' do
@@ -482,7 +476,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
         before do
           upload_file(size: resource_file_size)
           click_button 'Preview'
-          visit current_path
         end
 
         context 'all is sponsored' do

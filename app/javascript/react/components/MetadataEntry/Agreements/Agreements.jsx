@@ -54,7 +54,7 @@ export default function Agreements({
               (previous && resource.tenant_id !== previous.tenant_id) && <p className="del ins">Partner institution changed</p>}
             </>
           )}
-          <ShowCalculations {...{resource, config}} key={fees} />
+          <ShowCalculations {...{resource, config}} key={{ppr: resource.hold_for_peer_review, ...fees}} />
         </>
       )}
       {isSubmitter && (

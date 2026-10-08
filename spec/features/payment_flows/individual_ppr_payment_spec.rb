@@ -22,7 +22,6 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
   context 'on first version' do
     before do
       build_full_dataset
-      visit current_path
     end
 
     context 'payment value' do
@@ -40,7 +39,6 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
         end
 
         it 'user can choose between full fee and PPR fee' do
-          visit current_path
           expect(page).to have_content('These files will be kept private while your manuscript undergoes peer review')
 
           click_button 'Pay & submit for peer review'
@@ -58,7 +56,6 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
           before do
             upload_file(size: '54_000_000_000', file_name: 'ldf.txt')
             click_button 'Preview'
-            visit current_path
           end
 
           it 'user can choose between full fee and PPR fee' do
