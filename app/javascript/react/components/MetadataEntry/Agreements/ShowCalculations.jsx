@@ -5,7 +5,8 @@ import {ExitIcon} from '../../ExitButton';
 import CalculateFees, {formatCost} from '../../CalculateFees';
 import Calculations from './Calculations';
 
-function PaymentMessage({resource, fees}) {
+function PaymentMessage({resource}) {
+  const {storeState: {fees}} = useStore();
   if (fees.dpc_sponsored) {
     const partner = resource.identifier.display_payer
     return (
@@ -51,8 +52,8 @@ function PaymentMessage({resource, fees}) {
   );
 }
 
-export default function ShowCalculations({resource, ppr, config}) {
-  const {storeState: {fees, userMustPay}} = useStore();
+export default function ShowCalculations({resource, config}) {
+  const {storeState: {userMustPay}} = useStore();
   if (resource.identifier.old_payment_system) {
     if (userMustPay) {
       return (
@@ -67,8 +68,8 @@ export default function ShowCalculations({resource, ppr, config}) {
 
   return (
     <>
-      <CalculateFees resource={resource} fees={fees} ppr={ppr} />
-      <PaymentMessage resource={resource} fees={fees} />
+      <CalculateFees resource={resource} />
+      <PaymentMessage resource={resource} />
     </>
   )
 }

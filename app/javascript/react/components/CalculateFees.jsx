@@ -5,8 +5,9 @@ import {useStore} from '../shared/store';
 
 export const formatCost = (num) => num.toLocaleString('en-US', {style: 'currency', currency: 'USD'})
 
-export default function CalculateFees({resource, ppr = false}) {
+export default function CalculateFees({resource}) {
   const {storeState: {fees, dpc}} = useStore();
+  const ppr = resource.hold_for_peer_review;
   const paid = !!resource.identifier.last_invoiced_file_size;
 
   /* eslint-disable max-len */

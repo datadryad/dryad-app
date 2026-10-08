@@ -20,7 +20,7 @@ module PaymentsHelper
   def logs_ldf(amount)
     click_button 'Submit'
 
-    expect(page).to have_text('Your dataset with the DOI', wait: 10)
+    expect(page).to have_text('Your dataset with the DOI')
     expect(identifier.reload.latest_resource.sponsored_payment_log&.ldf).to eq(amount)
   end
 
@@ -33,14 +33,14 @@ module PaymentsHelper
     click_button 'Continue to the invoice generation form'
     click_button 'Send invoice & submit data'
 
-    expect(page).to have_text('Your dataset with the DOI', wait: 10)
+    expect(page).to have_text('Your dataset with the DOI')
     expect(identifier.reload.latest_resource.sponsored_payment_log&.ldf).to eq(amount)
   end
 
   def no_ldf
     click_button 'Submit'
 
-    expect(page).to have_text('Your dataset with the DOI', wait: 10)
+    expect(page).to have_text('Your dataset with the DOI')
     expect(identifier.reload.latest_resource.sponsored_payment_log).to be_nil
   end
 
@@ -49,7 +49,7 @@ module PaymentsHelper
     click_button 'Continue to the invoice generation form'
     click_button 'Send invoice & submit data'
 
-    expect(page).to have_text('Your dataset with the DOI', wait: 10)
+    expect(page).to have_text('Your dataset with the DOI')
     expect(identifier.reload.latest_resource.sponsored_payment_log).to be_nil
   end
 

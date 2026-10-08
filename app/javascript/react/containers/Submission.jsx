@@ -238,7 +238,7 @@ function Submission({
         }));
         updateStore({userMustPay: data.user_must_pay, refreshFees: true, refreshDpcStatus: true});
       });
-  }, [resource.tenant, resource.authors, resource.journal, resource.contributors, resource.total_file_size, resource.hold_for_peer_review]);
+  }, [resource.tenant, resource.authors, resource.journal, resource.contributors, resource.total_file_size]);
 
   const markInvalid = (el) => {
     const et = el.querySelector('.error-text');

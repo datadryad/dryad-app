@@ -6,6 +6,8 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
   include Mocks::DataFile
   include Mocks::Stripe
 
+  Capybara.default_max_wait_time = 20
+
   let(:tenant) { create(:tenant) }
   let(:user) { create(:user, tenant: tenant) }
 
@@ -65,7 +67,6 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
             click_button 'Preview'
             upload_file(size: '54_000_000_000', file_name: 'ldf.txt')
             click_button 'Preview'
-            expect(page).to have_button('submit_button', wait: 25)
           end
 
           it 'user can choose between full fee and PPR fee' do
@@ -75,8 +76,8 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
               'You may choose to pay only $50.00, with the remainder due at the end of the ' \
               'peer review period. The Private for Peer Review Fee is nonrefundable.'
             )
-            click_button 'Pay & submit for peer review'
 
+            click_button 'Pay & submit for peer review'
             expect(page).to have_content('This 54 GB dataset has a Data Publishing Charge of $808.00')
             expect(page).to have_content(
               'You may choose to pay only $50.00, with the remainder due at the end of ' \

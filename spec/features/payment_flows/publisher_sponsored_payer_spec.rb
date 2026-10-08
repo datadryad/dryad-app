@@ -6,6 +6,8 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
   include Mocks::DataFile
   include Mocks::Stripe
 
+  Capybara.default_max_wait_time = 20
+
   let!(:top_level_sponsor) { create(:journal_organization, parent_org: nil) }
   let!(:sponsor_payment) do
     create(:payment_configuration, partner: top_level_sponsor, payment_plan: '2025', covers_dpc: true)

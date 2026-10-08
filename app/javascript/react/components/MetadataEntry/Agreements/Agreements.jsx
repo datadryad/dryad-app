@@ -1,4 +1,4 @@
-import React, {useRef, useState, useEffect} from 'react';
+import React, {useRef, useEffect} from 'react';
 import {useStore} from '../../../shared/store';
 import ShowCalculations from './ShowCalculations';
 import PPRSetting from './PPRSetting';
@@ -7,8 +7,7 @@ import SubmitterAgreement from './SubmitterAgreement';
 export default function Agreements({
   resource, setResource, user, form, previous, config, setAuthorStep, current = false, preview = false,
 }) {
-  const {updateStore, storeState: {dpc, userMustPay}} = useStore();
-  const [ppr, setPPR] = useState(resource.hold_for_peer_review);
+  const {updateStore, storeState: {dpc, fees, userMustPay}} = useStore();
   const subType = resource.resource_type.resource_type;
   const {users} = resource;
   const submitter = users.find((u) => u.role === 'submitter');
@@ -31,8 +30,8 @@ export default function Agreements({
   }, [dpc, formRef.current]);
 
   useEffect(() => {
-    if (current || preview) updateStore({refreshDpcStatus: true})
-  }, [current, preview])
+    updateStore({refreshDpcStatus: true, refreshFees: true})
+  }, [current])
 
   if (Object.keys(dpc).length === 0) {
     return (
@@ -42,7 +41,7 @@ export default function Agreements({
 
   return (
     <>
-      <PPRSetting {...{ppr, setPPR, resource, setResource, dpc, preview, previous}} />
+      <PPRSetting {...{resource, setResource, dpc, preview, previous}} />
       {preview ? <h2>Do you agree to Dryad’s terms?</h2> : <h3 style={{marginTop: '3rem'}}>Do you agree to Dryad’s terms?</h3>}
       {subType !== 'collection' && (
         <>
@@ -55,7 +54,7 @@ export default function Agreements({
               (previous && resource.tenant_id !== previous.tenant_id) && <p className="del ins">Partner institution changed</p>}
             </>
           )}
-          <ShowCalculations {...{resource, ppr, config}} />
+          <ShowCalculations {...{resource, config}} key={fees} />
         </>
       )}
       {isSubmitter && (
