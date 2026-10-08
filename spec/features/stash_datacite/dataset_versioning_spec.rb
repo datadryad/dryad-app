@@ -340,7 +340,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     expect(page).to have_text('All progress saved')
     click_button 'Preview changes'
     # Submit the changes
-    expect(page).to have_text('Describe edits made', wait: 5)
+    expect(page).to have_text('Describe edits made', wait: 5) if curator
     fill_in('Describe edits made', with: Faker::Lorem.sentence) if curator
     set_and_submit
   end

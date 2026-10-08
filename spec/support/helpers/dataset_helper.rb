@@ -269,6 +269,7 @@ module DatasetHelper
     page.send_keys(:tab)
     fill_in 'Manuscript number', with: 'ASD-1234'
     page.send_keys(:tab)
+    expect(page).to have_content('All progress saved')
   end
 
   def upload_file(size: '10', file_name: 'funbar.txt')
@@ -277,7 +278,7 @@ module DatasetHelper
     click_button('data_manifest')
     fill_in('location_urls', with: "http://example.org/#{file_name}")
     click_on('validate_files')
-    expect(page.has_css?('i[aria-label="complete"]')).to be true
+    expect(page.has_css?('.c-uploadtable tr:last-child i[aria-label="complete"]')).to be true
   end
 
   def build_min_dataset(resource_file_size: '10')
