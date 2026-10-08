@@ -44,7 +44,7 @@ class CurationService
     return unless status == 'queued'
 
     journal = @resource&.journal
-    return if journal&.has_integration?(:scholarone)
+    return unless journal&.has_integration?(:scholarone)
 
     Integrations::ScholarOne.new(journal).relay_notification(resource)
   end
