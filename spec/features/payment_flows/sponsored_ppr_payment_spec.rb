@@ -6,7 +6,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
   include Mocks::DataFile
   include Mocks::Stripe
 
-  Capybara.default_max_wait_time = 20
+  Capybara.default_max_wait_time = 15
 
   let(:tenant) { create(:tenant) }
   let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: false) }

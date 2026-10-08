@@ -6,7 +6,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
   include Mocks::DataFile
   include Mocks::Stripe
 
-  Capybara.default_max_wait_time = 20
+  Capybara.default_max_wait_time = 15
 
   let(:tenant) { create(:tenant) }
   let(:user) { create(:user, tenant: tenant) }
@@ -42,7 +42,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
         end
 
         it 'user can choose between full fee and PPR fee' do
-          expect(page).to have_content('dataset has a Data Publishing Charge of $150.00', wait: 10)
+          expect(page).to have_content('dataset has a Data Publishing Charge of $150.00')
           expect(page).to have_content(
             'You may choose to pay only $50.00, with the remainder due at the end ' \
             'of the peer review period. The Private for Peer Review Fee is nonrefundable.'

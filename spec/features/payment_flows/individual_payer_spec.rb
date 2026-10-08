@@ -6,7 +6,7 @@ RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
   include Mocks::DataFile
   include Mocks::Stripe
 
-  Capybara.default_max_wait_time = 20
+  Capybara.default_max_wait_time = 15
 
   let(:tenant) { create(:tenant) }
   let(:user) { create(:user, tenant: tenant) }
