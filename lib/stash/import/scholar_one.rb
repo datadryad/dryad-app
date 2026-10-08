@@ -6,10 +6,13 @@ module Stash
         @resource = resource
         @manuscript_number = manuscript_number
         @journal = journal
-        @metadata = Integrations::ScholarOne.new(journal).manuscript_metadata(@manuscript_number)
+        @metadata = nil
       end
 
       def populate
+        return unless journal.has_integration?(:scholarone)
+
+        @metadata = Integrations::ScholarOne.new(journal).manuscript_metadata(@manuscript_number)
         return unless @metadata.present? && resource.present?
 
         populate_abstract
