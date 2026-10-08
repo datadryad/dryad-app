@@ -14,10 +14,11 @@
 #
 FactoryBot.define do
   factory :external_integration do
+    integration { 'scholarone' }
     integrator_id { 1 }
-    integrator_type { "MyString" }
-    username { "MyString" }
-    password { "MyString" }
-    details { { site_name: "MyString" } }
+    integrator_type { 'MyString' }
+    username { 'MyString' }
+    password { 'MyString' }
+    details { { site_name: 'MyString' } }
   end
 end

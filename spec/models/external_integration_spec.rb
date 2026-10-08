@@ -12,10 +12,18 @@
 #  updated_at      :datetime         not null
 #  integrator_id   :integer
 #
-require "test_helper"
 
-class ExternalIntegrationTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+RSpec.describe ExternalIntegration, type: :model do
+
+  describe 'associations' do
+    it { is_expected.to belong_to(:integrator) }
+  end
+
+  describe 'validations' do
+    it { is_expected.to validate_presence_of(:integration) }
+    it { is_expected.to validate_presence_of(:integrator_id) }
+    it { is_expected.to validate_presence_of(:integrator_type) }
+    it { is_expected.to validate_presence_of(:username) }
+    it { is_expected.to validate_presence_of(:password) }
+  end
 end

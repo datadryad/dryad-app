@@ -131,8 +131,6 @@ test:
   stripe_ic_webhook_secret: whsec_some_secret_key
   scholar_one:
     api_base_url: https://api.url.com
-    username: some_user
-    password: some_password
 
 <% else %>
 

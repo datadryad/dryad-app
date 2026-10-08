@@ -9,6 +9,7 @@ module Manuscript
 
     def create
       return false if metadata.blank?
+
       status = metadata.dig(:submissionStatus, :documentStatusName).downcase
       return unless %w[submitted accepted rejected].include?(status)
       return if journal.blank?
