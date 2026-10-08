@@ -10,7 +10,8 @@ module PaymentsHelper
     expect(page).to have_text("Payment for this submission is sponsored by #{payer_name}")
     expect(page).to have_content('This dataset has been previously submitted')
     expect(page).to have_content(
-      "Since the dataset size has increased to #{size}, submitting this new version will come with an additional charge of $#{amount}."
+      "Since the dataset size has increased to #{size}, submitting this new version will come with an additional charge of $#{amount}.",
+      wait: 5
     )
     expect(page).to have_css('button', exact_text: 'Pay & submit for publication')
     expect(page).not_to have_css('button', exact_text: 'Submit for publication')
@@ -61,7 +62,8 @@ module PaymentsHelper
   def unsponsored_with_fee(size, amount)
     expect(page).to have_content('This dataset has been previously submitted')
     expect(page).to have_content(
-      "Since the dataset size has increased to #{size}, submitting this new version will come with an additional charge of $#{amount}."
+      "Since the dataset size has increased to #{size}, submitting this new version will come with an additional charge of $#{amount}.",
+      wait: 5
     )
     expect(page).not_to have_button('Submit for')
     expect(page).to have_button('Pay & submit')

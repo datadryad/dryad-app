@@ -10,7 +10,6 @@ module DatasetHelper
   def navigate_to_metadata
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    click_button 'Next'
     click_button 'Connect'
     expect(page).to have_content('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?')
   end
@@ -120,17 +119,18 @@ module DatasetHelper
     find('[name="submit_invoice"]').click
   end
 
-  def fill_manuscript_info(name:, msid:)
+  def connect_journal(journal)
     navigate_to_metadata
     within_fieldset('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?') do
       find(:label, 'Yes').click
     end
-    expect(page).to have_content('Which would you like to connect?')
-    within_fieldset('Which would you like to connect?') do
-      find(:label, 'Submitted manuscript').click
-    end
-    fill_in 'publication_ms', with: name
-    fill_in 'msid', with: msid
+    find(:label, 'Submitted manuscript').click
+
+    find('#publication_ms').send_keys(journal.title)
+    page.send_keys(:tab)
+    fill_in 'Manuscript number', with: 'ASD-1234'
+    page.send_keys(:tab)
+    expect(page).to have_content('All progress saved')
   end
 
   def fill_crossref_info(doi:)
@@ -140,6 +140,7 @@ module DatasetHelper
     within_fieldset('Which would you like to connect?') do
       find(:label, 'Published article').click
     end
+    expect(page).to have_css('name=["primary_article_doi"]', wait: 5)
     fill_in 'primary_article_doi', with: doi
     page.send_keys(:tab)
   end
@@ -256,20 +257,6 @@ module DatasetHelper
     expect(fu.download_filename).to eq('funbar.txt')
     expect(fu.upload_content_type).to eq('text/plain')
     expect(fu.upload_file_size).to eq(37_221)
-  end
-
-  def connect_journal(journal)
-    click_button 'Connect'
-    within_fieldset('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?') do
-      find(:label, 'Yes').click
-    end
-    find(:label, 'Submitted manuscript').click
-
-    find('#publication_ms').send_keys(journal.title)
-    page.send_keys(:tab)
-    fill_in 'Manuscript number', with: 'ASD-1234'
-    page.send_keys(:tab)
-    expect(page).to have_content('All progress saved')
   end
 
   def upload_file(size: '10', file_name: 'funbar.txt')
