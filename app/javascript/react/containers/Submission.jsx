@@ -175,23 +175,15 @@ function Submission({
       component: <Agreements
         resource={resource}
         setResource={setResource}
+        previous={previous}
         current={step.name === 'Agreements'}
+        preview={step.name === 'Create a submission'}
         config={config_payments}
         form={change_tenant}
         user={user}
         setAuthorStep={() => setStep(steps().find((l) => l.name === 'Authors'))}
       />,
-      help: <AgreeHelp type={resource.resource_type.resource_type} />,
-      preview: <Agreements
-        {...{
-          resource, setResource, user, previous,
-        }}
-        config={config_payments}
-        form={change_tenant}
-        user={user}
-        setAuthorStep={() => setStep(steps().find((l) => l.name === 'Authors'))}
-        preview
-      />,
+      help: <AgreeHelp type={resource.resource_type.resource_type} />
     }];
     if (resource.resource_type.resource_type === 'collection') stepArray.splice(6, 3);
     if (previous?.action_reports?.slice(-1)) stepArray.unshift({name: '', pass: true, preview: <ActionRequired previous={previous} />});
@@ -380,7 +372,7 @@ function Submission({
             <div id="submission-preview" ref={previewRef} className={`${user.curator ? 'track-changes' : ''}`} hidden={payment || null}>
               {steps().map((s) => (
                 <section key={s.name} aria-label={s.name} aria-live="polite">
-                  {s.preview}
+                  {s.name === 'Agreements' ? s.component : s.preview}
                   {s.fail}
                 </section>
               ))}
