@@ -6,8 +6,6 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
   include Mocks::DataFile
   include Mocks::Stripe
 
-  Capybara.default_max_wait_time = 15
-
   let(:tenant) { create(:tenant) }
   let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: false) }
   let(:user) { create(:user, tenant: tenant) }
@@ -41,6 +39,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
           find('label', text: 'Keep my files private while my manuscript undergoes peer review').click
           expect(page).to have_content('All progress saved')
           click_button 'Preview'
+          visit current_path
         end
 
         it 'user pays nothing' do
@@ -51,6 +50,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
           before do
             upload_file(size: '54_000_000_000', file_name: 'ldf.txt')
             click_button 'Preview'
+            visit current_path
           end
 
           it 'user pays nothing' do
@@ -107,6 +107,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
           before do
             upload_file(size: resource_file_size, file_name: 'ldf.txt')
             click_button 'Preview'
+            visit current_path
           end
 
           context 'and tier is not exceeded' do
@@ -133,6 +134,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
         find('label', text: 'My files should be available for public download as soon as possible').click
         expect(page).to have_content('All progress saved')
         click_button 'Preview'
+        visit current_path
       end
 
       context 'when nothing changes' do
@@ -146,6 +148,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
         before do
           upload_file(size: resource_file_size, file_name: 'ldf.txt')
           click_button 'Preview'
+          visit current_path
         end
 
         context 'and tier is not exceeded' do

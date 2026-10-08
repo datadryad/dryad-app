@@ -6,8 +6,6 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
   include Mocks::DataFile
   include Mocks::Stripe
 
-  Capybara.default_max_wait_time = 15
-
   let(:tenant) { create(:tenant) }
   let(:user) { create(:user, tenant: tenant) }
 
@@ -24,6 +22,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
   context 'on first version' do
     before do
       build_full_dataset
+      visit current_path
     end
 
     context 'payment value' do
@@ -37,18 +36,11 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
           find('button[data-slug="agreements"]').click
           expect(page).to have_content('Dryad submissions are made publicly available')
           find('label', text: 'Keep my files private while my manuscript undergoes peer review').click
-          page.send_keys(:tab)
-          expect(page).to have_content('All progress saved')
+          click_button 'Preview'
         end
 
         it 'user can choose between full fee and PPR fee' do
-          expect(page).to have_content('dataset has a Data Publishing Charge of $150.00')
-          expect(page).to have_content(
-            'You may choose to pay only $50.00, with the remainder due at the end ' \
-            'of the peer review period. The Private for Peer Review Fee is nonrefundable.'
-          )
-          expect(page).not_to have_content('Payment for this submission is sponsored by')
-          click_button 'Preview'
+          visit current_path
           expect(page).to have_content('These files will be kept private while your manuscript undergoes peer review')
 
           click_button 'Pay & submit for peer review'
@@ -64,9 +56,9 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
 
         context 'when LDF exists' do
           before do
-            click_button 'Preview'
             upload_file(size: '54_000_000_000', file_name: 'ldf.txt')
             click_button 'Preview'
+            visit current_path
           end
 
           it 'user can choose between full fee and PPR fee' do

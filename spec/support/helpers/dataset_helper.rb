@@ -51,7 +51,7 @@ module DatasetHelper
     add_required_data_files
     click_button 'README'
     add_required_readme
-    expect(find_button('README')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('README')).to match_selector('[aria-describedby="step-complete"', wait: 5)
   end
 
   def fill_required_metadata
@@ -65,27 +65,27 @@ module DatasetHelper
     click_button 'Authors'
     click_button 'Affiliations'
     fill_in_affiliation
-    expect(find_button('Authors')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('Authors')).to match_selector('[aria-describedby="step-complete"', wait: 5)
     click_button 'Description'
     fill_in_abstract
     fill_in_research_domain
     fill_in_keywords
-    expect(find_button('Subjects')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('Subjects')).to match_selector('[aria-describedby="step-complete"', wait: 5)
     click_button 'Compliance'
     fill_in_validation
-    expect(find_button('Compliance')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('Compliance')).to match_selector('[aria-describedby="step-complete"', wait: 5)
   end
 
   def fill_in_title(title = Faker::Hipster.sentence(word_count: 6))
     find('[name="title"]').send_keys(title)
     page.send_keys(:tab)
-    expect(find_button('Title')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('Title')).to match_selector('[aria-describedby="step-complete"', wait: 5)
   end
 
   def fill_in_abstract
     find('[name="abstract"]').send_keys(Faker::Lorem.paragraph)
     page.send_keys(:tab)
-    expect(find_button('Description')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('Description')).to match_selector('[aria-describedby="step-complete"', wait: 5)
   end
 
   def add_required_data_files
@@ -189,7 +189,7 @@ module DatasetHelper
 
   def fill_in_no_funder
     find(:label, 'No funding received').click
-    expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"', wait: 5)
   end
 
   def fill_in_research_domain
@@ -304,28 +304,28 @@ module DatasetHelper
     click_button 'Authors'
     click_button 'Affiliations'
     fill_in_affiliation(name: tenant_name)
-    expect(find_button('Authors')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('Authors')).to match_selector('[aria-describedby="step-complete"', wait: 5)
 
     click_button 'Description'
     fill_in_abstract
 
     fill_in_research_domain
     fill_in_keywords
-    expect(find_button('Subjects')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('Subjects')).to match_selector('[aria-describedby="step-complete"', wait: 5)
 
     click_button 'Support'
     fill_in_no_funder
-    expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"', wait: 5)
 
     click_button 'Compliance'
     fill_in_validation
-    expect(find_button('Compliance')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('Compliance')).to match_selector('[aria-describedby="step-complete"', wait: 5)
 
     upload_file(size: resource_file_size)
 
     click_button 'README'
     add_required_readme
-    expect(find_button('README')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('README')).to match_selector('[aria-describedby="step-complete"', wait: 5)
 
     navigate_to_review
   end

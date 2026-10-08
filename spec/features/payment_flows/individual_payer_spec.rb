@@ -6,8 +6,6 @@ RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
   include Mocks::DataFile
   include Mocks::Stripe
 
-  Capybara.default_max_wait_time = 15
-
   let(:tenant) { create(:tenant) }
   let(:user) { create(:user, tenant: tenant) }
   let(:resource_file_size) { 10 }
@@ -26,6 +24,7 @@ RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
     context 'payment value' do
       before do
         build_min_dataset(resource_file_size: resource_file_size)
+        visit current_path
       end
 
       it 'user pays DPC' do
@@ -46,6 +45,7 @@ RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
     context 'when submitting' do
       before do
         build_full_dataset(resource_file_size: '53_200_000_000')
+        visit current_path
       end
 
       let(:identifier) { StashEngine::Identifier.last }
@@ -96,6 +96,7 @@ RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
         before do
           upload_file(size: resource_file_size)
           click_button 'Preview changes'
+          visit current_path
         end
 
         context 'and tier is not exceeded' do

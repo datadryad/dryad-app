@@ -6,8 +6,6 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
   include Mocks::DataFile
   include Mocks::Stripe
 
-  Capybara.default_max_wait_time = 15
-
   let(:tenant) { create(:tenant) }
   let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true) }
   let(:payer_name) { tenant.long_name }
@@ -30,6 +28,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
     before do
       start_new_dataset
       build_min_dataset(resource_file_size: resource_file_size)
+      visit current_path
     end
 
     context 'payment value' do
@@ -173,6 +172,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
           before do
             upload_file(size: resource_file_size)
             click_button 'Preview'
+            visit current_path
           end
 
           context 'and LDF tier is not exceeded' do
@@ -207,6 +207,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
           before do
             upload_file(size: resource_file_size)
             click_button 'Preview'
+            visit current_path
           end
 
           context 'and tier is not changed' do
@@ -244,6 +245,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
           before do
             upload_file(size: resource_file_size)
             click_button 'Preview'
+            visit current_path
           end
 
           context 'when limit tier is not changed' do
@@ -294,6 +296,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
           before do
             upload_file(size: resource_file_size)
             click_button 'Preview'
+            visit current_path
           end
 
           context 'and LDF tier is not changed' do
@@ -344,6 +347,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
           before do
             upload_file(size: resource_file_size)
             click_button 'Preview'
+            visit current_path
           end
 
           context 'and LDF tier is not changed' do
@@ -401,6 +405,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
         before do
           upload_file(size: resource_file_size)
           click_button 'Preview'
+          visit current_path
         end
 
         context 'all is sponsored' do
