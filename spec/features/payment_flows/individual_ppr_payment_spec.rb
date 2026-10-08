@@ -39,6 +39,11 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
         end
 
         it 'user can choose between full fee and PPR fee' do
+          expect(page).to have_content(
+            'You may choose to pay only $50.00, with the remainder due at the end of the ' \
+            'peer review period. The Private for Peer Review Fee is nonrefundable.',
+            wait: 5
+          )
           expect(page).to have_content('These files will be kept private while your manuscript undergoes peer review')
 
           click_button 'Pay & submit for peer review'
@@ -60,7 +65,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
 
           it 'user can choose between full fee and PPR fee' do
             expect(page).not_to have_content('Payment for this submission is sponsored by')
-            expect(page).to have_content('This 54 GB dataset has a Data Publishing Charge of $808.00')
+            expect(page).to have_content('This 54 GB dataset has a Data Publishing Charge of $808.00', wait: 5)
             expect(page).to have_content(
               'You may choose to pay only $50.00, with the remainder due at the end of the ' \
               'peer review period. The Private for Peer Review Fee is nonrefundable.'
@@ -144,7 +149,8 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
 
                 expect(page).not_to have_content(
                   'You may choose to pay only $50.00, with the remainder due at the ' \
-                  'end of the peer review period. The Private for Peer Review Fee is nonrefundable.'
+                  'end of the peer review period. The Private for Peer Review Fee is nonrefundable.',
+                  wait: 5
                 )
 
                 click_button 'Pay & submit for peer review'
