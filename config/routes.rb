@@ -317,7 +317,6 @@ Rails.application.routes.draw do
     post 'ds_admin/:id/make_report', to: 'admin_datasets#make_report', as: 'make_report'
     post 'ds_admin/:id/issue', to: 'admin_datasets#create_issue', as: 'ds_admin_issue'
     delete 'ds_admin/:id', to: 'admin_datasets#destroy', as: 'ds_admin_destroy'
-    
 
     # curation notes
     post 'curation_note/:id', to: 'curation_activity#curation_note', as: 'curation_note'
@@ -374,6 +373,13 @@ Rails.application.routes.draw do
   get 'research_integrity/history', to: 'research_integrity_case#history'
   get 'research_integrity/:id', to: 'research_integrity_case#edit', as: 'research_integrity_edit'
   match 'research_integrity/:id', to: 'research_integrity_case#update', via: %i[put post], as: 'research_integrity_update'
+
+  # external integration
+  resources :external_integrations, only: [:create, :update] do
+    collection do
+      get :form
+    end
+  end
 
   ########################## StashDatacite support ######################################
 
@@ -640,4 +646,7 @@ Rails.application.routes.draw do
   get '/resource/:doi_prefix/:doi_suffix*file',
       constraints: { doi_prefix: /doi:10.\d{4,9}/i, doi_suffix: /[A-Z0-9]+\.[A-Z0-9]+/i },
       to: redirect{ |p, req| "/dataset/#{p[:doi_prefix]}/#{p[:doi_suffix]}" }
+
+  get '/scolarone/notification', to: 'scholar_one#notification'
+  get '/scholarone/notification', to: 'scholar_one#notification'
 end

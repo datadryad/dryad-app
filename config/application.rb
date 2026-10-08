@@ -41,6 +41,12 @@ module Dash2
     config.active_record.default_timezone = :utc
     config.active_support.to_time_preserves_timezone = :zone
 
+    unless Rails.env.test?
+      config.active_record.encryption.primary_key = Rails.application.credentials[Rails.env.to_sym][:active_record_encryption][:primary_key]
+      config.active_record.encryption.deterministic_key = Rails.application.credentials[Rails.env.to_sym][:active_record_encryption][:deterministic_key]
+      config.active_record.encryption.key_derivation_salt = Rails.application.credentials[Rails.env.to_sym][:active_record_encryption][:key_derivation_salt]
+    end
+
     # Do not compare the origin of HTTP requests with the current state of the request.
     # Our Apache config changes HTTPS to HTTP when contacting Passenger, so the origin
     # will not be the same.
