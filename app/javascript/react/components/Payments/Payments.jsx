@@ -69,6 +69,10 @@ function InvoicingPageMessage({fees}) {
   return null
 }
 
+const PaymentWarning = () => (
+  <p>Please do not close or refresh the page while payment is processing</p>
+);
+
 function Payments({
   resource, setResource, invoice, setInvoice, setPayment, config,
 }) {
@@ -83,6 +87,21 @@ function Payments({
         setClientSecret(data.clientSecret);
       });
   };
+
+  useEffect(() => {
+    const checkPaymentSuccess = () => {
+      axios.get(`/payments/check/${resource.id}`)
+        .then(({data}) => {
+          if (data.success) {
+            clearInterval(intervalId);
+            window.location.href = data.redirect;
+          }
+        });
+    }
+
+    const intervalId = setInterval(checkPaymentSuccess, 2000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     if (fees.total && !clientSecret) fetchClientSecret();
@@ -123,12 +142,14 @@ function Payments({
     );
   }
 
+
   return (
     <div id="submission-payment">
       {dpc.can_pay_ppr_fee ? (
         <>
           <CalculateFees resource={resource} ppr />
           <p>You must complete payment to submit your dataset for Peer Review.</p>
+          <PaymentWarning />
           <p className="input-line" style={{justifyContent: 'center'}} role="group" aria-label="Choose payment">
             <button
               type="button"
@@ -159,6 +180,7 @@ function Payments({
           <CalculateFees resource={resource} />
           <Receipt fees={fees} />
           <p>You must complete payment to submit your dataset for curation and publication.</p>
+          <PaymentWarning />
         </>
       )}
       <div id="payment-sec" hidden={(dpc.can_pay_ppr_fee && ppr === null) || null}>
