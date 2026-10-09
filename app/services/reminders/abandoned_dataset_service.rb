@@ -170,6 +170,11 @@ module Reminders
         next if resource.curation_activities.pluck(:status).uniq.include?('published')
         next if resource.withdrawn_by_curator?
 
+        # skip if dataset files are deleted
+        files_deleted = resource.curation_activities.where('note LIKE ?', "%mark files as deleted%").exists?
+        next if files_deleted
+
+        # skip if resource already got the final withdrawn email
         reminder_flag = 'final_withdrawn_email_notice'
         last_reminder = resource.curation_activities.where('note LIKE ?', "%#{reminder_flag}%")&.last
         next if last_reminder.present?
