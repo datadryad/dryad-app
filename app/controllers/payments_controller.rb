@@ -6,7 +6,8 @@ class PaymentsController < ApplicationController
   STRIPE_EVENT_HANDLERS = {
     'invoice.paid' => Stripe::Handlers::InvoicePaid,
     'invoice.voided' => Stripe::Handlers::InvoiceVoided,
-    'charge.refunded' => Stripe::Handlers::ChargeRefunded
+    'charge.refunded' => Stripe::Handlers::ChargeRefunded,
+    'checkout.session.completed' => Stripe::Handlers::CheckoutSessionCompleted
   }.freeze
 
   skip_before_action :verify_authenticity_token
@@ -58,13 +59,7 @@ class PaymentsController < ApplicationController
     #  - success page refresh
     return if payment.paid?
 
-    payment.update(
-      status: :paid,
-      payment_checkout_session_id: params[:session_id],
-      paid_at: Time.current
-    )
-    update_identifier_files_size
-    update_payment_details(payment)
+    Stripe::HandlePayments.new(payment).mark_session_paid(params[:session_id])
   end
 
   # rubocop:disable Lint/NoReturnInBeginEndBlocks
@@ -87,8 +82,8 @@ class PaymentsController < ApplicationController
     Rails.logger.error("Stripe webhook error: #{e.message}")
     head :ok # still 200 so Stripe doesn't retry-storm on your bug
   end
-  # rubocop:enable Lint/NoReturnInBeginEndBlocks
 
+  # rubocop:enable Lint/NoReturnInBeginEndBlocks
   def reset_payment
     identifier = StashEngine::Identifier.find(params[:identifier_id])
     identifier.update(last_invoiced_file_size: nil, payment_type: 'unknown', payment_id: nil)
@@ -100,6 +95,16 @@ class PaymentsController < ApplicationController
     redirect_to activity_log_path(id: identifier.id), notice: 'Payment information was reset.'
   end
 
+  def check
+    resource = StashEngine::Resource.find(params[:resource_id])
+    render json: { success: false } and return unless resource.payment&.paid?
+
+    render json: {
+      success: resource.payment.paid?,
+      redirect: "#{callback_payments_url}?resource_id=#{resource.id}&session_id=#{resource.payment.payment_checkout_session_id}"
+    }
+  end
+
   private
 
   def resource
@@ -108,26 +113,6 @@ class PaymentsController < ApplicationController
 
   def identifier
     @identifier ||= @resource.identifier
-  end
-
-  def update_identifier_files_size
-    return if @resource.payment.ppr_fee_paid?
-    return if SponsoredPaymentsService.new(@resource).loggable?
-
-    @resource.fee_record&.update(status: :receipt)
-    identifier.update(last_invoiced_file_size: [identifier.last_invoiced_file_size.to_i, @resource.total_file_size.to_i].max)
-  end
-
-  def update_payment_details(payment)
-    stripe_session = Stripe::Checkout::Session.retrieve(params[:session_id])
-    payment.update(
-      payment_intent: stripe_session[:payment_intent],
-      payment_status: stripe_session[:payment_status],
-      payment_email: stripe_session[:customer_email] || stripe_session[:customer_details][:email]
-    )
-    Payments::Identifier.new(identifier.id).update_payment_details(payment)
-  rescue StandardError => e
-    Rails.logger.warn("Could not fetch payment details for resource #{@resource.id}, error: #{e.message}")
   end
 
   def create_params

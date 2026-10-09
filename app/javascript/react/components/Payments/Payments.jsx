@@ -85,6 +85,21 @@ function Payments({
   };
 
   useEffect(() => {
+    const checkPaymentSuccess = () => {
+      axios.get(`/payments/check/${resource.id}`)
+        .then(({data}) => {
+          if (data.success) {
+            clearInterval(intervalId);
+            window.location.href = data.redirect;
+          }
+        });
+    }
+
+    const intervalId = setInterval(checkPaymentSuccess, 2000);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
     if (fees.total && !clientSecret) fetchClientSecret();
   }, [clientSecret]);
 

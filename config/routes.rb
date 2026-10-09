@@ -526,6 +526,7 @@ Rails.application.routes.draw do
       post :invoice_callback, format: :json
       post ':resource_id', to: 'payments#create'
       get :callback
+      get 'check/:resource_id', action: :check
 
       delete '/reset_payment/:identifier_id', to: 'payments#reset_payment', as: :reset_payment
     end
