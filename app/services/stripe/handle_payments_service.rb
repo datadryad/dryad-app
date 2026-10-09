@@ -1,5 +1,5 @@
 module Stripe
-  class HandlePayments
+  class HandlePaymentsService
     attr_reader :payment, :resource, :identifier
     def initialize(payment)
       @payment = payment
@@ -14,17 +14,17 @@ module Stripe
       payment.update(
         status: :paid,
         payment_checkout_session_id: session_id,
-        paid_at: paid_at
+        paid_at: paid_at,
+        status_time: paid_at
       )
+
       update_identifier_files_size
-      update_payment_details(stripe_session)
+      update_payment_details(session_id)
     end
 
     private
 
     def update_identifier_files_size
-      resource = payment.resource
-      identifier = resource.identifier
       return if payment.ppr_fee_paid?
       return if SponsoredPaymentsService.new(resource).loggable?
 

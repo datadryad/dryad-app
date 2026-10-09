@@ -59,7 +59,7 @@ class PaymentsController < ApplicationController
     #  - success page refresh
     return if payment.paid?
 
-    Stripe::HandlePayments.new(payment).mark_session_paid(params[:session_id])
+    Stripe::HandlePaymentsService.new(payment).mark_session_paid(params[:session_id])
   end
 
   # rubocop:disable Lint/NoReturnInBeginEndBlocks

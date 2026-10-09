@@ -16,7 +16,7 @@ module Stripe
         end
         return if payment.paid?
 
-        Stripe::HandlePayments.new(payment).mark_session_paid(session_id, paid_at: status_time)
+        Stripe::HandlePaymentsService.new(payment).mark_session_paid(session_id, paid_at: status_time)
       end
 
       private
@@ -29,11 +29,11 @@ module Stripe
       end
 
       def log_status_time_error(action)
-        Rails.logger.error("Stripe - #{action} - Could not get status_time for payment_intent #{payment_intent}.")
+        Rails.logger.error("Stripe - #{action} - Could not get status_time for session_id #{session_id}.")
       end
 
       def invalid_payment_log(action)
-        Rails.logger.warn("Stripe - #{action} - No payment record for payment_intent #{payment_intent}.")
+        Rails.logger.warn("Stripe - #{action} - No payment record for session_id #{session_id}.")
       end
     end
   end
