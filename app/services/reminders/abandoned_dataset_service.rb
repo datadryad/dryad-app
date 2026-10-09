@@ -171,7 +171,7 @@ module Reminders
         next if resource.withdrawn_by_curator?
 
         # skip if dataset files are deleted
-        files_deleted = resource.curation_activities.where('note LIKE ?', "%mark files as deleted%").exists?
+        files_deleted = resource.curation_activities.where('note LIKE ?', '%mark files as deleted%').exists?
         next if files_deleted
 
         # skip if resource already got the final withdrawn email
