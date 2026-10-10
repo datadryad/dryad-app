@@ -58,8 +58,6 @@ class PaymentConfiguration < ApplicationRecord
   end
 
   def set_covers_dpc
-    return unless covers_dpc.nil?
-
     self.covers_dpc = payment_plan.present?
   end
 end
