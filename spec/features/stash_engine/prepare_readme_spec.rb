@@ -68,15 +68,17 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
 
       it 'changes the file name' do
         fname = Faker::Creature::Animal.name
+        sanitized = StashEngine::FilenameSanitizer.new(fname).process
         click_button 'Files'
         click_button "Rename file #{file.download_filename}"
         fill_in "Rename #{file.download_filename}", with: fname
         click_button "Save new name for #{file.download_filename}"
         expect(page).to have_text('All progress saved')
+        expect(page).to have_button("Rename file #{sanitized}")
         click_button 'README'
         expect(page).to have_content('a README file must be included')
         expect(page).to have_text(resource.title)
-        expect(page).to have_text(StashEngine::FilenameSanitizer.new(fname).process)
+        expect(page).to have_text(sanitized)
         expect(page).not_to have_text(file.download_filename)
       end
     end
