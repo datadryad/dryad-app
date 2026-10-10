@@ -150,22 +150,28 @@ module StashEngine
 
     def dpc_status
       identifier = @resource.identifier
-      user_payer_aff = StashEngine::Tenant.connect_list.find_by_ror_id(identifier.submitter_affiliation&.ror_id)
+      display_payer = identifier.display_payer
+      dpc_checks = {
+        new_upload_size_limit: identifier.new_upload_size_limit,
+        display_payer: display_payer,
+        unsponsored: display_payer.empty?,
+        user_must_pay: identifier.user_must_pay?,
+        allow_review: identifier.allow_review?,
+        automatic_ppr: identifier.automatic_ppr?,
+        man_decision_made: identifier.has_accepted_manuscript? || identifier.has_rejected_manuscript?,
+        can_pay_ppr_fee: @resource.hold_for_peer_review && display_payer.empty? && identifier.payments.paid.none?
+      }
+      render json: dpc_checks
+    end
+
+    def aff_check
+      user_payer_aff = StashEngine::Tenant.connect_list.find_by_ror_id(@resource.identifier.submitter_affiliation&.ror_id)
       aff_tenant = if @resource.tenant_id.in?(user_payer_aff.ids)
                      user_payer_aff.find_by(id: @resource.tenant_id)
                    else
                      user_payer_aff.first
                    end
-      dpc_checks = {
-        unsponsored: identifier.display_payer.empty?,
-        user_must_pay: identifier.user_must_pay?,
-        aff_tenant: aff_tenant,
-        allow_review: identifier.allow_review?,
-        automatic_ppr: identifier.automatic_ppr?,
-        man_decision_made: identifier.has_accepted_manuscript? || identifier.has_rejected_manuscript?,
-        can_pay_ppr_fee: @resource.hold_for_peer_review && identifier.display_payer.empty? && identifier.payments.paid.none?
-      }
-      render json: dpc_checks
+      render json: aff_tenant
     end
 
     def display_collection
@@ -225,14 +231,6 @@ module StashEngine
       agree = ActiveModel::Type::Boolean.new.cast(params[:agree])
       @resource.authors.update(credit_confirmed: agree)
       render json: @resource.authors.as_json(include: %i[affiliations credit_roles]), status: :ok
-    end
-
-    def payer_check
-      render json: {
-        new_upload_size_limit: @resource.identifier.new_upload_size_limit,
-        user_must_pay: @resource.identifier.user_must_pay?,
-        display_payer: @resource.identifier.display_payer
-      }, status: :ok
     end
 
     private

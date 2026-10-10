@@ -5,9 +5,9 @@ import PPRSetting from './PPRSetting';
 import SubmitterAgreement from './SubmitterAgreement';
 
 export default function Agreements({
-  resource, setResource, user, form, previous, config, setAuthorStep, current = false, preview = false,
+  resource, setResource, user, form, previous, config, setAuthorStep, preview = false
 }) {
-  const {updateStore, storeState: {dpc, refreshFees, userMustPay}} = useStore();
+  const {storeState: {dpc, affSuggest, userMustPay}} = useStore();
   const subType = resource.resource_type.resource_type;
   const {users} = resource;
   const submitter = users.find((u) => u.role === 'submitter');
@@ -21,18 +21,14 @@ export default function Agreements({
       const active_form = document.createRange().createContextualFragment(form);
       formRef.current.append(active_form);
     }
-    if (!!dpc.aff_tenant && existing) {
+    if (!!affSuggest && existing) {
       formRef.current.querySelector('#dryad-member').hidden = true;
       formRef.current.querySelector('#edit-tenant-form').hidden = false;
-      formRef.current.querySelector('#searchselect-tenant__value').value = dpc.aff_tenant.id;
-      formRef.current.querySelector('#searchselect-tenant__label').value = dpc.aff_tenant.short_name;
-      formRef.current.querySelector('#searchselect-tenant__input').value = dpc.aff_tenant.short_name;
+      formRef.current.querySelector('#searchselect-tenant__value').value = affSuggest.id;
+      formRef.current.querySelector('#searchselect-tenant__label').value = affSuggest.short_name;
+      formRef.current.querySelector('#searchselect-tenant__input').value = affSuggest.short_name;
     }
-  }, [dpc, formRef.current]);
-
-  useEffect(() => {
-    if (current || preview) updateStore({refreshDpcStatus: true, refreshFees: true})
-  }, [current, preview])
+  }, [affSuggest, formRef.current]);
 
   if (Object.keys(dpc).length === 0) {
     return (
@@ -55,7 +51,7 @@ export default function Agreements({
               (previous && resource.tenant_id !== previous.tenant_id) && <p className="del ins">Partner institution changed</p>}
             </>
           )}
-          <ShowCalculations {...{resource, config}} key={refreshFees} />
+          <ShowCalculations {...{resource, config}}/>
         </>
       )}
       {isSubmitter && (
@@ -64,23 +60,23 @@ export default function Agreements({
             && (!resource.identifier.payment_type || resource.identifier.payment_type === 'unknown')
             && (userMustPay || institutionPaying)) && (
             <>
-              {institutionPaying && !!dpc.aff_tenant && dpc.aff_tenant.id !== resource.tenant_id && (
+              {institutionPaying && !!affSuggest && affSuggest.id !== resource.tenant_id && (
                 <>
-                  <p><b>Is this correct?</b> Your author list affiliation <b>{dpc.aff_tenant.long_name}</b> is also a Dryad partner.</p>
+                  <p><b>Is this correct?</b> Your author list affiliation <b>{affSuggest.long_name}</b> is also a Dryad partner.</p>
                   <div style={{maxWidth: '700px'}} ref={formRef} />
                 </>
               )}
               {userMustPay && dpc.unsponsored && 
-              (!dpc.aff_tenant || dpc.aff_tenant.id !== resource.tenant_id) && (
+              (!affSuggest || affSuggest.id !== resource.tenant_id) && (
                 <div className="callout warn" style={{margin: '1em 0', paddingBottom: '5px'}}>
                   <p style={{marginBottom: '.75em'}}>
                     <i className="fas fa-circle-question" aria-hidden="true" style={{marginRight: '.5ch'}} />
                     Are you affiliated with a Dryad partner institution that covers the Data Publishing Charge?
                   </p>
                   <div style={{backgroundColor: 'white', padding: '10px', marginBottom: '5px'}}>
-                    {!!dpc.aff_tenant && (
+                    {!!affSuggest && (
                       <p>
-                        Your author list affiliation <b>{dpc.aff_tenant.long_name}</b> is a Dryad partner.
+                        Your author list affiliation <b>{affSuggest.long_name}</b> is a Dryad partner.
                         Verify your credentials for DPC sponsorship.
                       </p>
                     )}

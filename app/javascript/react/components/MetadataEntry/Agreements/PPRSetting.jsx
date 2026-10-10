@@ -5,7 +5,7 @@ import {useStore} from '../../../shared/store';
 import {ExitIcon} from '../../ExitButton';
 
 export default function PPRSetting({resource, setResource, preview, previous}) {
-  const {updateStore, storeState: {dpc}} = useStore();
+  const {storeState: {dpc}} = useStore();
   const [reason, setReason] = useState('');
   const ppr = resource.hold_for_peer_review
   const subType = resource.resource_type.resource_type;
@@ -23,7 +23,6 @@ export default function PPRSetting({resource, setResource, preview, previous}) {
         if (data.status === 200) {
           const {hold_for_peer_review} = data.data;
           setResource((r) => ({...r, hold_for_peer_review}));
-          updateStore({refreshFees: true, refreshDpcStatus: true});
           showSavedMsg();
         }
       });

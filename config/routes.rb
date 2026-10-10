@@ -103,7 +103,7 @@ Rails.application.routes.draw do
         get :dupe_check
         get :file_pub_dates
         get :display_collection
-        get :payer_check
+        get :aff_check
         get :generate_files
         patch :import_type
         patch :license_agree

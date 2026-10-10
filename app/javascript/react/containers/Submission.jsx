@@ -29,7 +29,7 @@ import {StoreProvider, useStore} from '../shared/store';
 function Submission({
   submission, user, s3_dir_name, config_s3, config_maximums, config_payments, change_tenant,
 }) {
-  const {updateStore, storeState: {userMustPay, refreshDpcStatus, refreshFees}} = useStore();
+  const {updateStore, storeState: {refreshFees}} = useStore();
   const location = useLocation();
   const subRef = useRef([]);
   const previewRef = useRef(null);
@@ -176,7 +176,6 @@ function Submission({
         resource={resource}
         setResource={setResource}
         previous={previous}
-        current={step.name === 'Agreements'}
         preview={step.name === 'Create a submission'}
         config={config_payments}
         form={change_tenant}
@@ -193,14 +192,33 @@ function Submission({
     });
   };
 
-  useEffect(() => {
-    if (!refreshDpcStatus) return;
-    axios.get(`/resources/${resource.id}/dpc_status`).then((data) => {
-      updateStore(
-        {dpc: data.data, userMustPay: data.data.user_must_pay, refreshDpcStatus: false, refreshFees: data.data.user_must_pay !== userMustPay}
-      );
-    });
-  }, [refreshDpcStatus]);
+  const getDPCStatus = async() => axios.get(`/resources/${resource.id}/dpc_status`).then(async({data}) => {
+    await Promise.all([
+      setResource((res) => ({
+        ...res,
+        identifier: {
+          ...res.identifier,
+          display_payer: data.display_payer,
+          new_upload_size_limit: data.new_upload_size_limit,
+        },
+      })),
+      updateStore({dpc: data, userMustPay: data.user_must_pay})
+    ])
+  });
+
+  const getFees = async() => {
+    if (resource.identifier.old_payment_system) return false;
+    return axios.get(`/resource_fee_calculator/${resource.id}`, {params: {generate_invoice: invoice}})
+      .then(({data}) => {
+        if (resource.hold_for_peer_review && data.fees.ppr_discount) {
+          data.fees.total = 0;
+        }
+        updateStore({refreshFees: false, fees: data.fees || {}});
+      });
+  }
+
+  const suggestAff = async() => axios.get(`/resources/${resource.id}/aff_check`)
+    .then(({data}) => updateStore({affSuggest: data}));
 
   useEffect(() => {
     if (!refreshFees) return;
@@ -208,29 +226,18 @@ function Submission({
       updateStore({refreshFees: false});
       return;
     }
-    axios.get(`/resource_fee_calculator/${resource.id}`, {params: {generate_invoice: invoice}})
-      .then(({data}) => {
-        if (resource.hold_for_peer_review && data.fees.ppr_discount) {
-          data.fees.total = 0;
-        }
-        updateStore({refreshFees: false, fees: data.fees || {}});
-      });
+    async function updateFees() {
+      await Promise.all([getFees(), suggestAff()])     
+    }
+    updateFees();
   }, [refreshFees, invoice]);
 
   useEffect(() => {
-    axios.get(`/resources/${resource.id}/payer_check`)
-      .then(({data}) => {
-        setResource((res) => ({
-          ...res,
-          identifier: {
-            ...res.identifier,
-            display_payer: data.display_payer,
-            new_upload_size_limit: data.new_upload_size_limit,
-          },
-        }));
-        updateStore({userMustPay: data.user_must_pay, refreshFees: true, refreshDpcStatus: true});
-      });
-  }, [resource.tenant, resource.authors, resource.journal, resource.contributors, resource.total_file_size]);
+    async function updatePayer() {
+      await Promise.all([getFees(), getDPCStatus()])     
+    }
+    updatePayer();
+  }, [resource.tenant, resource.authors, resource.journal, resource.contributors, resource.total_file_size, resource.hold_for_peer_review]);
 
   const markInvalid = (el) => {
     const et = el.querySelector('.error-text');
@@ -337,6 +344,7 @@ function Submission({
       }
     }
     getFileData();
+    suggestAff();
     if (resource.identifier.pub_state === 'published') getPubDates();
   }, []);
 
@@ -535,9 +543,9 @@ function Submission({
 export default function SubmissionWrapper(props) {
   const initialState = {
     ...props,
-    refreshDpcStatus: false,
     refreshFees: false,
     userMustPay: false,
+    affSuggest: null,
     dpc: {},
     fees: {},
   };
