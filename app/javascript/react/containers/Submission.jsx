@@ -29,7 +29,7 @@ import {StoreProvider, useStore} from '../shared/store';
 function Submission({
   submission, user, s3_dir_name, config_s3, config_maximums, config_payments, change_tenant,
 }) {
-  const {updateStore, storeState: {userMustPay, refreshDpcStatus, refreshFees}} = useStore();
+  const {updateStore, storeState: {refreshFees}} = useStore();
   const location = useLocation();
   const subRef = useRef([]);
   const previewRef = useRef(null);
@@ -131,7 +131,9 @@ function Submission({
       name: 'Files',
       pass: resource.generic_files?.length > 0,
       fail: (review || step.index > 6) && filesCheck(resource, pubDates, user.superuser, config_maximums),
-      component: resource.generic_files === undefined ? <p><i className="fas fa-spinner fa-spin" /></p> : (
+      component: resource.generic_files === undefined ? (
+        <p><i id="files-loading" className="fas fa-spinner fa-spin" role="img" aria-label="Loading"/></p>
+      ) : (
         <UploadFiles
           {...{
             resource, setResource, previous, s3_dir_name, config_s3, config_maximums, pubDates,
@@ -173,76 +175,69 @@ function Submission({
       component: <Agreements
         resource={resource}
         setResource={setResource}
-        current={step.name === 'Agreements'}
+        previous={previous}
+        preview={step.name === 'Create a submission'}
         config={config_payments}
         form={change_tenant}
         user={user}
         setAuthorStep={() => setStep(steps().find((l) => l.name === 'Authors'))}
       />,
-      help: <AgreeHelp type={resource.resource_type.resource_type} />,
-      preview: <Agreements
-        {...{
-          resource, setResource, user, previous,
-        }}
-        config={config_payments}
-        form={change_tenant}
-        user={user}
-        setAuthorStep={() => setStep(steps().find((l) => l.name === 'Authors'))}
-        preview
-      />,
+      help: <AgreeHelp type={resource.resource_type.resource_type} />
     }];
     if (resource.resource_type.resource_type === 'collection') stepArray.splice(6, 3);
-    if (previous?.action_reports?.slice(-1)) stepArray.unshift({name: '', pass: true, preview: <ActionRequired previous={previous} />});
+    if (previous?.action_reports?.slice(-1).length > 0) stepArray.unshift({name: '', pass: true, preview: <ActionRequired previous={previous} />});
     return stepArray.map((s, i) => {
       s.index = i;
       return s;
     });
   };
 
-  useEffect(() => {
-    if (!refreshDpcStatus) return;
+  const getDPCStatus = async() => axios.get(`/resources/${resource.id}/dpc_status`).then(async({data}) => {
+    await Promise.all([
+      setResource((res) => ({
+        ...res,
+        identifier: {
+          ...res.identifier,
+          display_payer: data.display_payer,
+          new_upload_size_limit: data.new_upload_size_limit,
+        },
+      })),
+      updateStore({dpc: data, userMustPay: data.user_must_pay})
+    ])
+  });
 
-    axios.get(`/resources/${resource.id}/dpc_status`).then((data) => {
-      const {user_must_pay, generated_files} = data.data;
-      updateStore({dpc: data.data, refreshDpcStatus: false, userMustPay: user_must_pay});
-      setResource((r) => ({...r, generated_files, total_file_size: data.data.total_file_size}));
-    });
-  }, [refreshDpcStatus]);
-
-  useEffect(() => {
-    if (!userMustPay && !refreshFees) return;
-    if (resource.identifier.old_payment_system) {
-      updateStore({refreshFees: false});
-      return;
-    }
-    axios.get(`/resource_fee_calculator/${resource.id}`, {params: {generate_invoice: invoice}})
+  const getFees = async() => {
+    if (resource.identifier.old_payment_system) return false;
+    return axios.get(`/resource_fee_calculator/${resource.id}`, {params: {generate_invoice: invoice}})
       .then(({data}) => {
         if (resource.hold_for_peer_review && data.fees.ppr_discount) {
           data.fees.total = 0;
         }
         updateStore({refreshFees: false, fees: data.fees || {}});
       });
-  }, [userMustPay, resource.hold_for_peer_review, resource.total_file_size, resource.authors, invoice, refreshFees]);
+  }
 
-  const recheckPayer = () => {
-    axios.get(`/resources/${resource.id}/payer_check`)
-      .then(({data}) => {
-        setResource((res) => ({
-          ...res,
-          identifier: {
-            ...res.identifier,
-            display_payer: data.display_payer,
-            'user_must_pay?': data.user_must_pay,
-            new_upload_size_limit: data.new_upload_size_limit,
-          },
-        }));
-        updateStore({userMustPay: data.user_must_pay, refreshFees: true});
-      });
-  };
+  const suggestAff = async() => axios.get(`/resources/${resource.id}/aff_check`)
+    .then(({data}) => updateStore({affSuggest: data}));
 
   useEffect(() => {
-    recheckPayer();
-  }, [resource.tenant, resource.authors, resource.journal, resource.contributors, resource.cedar_json, resource.descriptions]);
+    if (!refreshFees) return;
+    if (resource.identifier.old_payment_system) {
+      updateStore({refreshFees: false});
+      return;
+    }
+    async function updateFees() {
+      await Promise.all([getFees(), suggestAff()])     
+    }
+    updateFees();
+  }, [refreshFees, invoice]);
+
+  useEffect(() => {
+    async function updatePayer() {
+      await Promise.all([getFees(), getDPCStatus()])     
+    }
+    updatePayer();
+  }, [resource.tenant, resource.authors, resource.journal, resource.contributors, resource.total_file_size, resource.hold_for_peer_review]);
 
   const markInvalid = (el) => {
     const et = el.querySelector('.error-text');
@@ -349,6 +344,7 @@ function Submission({
       }
     }
     getFileData();
+    suggestAff();
     if (resource.identifier.pub_state === 'published') getPubDates();
   }, []);
 
@@ -384,7 +380,7 @@ function Submission({
             <div id="submission-preview" ref={previewRef} className={`${user.curator ? 'track-changes' : ''}`} hidden={payment || null}>
               {steps().map((s) => (
                 <section key={s.name} aria-label={s.name} aria-live="polite">
-                  {s.preview}
+                  {s.name === 'Agreements' ? s.component : s.preview}
                   {s.fail}
                 </section>
               ))}
@@ -547,9 +543,9 @@ function Submission({
 export default function SubmissionWrapper(props) {
   const initialState = {
     ...props,
-    refreshDpcStatus: false,
     refreshFees: false,
     userMustPay: false,
+    affSuggest: null,
     dpc: {},
     fees: {},
   };

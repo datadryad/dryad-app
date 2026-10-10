@@ -4,14 +4,12 @@ module DatasetHelper
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
     click_button 'Create a new dataset'
-    expect(page).to have_content('Dataset submission')
+    expect(page).to have_content('Dataset submission', wait: 5)
   end
 
   def navigate_to_metadata
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    click_button 'Next'
-    page.find('#checklist-button').click unless page.has_button?('Connect')
     click_button 'Connect'
     expect(page).to have_content('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?')
   end
@@ -19,7 +17,6 @@ module DatasetHelper
   def navigate_to_readme
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    page.find('#checklist-button').click unless page.has_button?('README')
     click_button 'README'
     expect(page).to have_content('See these example READMES from previous Dryad submissions')
   end
@@ -27,16 +24,16 @@ module DatasetHelper
   def navigate_to_upload
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    # page.find('#checklist-button').click unless page.has_button?('Files')
+    expect(page).to have_button('Files')
     click_button 'Files'
-    expect(page).to have_content('Choose files')
-    expect(page).to have_content('Enter URLs')
+    find('button[data-slug="files"]').click if page.has_css?('button[data-slug="files"]')
+    expect(page).to have_content('Files may be uploaded from your computer')
+    expect(page).to have_button('Enter URLs', wait: 8)
   end
 
   def navigate_to_review
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    page.find('#checklist-button').click unless page.has_button?('Agreements')
     click_button 'Agreements'
     expect(page).to have_content('Are your files ready to publish')
     agree_to_everything
@@ -52,7 +49,7 @@ module DatasetHelper
     add_required_data_files
     click_button 'README'
     add_required_readme
-    expect(find_button('README')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('README')).to match_selector('[aria-describedby="step-complete"', wait: 5)
   end
 
   def fill_required_metadata
@@ -66,27 +63,27 @@ module DatasetHelper
     click_button 'Authors'
     click_button 'Affiliations'
     fill_in_affiliation
-    expect(find_button('Authors')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('Authors')).to match_selector('[aria-describedby="step-complete"', wait: 5)
     click_button 'Description'
     fill_in_abstract
     fill_in_research_domain
     fill_in_keywords
-    expect(find_button('Subjects')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('Subjects')).to match_selector('[aria-describedby="step-complete"', wait: 5)
     click_button 'Compliance'
     fill_in_validation
-    expect(find_button('Compliance')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('Compliance')).to match_selector('[aria-describedby="step-complete"', wait: 5)
   end
 
   def fill_in_title(title = Faker::Hipster.sentence(word_count: 6))
     find('[name="title"]').send_keys(title)
     page.send_keys(:tab)
-    expect(find_button('Title')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('Title')).to match_selector('[aria-describedby="step-complete"', wait: 5)
   end
 
   def fill_in_abstract
     find('[name="abstract"]').send_keys(Faker::Lorem.paragraph)
     page.send_keys(:tab)
-    expect(find_button('Description')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('Description')).to match_selector('[aria-describedby="step-complete"', wait: 5)
   end
 
   def add_required_data_files
@@ -112,6 +109,7 @@ module DatasetHelper
     # page.scroll_to(find('#submission-heading'))
     expect(page).to have_content('submission preview')
     expect(page).to have_content('ready to publish?')
+    expect(page).to have_button('submit_button')
 
     find('[name="submit_button"]').click
     return unless page.has_content?('You must complete payment to submit your dataset')
@@ -120,32 +118,33 @@ module DatasetHelper
     find('[name="submit_invoice"]').click
   end
 
-  def fill_manuscript_info(name:, msid:)
+  def connect_journal(journal)
     navigate_to_metadata
     within_fieldset('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?') do
       find(:label, 'Yes').click
     end
-    expect(page).to have_content('Which would you like to connect?')
-    within_fieldset('Which would you like to connect?') do
-      find(:label, 'Submitted manuscript').click
-    end
-    fill_in 'publication_ms', with: name
-    fill_in 'msid', with: msid
+    find('input[value="manuscript"]').set(true)
+
+    find('#publication_ms').send_keys(journal.title)
+    page.send_keys(:tab)
+    fill_in 'Manuscript number', with: 'ASD-1234'
+    page.send_keys(:tab)
+    expect(page).to have_content('All progress saved')
   end
 
   def fill_crossref_info(doi:)
     navigate_to_metadata
     find(:label, 'Yes').click
     expect(page).to have_content('Which would you like to connect?')
-    within_fieldset('Which would you like to connect?') do
-      find(:label, 'Published article').click
-    end
+    find('input[value="published"]').set(true)
+    expect(page).to have_css('[name="primary_article_doi"]', wait: 5)
     fill_in 'primary_article_doi', with: doi
     page.send_keys(:tab)
   end
 
   def fill_in_keywords
-    fill_in 'keyword_ac', with: 3.times.map { Faker::Creature::Animal.unique.name }.join(',')
+    expect(page).to have_field('keyword_ac')
+    find('#keyword_ac').send_keys(3.times.map { Faker::Creature::Animal.unique.name }.join(','))
     page.send_keys(:tab)
     Faker::Creature::Animal.unique.clear
   end
@@ -183,13 +182,14 @@ module DatasetHelper
     fill_in 'Granting organization', with: name
     page.send_keys(:tab)
     find('.use-text-entered').set(true) if page.has_css?('.use-text-entered')
+    expect(page).to have_css('input[name="award_number"]', wait: 3)
     fill_in 'award_number', with: value
     page.send_keys(:tab)
   end
 
   def fill_in_no_funder
     find(:label, 'No funding received').click
-    expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"', wait: 5)
   end
 
   def fill_in_research_domain
@@ -202,7 +202,9 @@ module DatasetHelper
   end
 
   def agree_to_everything
-    find('#agreement').click
+    find('#agreement').set(true)
+    page.send_keys(:tab)
+    expect(find_button('Agreements')).to match_selector('[aria-describedby="step-complete"', wait: 5)
   end
 
   def attach_files
@@ -256,16 +258,15 @@ module DatasetHelper
     expect(fu.upload_file_size).to eq(37_221)
   end
 
-  def connect_journal(journal)
-    click_button 'Connect'
-    within_fieldset('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?') do
-      find(:label, 'Yes').click
-    end
-    find(:label, 'Submitted manuscript').click
-    fill_in 'Journal name', with: journal.title
-    page.send_keys(:tab)
-    fill_in 'Manuscript number', with: 'ASD-1234'
-    page.send_keys(:tab)
+  def upload_file(size: 10, file_name: 'funbar.txt')
+    navigate_to_upload
+    build_valid_stub_request("http://example.org/#{file_name}", 'text/plain', size)
+    click_button('data_manifest')
+    fill_in('location_urls', with: "http://example.org/#{file_name}")
+    click_on('validate_files')
+    expect(page).to have_css('.c-uploadtable tr:last-child i[aria-label="complete"]')
+    expect(page).to have_css('#file-size-total')
+    expect(page).to have_xpath("//span[@id='file-size-total'][number(@data-value) >= #{size.to_i}]", wait: 5)
   end
 
   def build_min_dataset(resource_file_size: '10')
@@ -276,28 +277,9 @@ module DatasetHelper
     click_button 'Title'
     fill_in_title
 
-    navigate_to_upload
-    build_valid_stub_request('http://example.org/funbar.txt')
-    click_button('data_manifest')
-    fill_in('location_urls', with: 'http://example.org/funbar.txt')
-    click_on('validate_files')
-    expect(page.has_css?('i[aria-label="complete"]')).to be true
+    upload_file(size: resource_file_size)
 
-    resource = StashEngine::Resource.last
-    resource.data_files.first.update(upload_file_size: resource_file_size)
-
-    click_button 'Agreements'
-    find('span', text: 'I agree').click
-    click_button 'Preview submission'
-  end
-
-  def upload_file(size: '10', file_name: 'funbar.txt')
-    navigate_to_upload
-    build_valid_stub_request("http://example.org/#{file_name}", 'text/plain', size)
-    click_button('data_manifest')
-    fill_in('location_urls', with: "http://example.org/#{file_name}")
-    click_on('validate_files')
-    expect(page.has_css?('i[aria-label="complete"]')).to be true
+    navigate_to_review
   end
 
   def build_full_dataset(resource_file_size: '10', tenant_name: Faker::Educator.university)
@@ -311,32 +293,29 @@ module DatasetHelper
     click_button 'Authors'
     click_button 'Affiliations'
     fill_in_affiliation(name: tenant_name)
-    expect(find_button('Authors')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('Authors')).to match_selector('[aria-describedby="step-complete"', wait: 5)
 
     click_button 'Description'
     fill_in_abstract
 
     fill_in_research_domain
     fill_in_keywords
-    expect(find_button('Subjects')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('Subjects')).to match_selector('[aria-describedby="step-complete"', wait: 5)
 
     click_button 'Support'
     fill_in_no_funder
-    expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"', wait: 5)
 
     click_button 'Compliance'
     fill_in_validation
-    expect(find_button('Compliance')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('Compliance')).to match_selector('[aria-describedby="step-complete"', wait: 5)
 
-    click_button 'Files'
     upload_file(size: resource_file_size)
 
     click_button 'README'
     add_required_readme
-    expect(find_button('README')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('README')).to match_selector('[aria-describedby="step-complete"', wait: 5)
 
-    click_button 'Agreements'
-    find('span', text: 'I agree').click
-    click_button 'Preview submission'
+    navigate_to_review
   end
 end

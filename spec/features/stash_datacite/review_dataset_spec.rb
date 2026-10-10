@@ -106,8 +106,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
       fill_in_funder(name: 'Happy Clown School')
 
       click_button 'Agreements'
-      sleep 15
-      expect(page).to have_text('Payment for this submission is sponsored by Happy Clown School')
+      expect(page).to have_text('Payment for this submission is sponsored by Happy Clown School', wait: 15)
     end
 
     it "doesn't waive the fee when funder won't pay" do

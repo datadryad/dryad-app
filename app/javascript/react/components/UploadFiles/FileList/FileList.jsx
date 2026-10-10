@@ -10,7 +10,7 @@ const file_list = ({
     <BadList chosenFiles={chosenFiles} />
     <div className="c-uploadtable-header">
       <h3 className="o-heading__level3" id="filelist_id">Selected files</h3>
-      <p>Total size: {formatSizeUnits(totalSize)}</p>
+      <p>Total size: <span id="file-size-total" data-value={totalSize}>{formatSizeUnits(totalSize)}</span></p>
     </div>
     <div className="table-wrapper c-uploadtable-wrapper" role="region" aria-labelledby="filelist_id">
       <table className="c-uploadtable">

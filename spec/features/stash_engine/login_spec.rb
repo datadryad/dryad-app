@@ -92,8 +92,7 @@ RSpec.feature 'Session', type: :feature do
       end
       expect(page).to have_button('Login to verify')
       click_button 'Login to verify'
-      sleep 1
-      expect(page).to have_text('Enter confirmation code')
+      expect(page).to have_text('Enter confirmation code', wait: 8)
       # enter and erase email
       expect(page).to have_field('email')
       fill_in 'email', with: 'test@example.org'
@@ -103,13 +102,11 @@ RSpec.feature 'Session', type: :feature do
       expect(page).to have_field('email')
       fill_in 'email', with: 'test@example.org'
       click_button 'Save email'
-      sleep 1
-      expect(page).to have_text('Enter confirmation code')
+      expect(page).to have_text('Enter confirmation code', wait: 8)
       # refresh code
       expect(page).to have_link('Send another code')
       click_link 'Send another code'
-      sleep 1
-      expect(page).to have_text('Enter confirmation code')
+      expect(page).to have_text('Enter confirmation code', wait: 8)
       # enter code
       fill_in 'email_code', with: StashEngine::EmailToken.all.last.token
       expect(page).to have_text('My datasets')
@@ -137,32 +134,24 @@ RSpec.feature 'Session', type: :feature do
       expect(page).to have_text('Reconnect')
 
       click_button 'Login to verify'
-      sleep 1
-      expect(page).to have_text('Enter confirmation code')
+      expect(page).to have_text('Enter confirmation code', wait: 8)
 
       # enter and erase email
       expect(page).to have_field('email')
-
       fill_in 'email', with: 'test@example.org'
       click_button 'Save email'
 
       expect(page).to have_button('Enter a new email address')
-
       click_button 'Enter a new email address'
-
       expect(page).to have_field('email')
 
       fill_in 'email', with: 'test@example.org'
       click_button 'Save email'
-
-      sleep 1
-      expect(page).to have_text('Enter confirmation code')
+      expect(page).to have_text('Enter confirmation code', wait: 8)
 
       # refresh code
       click_link 'Send another code'
-
-      sleep 1
-      expect(page).to have_text('Enter confirmation code')
+      expect(page).to have_text('Enter confirmation code', wait: 8)
       expect(page).to have_field('email_code')
 
       # enter code

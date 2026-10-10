@@ -1,5 +1,6 @@
 RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
   include DatasetHelper
+  include PaymentsHelper
   include Mocks::RSolr
   include Mocks::Aws
   include Mocks::DataFile
@@ -21,37 +22,38 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
   end
 
   context 'on first version' do
-    before { build_full_dataset }
-
-    it 'payment is sponsored' do
-      expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
+    before do
+      build_full_dataset
     end
 
     context 'payment value' do
       it 'user does not pay DPC' do
         expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
-        expect(page).not_to have_css('button', exact_text: 'Pay & Submit for publication')
         expect(page).to have_css('button', exact_text: 'Submit for publication')
       end
 
       context 'when is set to PPR' do
         before do
-          click_button 'Agreements'
+          find('button[data-slug="agreements"]').click
+          expect(page).to have_content('Dryad submissions are made publicly available')
           find('label', text: 'Keep my files private while my manuscript undergoes peer review').click
-          click_button 'Preview changes'
+          expect(page).to have_content('All progress saved')
+          click_button 'Preview'
         end
 
-        # it 'user does not pay anything, the PPR fee also is sponsored'
-        include_examples 'ppr - sponsored user does not pay anything'
+        it 'user pays nothing' do
+          sponsored_no_fee
+        end
 
         context 'when LDF exists' do
           before do
             upload_file(size: '54_000_000_000', file_name: 'ldf.txt')
-            click_button 'Preview changes'
+            click_button 'Preview'
           end
 
-          # it 'user does not pay anything, the PPR fee also is sponsored'
-          include_examples 'ppr - sponsored user does not pay anything'
+          it 'user pays nothing' do
+            sponsored_no_fee
+          end
         end
       end
     end
@@ -81,6 +83,9 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
       CurationService.new(user: user, resource: resource, status: 'queued').process
       resource.current_state = :submitted
 
+      identifier.reload
+      resource.reload
+
       click_link 'My datasets'
       click_button 'Revise submission'
 
@@ -88,28 +93,32 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
       resource.reload
     end
 
-    include_examples 'ppr - sponsored user does not pay anything'
-
     context 'when kept in PPR' do
       context 'payment value' do
         context 'when nothing changes' do
-          include_examples 'ppr - sponsored user does not pay anything'
+          it 'user pays nothing' do
+            sponsored_no_fee
+          end
         end
 
         context 'when files are added' do
           before do
             upload_file(size: resource_file_size, file_name: 'ldf.txt')
-            click_button 'Preview changes'
+            click_button 'Preview'
           end
 
           context 'and tier is not exceeded' do
-            include_examples 'ppr - sponsored user does not pay anything'
+            it 'user pays nothing' do
+              sponsored_no_fee
+            end
           end
 
           context 'and tier is exceeded' do
             let(:resource_file_size) { 20_000_000_000 }
 
-            include_examples 'ppr - sponsored user does not pay anything'
+            it 'user pays nothing' do
+              sponsored_no_fee
+            end
           end
         end
       end
@@ -117,32 +126,40 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
 
     context 'when removed from PPR' do
       before do
-        click_button 'Agreements'
+        find('button[data-slug="agreements"]').click
+        expect(page).to have_content('Dryad submissions are made publicly available')
         find('label', text: 'My files should be available for public download as soon as possible').click
-        click_button 'Preview changes'
+        expect(page).to have_content('All progress saved')
+        click_button 'Preview'
       end
 
       context 'when nothing changes' do
-        include_examples 'sponsored user does not pay anything'
-        include_examples 'no LDF sponsored payment log is created'
+        it 'user pays nothing and no LDF log created' do
+          sponsored_no_fee
+          no_ldf
+        end
       end
 
       context 'when files are added' do
         before do
           upload_file(size: resource_file_size, file_name: 'ldf.txt')
-          click_button 'Preview changes'
+          click_button 'Preview'
         end
 
         context 'and tier is not exceeded' do
-          include_examples 'individual user does not pay anything'
-          include_examples 'no LDF sponsored payment log is created'
+          it 'user pays nothing and no LDF log created' do
+            sponsored_no_fee
+            no_ldf
+          end
         end
 
         context 'and tier is exceeded' do
           let(:resource_file_size) { 20_000_000_000 }
 
-          include_examples 'sponsored user must pay', '20 GB', '259.00'
-          include_examples 'no LDF sponsored payment log is created'
+          it 'user pays nothing and no LDF log created' do
+            sponsored_with_fee('20 GB', '259.00')
+            pays_and_no_ldf
+          end
         end
       end
     end

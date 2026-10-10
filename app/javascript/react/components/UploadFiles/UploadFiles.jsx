@@ -618,7 +618,7 @@ export default function UploadFiles({
             renameFile={renameFileHandler}
             clickedRemove={removeFileHandler}
             clickedValidationReport={(file) => setValFile(file)}
-            totalSize={chosenFiles.reduce((s, f) => s + f.upload_file_size, 0)}
+            totalSize={resource.total_file_size}
           />
           {loading && (
             <p><i className="fas fa-spin fa-spinner" role="img" aria-label="Loading" /></p>

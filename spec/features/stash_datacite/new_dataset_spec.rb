@@ -45,9 +45,9 @@ RSpec.feature 'NewDataset', type: :feature do
     it 'creates a submission and imports manuscript info' do
       visit '/submit?journalID=JTEST&manu=MAN-001'
       expect(page).to have_content('Dataset submission')
-      expect(find_button('Title')).to match_selector('[aria-describedby="step-complete"')
-      expect(find_button('Description')).to match_selector('[aria-describedby="step-complete"')
-      expect(find_button('Subjects')).to match_selector('[aria-describedby="step-complete"')
+      expect(find_button('Title')).to match_selector('[aria-describedby="step-complete"]', wait: 5)
+      expect(find_button('Description')).to match_selector('[aria-describedby="step-complete"]', wait: 5)
+      expect(find_button('Subjects')).to match_selector('[aria-describedby="step-complete"]', wait: 5)
     end
 
     it 'redirects instead of creating a duplicate' do
