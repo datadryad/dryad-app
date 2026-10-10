@@ -10,7 +10,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
   let!(:sponsor_payment) do
     create(:payment_configuration, partner: top_level_sponsor, payment_plan: '2025', covers_dpc: true)
   end
-
   let!(:level_one_sponsor) { create(:journal_organization, parent_org: top_level_sponsor) }
   let!(:limits_payment) { create(:payment_configuration, partner: level_one_sponsor) }
 
@@ -18,6 +17,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
   let(:user) { create(:user) }
   let(:paid_ldf) { 0 }
   let(:resource_file_size) { 10 }
+  let!(:sponsored_payment_log) { create(:sponsored_payment_log, payer: journal, sponsor_id: top_level_sponsor.id, ldf: paid_ldf) }
   let(:payer_name) { journal.title }
 
   before do
@@ -27,8 +27,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
     mock_stripe!
     journal.reload
     limits_payment.reload
-    create(:sponsored_payment_log, payer: journal, sponsor_id: top_level_sponsor.id, ldf: paid_ldf)
-
     sign_in(user)
   end
 
@@ -38,14 +36,14 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
       build_min_dataset(resource_file_size: resource_file_size)
 
       connect_journal(journal)
-      expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
+      expect(page).to have_content("Payment for this submission is sponsored by #{journal.title}")
       click_button 'Preview'
+      expect(page).to have_content("Payment for this submission is sponsored by #{journal.title}")
     end
 
     context 'payment value' do
       it 'user does not pay DPC' do
         expect(page).to have_content('All data publishing fees are covered by your sponsorship.')
-        expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
         expect(page).to have_css('button', exact_text: 'Submit for publication')
       end
 
@@ -54,7 +52,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
         it 'user pays LDF value' do
           expect(page).to have_content('This 53.2 GB dataset has a Large Data Fee of $464.00.')
-          expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
           expect(page).to have_css('button', exact_text: 'Pay & submit for publication')
         end
       end
@@ -65,7 +62,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
         it 'sponsored user does not pay anything' do
           expect(page).to have_content('All data publishing fees are covered by your sponsorship.')
-          expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
           expect(page).to have_css('button', exact_text: 'Submit for publication')
         end
 
@@ -77,7 +73,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
             it 'sponsored user does not pay anything' do
               expect(page).to have_content('All data publishing fees are covered by your sponsorship.')
-              expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
               expect(page).to have_css('button', exact_text: 'Submit for publication')
             end
           end
@@ -87,7 +82,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
             it 'user pays only the difference' do
               expect(page).to have_content('This 123.2 GB dataset has a Large Data Fee of $659.00')
-              expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
               expect(page).to have_css('button', exact_text: 'Pay & submit for publication')
             end
           end
@@ -101,7 +95,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
             it 'sponsored user does not pay anything' do
               expect(page).to have_content('All data publishing fees are covered by your sponsorship.')
-              expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
               expect(page).to have_css('button', exact_text: 'Submit for publication')
             end
           end
@@ -111,7 +104,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
             it 'user pays the entire amount' do
               expect(page).to have_content('This 123.2 GB dataset has a Large Data Fee of $1,123.00')
-              expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
               expect(page).to have_css('button', exact_text: 'Pay & submit for publication')
             end
           end
@@ -130,7 +122,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
               it 'sponsored user does not pay anything' do
                 expect(page).to have_content('All data publishing fees are covered by your sponsorship.')
-                expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
                 expect(page).to have_css('button', exact_text: 'Submit for publication')
               end
             end
@@ -140,7 +131,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
               it 'user pays for the entire amount' do
                 expect(page).to have_content('This 13.2 GB dataset has a Large Data Fee of $259.00')
-                expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
                 expect(page).to have_css('button', exact_text: 'Pay & submit for publication')
               end
             end
@@ -150,7 +140,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
               it 'user pays for the entire amount' do
                 expect(page).to have_content('This 13.2 GB dataset has a Large Data Fee of $259.00')
-                expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
                 expect(page).to have_css('button', exact_text: 'Pay & submit for publication')
               end
             end
@@ -164,7 +153,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
               it 'user pays for the entire amount' do
                 expect(page).to have_content('This 51.2 GB dataset has a Large Data Fee of $205.00')
-                expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
                 expect(page).to have_css('button', exact_text: 'Pay & submit for publication')
               end
             end
@@ -174,7 +162,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
               it 'user pays for the entire amount' do
                 expect(page).to have_content('This 51.2 GB dataset has a Large Data Fee of $464.00')
-                expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
                 expect(page).to have_css('button', exact_text: 'Pay & submit for publication')
               end
             end
@@ -184,7 +171,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
               it 'user pays for the entire amount' do
                 expect(page).to have_content('This 51.2 GB dataset has a Large Data Fee of $464.00')
-                expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
                 expect(page).to have_css('button', exact_text: 'Pay & submit for publication')
               end
             end
@@ -202,7 +188,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
           it 'sponsored user does not pay anything' do
             expect(page).not_to have_content('Large Data Fee')
-            expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
             expect(page).to have_css('button', exact_text: 'Submit for publication')
           end
         end

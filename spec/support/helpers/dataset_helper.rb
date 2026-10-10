@@ -4,7 +4,7 @@ module DatasetHelper
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
     click_button 'Create a new dataset'
-    expect(page).to have_content('Dataset submission')
+    expect(page).to have_content('Dataset submission', wait: 5)
   end
 
   def navigate_to_metadata
@@ -24,7 +24,6 @@ module DatasetHelper
   def navigate_to_upload
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    expect(page).not_to have_css('#files-loading', wait: 8)
     expect(page).to have_button('Files')
     click_button 'Files'
     find('button[data-slug="files"]').click if page.has_css?('button[data-slug="files"]')
@@ -124,7 +123,7 @@ module DatasetHelper
     within_fieldset('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?') do
       find(:label, 'Yes').click
     end
-    find(:label, 'Submitted manuscript').click
+    find('input[value="manuscript"]').set(true)
 
     find('#publication_ms').send_keys(journal.title)
     page.send_keys(:tab)
@@ -137,16 +136,15 @@ module DatasetHelper
     navigate_to_metadata
     find(:label, 'Yes').click
     expect(page).to have_content('Which would you like to connect?')
-    within_fieldset('Which would you like to connect?') do
-      find(:label, 'Published article').click
-    end
-    expect(page).to have_css('name=["primary_article_doi"]', wait: 5)
+    find('input[value="published"]').set(true)
+    expect(page).to have_css('[name="primary_article_doi"]', wait: 5)
     fill_in 'primary_article_doi', with: doi
     page.send_keys(:tab)
   end
 
   def fill_in_keywords
-    fill_in 'keyword_ac', with: 3.times.map { Faker::Creature::Animal.unique.name }.join(',')
+    expect(page).to have_field('keyword_ac')
+    find('#keyword_ac').send_keys(3.times.map { Faker::Creature::Animal.unique.name }.join(','))
     page.send_keys(:tab)
     Faker::Creature::Animal.unique.clear
   end
@@ -184,6 +182,7 @@ module DatasetHelper
     fill_in 'Granting organization', with: name
     page.send_keys(:tab)
     find('.use-text-entered').set(true) if page.has_css?('.use-text-entered')
+    expect(page).to have_css('input[name="award_number"]', wait: 3)
     fill_in 'award_number', with: value
     page.send_keys(:tab)
   end
@@ -259,13 +258,15 @@ module DatasetHelper
     expect(fu.upload_file_size).to eq(37_221)
   end
 
-  def upload_file(size: '10', file_name: 'funbar.txt')
+  def upload_file(size: 10, file_name: 'funbar.txt')
     navigate_to_upload
     build_valid_stub_request("http://example.org/#{file_name}", 'text/plain', size)
     click_button('data_manifest')
     fill_in('location_urls', with: "http://example.org/#{file_name}")
     click_on('validate_files')
-    expect(page.has_css?('.c-uploadtable tr:last-child i[aria-label="complete"]')).to be true
+    expect(page).to have_css('.c-uploadtable tr:last-child i[aria-label="complete"]')
+    expect(page).to have_css('#file-size-total')
+    expect(page).to have_xpath("//span[@id='file-size-total'][number(@data-value) >= #{size.to_i}]", wait: 5)
   end
 
   def build_min_dataset(resource_file_size: '10')

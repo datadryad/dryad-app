@@ -35,17 +35,21 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
           find('button[data-slug="agreements"]').click
           expect(page).to have_content('Dryad submissions are made publicly available')
           find('label', text: 'Keep my files private while my manuscript undergoes peer review').click
-          click_button 'Preview'
-        end
-
-        it 'user can choose between full fee and PPR fee' do
+          find('input[name="peer_review"][value="1"]').click
           expect(page).to have_content(
             'You may choose to pay only $50.00, with the remainder due at the end of the ' \
             'peer review period. The Private for Peer Review Fee is nonrefundable.',
             wait: 5
           )
-          expect(page).to have_content('These files will be kept private while your manuscript undergoes peer review')
+          click_button 'Preview'
+        end
 
+        it 'user can choose between full fee and PPR fee' do
+          expect(page).to have_content('These files will be kept private while your manuscript undergoes peer review')
+          expect(page).to have_content(
+            'You may choose to pay only $50.00, with the remainder due at the end of the ' \
+            'peer review period. The Private for Peer Review Fee is nonrefundable.'
+          )
           click_button 'Pay & submit for peer review'
           expect(page).to have_content('dataset has a Data Publishing Charge of $150.00')
           expect(page).to have_content(
@@ -193,7 +197,11 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
           find('button[data-slug="agreements"]').click
           expect(page).to have_content('Dryad submissions are made publicly available')
           find('label', text: 'My files should be available for public download as soon as possible').click
-          expect(page).to have_content('All progress saved')
+          find('input[name="peer_review"][value="0"]').click
+          expect(page).not_to have_content(
+            'You may choose to pay only $50.00, with the remainder due at the ' \
+            'end of the peer review period. The Private for Peer Review Fee is nonrefundable.'
+          )
           click_button 'Preview'
         end
 

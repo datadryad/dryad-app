@@ -4,8 +4,8 @@ import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 import {useStore} from '../../../shared/store';
 import {ExitIcon} from '../../ExitButton';
 
-export default function PPRSetting({resource, setResource, dpc, preview, previous}) {
-  const {updateStore} = useStore();
+export default function PPRSetting({resource, setResource, preview, previous}) {
+  const {updateStore, storeState: {dpc}} = useStore();
   const [reason, setReason] = useState('');
   const ppr = resource.hold_for_peer_review
   const subType = resource.resource_type.resource_type;

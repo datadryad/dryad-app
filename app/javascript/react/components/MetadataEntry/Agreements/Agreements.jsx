@@ -7,11 +7,12 @@ import SubmitterAgreement from './SubmitterAgreement';
 export default function Agreements({
   resource, setResource, user, form, previous, config, setAuthorStep, current = false, preview = false,
 }) {
-  const {updateStore, storeState: {dpc, fees, userMustPay}} = useStore();
+  const {updateStore, storeState: {dpc, refreshFees, userMustPay}} = useStore();
   const subType = resource.resource_type.resource_type;
   const {users} = resource;
   const submitter = users.find((u) => u.role === 'submitter');
   const isSubmitter = user.id === submitter.id;
+  const institutionPaying = resource.identifier.display_payer.type === 'StashEngine::Tenant';
   const formRef = useRef(null);
 
   useEffect(() => {
@@ -30,8 +31,8 @@ export default function Agreements({
   }, [dpc, formRef.current]);
 
   useEffect(() => {
-    updateStore({refreshDpcStatus: true, refreshFees: true})
-  }, [current])
+    if (current || preview) updateStore({refreshDpcStatus: true, refreshFees: true})
+  }, [current, preview])
 
   if (Object.keys(dpc).length === 0) {
     return (
@@ -41,7 +42,7 @@ export default function Agreements({
 
   return (
     <>
-      <PPRSetting {...{resource, setResource, dpc, preview, previous}} />
+      <PPRSetting {...{resource, setResource, preview, previous}} />
       {preview ? <h2>Do you agree to Dryad’s terms?</h2> : <h3 style={{marginTop: '3rem'}}>Do you agree to Dryad’s terms?</h3>}
       {subType !== 'collection' && (
         <>
@@ -50,28 +51,26 @@ export default function Agreements({
               <div className="callout">
                 <p>Payment for this submission is sponsored by <b>{resource.identifier.display_payer.name}</b></p>
               </div>
-              {resource.identifier.display_payer.type === 'StashEngine::Tenant' && 
+              {institutionPaying && 
               (previous && resource.tenant_id !== previous.tenant_id) && <p className="del ins">Partner institution changed</p>}
             </>
           )}
-          <ShowCalculations {...{resource, config}} key={{ppr: resource.hold_for_peer_review, ...fees}} />
+          <ShowCalculations {...{resource, config}} key={refreshFees} />
         </>
       )}
       {isSubmitter && (
         <>
           {(subType !== 'collection'
             && (!resource.identifier.payment_type || resource.identifier.payment_type === 'unknown')
-            && (userMustPay || (!dpc.funder_will_pay && dpc.institution_will_pay))) && (
+            && (userMustPay || institutionPaying)) && (
             <>
-              {dpc.institution_will_pay && !!dpc.aff_tenant && dpc.aff_tenant.id !== resource.tenant_id && (
+              {institutionPaying && !!dpc.aff_tenant && dpc.aff_tenant.id !== resource.tenant_id && (
                 <>
                   <p><b>Is this correct?</b> Your author list affiliation <b>{dpc.aff_tenant.long_name}</b> is also a Dryad partner.</p>
                   <div style={{maxWidth: '700px'}} ref={formRef} />
                 </>
               )}
-              {userMustPay && 
-              // Not for LDF payments
-              (!dpc.funder_will_pay && !dpc.institution_will_pay && !dpc.journal_will_pay) && 
+              {userMustPay && dpc.unsponsored && 
               (!dpc.aff_tenant || dpc.aff_tenant.id !== resource.tenant_id) && (
                 <div className="callout warn" style={{margin: '1em 0', paddingBottom: '5px'}}>
                   <p style={{marginBottom: '.75em'}}>

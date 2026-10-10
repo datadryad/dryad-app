@@ -149,25 +149,22 @@ module StashEngine
     end
 
     def dpc_status
-      user_payer_aff = StashEngine::Tenant.connect_list.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id)
+      identifier = @resource.identifier
+      user_payer_aff = StashEngine::Tenant.connect_list.find_by_ror_id(identifier.submitter_affiliation&.ror_id)
       aff_tenant = if @resource.tenant_id.in?(user_payer_aff.ids)
                      user_payer_aff.find_by(id: @resource.tenant_id)
                    else
                      user_payer_aff.first
                    end
       dpc_checks = {
-        journal_will_pay: @resource.identifier.journal_will_pay?,
-        institution_will_pay: @resource.identifier.institution_will_pay?,
-        funder_will_pay: @resource.identifier.funder_will_pay?,
-        user_must_pay: @resource.identifier.user_must_pay?,
+        unsponsored: identifier.display_payer.empty?,
+        user_must_pay: identifier.user_must_pay?,
         aff_tenant: aff_tenant,
-        allow_review: @resource.identifier.allow_review?,
-        automatic_ppr: @resource.identifier.automatic_ppr?,
-        man_decision_made: @resource.identifier.has_accepted_manuscript? || @resource.identifier.has_rejected_manuscript?
+        allow_review: identifier.allow_review?,
+        automatic_ppr: identifier.automatic_ppr?,
+        man_decision_made: identifier.has_accepted_manuscript? || identifier.has_rejected_manuscript?,
+        can_pay_ppr_fee: @resource.hold_for_peer_review && identifier.display_payer.empty? && identifier.payments.paid.none?
       }
-      dpc_checks[:can_pay_ppr_fee] = @resource.hold_for_peer_review &&
-        !dpc_checks[:funder_will_pay] && !dpc_checks[:journal_will_pay] && !dpc_checks[:institution_will_pay] &&
-        (@resource.identifier.payments.paid.last&.ppr_fee_paid? || @resource.identifier.payments.paid.none?)
       render json: dpc_checks
     end
 

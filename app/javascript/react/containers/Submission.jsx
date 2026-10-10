@@ -186,7 +186,7 @@ function Submission({
       help: <AgreeHelp type={resource.resource_type.resource_type} />
     }];
     if (resource.resource_type.resource_type === 'collection') stepArray.splice(6, 3);
-    if (previous?.action_reports?.slice(-1)) stepArray.unshift({name: '', pass: true, preview: <ActionRequired previous={previous} />});
+    if (previous?.action_reports?.slice(-1).length > 0) stepArray.unshift({name: '', pass: true, preview: <ActionRequired previous={previous} />});
     return stepArray.map((s, i) => {
       s.index = i;
       return s;
