@@ -324,6 +324,13 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     @resource.reload
   end
 
+  def navigate_to_affs
+    click_button 'Authors'
+    find('button[data-slug="authors"]').click if page.has_css?('button[data-slug="authors"]')
+    click_button 'Affiliations'
+    expect(page).to have_css('input[id^=instit_affil_]')
+  end
+
   def minor_update
     click_button 'Subjects'
     fill_in_keywords
@@ -337,8 +344,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
   def update_dataset(curator: false)
     # Add a value to the dataset, submit it and then mock a successful submission
-    click_button 'Authors'
-    click_button 'Affiliations'
+    navigate_to_affs
     all('[id^=instit_affil_]').last.set(Faker::Company.name)
     page.send_keys(:tab)
     find('.use-text-entered').set(true) if page.has_css?('.use-text-entered')
