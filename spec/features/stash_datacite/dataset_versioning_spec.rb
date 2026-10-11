@@ -235,6 +235,23 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         expect(@resource.user_id).to eql(@curator.id)
       end
 
+      it 'creates a change log for a README edit', js: true do
+        @resource.check_add_readme_file
+        create(:curation_activity, :published, user: @curator, resource: @resource)
+        sign_in(@author)
+        click_link 'My datasets'
+        within(:css, "form[action=\"/metadata_entry_pages/new_version?resource_id=#{@resource.id}\"]") do
+          find('button[name="update"]').click
+        end
+        click_button 'README'
+        find('[name="readme_editor"]').send_keys("\nThis is a README update.")
+        page.send_keys(:tab)
+        expect(page).to have_content('All progress saved')
+        click_button 'Preview'
+        expect(page).to have_content('Change log', wait: 5)
+        expect(page).to have_content('Edited README.md')
+      end
+
       it 'is automatically published with simple changes', js: true do
         @resource.check_add_readme_file
         create(:curation_activity, :published, user: @curator, resource: @resource)

@@ -234,9 +234,10 @@ function Submission({
 
   useEffect(() => {
     async function updatePayer() {
-      await Promise.all([getFees(), getDPCStatus()])     
+      await Promise.all([updateStore({waitSubmit: true}), getFees(), getDPCStatus()])     
     }
     updatePayer();
+    updateStore({waitSubmit:false});
   }, [resource.tenant, resource.authors, resource.journal, resource.contributors, resource.total_file_size, resource.hold_for_peer_review]);
 
   const markInvalid = (el) => {
@@ -543,6 +544,7 @@ function Submission({
 export default function SubmissionWrapper(props) {
   const initialState = {
     ...props,
+    waitSubmit: false,
     refreshFees: false,
     userMustPay: false,
     affSuggest: null,

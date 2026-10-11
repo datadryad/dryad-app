@@ -15,6 +15,13 @@ import ReadMeWizard from '../../../../../app/javascript/react/components/ReadMeW
 
 jest.mock('axios');
 
+jest.mock('../../../../../app/javascript/react/shared/store', () => ({
+  useStore: () => ({
+    storeState: {fees: 999},
+    updateStore: jest.fn(),
+  }),
+}));
+
 describe('ReadMeWizard', () => {
   let info; let response;
   const setResource = () => {};

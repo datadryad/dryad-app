@@ -155,7 +155,7 @@ export default function UploadFiles({
         setChanges(true);
       }
     }
-  }, [chosenFiles]);
+  }, [chosenFiles, generated_files]);
 
   useEffect(() => {
     const files = resource.generic_files;
