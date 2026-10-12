@@ -17,7 +17,8 @@ class CreatePaymentRecords < ActiveRecord::Migration[8.0]
         PaymentRecord.find_or_create_by(identifier: id, resource_id: res_id, payment: journal, payment_plan: id.payment_type.sub('journal-', ''), fee_type: 'dpc', created_at: change_to&.created_at || id.latest_resource.created_at)
       elsif id.payment_type.start_with?('institution')
         inst = StashEngine::Tenant.find_by(id: id.payment_id)
-        PaymentRecord.find_or_create_by(identifier: id, resource_id: res_id, payment: inst, payment_plan: id.payment_type.sub('institution-', '').presence || '2025', fee_type: 'dpc', created_at: change_to&.created_at || id.latest_resource.created_at)
+        plan = inst.id == 'wayne' || (change_to&.created_at&.year && change_to.created_at.year >= 2026) ? '2025' : nil
+        PaymentRecord.find_or_create_by(identifier: id, resource_id: res_id, payment: inst, payment_plan: id.payment_type.sub('institution-', '').presence || plan, fee_type: 'dpc', created_at: change_to&.created_at || id.latest_resource.created_at)
       elsif id.payment_type.start_with?('funder')
         PaymentRecord.find_or_create_by(identifier: id, resource_id: res_id, payment: StashEngine::Funder.first, fee_type: 'dpc', created_at: change_to&.created_at || id.latest_resource.created_at)
       end
@@ -30,6 +31,14 @@ class CreatePaymentRecords < ActiveRecord::Migration[8.0]
                   'ldf'
                  else
                   'dpc'
+                 end
+      PaymentRecord.find_or_create_by(payment: payment, resource: payment.resource, identifier: payment.resource.identifier, fee_type: fee_type, created_at: payment.created_at)
+    end
+    ResourcePayment.created.where("invoice_id like 'in_%'").each do |payment|
+      fee_type = if payment.invoice_id == payment.resource.identifier.payment_id
+                  'dpc'
+                 else
+                  'ldf'
                  end
       PaymentRecord.find_or_create_by(payment: payment, resource: payment.resource, identifier: payment.resource.identifier, fee_type: fee_type, created_at: payment.created_at)
     end
@@ -96,7 +105,11 @@ class CreatePaymentRecords < ActiveRecord::Migration[8.0]
         when 'StashEngine::Waiver'
           nil
         end
-      r.identifier.update(payment_type: type, payment_id: id, waiver_basis: r.payment_type == 'StashEngine::Waiver' ? r.payment_id : nil)
+      if r.payment_type == 'StashEngine::Waiver' && ['dryad-v1', 'classic-dryad', 'manual', 'voucher', 'no_data'].include?(r.payment_id)
+        type = r.payment_id
+        id = r.payment_plan
+      end
+      r.identifier.update_columns(payment_type: type, payment_id: id, waiver_basis: id.nil? ? r.payment_id : nil)
     end
   end
 end

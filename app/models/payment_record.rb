@@ -4,6 +4,7 @@
 #
 #  id            :bigint           not null, primary key
 #  active        :boolean          default(TRUE)
+#  deleted_at    :datetime
 #  fee_type      :string(191)      default("dpc")
 #  payment_plan  :string(191)
 #  payment_type  :string(191)
@@ -20,6 +21,8 @@
 #  index_payment_records_on_resource_id_and_fee_type     (resource_id,fee_type)
 #
 class PaymentRecord < ApplicationRecord
+  acts_as_paranoid
+
   belongs_to :payment, polymorphic: true, optional: true
   belongs_to :identifier, class_name: 'StashEngine::Identifier'
   belongs_to :resource, class_name: 'StashEngine::Resource'

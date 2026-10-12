@@ -42,7 +42,7 @@ module Stash
         invoice = create_invoice(customer_id)
         create_invoice_items_for_dpc(customer_id, invoice.id)
         res = invoice.send_invoice
-        payment = resource.create_payment(payment_type: 'stripe', pay_with_invoice: true, invoice_id: invoice.id)
+        payment = resource.create_payment(payment_type: 'stripe', pay_with_invoice: true, invoice_id: invoice.id, status: :created)
         PaymentRecord.create(payment: payment, resource: resource, identifier: resource.identifier) unless resource.identifier.waiver?
 
         resource.identifier.update(last_invoiced_file_size: ds_size) if @has_overage_line_item

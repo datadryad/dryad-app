@@ -8,6 +8,8 @@ class AddPaymentRecordTable < ActiveRecord::Migration[8.0]
       t.bigint :resource_id
       t.string :fee_type, default: 'dpc'
       t.boolean :active, default: true
+      
+      t.datetime :deleted_at
       t.timestamps
     end
     add_index :payment_records, [:payment_type, :payment_id]
