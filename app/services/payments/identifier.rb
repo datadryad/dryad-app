@@ -22,7 +22,7 @@ module Payments
       return if identifier.sponsored?
       return if identifier.waiver?
 
-      PaymentRecord.find_or_create_by(payment: payment, resource: payment.resource, identifier: identifier)
+      PaymentRecord.find_or_create_by(payment: payment, resource: payment.resource, identifier: identifier).update(active: true)
     end
   end
 end

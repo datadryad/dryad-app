@@ -14,9 +14,9 @@ end
     <%= log.link %>
     <% if readable == 'stripe' %>(<%= log.payment.status %>)<% end %>
   </span>
-  <% if log.resource_payment || log.payment_log %>
+  <% if log.payment&.has_attribute?(:amount) || log.payment&.has_attribute?(:ldf) %>
     <span>
-      $<%= log.resource_payment&.amount || log.payment_log&.ldf %>
+      $<%= log.payment.has_attribute?(:amount) ? log.payment.amount : log.payment.ldf %>
     </span>
   <% elsif readable == 'waiver' && policy([:stash_engine, :admin_datasets]).waiver_add? %>
     <span>

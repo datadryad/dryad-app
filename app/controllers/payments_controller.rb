@@ -63,7 +63,7 @@ class PaymentsController < ApplicationController
       payment_checkout_session_id: params[:session_id],
       paid_at: Time.current
     )
-    update_identifier_files_size
+    update_identifier_files_size(payment)
     update_payment_details(payment)
   end
 
@@ -111,20 +111,19 @@ class PaymentsController < ApplicationController
     @identifier ||= @resource.identifier
   end
 
-  def update_identifier_files_size
-    sps = SponsoredPaymentsService.new(@resource)
-    fee_type = if @resource.payment.ppr_fee_paid?
+  def update_identifier_files_size(payment)
+    fee_type = if payment.ppr_fee_paid?
                  'ppr'
-               elsif sps.loggable?
+               elsif SponsoredPaymentsService.new(@resource).loggable?
                  'ldf'
-               else
-                 'dpc'
                end
-    PaymentRecord.create(payment: @resource.payment, resource: @resource, identifier: identifier, fee_type: fee_type)
-    return if @resource.payment.ppr_fee_paid? || sps.loggable?
-
-    @resource.fee_record&.update(status: :receipt)
-    identifier.update(last_invoiced_file_size: [identifier.last_invoiced_file_size.to_i, @resource.total_file_size.to_i].max)
+    identifier.record_payment
+    if fee_type.present?
+      PaymentRecord.create(payment: payment, resource: @resource, identifier: identifier, fee_type: fee_type)
+    else
+      @resource.fee_record&.update(status: :receipt)
+      identifier.update(last_invoiced_file_size: [identifier.last_invoiced_file_size.to_i, @resource.total_file_size.to_i].max)
+    end
   end
 
   def update_payment_details(payment)

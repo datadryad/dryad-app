@@ -2,9 +2,10 @@ RSpec.describe 'PaymentsController', type: :request do
   let!(:publisher) { create(:journal_organization, parent_org: nil) }
   let!(:journal) { create(:journal, sponsor: publisher) }
 
-  let(:identifier) { create(:identifier, payment_type: 'journal-2025', payment_id: journal.single_issn) }
+  let(:identifier) { create(:identifier) }
   let(:resource) { create(:resource, identifier: identifier, total_file_size: 100) }
   let!(:resource_publication) { create(:resource_publication, publication_issn: journal.single_issn, resource: resource) }
+  let!(:payment_record) { create(:payment_record, resource: resource, identifier: identifier, payment: journal, payment_plan: '2025') }
 
   let(:session_id) { '12345' }
   let!(:payment) { create(:resource_payment, resource: resource, checkout_session_id: session_id, status: :created) }
@@ -25,29 +26,30 @@ RSpec.describe 'PaymentsController', type: :request do
           it 'does not overwrite identifier payment fields' do
             subject
 
-            expect(identifier.reload.payment_type).to eq('journal-2025')
-            expect(identifier.payment_id).to eq(journal.single_issn)
+            expect(identifier.reload.dpc_payment.payment).to eq(journal)
           end
         end
 
         context 'when dataset is not a sponsor anymore' do
+          let!(:payment_config) { create(:payment_configuration, partner: publisher, payment_plan: nil, covers_dpc: false) }
+
           it 'overwrites identifier payment fields with stripe payment' do
             subject
 
-            expect(identifier.reload.payment_type).to eq('stripe')
-            expect(identifier.payment_id).to eq(stripe_response.payment_intent)
+            expect(identifier.reload.dpc_payment.payment).not_to eq(journal)
+            expect(identifier.dpc_payment.payment.payment_id).to eq(stripe_response.payment_intent)
           end
         end
 
         context 'when dataset is not sponsored' do
-          let(:identifier) { create(:identifier, payment_type: 'stripe', payment_id: 'initial_payment') }
+          let(:identifier) { create(:identifier) }
           let!(:resource_publication) { nil }
+          let!(:payment_record) { nil }
 
           it 'overwrites identifier payment fields' do
             subject
 
-            expect(identifier.reload.payment_type).to eq('stripe')
-            expect(identifier.payment_id).to eq(stripe_response.payment_intent)
+            expect(identifier.dpc_payment.payment.payment_id).to eq(stripe_response.payment_intent)
           end
         end
       end
