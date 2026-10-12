@@ -90,7 +90,7 @@ gem 'rest-client', '~> 2.1.0'
 gem 'restforce', '~> 8.0.1'
 gem 'rinku', '~> 2.0.6' # we used this one, creates links from text but not sure if we still use it
 gem 'rsolr', '~> 2.6.0'
-gem 'rubyzip', '~> 2.3', '>= 2.3.2'
+gem 'rubyzip', '~> 3.7'
 gem 'serrano', '~> 1.7'
 gem 'sidekiq', '~> 8.1.6'
 gem 'sidekiq-limit_fetch'
@@ -138,7 +138,7 @@ group :test do
   gem 'rspec-html'
 
   # The next generation developer focused tool for automated testing of webapps (https://github.com/SeleniumHQ/selenium)
-  gem 'selenium-webdriver', '~> 4.44'
+  gem 'selenium-webdriver', '~> 4.50'
   # Making tests easy on the fingers and eyes (https://github.com/thoughtbot/shoulda)
   gem 'shoulda', '~> 4.0.0'
   # Code coverage for Ruby 1.9+ with a powerful configuration library and automatic merging of coverage across test suites (http://github.com/colszowka/simplecov)

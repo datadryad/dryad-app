@@ -232,17 +232,32 @@ module Stash
       end
 
       describe '#fallback_file_entries1' do
-        it 'gives correct file entries for zip32' do
-          file_string = File.binread('spec/data/zipfiles/test_zip.zip')
-          stub_request(:get, 'https://example.com/zipfile.zip')
-            .with(headers: { 'Host' => 'example.com' })
-            .to_return(status: 200, body: file_string,
-                       headers: { 'Content-Type' => 'application/zip' })
+        context 'when the file has correct headers' do
+          it 'gives correct file entries for zip32' do
+            file_string = File.binread('spec/data/zipfiles/correct_headers_zip_file.zip')
+            stub_request(:get, 'https://example.com/zipfile.zip')
+              .with(headers: { 'Host' => 'example.com' })
+              .to_return(status: 200, body: file_string,
+                         headers: { 'Content-Type' => 'application/zip' })
 
-          zi = Stash::Compressed::ZipInfo.new(presigned_url: 'https://example.com/zipfile.zip')
-          fe = zi.fallback_file_entries1
-          expect(fe.first[:file_name]).to eq('Screen Shot 2022-12-09 at 12.17.31 PM.png')
-          expect(fe.first[:uncompressed_size]).to eq(68_742)
+            zi = Stash::Compressed::ZipInfo.new(presigned_url: 'https://example.com/zipfile.zip')
+            fe = zi.fallback_file_entries1
+            expect(fe.first[:file_name]).to eq('Screen Shot 2022-12-09 at 12.17.31 PM.png')
+            expect(fe.first[:uncompressed_size]).to eq(68_742)
+          end
+        end
+
+        context 'when the file has incorrect headers' do
+          it 'gives correct file entries for zip32' do
+            file_string = File.binread('spec/data/zipfiles/test_zip.zip')
+            stub_request(:get, 'https://example.com/zipfile.zip')
+              .with(headers: { 'Host' => 'example.com' })
+              .to_return(status: 200, body: file_string,
+                         headers: { 'Content-Type' => 'application/zip' })
+
+            zi = Stash::Compressed::ZipInfo.new(presigned_url: 'https://example.com/zipfile.zip')
+            expect { zi.fallback_file_entries1 }.to raise_error(Zip::StreamingError)
+          end
         end
       end
 

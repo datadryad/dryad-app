@@ -25,7 +25,6 @@ class ApplicationController < ActionController::Base
   end
 
   def protect_from_host_header_attack
-    return if controller_name == 'help'
     return if request.host == Rails.application.default_url_options[:host]
 
     log_auth_failure
@@ -35,6 +34,11 @@ class ApplicationController < ActionController::Base
   def log_auth_failure(type: :unauthorized)
     return if controller_name == 'csp_violation_reports'
 
-    AuthFailureService.new(request, current_user, params).create(type)
+    user = begin
+      current_user
+    rescue StandardError
+      nil
+    end
+    AuthFailureService.new(request, user, params).create(type)
   end
 end

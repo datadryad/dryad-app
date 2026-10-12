@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
+import {useStore} from '../../../shared/store';
 import {ExitIcon} from '../../ExitButton';
 
-export default function PPRSetting({ppr, setPPR, resource, setResource, dpc, preview, previous}) {
+export default function PPRSetting({resource, setResource, preview, previous}) {
+  const {storeState: {dpc}} = useStore();
   const [reason, setReason] = useState('');
-
+  const ppr = resource.hold_for_peer_review
   const subType = resource.resource_type.resource_type;
   const curated = !!resource.identifier.process_date.curation_end;
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
@@ -20,7 +22,6 @@ export default function PPRSetting({ppr, setPPR, resource, setResource, dpc, pre
       .then((data) => {
         if (data.status === 200) {
           const {hold_for_peer_review} = data.data;
-          setPPR(hold_for_peer_review);
           setResource((r) => ({...r, hold_for_peer_review}));
           showSavedMsg();
         }
