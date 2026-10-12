@@ -41,7 +41,7 @@ module Stash
 
         invoice = create_invoice(customer_id)
         create_invoice_items_for_dpc(customer_id, invoice.id)
-        res = invoice.send_invoice
+        invoice.send_invoice
         resource.identifier.update(last_invoiced_file_size: ds_size) if @has_overage_line_item
         invoice
       end
