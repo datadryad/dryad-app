@@ -25,10 +25,11 @@ module DatasetHelper
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
     expect(page).to have_button('Files')
+    expect(page).not_to have_css('#files-loading', wait: 5)
     click_button 'Files'
     find('button[data-slug="files"]').click if page.has_css?('button[data-slug="files"]')
     expect(page).to have_content('Files may be uploaded from your computer')
-    expect(page).to have_button('Enter URLs', wait: 8)
+    expect(page).to have_button('Enter URLs', wait: 5)
   end
 
   def navigate_to_review
