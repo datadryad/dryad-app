@@ -7,12 +7,10 @@
   ["#{label ? "#{label} " : ''}#{r.role.capitalize}", r.id] 
 }
 if roles.length > 1 %>
-  <%= form_with(url: stash_url_helpers.admin_dashboard_path, method: 'post') do %>
-    <div class="o-admin-form-pair">
-      <%= label_tag(:user_role, 'View as:') %>
-      <%= select_tag(:user_role, options_for_select(roles, session[:admin_search_role]), class: 'c-input__select', onchange: "this.form.submit();") %>
-    </div>
-  <% end %>
+<div class="o-admin-form-pair">
+  <%= label_tag(:user_role, 'View as:') %>
+  <%= select_tag(:user_role, options_for_select(roles, session[:admin_search_role]), class: 'c-input__select', form: "admin_search_form", onchange: "this.form.requestSubmit();") %>
+</div>
 <% else %>
   <%= roles.first.first %>
 <% end %>
