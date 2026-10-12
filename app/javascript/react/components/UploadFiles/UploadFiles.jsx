@@ -5,6 +5,7 @@ import {v4 as uuid} from 'uuid';
 import Crypto from 'crypto-js';
 import sanitize from '../../../lib/sanitize_filename';
 import {formatSizeUnits} from '../../../lib/utils';
+import {useStore} from '../../shared/store';
 import {pollingDelay} from './pollingDelay';
 import FailedUrlList from './FailedUrlList/FailedUrlList';
 import FileList from './FileList/FileList';
@@ -71,6 +72,7 @@ const changeStatusToProgressBar = (chosenFileId) => {
 export default function UploadFiles({
   resource, setResource, previous, config_maximums, config_s3, s3_dir_name, current, pubDates, error,
 }) {
+  const {updateStore} = useStore();
   const [touched, setTouched] = useState(false);
   const [initialLoad, setInitialLoad] = useState(false);
   const [chosenFiles, setChosenFiles] = useState([]);
@@ -141,7 +143,7 @@ export default function UploadFiles({
       download_filename: f.sanitized_name,
       type: UploadTypetoRailsActiveRecord[f.uploadType],
     }));
-    setResource((r) => ({...r, total_file_size: generic_files.reduce((s, f) => s + f.upload_file_size, 0), generic_files}));
+    setResource((r) => ({...r, total_file_size: generic_files.concat(generated_files).reduce((s, f) => s + f.upload_file_size, 0), generic_files}));
     if (previous) {
       if (chosenFiles.some((f) => f.uploadType === 'data' && f.status !== 'Pending' && f.file_state === 'created')) {
         setChanges(true);
@@ -548,6 +550,7 @@ export default function UploadFiles({
           document.getElementById('submission-help')?.querySelectorAll('button').forEach((b) => {
             b.removeAttribute('disabled');
           });
+          updateStore({refreshFees: true})
         }
       });
       observer.observe(uploadRef.current, {subtree: true, childList: true});

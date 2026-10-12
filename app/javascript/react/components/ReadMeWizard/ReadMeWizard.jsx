@@ -33,6 +33,7 @@ export default function ReadMeWizard({
     axios.get(`/resources/${resource.id}/generate_files`).then((data) => {
       const {generated_files, total_file_size} = data.data;
       setResource((r) => ({...r, generated_files, total_file_size}))
+      if (total_file_size === resource.total_file_size) updateStore({waitSubmit: false});
     });
   }
 
