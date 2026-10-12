@@ -1,5 +1,6 @@
 RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true do
   include DatasetHelper
+  include PaymentsHelper
   include Mocks::RSolr
   include Mocks::Aws
   include Mocks::DataFile
@@ -19,82 +20,70 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
   end
 
   context 'on first version' do
-    before { build_full_dataset }
-
-    it 'payment is not sponsored' do
-      expect(page).not_to have_text('Payment for this submission is sponsored by')
+    before do
+      build_full_dataset
     end
 
     context 'payment value' do
       it 'user pays DPC' do
         expect(page).to have_content('dataset has a Data Publishing Charge of $150.00')
         expect(page).not_to have_content('Payment for this submission is sponsored by')
-        expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
       end
 
       context 'when is set to PPR' do
         before do
-          click_button 'Agreements'
+          find('button[data-slug="agreements"]').click
+          expect(page).to have_content('Dryad submissions are made publicly available')
           find('label', text: 'Keep my files private while my manuscript undergoes peer review').click
-          click_button 'Preview changes'
+          find('input[name="peer_review"][value="1"]').click
+          expect(page).to have_content(
+            'You may choose to pay only $50.00, with the remainder due at the end of the ' \
+            'peer review period. The Private for Peer Review Fee is nonrefundable.',
+            wait: 5
+          )
+          click_button 'Preview'
         end
 
-        it 'user is informed he can pay only the PPR fee' do
-          expect(page).not_to have_content('Payment for this submission is sponsored by')
+        it 'user can choose between full fee and PPR fee' do
+          expect(page).to have_content('These files will be kept private while your manuscript undergoes peer review')
+          expect(page).to have_content(
+            'You may choose to pay only $50.00, with the remainder due at the end of the ' \
+            'peer review period. The Private for Peer Review Fee is nonrefundable.'
+          )
+          click_button 'Pay & submit for peer review'
           expect(page).to have_content('dataset has a Data Publishing Charge of $150.00')
           expect(page).to have_content(
-            'You may choose to pay only $50.00, with the remainder due at the end ' \
-            'of the peer review period. The Private for Peer Review Fee is nonrefundable.'
+            'You may choose to pay only $50.00, with the remainder due at the end of the ' \
+            'peer review period. The Private for Peer Review Fee is nonrefundable.'
           )
 
-          expect(page).to have_css('button', exact_text: 'Pay & Submit for peer review')
-        end
-
-        context 'when on payment page' do
-          it 'user can choose between full fee and PPR fee' do
-            click_button 'Pay & Submit for peer review'
-
-            expect(page).to have_content('dataset has a Data Publishing Charge of $150.00')
-            expect(page).to have_content(
-              'You may choose to pay only $50.00, with the remainder due at the end of the ' \
-              'peer review period. The Private for Peer Review Fee is nonrefundable.'
-            )
-
-            expect(page).to have_css('button', exact_text: 'Pay full $150.00 now')
-            expect(page).to have_css('button', exact_text: 'Pay $50.00 Peer Review Fee')
-          end
+          expect(page).to have_css('button', exact_text: 'Pay full $150.00 now')
+          expect(page).to have_css('button', exact_text: 'Pay $50.00 Peer Review Fee')
         end
 
         context 'when LDF exists' do
           before do
             upload_file(size: '54_000_000_000', file_name: 'ldf.txt')
-            click_button 'Preview changes'
+            click_button 'Preview'
           end
 
-          it 'user is informed he can pay only the PPR fee' do
+          it 'user can choose between full fee and PPR fee' do
             expect(page).not_to have_content('Payment for this submission is sponsored by')
-            expect(page).to have_content('This 54 GB dataset has a Data Publishing Charge of $808.00')
+            expect(page).to have_content('This 54 GB dataset has a Data Publishing Charge of $808.00', wait: 5)
             expect(page).to have_content(
               'You may choose to pay only $50.00, with the remainder due at the end of the ' \
               'peer review period. The Private for Peer Review Fee is nonrefundable.'
             )
 
-            expect(page).to have_css('button', exact_text: 'Pay & Submit for peer review')
-          end
+            click_button 'Pay & submit for peer review'
+            expect(page).to have_content('This 54 GB dataset has a Data Publishing Charge of $808.00')
+            expect(page).to have_content(
+              'You may choose to pay only $50.00, with the remainder due at the end of ' \
+              'the peer review period. The Private for Peer Review Fee is nonrefundable.'
+            )
 
-          context 'when on payment page' do
-            it 'user can choose between full fee and PPR fee' do
-              click_button 'Pay & Submit for peer review'
-
-              expect(page).to have_content('This 54 GB dataset has a Data Publishing Charge of $808.00')
-              expect(page).to have_content(
-                'You may choose to pay only $50.00, with the remainder due at the end of ' \
-                'the peer review period. The Private for Peer Review Fee is nonrefundable.'
-              )
-
-              expect(page).to have_css('button', exact_text: 'Pay full $808.00 now')
-              expect(page).to have_css('button', exact_text: 'Pay $50.00 Peer Review Fee')
-            end
+            expect(page).to have_css('button', exact_text: 'Pay full $808.00 now')
+            expect(page).to have_css('button', exact_text: 'Pay $50.00 Peer Review Fee')
           end
         end
       end
@@ -125,76 +114,74 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
       CurationService.new(user: user, resource: resource, status: 'queued').process
       resource.current_state = :submitted
 
-      click_link 'My datasets'
-      click_button 'Revise submission'
-
       identifier.reload
       resource.reload
-    end
 
-    include_examples 'ppr - individual user does not pay anything'
+      click_link 'My datasets'
+      click_button 'Revise submission'
+    end
 
     context 'payment value' do
       context 'when kept in PPR' do
         context 'when nothing changes' do
-          include_examples 'ppr - individual user does not pay anything'
-          include_examples 'ppr - no LDF sponsored payment log is created'
+          it 'user pays nothing and no LDF log created' do
+            unsponsored_no_fee
+            no_ldf
+          end
         end
 
         context 'when files are added' do
           before do
             upload_file(size: resource_file_size, file_name: 'ldf.txt')
-            click_button 'Preview changes'
+            click_button 'Preview'
           end
 
           context 'and tier is not exceeded' do
-            include_examples 'ppr - individual user does not pay anything'
-            include_examples 'ppr - no LDF sponsored payment log is created'
+            it 'user pays nothing and no LDF log created' do
+              unsponsored_no_fee
+              no_ldf
+            end
           end
 
           context 'and tier is exceeded' do
             let(:resource_file_size) { 20_000_000_000 }
 
             context 'when DPC was paid in full (not the PPR fee)' do
-              include_examples 'ppr - individual user must pay', '20 GB', '370.00'
 
               it 'user is not prompted to pay the PPR fee' do
+                unsponsored_with_fee('20 GB', '370.00')
+
                 expect(page).not_to have_content(
                   'You may choose to pay only $50.00, with the remainder due at the ' \
-                  'end of the peer review period. The Private for Peer Review Fee is nonrefundable.'
+                  'end of the peer review period. The Private for Peer Review Fee is nonrefundable.',
+                  wait: 5
                 )
-              end
 
-              context 'when on payment page' do
-                include_examples 'ppr - individual user must pay', '20 GB', '370.00'
+                click_button 'Pay & submit for peer review'
 
-                it 'user can not choose PPR fee' do
-                  click_button 'Pay & Submit for peer review'
+                expect(page).to have_content(
+                  'Since the dataset size has increased to 20 GB, submitting this new ' \
+                  'version will come with an additional charge of $370.00.'
+                )
+                expect(page).not_to have_content(
+                  'You may choose to pay only $50.00, with the remainder due at ' \
+                  'the end of the peer review period. The Private for Peer Review Fee is nonrefundable.'
+                )
 
-                  expect(page).to have_content(
-                    'Since the dataset size has increased to 20 GB, submitting this new ' \
-                    'version will come with an additional charge of $370.00.'
-                  )
-                  expect(page).not_to have_content(
-                    'You may choose to pay only $50.00, with the remainder due at ' \
-                    'the end of the peer review period. The Private for Peer Review Fee is nonrefundable.'
-                  )
-
-                  expect(page).not_to have_css('button', exact_text: 'Pay full $370.00 now')
-                  expect(page).not_to have_css('button', exact_text: 'Pay $50.00 Peer Review Fee')
-                end
+                expect(page).not_to have_css('button', exact_text: 'Pay full $370.00 now')
+                expect(page).not_to have_css('button', exact_text: 'Pay $50.00 Peer Review Fee')
               end
             end
 
             context 'when only the ppr fee was paid' do
+              let(:last_invoiced_file_size) { nil }
               let!(:payment) do
                 create(:resource_payment, resource: resource, amount: 50, payment_type: 'stripe', status: :paid, ppr_fee_paid: true)
               end
 
-              include_examples 'ppr - individual user does not pay anything'
+              it 'notifies the user that the PPR fee was already paid' do
+                unsponsored_no_fee
 
-              xit 'notifies the user that the PPR fee was already paid' do
-                # works as expected when testing manual
                 expect(page).to have_content(
                   'The $50.00 Private for Peer Review Fee has been paid. ' \
                   'The remainder of the Data Publishing Charge is due at submission for curation and publication.'
@@ -207,67 +194,74 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
 
       context 'when removed from PPR' do
         before do
-          click_button 'Agreements'
+          find('button[data-slug="agreements"]').click
+          expect(page).to have_content('Dryad submissions are made publicly available')
           find('label', text: 'My files should be available for public download as soon as possible').click
-          click_button 'Preview changes'
+          find('input[name="peer_review"][value="0"]').click
+          expect(page).not_to have_content(
+            'You may choose to pay only $50.00, with the remainder due at the ' \
+            'end of the peer review period. The Private for Peer Review Fee is nonrefundable.'
+          )
+          click_button 'Preview'
         end
 
         context 'when nothing changes' do
-          include_examples 'individual user does not pay anything'
-          include_examples 'no LDF sponsored payment log is created'
+          it 'user pays nothing and no LDF log created' do
+            unsponsored_no_fee
+            no_ldf
+          end
         end
 
         context 'when files are added' do
           before do
             upload_file(size: resource_file_size, file_name: 'ldf.txt')
-            click_button 'Preview changes'
+            click_button 'Preview'
           end
 
           context 'and tier is not exceeded' do
-            include_examples 'individual user does not pay anything'
-            include_examples 'no LDF sponsored payment log is created'
+            it 'user pays nothing and no LDF log created' do
+              unsponsored_no_fee
+              no_ldf
+            end
           end
 
           context 'and tier is exceeded' do
             let(:resource_file_size) { 20_000_000_000 }
 
             context 'when DPC was paid in full (not the PPR fee)' do
-              include_examples 'individual user must pay', '20 GB', '370.00'
-
               it 'user is not prompted to pay the PPR fee' do
+                unsponsored_with_fee('20 GB', '370.00')
+
                 expect(page).not_to have_content(
                   'You may choose to pay only $50.00, with the remainder due at the ' \
                   'end of the peer review period. The Private for Peer Review Fee is nonrefundable.'
                 )
-              end
 
-              context 'when on payment page' do
-                include_examples 'individual user must pay', '20 GB', '370.00'
+                click_button 'Pay & submit for publication'
 
-                it 'user can not choose PPR fee' do
-                  click_button 'Pay & Submit for publication'
+                expect(page).to have_content(
+                  'Since the dataset size has increased to 20 GB, submitting this new ' \
+                  'version will come with an additional charge of $370.00.'
+                )
+                expect(page).not_to have_content(
+                  'You may choose to pay only $50.00, with the remainder due at ' \
+                  'the end of the peer review period. The Private for Peer Review Fee is nonrefundable.'
+                )
 
-                  expect(page).to have_content(
-                    'Since the dataset size has increased to 20 GB, submitting this new ' \
-                    'version will come with an additional charge of $370.00.'
-                  )
-                  expect(page).not_to have_content(
-                    'You may choose to pay only $50.00, with the remainder due at ' \
-                    'the end of the peer review period. The Private for Peer Review Fee is nonrefundable.'
-                  )
-
-                  expect(page).not_to have_css('button', exact_text: 'Pay full $370.00 now')
-                  expect(page).not_to have_css('button', exact_text: 'Pay $50.00 Peer Review Fee')
-                end
+                expect(page).not_to have_css('button', exact_text: 'Pay full $370.00 now')
+                expect(page).not_to have_css('button', exact_text: 'Pay $50.00 Peer Review Fee')
               end
             end
 
             context 'when only the ppr fee was paid' do
+              let(:last_invoiced_file_size) { nil }
               let!(:payment) do
                 create(:resource_payment, resource: resource, amount: 50, payment_type: 'stripe', status: :paid, ppr_fee_paid: true)
               end
 
-              include_examples 'individual user must pay', '20 GB', '370.00'
+              it 'shows correct PPR fee paid discount' do
+                unsponsored_ppr_paid('20 GB', '470.00')
+              end
             end
           end
         end

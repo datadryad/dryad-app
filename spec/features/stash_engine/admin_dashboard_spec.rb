@@ -337,7 +337,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
             click_button 'Preview changes'
             click_button 'Subjects'
             fill_in_keywords
-            refresh
+            click_button 'Preview changes'
             fill_in 'user_comment', with: Faker::Lorem.sentence
             submit_form
             expect(page).to have_text('Admin dashboard')
