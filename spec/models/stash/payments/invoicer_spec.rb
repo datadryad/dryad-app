@@ -51,13 +51,13 @@ module Stash
         end
 
         it 'creates an invoice for a new stripe customer' do
-          expect(@invoicer.charge_user_via_invoice).to eql('STRIPE1234')
+          expect(@invoicer.charge_user_via_invoice.send_invoice).to eql('STRIPE1234')
         end
 
         it 'creates an invoice for an existing stripe customer' do
           allow(@invoicer).to receive(:lookup_prior_stripe_customer_id).and_return('999911')
           allow(@author).to receive(:stripe_customer_id).and_return('999911')
-          expect(@invoicer.charge_user_via_invoice).to eql('STRIPE1234')
+          expect(@invoicer.charge_user_via_invoice.send_invoice).to eql('STRIPE1234')
         end
 
         it 'does not create an invoice when the resource has no primary author' do

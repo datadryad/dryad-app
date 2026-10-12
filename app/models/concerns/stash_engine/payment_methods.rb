@@ -217,6 +217,8 @@ module StashEngine
       elsif journal_will_pay?
         # remove payment if paying journal has changed or been removed
         return if dpc_payment.payment == journal
+      elsif waiver?
+        return
       end
 
       dpc_payment.update(active: false)
