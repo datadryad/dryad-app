@@ -21,6 +21,8 @@ RSpec.feature 'EditLink', type: :feature do
     it 'opens a page with an edit link and redirects when complete', js: true do
       content = Faker::Lorem.paragraph
       @identifier = create(:identifier, edit_code: Faker::Number.number(digits: 5), import_info: 'other')
+      tenant = create(:tenant, id: 'email_auth')
+      create(:payment_configuration, partner: tenant, payment_plan: '2025')
       @res = create(:resource, tenant_id: 'email_auth', identifier: @identifier, user: create(:user, tenant_id: 'email_auth'))
       create(:data_file, resource: @res)
       create(:description, description_type: 'technicalinfo', resource: @res, description: content)
