@@ -3,7 +3,6 @@
 # Table name: payment_configurations
 #
 #  id                     :bigint           not null, primary key
-#  covers_dpc             :boolean
 #  covers_ldf             :boolean
 #  ldf_limit              :integer
 #  ldf_limit_notification :text(65535)
@@ -21,10 +20,10 @@ FactoryBot.define do
     id { Faker::Number.number }
     partner { '1' }
     payment_plan { nil }
-    covers_dpc { nil }
     covers_ldf { nil }
     ldf_limit { nil }
     yearly_ldf_limit { nil }
+    submitter_contact { nil }
 
     to_create do |instance|
       record = PaymentConfiguration.find_or_initialize_by(partner: instance.partner)

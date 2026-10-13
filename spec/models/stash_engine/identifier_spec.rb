@@ -53,7 +53,8 @@ module StashEngine
       mock_salesforce!
       mock_stripe!
       neuter_emails!
-      create(:tenant_ucop)
+      tenant = create(:tenant_ucop)
+      create(:payment_configuration, partner: tenant, payment_plan: '2025')
       @user = create(:user, tenant_id: 'dryad')
       Timecop.travel(Time.now.utc - 3.minutes)
       @identifier = create(:identifier, identifier_type: 'DOI', identifier: '10.123/456')
@@ -466,7 +467,7 @@ module StashEngine
       context 'when journal will pay' do
         let(:org) { create(:journal_organization) }
         let!(:journal) { create(:journal, issn: @fake_issn, sponsor: org) }
-        let!(:payment_configuration) { create(:payment_configuration, partner: org, payment_plan: '2025', covers_dpc: true, covers_ldf: true) }
+        let!(:payment_configuration) { create(:payment_configuration, partner: org, payment_plan: '2025', covers_ldf: true) }
         let!(:resource_publication) { create(:resource_publication, publication_issn: @fake_issn, resource: resource) }
 
         it { is_expected.to be_falsey }
@@ -480,7 +481,6 @@ module StashEngine
             :payment_configuration,
             partner: tenant,
             payment_plan: '2025',
-            covers_dpc: true,
             covers_ldf: true,
             ldf_limit: size_limit,
             yearly_ldf_limit: amount_limit
@@ -490,7 +490,7 @@ module StashEngine
         it { is_expected.to be_falsey }
 
         context 'when ldf size limit is not covered' do
-          let!(:payment_configuration) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: false) }
+          let!(:payment_configuration) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: false) }
 
           it { is_expected.to be_truthy }
         end
@@ -669,6 +669,7 @@ module StashEngine
       describe '"author_match" strategy' do
         before(:each) do
           @tenant = create(:tenant_match)
+          create(:payment_configuration, partner: @tenant, payment_plan: '2025')
           @user.update(tenant_id: 'match_tenant')
           @resource = create(:resource, user: @user)
         end

@@ -53,7 +53,7 @@ module StashEngine
     scope :connect_list, -> {
       partner_list.with_recursive(
         tenant_tree: [
-          StashEngine::Tenant.partner_list.joins(:payment_configuration).where(sponsor_id: nil, payment_configuration: { covers_dpc: true }),
+          StashEngine::Tenant.partner_list.joins(:payment_configuration).where(sponsor_id: nil).merge(PaymentConfiguration.covering_dpc),
           StashEngine::Tenant.joins('JOIN tenant_tree ON stash_engine_tenants.sponsor_id = tenant_tree.id')
         ]
       )
