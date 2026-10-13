@@ -45,12 +45,12 @@ RSpec.describe PaymentConfiguration, type: :model do
   describe 'payment_plan enum' do
     it 'defines the expected values' do
       expect(described_class.payment_plans).to eq(
-                                                 'SUBSCRIPTION' => 1,
-                                                 'PREPAID' => 2,
-                                                 'DEFERRED' => 3,
-                                                 'TIERED' => 4,
-                                                 '2025' => 5
-                                               )
+        'SUBSCRIPTION' => 1,
+        'PREPAID' => 2,
+        'DEFERRED' => 3,
+        'TIERED' => 4,
+        '2025' => 5
+      )
     end
   end
 
