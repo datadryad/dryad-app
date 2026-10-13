@@ -72,7 +72,7 @@ function InvoicingPageMessage({fees}) {
 }
 
 const PaymentWarning = () => (
-  <p>Please do not close or refresh the page while payment is processing</p>
+  <p style={{textAlign: 'center', fontSize: '.98rem', fontStyle: 'italic'}}>Please do not close or refresh this page while payment is processing</p>
 );
 
 function Payments({
@@ -151,7 +151,6 @@ function Payments({
         <>
           <CalculateFees resource={resource} ppr />
           <p>You must complete payment to submit your dataset for Peer Review.</p>
-          <PaymentWarning />
           <p className="input-line" style={{justifyContent: 'center'}} role="group" aria-label="Choose payment">
             <button
               type="button"
@@ -176,6 +175,7 @@ function Payments({
               Pay $50.00 Peer Review Fee
             </button>
           </p>
+          <PaymentWarning />
         </>
       ) : (
         <>
