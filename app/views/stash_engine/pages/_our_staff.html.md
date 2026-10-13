@@ -82,42 +82,42 @@
 <div class="bio">
   <img src="/images/laura.jpg" alt="Headshot of Laura Bowman">
   <h5>Laura Bowman</h5><br/>
-  <p><em>Senior Data Curator II</em><br/>
+  <p><em>Global Curation Process Manager</em><br/>
   Laura has a B.S. and M.S. in Accounting from Penn State and worked as a public accountant for several years before transitioning to librarianship. She holds an MLIS from the University of Pittsburgh and has worked in academic and public librarianship, but found her niche in data librarianship. Laura is an avid reader, loves taking walks and exploring new places, and playing with her two cats.
   </p>
 </div>
 <div class="bio">
   <img src="/images/alex.jpg" alt="Headshot of Alex Hall">
   <h5>Alex Hall</h5><br/>
-  <p><em>Data Curator</em><br/>Alex is an interdisciplinary scientist with a B.S. in Animal Behavior and Ph.D. in Biology. He has published a dozen papers on topics such as parthenogenesis, artificial light at night, and image processing. He has been an advocate for open science and open data sharing practices, through, for example, BioImaging North America and Non-Clinical Tomography Users Research Network. Alex enjoys greyhound rescue, pottery, house music, birdwatching, and reptiles.</p>
+  <p><em>Senior Data Curator I (Americas)</em><br/>Alex is an interdisciplinary scientist with a B.S. in Animal Behavior and Ph.D. in Biology. He has published a dozen papers on topics such as parthenogenesis, artificial light at night, and image processing. He has been an advocate for open science and open data sharing practices, through, for example, BioImaging North America and Non-Clinical Tomography Users Research Network. Alex enjoys greyhound rescue, pottery, house music, birdwatching, and reptiles.</p>
 </div>
 <div class="bio">
   <img src="/images/kathiyayini.jpg" alt="Headshot of Kathiyayini Jayaraman">
   <h5>Kathiyayini Jayaraman</h5><br/>
-  <p><em>Data Curator</em><br/>Kathiyayini holds an M.Sc. in Biochemistry. She has three years of experience as a curator of life science literature and has previously worked for two different companies as a research analyst and scientific analyst. In her role as a scientific analyst, Kathiyayini coordinated interviews, served as a trainer, and oversaw quality control. In her free time, she enjoys pencil drawing, painting, and listening to music.</p>
+  <p><em>Data Curator (EMEA and APAC)</em><br/>Kathiyayini holds an M.Sc. in Biochemistry. She has three years of experience as a curator of life science literature and has previously worked for two different companies as a research analyst and scientific analyst. In her role as a scientific analyst, Kathiyayini coordinated interviews, served as a trainer, and oversaw quality control. In her free time, she enjoys pencil drawing, painting, and listening to music.</p>
 </div>
 <div class="bio">
   <img src="/images/rose.jpg" alt="Headshot of Rose Jeffries">
   <h5>Rose Jeffries</h5><br/>
-  <p><em>Data Curator</em><br/>Rose holds a B.A. and M.S. in Psychology. She started her career as a research assistant at the University of Oregon, where she discovered her enthusiasm for data management and stewardship. She has worked with data types ranging from brain imaging and blood samples to observational coding, survey responses, and government records. Rose is a vocal advocate of open science and community-centered research, and she enjoys crochet, exploring the Pacific Northwest, gardening, gaming, and spending time with her partner and their cats.</p>
+  <p><em>Data Curator (Americas)</em><br/>Rose holds a B.A. and M.S. in Psychology. She started her career as a research assistant at the University of Oregon, where she discovered her enthusiasm for data management and stewardship. She has worked with data types ranging from brain imaging and blood samples to observational coding, survey responses, and government records. Rose is a vocal advocate of open science and community-centered research, and she enjoys crochet, exploring the Pacific Northwest, gardening, gaming, and spending time with her partner and their cats.</p>
 </div>
 <div class="bio">
   <img src="/images/kailasha.jpg" alt="Headshot of Kailasha Purushothaman">
   <h5>Kailasha Purushothaman</h5><br/>
-  <p><em>Data Curator</em><br/>
+  <p><em>Senior Data Curator I (EMEA and APAC)</em><br/>
   Kailasha has a diverse range of experiences and expertise in the fields of medical physics, teaching, biophysics imaging and copyediting. She earned her Master of Medical Physics degree from RMIT University and began her career as a Physicist at Peter MacCallum Cancer Center in Australia, where she gained valuable experience in radiation therapy. She has also taught medical physics and biomedical imaging to undergraduate students. In her free time, Kailasha enjoys pursuing creative outlets such as cooking and painting.</p>
 </div>
 <div class="bio">
   <img src="/images/maryann.jpg" alt="Headshot of Mary Ann Tuli">
   <h5>Mary Ann Tuli</h5><br/>
-  <p><em>Data Curator</em><br/>
+  <p><em>Data Curator (EMEA and APAC)</em><br/>
   Mary Ann studied Applied Molecular Biology at the University of Hull, UK. She began her biocuration career at the EMBL Database in Heidelberg, later working on the model organism database WormBase. She subsequently moved into scientific publishing as a Data Editor for GigaDB, the data repository supporting GigaScience Press journals. Outside of work, she is a keen and competitive runner and enjoys watching live theatre and ballet.
   </p>
 </div>
 <div class="bio">
   <img src="/images/jwalter.png" alt="Headshot of Jeremy Walter">
   <h5>Jeremy Walter</h5><br/>
-  <p><em>Senior Data Curator I</em><br/>
+  <p><em>Senior Data Curator I (Americas)</em><br/>
   Jeremy transitioned from a management role in English as a Second Language
   education in Thailand to technical writing and training coordination roles on
   various biology-driven projects in the United States. He recently repatriated
