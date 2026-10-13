@@ -58,7 +58,9 @@ RSpec.feature 'ReviewDataset', type: :feature do
     end
 
     it 'waives the fee when the institution will pay' do
-      create(:tenant_email)
+      tenant = create(:tenant_email)
+      create(:payment_configuration, partner: tenant, payment_plan: '2025')
+
       user.update(tenant_id: 'email_auth')
       refresh
       click_button 'Agreements'
@@ -101,7 +103,8 @@ RSpec.feature 'ReviewDataset', type: :feature do
     end
 
     it 'waives the fee when funder will pay' do
-      create(:funder, name: 'Happy Clown School')
+      funder = create(:funder, name: 'Happy Clown School')
+      create(:payment_configuration, partner: funder, payment_plan: '2025')
       click_button 'Support'
       fill_in_funder(name: 'Happy Clown School')
 
