@@ -332,7 +332,7 @@ module StashEngine
         tenant_orgs = []
       end
 
-      tenant_orgs = [] if @filters[:submitter_limit].present?
+      # tenant_orgs = [] if @filters[:submitter_limit].present?
 
       @datasets = @datasets.left_outer_joins(authors: :affiliations, identifier: :dpc_payment)
         .joins('left outer join dcs_contributors contributors on stash_engine_resources.id = contributors.resource_id')
