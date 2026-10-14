@@ -144,7 +144,7 @@ end
   <% end %>
   <div class="o-admin-form-pair half-width">
     <div class="input-stack">
-      <b id="edit_filters" role="heading" aria-level="4">Limit results to datasets with</b>
+      <b id="edit_filters" role="heading" aria-level="4">Limit results to datasets with:</b>
       <div class="input-line" style="align-items: center;">
         <div class="o-admin-form-pair">
           <%= check_box_tag 'doi_limit', checked: @filters[:doi_limit].present?, name: 'filters[doi_limit]', 'aria-describedby': 'filter-limits-desc' %>
