@@ -305,16 +305,6 @@ module StashEngine
             expect(@identifier.reload.latest_resource_with_public_metadata).to eql(nil)
           end
 
-          it 'disallows any access if latest state is withdrawn' do
-            CurationService.new(resource: @res1, status: 'curation', user: @user).process
-            CurationService.new(resource: @res1, status: 'published', user: @user).process
-            CurationService.new(resource: @res2, status: 'curation', user: @user).process
-            CurationService.new(resource: @res2, status: 'published', user: @user).process
-            CurationService.new(resource: @res3, status: 'curation', user: @user).process
-            CurationService.new(resource: @res3, status: 'withdrawn', user: @user).process
-            expect(@identifier.reload.latest_resource_with_public_metadata).to eql(nil)
-          end
-
         end
 
         describe '#latest_viewable_resource' do

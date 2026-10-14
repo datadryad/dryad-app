@@ -20,6 +20,16 @@ namespace :payments do
     end
   end
 
+  desc 'Check for paid invoices'
+  task check_paid_invoices: :environment do
+    last_invoice_id = nil
+    loop do
+      invoices = Stripe::Invoice.list({ status: 'paid', starting_after: last_invoice_id, limit: 100 })
+      last_invoice_id = pay_invoices(invoices.data)
+      break unless invoices.has_more
+    end
+  end
+
   def void_invoices(invoices)
     processed_ids = ResourcePayment.where(status: :voided).pluck(:invoice_id)
 
@@ -52,6 +62,33 @@ namespace :payments do
       end
     end
     transactions.last&.id
+  end
+
+  def pay_invoices(invoices)
+    processed_ids = ResourcePayment.paid.select(:invoice_id).distinct.pluck(:invoice_id).uniq
+
+    invoices.each do |invoice|
+      next if processed_ids.include?(invoice.id)
+
+      payment = ResourcePayment.find_by(invoice_id: invoice.id)
+      if payment.present?
+        puts "Updating payment for invoice #{invoice.id}"
+        payment.update(
+          status: :paid,
+          paid_at: paid_at(invoice),
+          status_time: paid_at(invoice)
+        )
+      else
+        puts "No payment found for invoice #{invoice.id}"
+      end
+    end
+    invoices.last&.id
+  end
+
+  def paid_at(stripe_invoice)
+    Time.at(stripe_invoice.status_transitions.paid_at.to_i)
+  rescue StandardError
+    Time.current
   end
 end
 # :nocov:

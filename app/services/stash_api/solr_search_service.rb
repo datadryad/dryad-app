@@ -50,7 +50,8 @@ module StashApi
         award: 'funder_awd_ids_sm',
         facility: 'sponsor_ror_ids_sm',
         org: 'ror_ids_sm',
-        year: 'solr_year_i'
+        year: 'solr_year_i',
+        orcid: 'author_orcids_sm'
       }
     end
 
@@ -59,7 +60,6 @@ module StashApi
         doi: 'dc_identifier_ti',
         subject: 'dc_subject_tmi',
         author: 'dc_creator_tmi',
-        orcid: 'author_orcids_tmi',
         affiliationName: 'dryad_author_affiliation_name_tmi',
         relatedId: 'dryad_related_publication_id_tmi',
         journal: 'dryad_related_publication_name_ti',

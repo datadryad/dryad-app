@@ -216,7 +216,7 @@ module Stash
             entries = fallback_file_entries1
             return entries unless entries.empty?
           end
-        rescue Zip::GPFBit3Error
+        rescue Zip::StreamingError
           # ignore
           # this is a known issue with rubyzip
         end

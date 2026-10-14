@@ -62,7 +62,7 @@ export default function FilesPreview({
   const diff = prevlog && changelog.description !== prevlog.description;
   const getChanges = () => {
     axios.get(`/stash_datacite/descriptions/${changelog.id}?markdown`).then((res) => {
-      const existing = logRef.current.querySelector('#content');
+      const existing = logRef.current.querySelector('p');
       if (diff && curator) setCurrent(res.data || '<div></div>');
       else if (logRef.current && !existing) logRef.current.append(document.createRange().createContextualFragment(res.data));
     });

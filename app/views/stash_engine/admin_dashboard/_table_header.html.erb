@@ -47,7 +47,7 @@
       <th>Journal sponsor</th>
     <% end %>
     <% if @fields.include?('identifiers') %>
-      <th>Publication IDs</th>
+      <th>Related work IDs</th>
     <% end %>
     <% if @fields.include?('dpc') %>
       <th>DPC paid by</th>
@@ -67,34 +67,34 @@
         <%= sortable_column_head sort_field: 'updated_at', title: 'Last modified', remote: true %>
       </th>
     <% end %>
-    <% if @fields.include?('submit_date') %>
-      <th class="c-lined-table__sort" <%= sort_display('submit_date') %>>
-        <%= sortable_column_head sort_field: 'submit_date', title: 'Submitted', remote: true %>
+    <% if @fields.include?('created_at') %>
+      <th class="c-lined-table__sort" <%= sort_display('created_at') %>>
+        <%= sortable_column_head sort_field: 'created_at', title: 'Dataset created', remote: true %>
       </th>
     <% end %>
     <% if @fields.include?('first_sub_date') %>
       <th class="c-lined-table__sort" <%= sort_display('first_sub_date') %>>
-        <%= sortable_column_head sort_field: 'first_sub_date', title: 'First submitted', remote: true %>
-      </th>
-    <% end %>
-    <% if @fields.include?('publication_date') %>
-      <th class="c-lined-table__sort" <%= sort_display('publication_date') %>>
-        <%= sortable_column_head sort_field: 'publication_date', title: 'Published', remote: true %>
-      </th>
-    <% end %>
-    <% if @fields.include?('first_pub_date') %>
-      <th class="c-lined-table__sort" <%= sort_display('first_pub_date') %>>
-        <%= sortable_column_head sort_field: 'first_pub_date', title: 'First published', remote: true %>
-      </th>
-    <% end %>
-    <% if @fields.include?('created_at') %>
-      <th class="c-lined-table__sort" <%= sort_display('created_at') %>>
-        <%= sortable_column_head sort_field: 'created_at', title: 'First created', remote: true %>
+        <%= sortable_column_head sort_field: 'first_sub_date', title: 'Dataset submitted', remote: true %>
       </th>
     <% end %>
     <% if @fields.include?('queue_date') %>
       <th class="c-lined-table__sort" <%= sort_display('queue_date') %>>
-        <%= sortable_column_head sort_field: 'queue_date', title: 'First queued', remote: true %>
+        <%= sortable_column_head sort_field: 'queue_date', title: 'Dataset queued', remote: true %>
+      </th>
+    <% end %>
+    <% if @fields.include?('first_pub_date') %>
+      <th class="c-lined-table__sort" <%= sort_display('first_pub_date') %>>
+        <%= sortable_column_head sort_field: 'first_pub_date', title: 'Dataset published', remote: true %>
+      </th>
+    <% end %>
+    <% if @fields.include?('submit_date') %>
+      <th class="c-lined-table__sort" <%= sort_display('submit_date') %>>
+        <%= sortable_column_head sort_field: 'submit_date', title: 'Last submitted', remote: true %>
+      </th>
+    <% end %>
+    <% if @fields.include?('publication_date') %>
+      <th class="c-lined-table__sort" <%= sort_display('publication_date') %>>
+        <%= sortable_column_head sort_field: 'publication_date', title: 'Last published', remote: true %>
       </th>
     <% end %>
     <% if @fields.include?('status_date') %>

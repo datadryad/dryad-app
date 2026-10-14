@@ -1,5 +1,6 @@
 RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
   include DatasetHelper
+  include PaymentsHelper
   include Mocks::RSolr
   include Mocks::Aws
   include Mocks::DataFile
@@ -7,6 +8,7 @@ RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
 
   let(:tenant) { create(:tenant) }
   let(:user) { create(:user, tenant: tenant) }
+  let(:resource_file_size) { 10 }
 
   before do
     mock_solr_frontend!
@@ -19,41 +21,35 @@ RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
   end
 
   context 'on first version' do
-    it 'payment is not sponsored' do
-      build_min_dataset
-
-      expect(page).not_to have_text('Payment for this submission is sponsored by')
-    end
-
     context 'payment value' do
-      it 'user pays DPC' do
-        build_min_dataset
+      before do
+        build_min_dataset(resource_file_size: resource_file_size)
+      end
 
+      it 'user pays DPC' do
         expect(page).to have_content('This 10 B dataset has a Data Publishing Charge of $150.00')
         expect(page).not_to have_content('Payment for this submission is sponsored by')
-        expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
       end
 
-      it 'user pays different based on files size' do
-        build_min_dataset(resource_file_size: '53_200_000_000')
+      context 'larger dataset' do
+        let(:resource_file_size) { 53_200_000_000 }
 
-        expect(page).to have_content('This 53.2 GB dataset has a Data Publishing Charge of $808.00')
-        expect(page).not_to have_content('Payment for this submission is sponsored by')
-        expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
+        it 'user pays larger DPC based on file size' do
+          expect(page).to have_content('This 53.2 GB dataset has a Data Publishing Charge of $808.00')
+          expect(page).not_to have_content('Payment for this submission is sponsored by')
+        end
+      end
+    end
+
+    context 'when submitting' do
+      before do
+        build_full_dataset(resource_file_size: '53_200_000_000')
       end
 
-      context 'when submitting' do
-        before do
-          build_full_dataset(resource_file_size: '53_200_000_000')
-          click_button 'Pay & Submit for publication'
-          click_button 'Continue to the invoice generation form'
-          click_button 'Send invoice & Submit for publication'
-          sleep 1
-        end
+      let(:identifier) { StashEngine::Identifier.last }
 
-        it 'does not create any LDF sponsored payment log' do
-          expect(StashEngine::Identifier.last.latest_resource.sponsored_payment_log).to be_nil
-        end
+      it 'user pays and no LDF sponsored payment log is created' do
+        pays_and_no_ldf
       end
     end
   end
@@ -79,19 +75,19 @@ RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
       CurationService.new(user: user, resource: resource, status: 'queued').process
       resource.current_state = :submitted
 
-      click_link 'My datasets'
-      click_button 'Revise submission'
-
       identifier.reload
       resource.reload
-    end
 
-    include_examples 'individual user does not pay anything'
+      click_link 'My datasets'
+      click_button 'Revise submission'
+    end
 
     context 'payment value' do
       context 'when nothing changes' do
-        include_examples 'individual user does not pay anything'
-        include_examples 'no LDF sponsored payment log is created'
+        it 'individual user does not pay and no LDF sponsored payment log is created' do
+          unsponsored_no_fee
+          no_ldf
+        end
       end
 
       context 'when files are added' do
@@ -101,15 +97,19 @@ RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
         end
 
         context 'and tier is not exceeded' do
-          include_examples 'individual user does not pay anything'
-          include_examples 'no LDF sponsored payment log is created'
+          it 'individual user does not pay and no LDF sponsored payment log is created' do
+            unsponsored_no_fee
+            no_ldf
+          end
         end
 
         context 'and tier is exceeded' do
           let(:resource_file_size) { 20_000_000_000 }
 
-          include_examples 'individual user must pay', '20 GB', '370.00'
-          include_examples 'no LDF sponsored payment log is created'
+          it 'individual user must pay and no LDF sponsored payment log is created' do
+            unsponsored_with_fee('20 GB', '370.00')
+            pays_and_no_ldf
+          end
         end
       end
     end

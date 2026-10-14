@@ -52,7 +52,7 @@ RSpec.describe Stripe::Handlers::InvoiceVoided do
 
     describe '#call' do
       context 'when a payment exists' do
-        it 'marks the payment as paid' do
+        it 'marks the payment as voided' do
           subject.call
 
           expect(payment.reload.status).to eq('voided')
@@ -146,7 +146,7 @@ RSpec.describe Stripe::Handlers::InvoiceVoided do
 
     describe '#call' do
       context 'when a payment exists' do
-        it 'marks the payment as paid' do
+        it 'marks the payment as voided' do
           subject.call
 
           expect(payment.reload.status).to eq('voided')
