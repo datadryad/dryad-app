@@ -1,6 +1,6 @@
 <%
 def check(id, indent = false)
-  h = {pub_state: 'Publication status', status: 'Workflow status', funders: 'Grant funders', awards: 'Award IDs', sponsor: 'Journal sponsor', dpc: 'DPC paid by', updated_at: 'Last modified', submit_date: 'Last submitted', publication_date: 'Last published', first_sub_date: 'Dataset submitted', first_pub_date: 'Dataset published', queue_date: 'Dataset queued', created_at: 'Dataset created', identifiers: 'Related work IDs', status_date: 'Entered status'}
+  h = {pub_state: 'Publication status', status: 'Workflow status', funders: 'Grant funders', awards: 'Award IDs', sponsor: 'Journal sponsor', dpc: 'DPC paid by', updated_at: 'Last modified', submit_date: 'Version submitted', publication_date: 'Version published', first_sub_date: 'Dataset submitted', first_pub_date: 'Dataset published', queue_date: 'Dataset queued', created_at: 'Dataset created', identifiers: 'Related work IDs', status_date: 'Entered status'}
   label = h[id.to_sym]
   label ||= id.length < 4 ? id.upcase : id.humanize.capitalize
 

@@ -115,7 +115,7 @@ end
     } %>
     <span class="limiter">
       <%= check_box_tag 'funder_limit', checked: @filters[:funder_limit].present?, name: 'filters[funder_limit]' %>
-      <label for="funder_limit">Exclude children</span>
+      <label for="funder_limit">Exclude child orgs</span>
     </span>
   </div>
   <p class="help" id="filter-funder-desc">Filter result datasets by funding organizations matched with a <a href="https://ror.org/" target="_blank" rel="noreferrer">ROR ID<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>.</p>
@@ -144,11 +144,11 @@ end
   <div class="date-flex">
     <%= render partial: 'filter_date', locals: { id: 'first_sub_date', label: 'Dataset submitted' } %>
     <p class="help" id="first_sub_date-filter-desc">Filter results by the date the dataset was first submitted.</p>
-    <%= render partial: 'filter_date', locals: { id: 'submit_date', label: 'Last submitted' } %>
+    <%= render partial: 'filter_date', locals: { id: 'submit_date', label: 'Version submitted' } %>
     <p class="help" id="submit_date-filter-desc">Filter results by the date the latest revision of the dataset was submitted.</p>
     <%= render partial: 'filter_date', locals: { id: 'first_pub_date', label: 'Dataset published' } %>
     <p class="help" id="first_pub_date-filter-desc">Filter results by the date the dataset was first published.</p>
-    <%= render partial: 'filter_date', locals: { id: 'publication_date', label: 'Last published' } %>
+    <%= render partial: 'filter_date', locals: { id: 'publication_date', label: 'Version published' } %>
     <p class="help" id="publication_date-filter-desc">Filter results by the date the latest revision of the dataset was published.</p>    
     <%= render partial: 'filter_date', locals: { id: 'queue_date', label: 'Dataset queued' } %>
     <p class="help" id="queue_date-filter-desc">Filter results by the date the dataset was first queued for curation.</p>
