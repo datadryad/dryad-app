@@ -33,8 +33,8 @@ module StashEngine
       head << 'Dataset submitted' if @fields.include?('first_sub_date')
       head << 'Dataset queued' if @fields.include?('queue_date')
       head << 'Dataset published' if @fields.include?('first_pub_date')
-      head << 'Last submitted' if @fields.include?('submit_date')
-      head << 'Last published' if @fields.include?('publication_date')
+      head << 'Version submitted' if @fields.include?('submit_date')
+      head << 'Version published' if @fields.include?('publication_date')
       head << 'Entered status' if @fields.include?('status_date')
       head.to_csv(row_sep: "\r\n")
     end
