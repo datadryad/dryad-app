@@ -97,7 +97,7 @@ FactoryBot.define do
     trait :paid do
       after(:create) do |resource|
         2.times { create(:data_file, resource: resource) }
-        payment = if resource.identifier.reload.institution_will_pay?
+        payment = if resource.submitter.tenant_id.present? && resource.identifier.reload.institution_will_pay?
                     resource.submitter.tenant
                   else
                     create(:resource_payment, resource: resource,
