@@ -50,7 +50,7 @@ RSpec.feature 'Landing', type: :feature, js: true do
         expect(page).to have_button('Author information')
         click_button 'Author information'
         expect(page).to have_content(resource.authors.first.affiliations.first.smart_name)
-        expect(page).to have_content(resource.authors.first.credit_roles.first.credit_role)
+        expect(page).to have_content(resource.authors.first.credit_roles.first.credit_role.capitalize)
       end
 
       it 'displays and expands the included sections' do

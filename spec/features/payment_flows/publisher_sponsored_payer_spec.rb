@@ -1,5 +1,6 @@
 RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
   include DatasetHelper
+  include PaymentsHelper
   include Mocks::RSolr
   include Mocks::Aws
   include Mocks::DataFile
@@ -9,7 +10,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
   let!(:sponsor_payment) do
     create(:payment_configuration, partner: top_level_sponsor, payment_plan: '2025', covers_dpc: true)
   end
-
   let!(:level_one_sponsor) { create(:journal_organization, parent_org: top_level_sponsor) }
   let!(:limits_payment) { create(:payment_configuration, partner: level_one_sponsor) }
 
@@ -17,6 +17,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
   let(:user) { create(:user) }
   let(:paid_ldf) { 0 }
   let(:resource_file_size) { 10 }
+  let!(:sponsored_payment_log) { create(:sponsored_payment_log, payer: journal, sponsor_id: top_level_sponsor.id, ldf: paid_ldf) }
   let(:payer_name) { journal.title }
 
   before do
@@ -24,9 +25,8 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
     mock_aws!
     mock_file_content!
     mock_stripe!
-
-    create(:sponsored_payment_log, payer: journal, sponsor_id: top_level_sponsor.id, ldf: paid_ldf)
-
+    journal.reload
+    limits_payment.reload
     sign_in(user)
   end
 
@@ -36,17 +36,14 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
       build_min_dataset(resource_file_size: resource_file_size)
 
       connect_journal(journal)
-      click_button 'Preview changes'
-    end
-
-    it 'payment sponsored' do
-      expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
+      expect(page).to have_content("Payment for this submission is sponsored by #{journal.title}")
+      click_button 'Preview'
+      expect(page).to have_content("Payment for this submission is sponsored by #{journal.title}")
     end
 
     context 'payment value' do
       it 'user does not pay DPC' do
-        expect(page).not_to have_content('Data Publishing Charge')
-        expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
+        expect(page).to have_content('All data publishing fees are covered by your sponsorship.')
         expect(page).to have_css('button', exact_text: 'Submit for publication')
       end
 
@@ -55,8 +52,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
         it 'user pays LDF value' do
           expect(page).to have_content('This 53.2 GB dataset has a Large Data Fee of $464.00.')
-          expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
-          expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
+          expect(page).to have_css('button', exact_text: 'Pay & submit for publication')
         end
       end
 
@@ -65,8 +61,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
         let(:resource_file_size) { 53_200_000_000 }
 
         it 'sponsored user does not pay anything' do
-          expect(page).not_to have_content('Large Data Fee')
-          expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
+          expect(page).to have_content('All data publishing fees are covered by your sponsorship.')
           expect(page).to have_css('button', exact_text: 'Submit for publication')
         end
 
@@ -77,8 +72,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
             let(:resource_file_size) { 13_200_000_000 }
 
             it 'sponsored user does not pay anything' do
-              expect(page).not_to have_content('Large Data Fee')
-              expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
+              expect(page).to have_content('All data publishing fees are covered by your sponsorship.')
               expect(page).to have_css('button', exact_text: 'Submit for publication')
             end
           end
@@ -88,8 +82,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
             it 'user pays only the difference' do
               expect(page).to have_content('This 123.2 GB dataset has a Large Data Fee of $659.00')
-              expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
-              expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
+              expect(page).to have_css('button', exact_text: 'Pay & submit for publication')
             end
           end
         end
@@ -101,8 +94,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
             let(:resource_file_size) { 53_200_000_000 }
 
             it 'sponsored user does not pay anything' do
-              expect(page).not_to have_content('Large Data Fee')
-              expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
+              expect(page).to have_content('All data publishing fees are covered by your sponsorship.')
               expect(page).to have_css('button', exact_text: 'Submit for publication')
             end
           end
@@ -112,8 +104,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
             it 'user pays the entire amount' do
               expect(page).to have_content('This 123.2 GB dataset has a Large Data Fee of $1,123.00')
-              expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
-              expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
+              expect(page).to have_css('button', exact_text: 'Pay & submit for publication')
             end
           end
         end
@@ -130,8 +121,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
               let(:paid_ldf) { 700 }
 
               it 'sponsored user does not pay anything' do
-                expect(page).not_to have_content('Large Data Fee')
-                expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
+                expect(page).to have_content('All data publishing fees are covered by your sponsorship.')
                 expect(page).to have_css('button', exact_text: 'Submit for publication')
               end
             end
@@ -141,8 +131,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
               it 'user pays for the entire amount' do
                 expect(page).to have_content('This 13.2 GB dataset has a Large Data Fee of $259.00')
-                expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
-                expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
+                expect(page).to have_css('button', exact_text: 'Pay & submit for publication')
               end
             end
 
@@ -151,8 +140,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
               it 'user pays for the entire amount' do
                 expect(page).to have_content('This 13.2 GB dataset has a Large Data Fee of $259.00')
-                expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
-                expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
+                expect(page).to have_css('button', exact_text: 'Pay & submit for publication')
               end
             end
           end
@@ -165,8 +153,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
               it 'user pays for the entire amount' do
                 expect(page).to have_content('This 51.2 GB dataset has a Large Data Fee of $205.00')
-                expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
-                expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
+                expect(page).to have_css('button', exact_text: 'Pay & submit for publication')
               end
             end
 
@@ -175,8 +162,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
               it 'user pays for the entire amount' do
                 expect(page).to have_content('This 51.2 GB dataset has a Large Data Fee of $464.00')
-                expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
-                expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
+                expect(page).to have_css('button', exact_text: 'Pay & submit for publication')
               end
             end
 
@@ -185,8 +171,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
               it 'user pays for the entire amount' do
                 expect(page).to have_content('This 51.2 GB dataset has a Large Data Fee of $464.00')
-                expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
-                expect(page).to have_css('button', exact_text: 'Pay & Submit for publication')
+                expect(page).to have_css('button', exact_text: 'Pay & submit for publication')
               end
             end
           end
@@ -203,7 +188,6 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
           it 'sponsored user does not pay anything' do
             expect(page).not_to have_content('Large Data Fee')
-            expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
             expect(page).to have_css('button', exact_text: 'Submit for publication')
           end
         end
@@ -237,38 +221,46 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
       CurationService.new(user: user, resource: resource, status: 'queued').process
       resource.current_state = :submitted
 
+      identifier.reload
+      resource.reload
+
       click_link 'My datasets'
       click_button 'Revise submission'
 
-      identifier.reload
-      resource.reload
+      expect(page).to have_content('Dataset submission')
+      identifier.update!(last_invoiced_file_size: last_invoiced_file_size)
+      visit current_path
     end
-
-    include_examples 'sponsored user does not pay anything'
 
     context 'payment value' do
       context 'ldf is not covered' do
         context 'when nothing changes' do
-          include_examples 'sponsored user does not pay anything'
-          include_examples 'no LDF sponsored payment log is created'
+          it 'user pays nothing and no LDF log created' do
+            sponsored_no_fee
+            no_ldf
+          end
         end
 
         context 'when files are added' do
           before do
             upload_file(size: resource_file_size)
-            click_button 'Preview changes'
+            click_button 'Preview'
           end
 
           context 'and tier is not exceeded' do
-            include_examples 'sponsored user does not pay anything'
-            include_examples 'no LDF sponsored payment log is created'
+            it 'user pays nothing and no LDF log created' do
+              sponsored_no_fee
+              no_ldf
+            end
           end
 
           context 'and tier is exceeded' do
             let(:resource_file_size) { 20_000_000_000 }
 
-            include_examples 'sponsored user must pay', '20 GB', '259.00'
-            include_examples 'no LDF sponsored payment log is created'
+            it 'user pays and no LDF log created' do
+              sponsored_with_fee('20 GB', '259.00')
+              pays_and_no_ldf
+            end
           end
         end
       end
@@ -277,26 +269,32 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
         let!(:limits_payment) { create(:payment_configuration, partner: level_one_sponsor, covers_ldf: true) }
 
         context 'when nothing changes' do
-          include_examples 'sponsored user does not pay anything'
-          include_examples 'no LDF sponsored payment log is created'
+          it 'user pays nothing and no LDF log created' do
+            sponsored_no_fee
+            no_ldf
+          end
         end
 
         context 'when files are added' do
           before do
             upload_file(size: resource_file_size)
-            click_button 'Preview changes'
+            click_button 'Preview'
           end
 
           context 'and tier is not changed' do
-            include_examples 'sponsored user does not pay anything'
-            include_examples 'no LDF sponsored payment log is created'
+            it 'user pays nothing and no LDF log created' do
+              sponsored_no_fee
+              no_ldf
+            end
           end
 
           context 'and tier is changed' do
             let(:resource_file_size) { 53_200_000_000 }
 
-            include_examples 'sponsored user does not pay anything'
-            include_examples 'logs sponsored LDF value', 464
+            it 'user pays nothing and LDF log is created' do
+              sponsored_no_fee
+              logs_ldf(464)
+            end
           end
         end
       end
@@ -305,37 +303,45 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
         let!(:limits_payment) { create(:payment_configuration, partner: level_one_sponsor, covers_ldf: true, ldf_limit: 2) }
 
         context 'when nothing changes' do
-          include_examples 'sponsored user does not pay anything'
-          include_examples 'no LDF sponsored payment log is created'
+          it 'user pays nothing and no LDF log created' do
+            sponsored_no_fee
+            no_ldf
+          end
         end
 
         context 'when files are added' do
           before do
             upload_file(size: resource_file_size)
-            click_button 'Preview changes'
+            click_button 'Preview'
           end
 
           context 'when limit tier is not changed' do
             let(:last_invoiced_file_size) { 20_000_000_000 }
             let(:resource_file_size) { 44_200_000_000 }
 
-            include_examples 'sponsored user does not pay anything'
-            include_examples 'no LDF sponsored payment log is created'
+            it 'user pays nothing and no LDF log created' do
+              sponsored_no_fee
+              no_ldf
+            end
           end
 
           context 'when limit tier is exceeded' do
             let(:resource_file_size) { 153_200_000_000 }
 
-            include_examples 'sponsored user must pay', '153.2 GB', '659.00'
-            include_examples 'logs sponsored LDF value', 464
+            it 'user pays and LDF log is created' do
+              sponsored_with_fee('153.2 GB', '659.00')
+              pays_and_logs_ldf(464)
+            end
           end
 
           context 'when limit tier is not exceeded, logs only the difference' do
             let(:last_invoiced_file_size) { 12_000_000_000 }
             let(:resource_file_size) { 55_000_000_000 }
 
-            include_examples 'sponsored user does not pay anything'
-            include_examples 'logs sponsored LDF value', 205
+            it 'user pays nothing and LDF log is created' do
+              sponsored_no_fee
+              logs_ldf(205)
+            end
           end
         end
       end
@@ -344,37 +350,45 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
         let!(:limits_payment) { create(:payment_configuration, partner: level_one_sponsor, covers_ldf: true, yearly_ldf_limit: 1_000) }
 
         context 'when nothing changes' do
-          include_examples 'sponsored user does not pay anything'
-          include_examples 'no LDF sponsored payment log is created'
+          it 'user pays nothing and no LDF log created' do
+            sponsored_no_fee
+            no_ldf
+          end
         end
 
         context 'when files are added' do
           before do
             upload_file(size: resource_file_size)
-            click_button 'Preview changes'
+            click_button 'Preview'
           end
 
           context 'and LDF tier is not changed' do
             let(:last_invoiced_file_size) { 20_000_000_000 }
             let(:resource_file_size) { 44_200_000_000 }
 
-            include_examples 'sponsored user does not pay anything'
-            include_examples 'no LDF sponsored payment log is created'
+            it 'user pays nothing and no LDF log created' do
+              sponsored_no_fee
+              no_ldf
+            end
           end
 
           context 'when yearly limit is exceeded' do
             let(:resource_file_size) { 153_200_000_000 }
 
-            include_examples 'sponsored user must pay', '153.2 GB', '1,123.00'
-            include_examples 'no LDF sponsored payment log is created'
+            it 'user pays and no LDF log created' do
+              sponsored_with_fee('153.2 GB', '1,123.00')
+              pays_and_no_ldf
+            end
           end
 
           context 'when LDF tier is exceeded, logs only the difference' do
             let(:last_invoiced_file_size) { 12_000_000_000 }
             let(:resource_file_size) { 55_000_000_000 }
 
-            include_examples 'sponsored user does not pay anything'
-            include_examples 'logs sponsored LDF value', 205
+            it 'user pays nothing and LDF log is created' do
+              sponsored_no_fee
+              logs_ldf(205)
+            end
           end
         end
       end
@@ -386,38 +400,46 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
         end
 
         context 'when nothing changes' do
-          include_examples 'sponsored user does not pay anything'
-          include_examples 'no LDF sponsored payment log is created'
+          it 'user pays nothing and no LDF log created' do
+            sponsored_no_fee
+            no_ldf
+          end
         end
 
         context 'when files are added' do
           before do
             upload_file(size: resource_file_size)
-            click_button 'Preview changes'
+            click_button 'Preview'
           end
 
           context 'and LDF tier is not changed' do
             let(:last_invoiced_file_size) { 20_000_000_000 }
             let(:resource_file_size) { 44_200_000_000 }
 
-            include_examples 'sponsored user does not pay anything'
-            include_examples 'no LDF sponsored payment log is created'
+            it 'user pays nothing and no LDF log created' do
+              sponsored_no_fee
+              no_ldf
+            end
           end
 
           context 'when LDF limit will be exceeded, but yearly limit not' do
             let(:last_invoiced_file_size) { 12_200_000_000 }
             let(:resource_file_size) { 153_200_000_000 }
 
-            include_examples 'sponsored user must pay', '153.2 GB', '659.00'
-            include_examples 'logs sponsored LDF value', 205
+            it 'user pays and LDF log is created' do
+              sponsored_with_fee('153.2 GB', '659.00')
+              pays_and_logs_ldf(205)
+            end
           end
 
           context 'when LDF limit is already exceeded, but yearly limit not' do
             let(:last_invoiced_file_size) { 53_200_000_000 }
             let(:resource_file_size) { 153_200_000_000 }
 
-            include_examples 'sponsored user must pay', '153.2 GB', '659.00'
-            include_examples 'no LDF sponsored payment log is created'
+            it 'user pays and no LDF log created' do
+              sponsored_with_fee('153.2 GB', '659.00')
+              pays_and_no_ldf
+            end
           end
 
           context 'when LDF limit is exceeded, and yearly limit is exceeded' do
@@ -427,8 +449,10 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
               create(:sponsored_payment_log, ldf: 900, resource_id: resource.id, payer: journal, sponsor_id: top_level_sponsor.id)
             end
 
-            include_examples 'sponsored user must pay', '153.2 GB', '864.00'
-            include_examples 'no LDF sponsored payment log is created'
+            it 'user pays and no LDF log created' do
+              sponsored_with_fee('153.2 GB', '864.00')
+              pays_and_no_ldf
+            end
           end
         end
       end
@@ -436,7 +460,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
       context 'when payer is not on 2025' do
         before do
           upload_file(size: resource_file_size)
-          click_button 'Preview changes'
+          click_button 'Preview'
         end
 
         context 'all is sponsored' do
@@ -446,8 +470,10 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
           let!(:limits_payment) { create(:payment_configuration, partner: level_one_sponsor, covers_ldf: false) }
           let(:resource_file_size) { 151_200_000_000 }
 
-          include_examples 'sponsored user does not pay anything'
-          include_examples 'no LDF sponsored payment log is created'
+          it 'user pays nothing and no LDF log created' do
+            sponsored_no_fee
+            no_ldf
+          end
         end
       end
     end

@@ -1105,6 +1105,8 @@ module StashEngine
       sf_cases&.each do |c|
         Stash::Salesforce.update_case_metadata(case_id: c.id, resource: self, update_timestamp: true, update_owner: c.owner.blank?)
       end
+    rescue Restforce::ResponseError => e
+      Rails.logger.error("Error updating Salesforce metadata for identifier: #{identifier&.identifier}, #{e.message}")
     end
 
     def purge_duplicate_subjects!

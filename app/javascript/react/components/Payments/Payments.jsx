@@ -9,8 +9,10 @@ import InvoiceForm from './InvoiceForm';
 import {useStore} from '../../shared/store';
 
 
-function Receipt({fees}) {
+function Receipt({fees, resource}) {
   if (!fees.dpc_sponsored) return null
+  if(resource.identifier.last_invoiced_file_size) return null
+
   return (
     <>
       <p>Your fee breakdown is as follows:</p>
@@ -69,6 +71,10 @@ function InvoicingPageMessage({fees}) {
   return null
 }
 
+const PaymentWarning = () => (
+  <p style={{textAlign: 'center', fontSize: '.98rem', fontStyle: 'italic'}}>Please do not close or refresh this page while payment is processing</p>
+);
+
 function Payments({
   resource, setResource, invoice, setInvoice, setPayment, config,
 }) {
@@ -83,6 +89,21 @@ function Payments({
         setClientSecret(data.clientSecret);
       });
   };
+
+  useEffect(() => {
+    const checkPaymentSuccess = () => {
+      axios.get(`/payments/check/${resource.id}`)
+        .then(({data}) => {
+          if (data.success) {
+            clearInterval(intervalId);
+            window.location.href = data.redirect;
+          }
+        });
+    }
+
+    const intervalId = setInterval(checkPaymentSuccess, 2000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     if (fees.total && !clientSecret) fetchClientSecret();
@@ -114,7 +135,7 @@ function Payments({
               </button>
             </p>
             <CalculateFees resource={resource} />
-            <Receipt fees={fees} />
+            <Receipt fees={fees} resource={resource} />
             <InvoicingPageMessage fees={fees} />
           </>
         )}
@@ -122,6 +143,7 @@ function Payments({
       </div>
     );
   }
+
 
   return (
     <div id="submission-payment">
@@ -153,12 +175,14 @@ function Payments({
               Pay $50.00 Peer Review Fee
             </button>
           </p>
+          <PaymentWarning />
         </>
       ) : (
         <>
           <CalculateFees resource={resource} />
-          <Receipt fees={fees} />
+          <Receipt fees={fees} resource={resource} />
           <p>You must complete payment to submit your dataset for curation and publication.</p>
+          <PaymentWarning />
         </>
       )}
       <div id="payment-sec" hidden={(dpc.can_pay_ppr_fee && ppr === null) || null}>
