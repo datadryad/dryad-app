@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
 
   include Pundit::Authorization
 
+  before_action :add_security_headers
   before_action :set_paper_trail_whodunnit
   before_action :protect_from_host_header_attack
 
@@ -22,6 +23,19 @@ class ApplicationController < ActionController::Base
   def allow_iframe_requests
     response.headers.delete('X-Frame-Options') # remove default
     response.headers['X-Frame-Options'] = 'ALLOWALL' # or 'SAMEORIGIN'
+  end
+
+  def add_security_headers
+    response.headers['Cache-Control'] = 'no-cache, no-store'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = 'Mon, 01 Jan 1990 00:00:00 GMT'
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    response.headers['Referrer-Policy'] = 'same-origin'
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+    response.headers['Strict-Transport-Security'] = 'max-age=63072000; includeSubDomains; preload'
+
+    response.headers.delete('Server')
   end
 
   def protect_from_host_header_attack
