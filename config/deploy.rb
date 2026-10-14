@@ -124,7 +124,7 @@ end
 task :index_help_center do
   desc "Index help center"
   on roles(:app) do
-    sleep 15
+    sleep 10
     within release_path do
       with rails_env: fetch(:rails_env) do
         execute :rake, "help_cache"
