@@ -95,7 +95,9 @@ module StashEngine
       end
       row << dataset.curator_name if @fields.include?('curator')
       row << dataset.editor_name if @fields.include?('editor')
-      row << dataset.identifier&.payer_name&.gsub('Individual', '') if @fields.include?('dpc')
+      if @fields.include?('dpc')
+        row << "#{dataset.identifier.payer_name}#{' (expected)' if dataset.identifier.payer_name && dataset.identifier.dpc_payment.nil?}"
+      end
       row << dataset.last_curation_activity.updated_at if @fields.include?('updated_at')
       row << dataset.identifier.created_at if @fields.include?('created_at')
       row << dataset.identifier.process_date.processing if @fields.include?('first_sub_date')
