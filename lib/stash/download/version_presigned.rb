@@ -35,7 +35,7 @@ module Stash
       end
 
       # rubocop:disable Metrics/AbcSize
-      def download(resource:)
+      def download(resource:, from_api: false)
         @resource ||= resource
         if @resource&.total_file_size&.< APP_CONFIG[:maximums][:api_zip_size]
           @resource.identifier.update_columns(downloaded_at: Time.now.utc)
@@ -56,6 +56,7 @@ module Stash
             expires_in: 3600,
             url: "https://#{APP_CONFIG[:lambda_id][:dataZip]}.lambda-url.#{APP_CONFIG[:s3][:region]}.on.aws/?filename=#{zip_name}&download_url=#{CGI.escape("#{download_url}/#{generate_token}")}"
           )
+          Current.download_service.create(nil, @resource.id, from_api: from_api, as_zip: true)
           cc.redirect_to zip_url.to_s, allow_other_host: true
         else
           cc.render status: 405, plain: 'The dataset is too large for zip file generation. Please download each file individually.'
