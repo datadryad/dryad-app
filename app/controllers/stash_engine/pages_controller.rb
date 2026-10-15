@@ -8,7 +8,7 @@ module StashEngine
 
     def home
       @dataset_count = Resource.submitted_dataset_count
-      @hostname = request.host
+      # @hostname = request.host
     end
 
     def sitemap

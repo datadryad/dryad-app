@@ -17,8 +17,7 @@ describe CostReportingService do
   let(:identifier) { create(:identifier) }
   let!(:tenant) { create(:tenant) }
   let!(:payment_conf) do
-    create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true,
-                                   ldf_limit_notification: 'some@email.com')
+    create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: true, ldf_limit_notification: 'some@email.com')
   end
   let(:prev_resource) do
     create(:resource,

@@ -20,7 +20,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
   context :fields_and_filters do
     before(:each) do
-      create(:tenant)
+      create(:tenant, id: 'test_tenant')
       @user = create(:user, tenant_id: 'test_tenant')
       @superuser = create(:user, role: 'superuser')
       2.times do
@@ -165,7 +165,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
   context :roles do
     before(:each) do
       Timecop.travel(Time.now.utc - 1.minute)
-      create(:tenant)
+      create(:tenant, id: 'test_tenant')
       @admin = create(:user, tenant_id: 'test_tenant')
       create(:role, user: @admin, role_object: @admin.tenant)
       @user = create(:user, tenant_id: @admin.tenant_id)

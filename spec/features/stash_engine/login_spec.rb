@@ -117,6 +117,7 @@ RSpec.feature 'Session', type: :feature do
   describe :reauthentication, js: true do
     before do
       @tenant = create(:tenant_email)
+      create(:payment_configuration, partner: @tenant, payment_plan: '2025')
       @user = create(:user, tenant_id: @tenant.id, tenant_auth_date: 2.months.ago)
       mock_orcid!(@user)
       OmniAuth.config.test_mode = true
