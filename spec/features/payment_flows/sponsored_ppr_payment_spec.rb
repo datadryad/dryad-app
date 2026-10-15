@@ -34,10 +34,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
 
       context 'when is set to PPR' do
         before do
-          find('button[data-slug="agreements"]').click
-          expect(page).to have_content('Dryad submissions are made publicly available')
-          find('label', text: 'Keep my files private while my manuscript undergoes peer review').click
-          expect(page).to have_content('All progress saved')
+          switch_ppr_from_preview
           click_button 'Preview'
         end
 
@@ -127,10 +124,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
 
     context 'when removed from PPR' do
       before do
-        find('button[data-slug="agreements"]').click
-        expect(page).to have_content('Dryad submissions are made publicly available')
-        find('label', text: 'My files should be available for public download as soon as possible').click
-        expect(page).to have_content('All progress saved')
+        switch_ppr_from_preview
         click_button 'Preview'
       end
 

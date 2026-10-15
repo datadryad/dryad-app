@@ -2,7 +2,7 @@
 
 *Updated: March 30, 2026*
 
-<dl>
+<dl class="def-list">
   <div>
   <dt>Accept/Acceptance</dt>
   <dd>A conclusion by Dryad Curation personnel that a Dataset is suitable for Dataset Publication.</dd>

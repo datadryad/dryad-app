@@ -30,6 +30,14 @@ module DatasetHelper
     expect(page).to have_button('Enter URLs', wait: 5)
   end
 
+  def switch_ppr_from_preview
+    expect(page).to have_content('Data files hosted by Dryad' || 'Files are required', wait: 5)
+    click_button 'Agreements'
+    expect(page).to have_content('Dryad submissions are made publicly available')
+    find('input[name="peer_review"]:not([checked])').click
+    expect(page).to have_content('All progress saved')
+  end
+
   def navigate_to_review
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
