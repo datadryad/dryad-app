@@ -8,6 +8,8 @@ module StashApi
     before_action -> { require_resource_id(resource_id: params[:id]) }, only: %i[show download]
     before_action :optional_api_user
     before_action -> { require_viewable_resource(resource_id: params[:id]) }, only: :show
+    before_action :set_download_service
+
 
     # get /versions/<id>
     def show
@@ -28,7 +30,7 @@ module StashApi
         res = @stash_resources.first
         @version_presigned = Stash::Download::VersionPresigned.new(controller_context: self, resource: res)
         if res&.may_download?(ui_user: @user) && @version_presigned.valid_resource?
-          @version_presigned.download(resource: res)
+          @version_presigned.download(resource: res, from_api: true)
         else
           render plain: 'Download for this version of the dataset is unavailable', status: :not_found
         end
