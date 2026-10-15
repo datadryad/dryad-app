@@ -10,7 +10,6 @@ module StashApi
     before_action -> { require_viewable_resource(resource_id: params[:id]) }, only: :show
     before_action :set_download_service
 
-
     # get /versions/<id>
     def show
       v = Version.new(resource_id: params[:id], item_view: true)
