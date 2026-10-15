@@ -97,7 +97,8 @@ FactoryBot.define do
     trait :paid do
       after(:create) do |resource|
         2.times { create(:data_file, resource: resource) }
-        create(:resource_payment, resource: resource, status: 'paid')
+        create(:payment_record, payment: create(:resource_payment, resource: resource, status: 'paid'), resource: resource,
+                                identifier: resource.identifier)
         resource.reload
         resource.identifier.update(last_invoiced_file_size: resource.total_file_size)
       end

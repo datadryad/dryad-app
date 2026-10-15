@@ -47,7 +47,8 @@ module FeeCalculator
     describe '#dataset fee_calculator' do
       let(:prev_files_size) { nil }
       let(:new_files_size) { 100 }
-      let(:identifier) { create(:identifier, last_invoiced_file_size: prev_files_size, payment_type: 'waiver') }
+      let(:identifier) { create(:identifier, last_invoiced_file_size: prev_files_size) }
+      let!(:record) { create(:payment_record, identifier: identifier, payment_type: 'StashEngine::Waiver', payment_id: 'other') }
 
       context 'without invoice flag' do
         context 'on first submit' do

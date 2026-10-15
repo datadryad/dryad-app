@@ -29,7 +29,7 @@
     <h3>Identifier</h3>
     <pre><code><%=
       JSON.pretty_generate(
-        @identifier.attributes.slice('payment_type', 'payment_id', 'waiver_basis', 'pub_state', 'publication_date', 'old_payment_system')
+        @identifier.attributes.slice('pub_state', 'publication_date', 'old_payment_system')
           .merge({
                    last_invoiced_file_size: "#{@identifier.last_invoiced_file_size} (#{filesize(@identifier.last_invoiced_file_size)})",
                  })

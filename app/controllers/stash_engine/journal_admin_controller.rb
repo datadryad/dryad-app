@@ -9,7 +9,9 @@ module StashEngine
 
       @journals = authorize StashEngine::Journal.with_sponsorship
 
-      if params[:q]
+      if params[:id]
+        @tenants = @tenants.where(id: params[:id])
+      elsif params[:q]
         q = params[:q]
         # search the query in any searchable field
         @journals = @journals.left_outer_joins(%i[alternate_titles issns])

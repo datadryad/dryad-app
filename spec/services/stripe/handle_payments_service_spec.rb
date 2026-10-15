@@ -4,7 +4,7 @@ RSpec.describe Stripe::HandlePaymentsService do
   let!(:publisher) { create(:journal_organization, parent_org: nil) }
   let!(:journal) { create(:journal, sponsor: publisher) }
 
-  let(:identifier) { create(:identifier, payment_type: 'journal-2025', payment_id: journal.single_issn) }
+  let(:identifier) { create(:identifier) }
   let(:resource) { create(:resource, identifier: identifier, total_file_size: 100) }
   let!(:resource_publication) { create(:resource_publication, publication_issn: journal.single_issn, resource: resource) }
 
@@ -23,21 +23,21 @@ RSpec.describe Stripe::HandlePaymentsService do
     context 'when the user needs to pay' do
       context 'when dataset is sponsored' do
         let!(:payment_config) { create(:payment_configuration, partner: publisher, payment_plan: '2025', covers_dpc: true) }
+        let!(:dpc_payment) { create(:payment_record, identifier: identifier, payment: journal) }
 
-        it 'does not overwrite identifier payment fields' do
+        it 'does not overwrite sposnored payment fields' do
           subject.mark_session_paid(session_id)
 
-          expect(identifier.reload.payment_type).to eq('journal-2025')
-          expect(identifier.payment_id).to eq(journal.single_issn)
+          expect(identifier.dpc_payment.payment).to eq(journal)
         end
       end
 
       context 'when dataset is not sponsored anymore' do
-        it 'overwrites identifier payment fields with stripe payment' do
+        it 'overwrites payment fields with stripe payment' do
           subject.mark_session_paid(session_id)
 
-          expect(identifier.reload.payment_type).to eq('stripe')
-          expect(identifier.payment_id).to eq(stripe_response.payment_intent)
+          expect(identifier.user_paid_dpc?).to eq(true)
+          expect(identifier.dpc_payment.payment.payment_id).to eq(stripe_response.payment_intent)
         end
       end
 
@@ -49,7 +49,7 @@ RSpec.describe Stripe::HandlePaymentsService do
           subject.mark_session_paid(session_id)
 
           expect(identifier.reload.payment_type).to eq('stripe')
-          expect(identifier.payment_id).to eq(stripe_response.payment_intent)
+          expect(identifier.dpc_payment.payment.payment_id).to eq(stripe_response.payment_intent)
         end
       end
 
