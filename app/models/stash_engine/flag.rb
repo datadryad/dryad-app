@@ -4,11 +4,11 @@
 #
 #  id             :bigint           not null, primary key
 #  flag           :integer
-#  flaggable_type :string(191)
 #  note           :text(65535)
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  flaggable_id   :string(191)
+#  flaggable_type :string(191)
 #
 # Indexes
 #

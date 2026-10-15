@@ -3,14 +3,14 @@
 # Table name: stash_engine_processor_results
 #
 #  id               :bigint           not null, primary key
-#  resource_id      :integer
-#  processing_type  :integer
-#  parent_id        :integer
 #  completion_state :integer
 #  message          :text(16777215)
+#  processing_type  :integer
 #  structured_info  :text(4294967295)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  parent_id        :integer
+#  resource_id      :integer
 #
 module StashEngine
   class ProcessorResult < ApplicationRecord

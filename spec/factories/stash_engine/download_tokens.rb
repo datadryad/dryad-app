@@ -5,13 +5,9 @@
 #  id          :integer          not null, primary key
 #  available   :datetime
 #  token       :string(191)
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  created_at  :datetime
+#  updated_at  :datetime
 #  resource_id :integer
-#
-# Indexes
-#
-#  index_stash_engine_download_tokens_on_token  (token)
 #
 FactoryBot.define do
 
