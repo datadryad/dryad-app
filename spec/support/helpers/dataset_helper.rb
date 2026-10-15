@@ -24,11 +24,18 @@ module DatasetHelper
   def navigate_to_upload
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    expect(page).to have_button('Files')
+    expect(page).to have_content('Data files hosted by Dryad' || 'Files are required', wait: 5) if page.has_content?('submission preview')
     click_button 'Files'
-    find('button[data-slug="files"]').click if page.has_css?('button[data-slug="files"]')
     expect(page).to have_content('Files may be uploaded from your computer')
-    expect(page).to have_button('Enter URLs', wait: 8)
+    expect(page).to have_button('Enter URLs', wait: 5)
+  end
+
+  def switch_ppr_from_preview
+    expect(page).to have_content('Data files hosted by Dryad' || 'Files are required', wait: 5)
+    click_button 'Agreements'
+    expect(page).to have_content('Dryad submissions are made publicly available')
+    find('input[name="peer_review"]:not([checked])').click
+    expect(page).to have_content('All progress saved')
   end
 
   def navigate_to_review
