@@ -32,10 +32,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
 
       context 'when is set to PPR' do
         before do
-          find('button[data-slug="agreements"]').click
-          expect(page).to have_content('Dryad submissions are made publicly available')
-          find('label', text: 'Keep my files private while my manuscript undergoes peer review').click
-          find('input[name="peer_review"][value="1"]').click
+          switch_ppr_from_preview
           expect(page).to have_content(
             'You may choose to pay only $50.00, with the remainder due at the end of the ' \
             'peer review period. The Private for Peer Review Fee is nonrefundable.',
@@ -195,10 +192,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
 
       context 'when removed from PPR' do
         before do
-          find('button[data-slug="agreements"]').click
-          expect(page).to have_content('Dryad submissions are made publicly available')
-          find('label', text: 'My files should be available for public download as soon as possible').click
-          find('input[name="peer_review"][value="0"]').click
+          switch_ppr_from_preview
           expect(page).not_to have_content(
             'You may choose to pay only $50.00, with the remainder due at the ' \
             'end of the peer review period. The Private for Peer Review Fee is nonrefundable.'
