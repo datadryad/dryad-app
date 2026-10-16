@@ -39,6 +39,7 @@ Capybara.disable_animation = true
 # This stupid capybara driver started breaking again and not setting chrome options correctly, so
 # based this on https://gist.github.com/mars/6957187 and it seemed to fix my problems.
 
+# rubocop:disable Layout/LineLength
 Capybara.register_driver :selenium_chrome_headless do |app|
   options = Selenium::WebDriver::Chrome::Options.new
 
@@ -55,8 +56,10 @@ Capybara.register_driver :selenium_chrome_headless do |app|
   options.add_argument('--disable-search-engine-choice-screen')
 
   options.add_argument(
-    '--disable-features=OptimizationGuideModelDownloading,OptimizationHintsFetching,OptimizationTargetPrediction,OptimizationHints'
+    '--disable-features=OptimizationGuideModelDownloading,OptimizationHintsFetching,OptimizationTargetPrediction,OptimizationHints,DeferRendererTasksAfterInput'
   )
+  # Fixes the specific Chrome scheduling bug plaguing GitHub CI runners
+  # options.add_argument('--disable-features=DeferRendererTasksAfterInput')
 
   Capybara::Selenium::Driver.new(
     app,
@@ -64,6 +67,7 @@ Capybara.register_driver :selenium_chrome_headless do |app|
     options: options
   )
 end
+# rubocop:enable Layout/LineLength
 
 RSpec.configure do |config|
   config.before(:each, type: :feature, js: false) do
