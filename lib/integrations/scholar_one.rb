@@ -27,6 +27,7 @@ module Integrations
 
     def relay_notification(resource)
       document_id = submission_document_id(resource)
+      puts "Sending relay call for #{document_id}, resource #{resource.id}, version #{resource.stash_version.version}"
       return if document_id.blank?
 
       url = "#{BASE_URL}/api/s1m/v2/system/addJSONData"
@@ -50,12 +51,14 @@ module Integrations
       )
 
       resp = parsed_response
-      Rails.logger.info("Relay API successfully called for #{resource.id}") if resp['returnCode'] == 'OK'
+      puts("Relay API successfully called for #{resource.id}") if resp['returnCode'].downcase == 'ok'
       resp
     end
 
     def submission_document_id(resource)
       manuscript_number = resource.resource_publication.manuscript_number
+      return if manuscript_number.blank?
+
       manu = StashEngine::Manuscript.where(manuscript_number: manuscript_number, identifier_id: resource.identifier_id).first
       manu ||= StashEngine::Manuscript.where(manuscript_number: manuscript_number, journal_id: resource.journal.id).first
 
@@ -92,7 +95,7 @@ module Integrations
           type: 2,
           payload: {
             documentId: document_id,
-            content: resource.title,
+            content: "Dryad - #{resource.title}",
             checkType: 1111,
             url: resource.identifier&.shares&.first&.sharing_link,
             effectiveDate: 1.year.from_now.to_date.to_s,
