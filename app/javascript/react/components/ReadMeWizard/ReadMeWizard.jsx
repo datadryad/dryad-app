@@ -2,16 +2,18 @@ import React, {useState, useEffect, useCallback} from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import {debounce} from 'lodash';
-import ReadMeImport from './ReadMeImport';
-import ReadMeSteps, {secTitles} from './ReadMeSteps';
+import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
+import {useStore} from '../../shared/store';
 import {ExitIcon} from '../ExitButton';
 import MarkdownEditor from '../MarkdownEditor';
-import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
+import ReadMeImport from './ReadMeImport';
+import ReadMeSteps, {secTitles} from './ReadMeSteps';
 import ReadmeWarning from './ReadmeWarning';
 
 export default function ReadMeWizard({
   resource, setResource, current, error,
 }) {
+  const {updateStore} = useStore();
   const [loading, setLoading] = useState(true);
   const [desc, setDesc] = useState(null);
   const [fileList, setFileList] = useState([]);
@@ -26,10 +28,21 @@ export default function ReadMeWizard({
     });
   };
 
+  const generateFiles = async () => {
+    updateStore({waitSubmit: true});
+    axios.get(`/resources/${resource.id}/generate_files`).then((data) => {
+      const {generated_files, total_file_size} = data.data;
+      setResource((r) => ({...r, generated_files, total_file_size}))
+      if (total_file_size === resource.total_file_size) updateStore({waitSubmit: false});
+    });
+  }
+
   useEffect(() => {
     if (current) {
       getFiles();
       setDesc(JSON.parse(JSON.stringify(resource.descriptions.find((d) => d.description_type === 'technicalinfo'))));
+    } else {
+      generateFiles();
     }
   }, [current]);
 

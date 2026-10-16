@@ -17,7 +17,27 @@ RSpec.describe 'PaymentsController', type: :request do
   describe '#callback' do
     subject { get callback_payments_url, params: { session_id: session_id, resource_id: resource.id } }
 
-    describe '#update_payment_details' do
+    context 'when session_id matched payment' do
+      it 'does not log anything and calls payment handler' do
+        expect(Rails.logger).not_to receive(:warn)
+        expect(Stripe::HandlePaymentsService).to receive_message_chain(:new, :mark_session_paid).with(payment).with(session_id)
+
+        subject
+      end
+    end
+
+    context 'when session_id does not match payment' do
+      let!(:payment) { create(:resource_payment, resource: resource, checkout_session_id: 'aaa', status: :created) }
+
+      it 'does not log anything and calls payment handler' do
+        expect(Rails.logger).to receive(:warn).once
+        expect(Stripe::HandlePaymentsService).to receive_message_chain(:new, :mark_session_paid).with(payment).with(session_id)
+
+        subject
+      end
+    end
+
+    describe 'update_payment_details' do
       context 'when the user needs to pay' do
         context 'when dataset is sponsored' do
           let!(:payment_config) { create(:payment_configuration, partner: publisher, payment_plan: '2025', covers_dpc: true) }
@@ -30,7 +50,7 @@ RSpec.describe 'PaymentsController', type: :request do
           end
         end
 
-        context 'when dataset is not a sponsor anymore' do
+        context 'when dataset is not sponsored anymore' do
           it 'overwrites identifier payment fields with stripe payment' do
             subject
 

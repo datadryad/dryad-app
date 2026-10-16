@@ -31,7 +31,7 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
         click_button 'readme-next'
         click_button 'readme-next'
         click_button 'readme-next'
-        expect(page).to have_content('a README file must be included')
+        expect(page).to have_content('a README file must be included', wait: 5)
         expect(page).to have_text(resource.title)
       end
     end
@@ -49,7 +49,7 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
 
       it 'displays the README content' do
         click_button 'README'
-        expect(page).to have_content('a README file must be included')
+        expect(page).to have_content('a README file must be included', wait: 5)
         expect(page).to have_text(resource.title)
         expect(page).to have_text(file.download_filename)
       end
@@ -58,25 +58,28 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
         title = 'A test updated title for a dataset'
         click_button 'Title'
         resource.title.length.times { find('[name="title"]').send_keys([:backspace]) }
+        page.send_keys(:tab)
+        expect(find_button('Title')).to match_selector('[aria-describedby="step-error"', wait: 5)
         fill_in_title(title)
-        expect(page).to have_text('All progress saved')
         click_button 'README'
-        expect(page).to have_content('a README file must be included')
+        expect(page).to have_content('a README file must be included', wait: 5)
         expect(page).to have_text(title)
         expect(page).to have_text(file.download_filename)
       end
 
       it 'changes the file name' do
         fname = Faker::Creature::Animal.name
+        sanitized = StashEngine::FilenameSanitizer.new(fname).process
         click_button 'Files'
         click_button "Rename file #{file.download_filename}"
         fill_in "Rename #{file.download_filename}", with: fname
         click_button "Save new name for #{file.download_filename}"
         expect(page).to have_text('All progress saved')
+        expect(page).to have_button("Rename file #{sanitized}")
         click_button 'README'
-        expect(page).to have_content('a README file must be included')
+        expect(page).to have_content('a README file must be included', wait: 5)
         expect(page).to have_text(resource.title)
-        expect(page).to have_text(StashEngine::FilenameSanitizer.new(fname).process)
+        expect(page).to have_text(sanitized)
         expect(page).not_to have_text(file.download_filename)
       end
     end

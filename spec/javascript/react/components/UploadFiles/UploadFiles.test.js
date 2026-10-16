@@ -38,6 +38,12 @@ jest.mock('evaporate', () => ({
 jest.mock('../../../../../app/javascript/react/components/UploadFiles/pollingDelay', () => ({
   pollingDelay: 100,
 }));
+jest.mock('../../../../../app/javascript/react/shared/store', () => ({
+  useStore: () => ({
+    storeState: {fees: 999},
+    updateStore: jest.fn(),
+  }),
+}));
 
 const setLoaded = (obj) => {
   const loaded = JSON.parse(JSON.stringify(obj));

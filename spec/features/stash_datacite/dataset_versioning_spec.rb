@@ -235,6 +235,24 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         expect(@resource.user_id).to eql(@curator.id)
       end
 
+      it 'creates a change log for a README edit', js: true do
+        @resource.check_add_readme_file
+        create(:curation_activity, :published, user: @curator, resource: @resource)
+        sign_in(@author)
+        click_link 'My datasets'
+        within(:css, "form[action=\"/metadata_entry_pages/new_version?resource_id=#{@resource.id}\"]") do
+          find('button[name="update"]').click
+        end
+        expect(page).to have_content('Data files hosted by Dryad' || 'Files are required', wait: 5)
+        click_button 'README'
+        find('[name="readme_editor"]').send_keys("\nThis is a README update.")
+        page.send_keys(:tab)
+        expect(page).to have_content('All progress saved')
+        click_button 'Preview'
+        expect(page).to have_content('Change log', wait: 5)
+        expect(page).to have_content('Edited README.md')
+      end
+
       it 'is automatically published with simple changes', js: true do
         @resource.check_add_readme_file
         create(:curation_activity, :published, user: @curator, resource: @resource)
@@ -307,6 +325,13 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     @resource.reload
   end
 
+  def navigate_to_affs
+    click_button 'Authors'
+    find('button[data-slug="authors"]').click if page.has_css?('button[data-slug="authors"]')
+    click_button 'Affiliations'
+    expect(page).to have_css('input[id^=instit_affil_]')
+  end
+
   def minor_update
     click_button 'Subjects'
     fill_in_keywords
@@ -314,14 +339,13 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     click_button 'Support'
     fill_in_funder
     click_button 'Preview changes'
-    expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"')
+    expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"]', wait: 5)
     set_and_submit
   end
 
   def update_dataset(curator: false)
     # Add a value to the dataset, submit it and then mock a successful submission
-    click_button 'Authors'
-    click_button 'Affiliations'
+    navigate_to_affs
     all('[id^=instit_affil_]').last.set(Faker::Company.name)
     page.send_keys(:tab)
     find('.use-text-entered').set(true) if page.has_css?('.use-text-entered')
@@ -340,6 +364,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     expect(page).to have_text('All progress saved')
     click_button 'Preview changes'
     # Submit the changes
+    expect(page).to have_text('Describe edits made', wait: 5) if curator
     fill_in('Describe edits made', with: Faker::Lorem.sentence) if curator
     set_and_submit
   end

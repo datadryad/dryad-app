@@ -111,9 +111,9 @@ RSpec.feature 'TenantAdmin', type: :feature do
         find('#enabled').click
         find('input[name=commit]').click
       end
-      expect(page.find("##{@match.id}_row")).to have_text('Disabled')
+      expect(page.find("##{@match.id}_row")).to have_text('Disabled', minimum: 2, wait: 5)
       changed = StashEngine::Tenant.find(@match.id)
-      expect(changed.enabled).to be false
+      expect(changed.enabled).to eq(false)
     end
 
     it 'allows adding a flag as a system admin', js: true do

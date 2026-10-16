@@ -235,7 +235,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
         find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(find('#identifiers')).to be_checked
-        expect(find('thead')).to have_text('Publication IDs')
+        expect(find('thead')).to have_text('Related work IDs')
         expect(find('#curator')).to be_checked
         expect(find('thead')).to have_text('Curator')
       end
@@ -337,7 +337,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
             click_button 'Preview changes'
             click_button 'Subjects'
             fill_in_keywords
-            refresh
+            click_button 'Preview changes'
             fill_in 'user_comment', with: Faker::Lorem.sentence
             submit_form
             expect(page).to have_text('Admin dashboard')
@@ -532,7 +532,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
         find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(find('#identifiers')).to be_checked
-        expect(find('thead')).to have_text('Publication IDs')
+        expect(find('thead')).to have_text('Related work IDs')
       end
     end
 

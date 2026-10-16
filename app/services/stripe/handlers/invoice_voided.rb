@@ -29,7 +29,7 @@ module Stripe
         when 'void'
           updates.merge!(status: :voided, status_time: voided_at(stripe_invoice), paid_at: nil)
         when 'paid'
-          updates.merge!(status: :voided, status_time: paid_at(stripe_invoice), paid_at: paid_at(stripe_invoice))
+          updates.merge!(status: :paid, status_time: paid_at(stripe_invoice), paid_at: paid_at(stripe_invoice))
         else
           updates.merge!(status: :created, paid_at: nil)
         end
