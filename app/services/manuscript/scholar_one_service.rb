@@ -70,7 +70,9 @@ module Manuscript
 
     def dryad_question_answered_yes
       # dryad answer
-      metadata['submissionCustomQuestions'].each do |question|
+      questions = metadata['submissionCustomQuestions']
+      questions = [questions] unless questions.is_a?(Array)
+      questions.each do |question|
         return true if question['questionName'].downcase == 'dryad' && question.dig('submissionCustomAnswer', 'answerName').downcase == 'yes'
       end
 

@@ -41,12 +41,10 @@ class CurationService
   private
 
   def notify_scholar_one
-    return unless status == 'queued'
-
     journal = @resource&.journal
     return unless journal&.has_integration?(:scholarone)
 
-    Integrations::ScholarOne.new(journal).relay_notification(resource)
+    Integrations::ScholarOne.new(journal, resource, status).relay_notification
   end
 
   def copy_to_zenodo
