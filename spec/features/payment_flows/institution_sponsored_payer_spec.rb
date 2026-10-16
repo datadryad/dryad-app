@@ -5,6 +5,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
   include Mocks::Aws
   include Mocks::DataFile
   include Mocks::Stripe
+  include Mocks::Salesforce
 
   let(:tenant) { create(:tenant) }
   let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true) }
@@ -17,6 +18,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
     mock_aws!
     mock_file_content!
     mock_stripe!
+    mock_salesforce!
 
     tenant.reload
     payment_conf.reload

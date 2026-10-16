@@ -31,6 +31,7 @@ class CurationService
       end
       update_salesforce_metadata if @resource.curation_activities.count > 1
       processed_sponsored_resource
+      notify_scholar_one
     end
 
     @resource.identifier.reload
@@ -38,6 +39,13 @@ class CurationService
   end
 
   private
+
+  def notify_scholar_one
+    journal = @resource&.journal
+    return unless journal&.has_integration?(:scholarone)
+
+    Integrations::ScholarOne.new(journal, resource, status).relay_notification
+  end
 
   def copy_to_zenodo
     # Copy only software and supplemental files to zenodo
