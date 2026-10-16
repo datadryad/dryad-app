@@ -5,6 +5,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
   include Mocks::Aws
   include Mocks::DataFile
   include Mocks::Stripe
+  include Mocks::Salesforce
 
   let!(:top_level_sponsor) { create(:journal_organization, parent_org: nil) }
   let!(:sponsor_payment) do
@@ -25,6 +26,8 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
     mock_aws!
     mock_file_content!
     mock_stripe!
+    mock_salesforce!
+
     journal.reload
     limits_payment.reload
     sign_in(user)

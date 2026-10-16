@@ -31,6 +31,7 @@ Rails.application.config.content_security_policy do |policy|
                      'https://doubleclick.net',
                      'http://localhost:3000',
                      'http://127.0.0.1:3000',
+                     'https://analytics.google.com',
                      main_domain
 
   # --------------------
