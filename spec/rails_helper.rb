@@ -110,6 +110,14 @@ RSpec.configure do |config|
     # result = ActiveRecord::Base.connection.execute("show triggers like '%curation%'") and result.to_a.length shows number
   end
 
+  config.before do
+    Current.download_service = instance_double(DownloadService, create: true)
+  end
+
+  config.after do
+    Current.reset
+  end
+
   config.include React::Rails::TestHelper
   config.include Rails.application.routes.url_helpers, type: :request
 end

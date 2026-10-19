@@ -103,13 +103,13 @@ function Submission({
     },
     {
       name: 'Support',
-      pass: !fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
-      fail: (review || step.index > 4) && fundingCheck(resource.contributors),
+      pass: !fundingCheck(resource),
+      fail: (review || step.index > 4) && fundingCheck(resource),
       component: <Support
         current={step.name === 'Support'}
         resource={resource}
         setResource={setResource}
-        error={fundingCheck(resource.contributors)}
+        error={fundingCheck(resource)}
       />,
       help: <SuppHelp type={resource.resource_type.resource_type} />,
       preview: <SuppPreview resource={resource} previous={previous} curator={user.curator} />,

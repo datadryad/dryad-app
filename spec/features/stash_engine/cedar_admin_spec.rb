@@ -19,7 +19,7 @@ RSpec.feature 'CedarAdmin', type: :feature, js: true do
           fill_in 'keywords', with: 'some|test|words'
           find('input[name=commit]').click
         end
-        expect(page).to have_content 'New word bank'
+        expect(page.find('.c-lined-table')).to have_content 'New word bank'
         expect(CedarWordBank.all.length).to eql(2)
       end
 
@@ -32,7 +32,7 @@ RSpec.feature 'CedarAdmin', type: :feature, js: true do
           fill_in 'keywords', with: 'some|different|test|words'
           find('input[name=commit]').click
         end
-        expect(page).to have_content 'Test word bank update'
+        expect(page.find('.c-lined-table')).to have_content 'Test word bank update'
         expect(CedarWordBank.all.length).to eql(1)
       end
     end
@@ -48,7 +48,7 @@ RSpec.feature 'CedarAdmin', type: :feature, js: true do
           first('#word_bank_id option:nth-of-type(2)').select_option
           find('input[name=commit]').click
         end
-        expect(page).to have_content 'This is just a test'
+        expect(page.find('.c-lined-table')).to have_content 'This is just a test'
         expect(CedarTemplate.all.length).to eql(1)
       end
 
