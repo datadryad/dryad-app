@@ -5,9 +5,17 @@ import {orderedItems} from '../DragonDropList';
 export {default} from './Support';
 export {default as SuppPreview} from './SuppPreview';
 
-export const fundingCheck = (contributors) => {
-  const orgs = contributors.filter((f) => f.contributor_type === 'funder');
-  if (orgs.length < 1) return true;
+export const fundingCheck = (resource) => {
+  const pubbed = resource.identifier.pub_state === 'published'
+  const orgs = resource.contributors.filter((f) => f.contributor_type === 'funder');
+  if (orgs.length < 1) {
+    if (pubbed) return false;
+    return (
+      <p className="error-text" id="funder_error">
+        Granting organization is blank. Check &quot;No funding received&quot; if there is no funding associated with the submission
+      </p>
+    )
+  }
   const funders = orderedItems({items: orgs, typeName: 'funder'});
   const orgError = funders.findIndex((f) => !f.contributor_name);
   if (orgError >= 0) {

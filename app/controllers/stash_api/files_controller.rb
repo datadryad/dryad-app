@@ -23,6 +23,7 @@ module StashApi
     before_action :require_permission, only: %i[update destroy]
     before_action :require_viewable_file, only: %i[show download]
     before_action -> { require_viewable_resource(resource_id: params[:version_id]) }, only: :index
+    before_action :set_download_service
 
     # GET /files/<id>
     def show
@@ -68,7 +69,7 @@ module StashApi
     def download
       if @resource.may_download?(ui_user: @user)
         @file_presigned = Stash::Download::FilePresigned.new(controller_context: self)
-        @file_presigned.download(file: @stash_file)
+        @file_presigned.download(file: @stash_file, from_api: true)
       else
         render status: 404, plain: 'Not found'
       end
