@@ -29,6 +29,10 @@ export default function AuthorSteps({resource, setResource, current, review, use
     });
   };
 
+  useEffect(() => {
+    setAuthors(resource.authors)
+  }, [resource.authors]);
+
   const secTitles = ['Author list', 'Affiliations', 'Contributions']
 
   const sections = {

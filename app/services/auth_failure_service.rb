@@ -1,7 +1,7 @@
 class AuthFailureService
 
-  def initialize(request, current_user, params)
-    @current_user = current_user
+  def initialize(request, current_user_id, params)
+    @current_user_id = current_user_id
     @request = request
     @params = params
   end
@@ -23,7 +23,7 @@ class AuthFailureService
       ip: @request.remote_ip,
       url: @request.fullpath,
       params: @params,
-      user_id: @current_user&.id,
+      user_id: @current_user_id,
       user_agent: @request.user_agent,
       error_type: error_type,
       time: Time.now
