@@ -58,7 +58,7 @@ Dryad partner, you will be responsible for paying the DPC as well as any overage
       <td><%= journal.top_level_org&.name == journal.sponsor&.name ? '' : journal.top_level_org&.name %></td>
     <% end %>
     <% if policy(@journals).detail? %>
-      <td>
+      <td style="white-space: nowrap;">
         <% if journal.integrated_at.present? %>
           <i class="fa fa-check-circle" aria-hidden="true" title="Data integrated" role="img" aria-label="Data integrated"></i>
           <% if journal.has_integration?(:scholarone) %>ScholarOne<% elsif journal.api_journal? %>API<% else %>Email<% end %>
