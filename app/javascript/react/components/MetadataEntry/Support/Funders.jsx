@@ -136,7 +136,9 @@ function Funders({current, resource, setResource}) {
       )}
       <div className="funder-buttons">
         {!disabled && <div />}
-        <label><input type="checkbox" checked={disabled} onChange={setNoFunders} /> No funding received</label>
+        <label>
+          <input id="no-funding" type="checkbox" checked={disabled} disabled={funders.length < 1} onChange={setNoFunders} /> No funding received
+        </label>
         <button
           className="o-button__plain-text1"
           type="button"

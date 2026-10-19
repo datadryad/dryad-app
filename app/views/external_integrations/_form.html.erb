@@ -6,13 +6,13 @@
   <%= form.hidden_field :integrator_type %>
   <%= form.hidden_field :integrator_id %>
   <div class="c-input">
-    <%= form.label :details, 'SiteName:' %>
     <%= form.fields :details, model: form.object.details do |field| %>
+      <%= field.label :site_name, 'SiteName:' %>
       <%= field.text_field :site_name, value: field.object&.dig('site_name'), class: 'c-input__text', style: 'width:100%;' %>
     <% end %>
   </div>
   <div class="c-input">
-    <%= form.label :username, "Username" %>
+    <%= form.label :username, "Username:" %>
     <%= form.text_field :username, required: true, class: 'c-input__text', style: 'width:100%' %>
   </div>
   <div class="c-input">
