@@ -34,7 +34,7 @@
   height: 55vh;
 }
 .micro_editor .md_editor_textarea {
-  height: calc(1.5rem + 1ch + 6px);
+  height: calc(3rem + 1ch + 6px);
 }
 
 .md_editor_textarea > div:not(.c-alert--error) {
