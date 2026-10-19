@@ -8,15 +8,7 @@
       <% end %>
       <%= form_with(url: journal_edit_path(id: j.id), method: :get, local: false) do %>
         <button class="c-admin-edit-icon" aria-label="Edit journal" aria-haspopup="dialog" id="edit_button_<%= j.id %>">
-          <i class="fa fa-pencil" aria-hidden="true"></i>
-        </button>
-      <% end %>
-      <%= form_with(url: form_external_integrations_path, method: :get, local: false) do |f| %>
-        <%= f.hidden_field :integration, value: 'scholarone' %>
-        <%= f.hidden_field :integrator_type, value: j.class.name %>
-        <%= f.hidden_field :integrator_id, value: j.id %>
-        <button class="c-admin-edit-icon" aria-label="ScholarOne integration" aria-haspopup="dialog">
-          <i class="fas fa-arrow-up-right-from-square exit-icon" aria-hidden="true"></i>
+          <i class="fas fa-pencil" aria-hidden="true"></i>
         </button>
       <% end %>
     </div>
@@ -24,6 +16,25 @@
   </div>
 </td>
 <td><%= j.issn_array.join(", ") %></td>
+<td>
+  <div class="c-lined-table__with-actions">
+    <div class="c-lined-table__data">
+      <% if j.integrated_at.present? %>
+        <span title="Last received: <%= formatted_date(j.integrated_at) if j.integrated_at.present? %>" style="cursor: help">
+          <i class="fa fa-check-circle" aria-hidden="true" role="img" aria-label="Data integrated" style="color: #3c763d"></i>
+          <%= j.api_journal? ? 'API' : 'Email' %>
+        </span>
+      <% end %>
+    </div>
+    <%= form_with(url: form_external_integrations_path, method: :get, local: false) do |f| %>
+      <%= f.hidden_field :integration, value: 'scholarone' %>
+      <%= f.hidden_field :integrator_type, value: j.class.name %>
+      <%= f.hidden_field :integrator_id, value: j.id %>
+      <button class="c-admin-edit-icon" aria-label="Edit ScholarOne integration" title="Edit ScholarOne integration" aria-haspopup="dialog">
+        <i class="fas fa-pencil" aria-hidden="true"></i>
+      </button>
+    <% end %>
+  </div>
 <td>
   <span style="color: <%= j.default_to_ppr ? '#3c763d' : 'rgb(209, 44, 29)'%>">
     <%= j.default_to_ppr ? "True" : "False" %>
