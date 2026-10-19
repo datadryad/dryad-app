@@ -99,8 +99,11 @@ function Funders({current, resource, setResource}) {
 
   useEffect(() => {
     setResource((r) => ({...r, contributors: [...funders, ...r.contributors.filter((con) => con.contributor_type !== 'funder')]}));
-    if (funders.length < 1) addNewFunder();
-  }, [funders]);
+  }, [funders])
+
+  useEffect(() => {
+    if (current && funders.length < 1) addNewFunder();
+  }, [funders, current]);
 
   return (
     <div style={{marginBottom: '20px'}}>
