@@ -153,6 +153,7 @@ module DatasetHelper
     expect(page).to have_field('keyword_ac')
     find('#keyword_ac').send_keys(3.times.map { Faker::Creature::Animal.unique.name }.join(','))
     page.send_keys(:tab)
+    expect(page).to have_css('.c-keywords__keyword-remove', minimum: 3)
     Faker::Creature::Animal.unique.clear
   end
 
@@ -195,7 +196,8 @@ module DatasetHelper
   end
 
   def fill_in_no_funder
-    find(:label, 'No funding received').click
+    expect(page).to have_field('no-funding', disabled: false, wait: 3)
+    find('#no-funding').set(true)
     expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"', wait: 5)
   end
 
