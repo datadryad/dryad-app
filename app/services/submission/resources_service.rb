@@ -135,7 +135,7 @@ module Submission
 
     def update_storage_size
       id = resource.identifier
-      total_dataset_size = id.resources.sum { |r| r.data_files.included_in_total_storage.sum(&:upload_file_size) }
+      total_dataset_size = id.resources.sum { |r| r.data_files.created_without_deleted.sum(&:upload_file_size) }
       id.update(storage_size: total_dataset_size)
     end
   end

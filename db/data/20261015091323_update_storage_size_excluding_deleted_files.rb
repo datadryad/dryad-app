@@ -6,7 +6,7 @@ class UpdateStorageSizeExcludingDeletedFiles < ActiveRecord::Migration[8.0]
     StashEngine::Identifier.where(id: StashEngine::DataFile.where.not(file_deleted_at: nil).joins(:resource).select(:identifier_id).distinct).each do |id|
       next if id.resources.count == 1
 
-      total_dataset_size = id.resources.sum { |r| r.data_files.included_in_total_storage.sum(&:upload_file_size) }
+      total_dataset_size = id.resources.sum { |r| r.data_files.created_without_deleted.sum(&:upload_file_size) }
       pp "Updating storage size for #{id.id} from #{id.storage_size} -> #{total_dataset_size}" if id.storage_size != total_dataset_size
       id.update(storage_size: total_dataset_size)
     end
