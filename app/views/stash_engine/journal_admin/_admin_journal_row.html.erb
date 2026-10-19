@@ -22,7 +22,7 @@
       <% if j.integrated_at.present? %>
         <span title="Last received: <%= formatted_date(j.integrated_at) if j.integrated_at.present? %>" style="cursor: help">
           <i class="fa fa-check-circle" aria-hidden="true" role="img" aria-label="Data integrated" style="color: #3c763d"></i>
-          <% if j.has_integration?(:scholarone) %>API<% elsif j.api_journal? %>ScholarOne<% else %>Email<% end %>
+          <% if j.has_integration?(:scholarone) %>ScholarOne<% elsif j.api_journal? %>API<% else %>Email<% end %>
         </span>
       <% end %>
     </div>
