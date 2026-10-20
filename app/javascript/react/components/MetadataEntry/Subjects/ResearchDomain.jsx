@@ -9,7 +9,7 @@ function ResearchDomain({
 }) {
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const [selected, setSelected] = useState(domains || []);
-  const [subjects, setSubjects] = useState([]);
+  const [subjects, setSubjects] = useState(null);
 
   const submit = (items) => {
     showSavingMsg();
@@ -49,7 +49,7 @@ function ResearchDomain({
         setSubjects(data);
       });
     }
-    if (subjects.length === 0) getList();
+    if (!subjects?.length) getList();
   }, [current, subjects]);
 
   return (
@@ -61,7 +61,7 @@ function ResearchDomain({
         example={<div id="r_domain-ex"><i aria-hidden="true" />The main scholarly or technical fields for the data or project</div>}
         remove={(subj) => setSelected((s) => s.filter((k) => k !== subj))}
       >
-        {subjects.length > 0 && (
+        {subjects && (
           <select
             id="r_domain"
             aria-describedby="r_domain-ex"
