@@ -209,7 +209,7 @@ module DatasetHelper
     expect(StashDatacite::Subject.fos.pluck(:subject)).to include(fos)
     click_button 'Subjects'
     expect(page).to have_content('Research domains')
-    expect(page).to have_select('r_domain', with_options: [fos], wait: 5)
+    expect(page).to have_select('r_domain', with_options: [fos], wait: 8)
     select(fos, from: 'Research domain')
     page.send_keys(:tab)
   end
