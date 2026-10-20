@@ -36,7 +36,7 @@ function Title({resource, setResource, setTouched}) {
   }
 
   useEffect(() => {
-    if (resource.title?.trim() !== prevTitle.current.trim()) {
+    if (resource.title?.trim() !== prevTitle.current?.trim()) {
       if (document.activeElement?.getAttribute('name') !== 'title') {
         const p = document.createElement('p');
         p.innerHTML = resource.title;
