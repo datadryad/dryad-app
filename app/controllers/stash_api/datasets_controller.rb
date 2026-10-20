@@ -8,6 +8,7 @@ module StashApi
   class DatasetsController < ApiApplicationController
     include ActionView::Helpers::DateHelper
     include SubmissionMixin
+    include PublicationMixin
 
     before_action :require_json_headers, only: %i[show create index update]
     before_action :force_json_content_type, except: :download
@@ -158,11 +159,11 @@ module StashApi
             note = 'received API request to change status to queued, but submission needs further payment'
             StashEngine::ResourceMailer.peer_review_payment_needed(@resource).deliver_now
           end
+          @resource.update(hold_for_peer_review: false)
           CurationService.new(user_id: @user.id, resource: @resource, status: status, note: note).process
         else
-          # any other article disposition -> transition peer_review to withdrawn
-          CurationService.new(user_id: @user.id, resource: @resource, status: 'withdrawn',
-                              note: 'updating status based on API notification from Editorial Manager').process
+          # any other article disposition -> rejected manuscript
+          reject_manuscript(@resource, 'API notification from Editorial Manager', @user)
         end
       end
 
