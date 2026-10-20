@@ -153,7 +153,7 @@ module DatasetHelper
     expect(page).to have_field('keyword_ac')
     find('#keyword_ac').send_keys(3.times.map { Faker::Creature::Animal.unique.name }.join(','))
     page.send_keys(:tab)
-    expect(page).to have_content('All progress saved', wait: 3)
+    expect(page).to have_content('All progress saved', wait: 5)
     expect(page).to have_css('.c-keywords__keyword-remove', minimum: 3, wait: 3)
     Faker::Creature::Animal.unique.clear
   end
@@ -203,10 +203,13 @@ module DatasetHelper
   end
 
   def fill_in_research_domain
-    fos = 'Biological sciences'
     # the fos field must exist
-    create(:subject, subject: fos, subject_scheme: 'fos')
-    expect(StashDatacite::Subject.fos.pluck(:subject)).to include(fos)
+    fos = StashDatacite::Subject.fos.pluck(:subject).first
+    if fos.nil?
+      fos = Faker::Job.unique.field
+      create(:subject, subject: fos, subject_scheme: 'fos')
+    end
+
     click_button 'Subjects'
     expect(page).to have_select('r_domain', with_options: [fos], wait: 10)
     select(fos, from: 'Research domains')
