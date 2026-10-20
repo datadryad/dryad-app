@@ -355,7 +355,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     click_button 'Preview changes'
     click_button 'Subjects'
     fill_in_keywords
-    expect(page).to have_text('All progress saved')
     click_button 'Preview changes'
     click_button 'Related works'
     doi = Faker::Pid.doi

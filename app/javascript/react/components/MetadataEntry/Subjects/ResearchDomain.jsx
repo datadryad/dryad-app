@@ -51,11 +51,11 @@ function ResearchDomain({
   useEffect(() => {
     async function getList() {
       axios.get('/stash_datacite/fos_subjects').then((data) => {
-        setSubjects(data.data);
+        if (data.status === 200) setSubjects(data.data);
       });
     }
-    if (fieldRef.current && current) getList();
-  }, [fieldRef, current]);
+    if (fieldRef.current && current && subjects.length === 0) getList();
+  }, [fieldRef.current, current, subjects]);
 
   return (
     <form className="input-stack" ref={fieldRef} style={{marginBottom: '1.5em'}}>
@@ -66,17 +66,19 @@ function ResearchDomain({
         example={<div id="r_domain-ex"><i aria-hidden="true" />The main scholarly or technical fields for the data or project</div>}
         remove={(subj) => setSelected((s) => s.filter((k) => k !== subj))}
       >
-        <select
-          id="r_domain"
-          aria-describedby="r_domain-ex"
-          aria-errormessage="domain_error"
-          className="c-input__select"
-          onChange={(e) => setSelected((s) => s.concat(e.target.value))}
-          onBlur={onBlur}
-        >
-          <option value="">Select Research domain</option>
-          {subjects.filter((s) => !selected.includes(s)).map((s) => <option key={s} value={s}>{s}</option>)}
-        </select>
+        {subjects.length > 0 && (
+          <select
+            id="r_domain"
+            aria-describedby="r_domain-ex"
+            aria-errormessage="domain_error"
+            className="c-input__select"
+            onChange={(e) => setSelected((s) => s.concat(e.target.value))}
+            onBlur={onBlur}
+          >
+            <option value="">Select Research domain</option>
+            {subjects.filter((s) => !selected.includes(s)).map((s) => <option key={s} value={s}>{s}</option>)}
+          </select>
+        )}
       </SubjectSelect>
     </form>
   );
