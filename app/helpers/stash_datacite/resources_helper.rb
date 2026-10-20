@@ -9,7 +9,7 @@ module StashDatacite
         str = ''
 
         if authors.length > 15
-          str += "<button class=\"o-button__plain-textlink expander\" aria-controls=\"author-expander\" aria-expanded=\"false\" title=\"See all #{authors.length} authors\" aria-label=\"See all #{authors.length} authors\">[&#8230;]</button><span id=\"author-expander\" hidden>" if ind == 10
+          str += "<button class=\"o-button__plain-textlink expander\" aria-controls=\"author-expander\" aria-expanded=\"false\" title=\"See all #{authors.length} authors\" aria-label=\"See all #{authors.length} authors\">[&#8230;+]</button><span id=\"author-expander\" hidden>" if ind == 9
           str += '</span>' if ind == authors.length - 1
         end
 
