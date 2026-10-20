@@ -50,12 +50,12 @@ function ResearchDomain({
 
   useEffect(() => {
     async function getList() {
-      axios.get('/stash_datacite/fos_subjects').then((data) => {
-        if (data.status === 200) setSubjects(data.data);
+      axios.get('/stash_datacite/fos_subjects').then(({data}) => {
+        setSubjects(data);
       });
     }
-    if (fieldRef.current && current && subjects.length === 0) getList();
-  }, [fieldRef.current, current, subjects]);
+    if (subjects.length === 0) getList();
+  }, [current, subjects]);
 
   return (
     <form className="input-stack" ref={fieldRef} style={{marginBottom: '1.5em'}}>
