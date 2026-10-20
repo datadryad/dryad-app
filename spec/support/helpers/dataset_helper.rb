@@ -203,7 +203,7 @@ module DatasetHelper
 
   def fill_in_research_domain
     fos = 'Biological sciences'
-    StashDatacite::Subject.create(subject: fos, subject_scheme: 'fos') # the fos field must exist
+    create(:subject, subject: fos, subject_scheme: 'fos') # the fos field must exist
     click_button 'Subjects'
     expect(page).to have_content('Research domain')
     expect(page).to have_select('r_domain', with_options: [fos], wait: 10)

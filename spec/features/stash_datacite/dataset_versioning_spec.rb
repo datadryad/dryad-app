@@ -334,6 +334,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
   def minor_update
     click_button 'Subjects'
+    find('button[data-slug="subjects"]').click if page.has_css?('button[data-slug="subjects"]')
     fill_in_keywords
     click_button 'Preview changes'
     click_button 'Support'
