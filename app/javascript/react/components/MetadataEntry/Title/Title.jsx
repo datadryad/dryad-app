@@ -11,15 +11,15 @@ function Title({resource, setResource, setTouched}) {
 
   const submit = (newValue) => {
     showSavingMsg();
-    prevTitle.current = newValue
     axios.patch(
       '/stash_datacite/titles/update',
       {authenticity_token, id: resource.id, title: newValue},
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     )
-      .then((data) => {
-        if (data.data) {
-          const {descriptions, title} = data.data;
+      .then(({data}) => {
+        if (data) {
+          const {descriptions, title} = data;
+          prevTitle.current = title;
           setResource((r) => ({...r, title, descriptions}));
         }
         showSavedMsg();
@@ -36,7 +36,7 @@ function Title({resource, setResource, setTouched}) {
   }
 
   useEffect(() => {
-    if (resource.title?.trim() !== prevTitle.current?.trim()) {
+    if (resource.title !== prevTitle.current) {
       if (document.activeElement?.getAttribute('name') !== 'title') {
         const p = document.createElement('p');
         p.innerHTML = resource.title;
