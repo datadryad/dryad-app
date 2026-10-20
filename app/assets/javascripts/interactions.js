@@ -155,8 +155,10 @@ function expandButtonMenu(e) {
   const section = document.getElementById(e.currentTarget.getAttribute('aria-controls'))
   const baseURL = window.location.pathname + window.location.search
   if (closed) {
-    const newHash = '#' + e.currentTarget.id
-    history.replaceState('', '', baseURL + newHash);
+    if (e.currentTarget.id) {
+      const newHash = '#' + e.currentTarget.id
+      history.replaceState('', '', baseURL + newHash);
+    }
     e.currentTarget.setAttribute('aria-expanded', 'true');
     section.removeAttribute('hidden');
   } else {
@@ -164,8 +166,9 @@ function expandButtonMenu(e) {
     e.currentTarget.setAttribute('aria-expanded', 'false');
     section.setAttribute('hidden', true);
   }
+  if (e.currentTarget.classList.contains('expander')) e.currentTarget.setAttribute('hidden', true)
 }
-var expandButtons = Array.from(document.querySelectorAll('.expand-button button'));
+var expandButtons = Array.from(document.querySelectorAll('.expand-button button, button.expander'));
 expandButtons.forEach(button => {
   button.addEventListener('click', expandButtonMenu)
   button.addEventListener('keydown', (e) => {
