@@ -1,18 +1,14 @@
-import React, {useRef, useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import PropTypes from 'prop-types';
 import {xor} from 'lodash';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 import SubjectSelect from './SubjectSelect';
 
 function ResearchDomain({
-  current, resource, setResource, onBlur,
+  current, domains, resourceId, setResource, onBlur,
 }) {
-  const fieldRef = useRef(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
-  const [selected, setSelected] = useState(
-    resource.subjects?.filter((s) => ['fos', 'bad_fos'].includes(s.subject_scheme)).map((s) => s.subject) || [],
-  );
+  const [selected, setSelected] = useState(domains || []);
   const [subjects, setSubjects] = useState([]);
 
   const submit = (items) => {
@@ -22,7 +18,7 @@ function ResearchDomain({
       {
         authenticity_token,
         fos_subjects: items,
-        id: resource.id,
+        id: resourceId,
       },
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     )
@@ -42,8 +38,7 @@ function ResearchDomain({
   };
 
   useEffect(() => {
-    const oldSelected = resource.subjects?.filter((s) => ['fos', 'bad_fos'].includes(s.subject_scheme)).map((s) => s.subject) || [];
-    if (xor(oldSelected, selected).length) {
+    if (xor(domains, selected).length) {
       submit(selected);
     }
   }, [selected]);
@@ -58,7 +53,7 @@ function ResearchDomain({
   }, [current, subjects]);
 
   return (
-    <form className="input-stack" ref={fieldRef} style={{marginBottom: '1.5em'}}>
+    <form className="input-stack" style={{marginBottom: '1.5em'}}>
       <SubjectSelect
         selected={selected}
         id="r_domain"
@@ -85,8 +80,3 @@ function ResearchDomain({
 }
 
 export default ResearchDomain;
-
-ResearchDomain.propTypes = {
-  resource: PropTypes.object.isRequired,
-  setResource: PropTypes.func.isRequired,
-};

@@ -206,6 +206,7 @@ module DatasetHelper
     fos = 'Biological sciences'
     # the fos field must exist
     create(:subject, subject: fos, subject_scheme: 'fos')
+    expect(StashDatacite::Subject.fos.pluck(:subject)).to include(fos)
     click_button 'Subjects'
     expect(page).to have_content('Research domains')
     expect(page).to have_select('r_domain', with_options: [fos], wait: 5)
