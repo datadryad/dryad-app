@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import PropTypes from 'prop-types';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 import SubjectSelect from './SubjectSelect';
 import KeywordAutocomplete from './KeywordAutocomplete';
@@ -90,8 +89,3 @@ function Keywords({resource, setResource, onBlur}) {
 }
 
 export default Keywords;
-
-Keywords.propTypes = {
-  resource: PropTypes.object.isRequired,
-  setResource: PropTypes.func.isRequired,
-};

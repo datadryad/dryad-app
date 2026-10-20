@@ -283,6 +283,7 @@ function Submission({
       document.title = 'Dryad | Submission | Preview';
     } else if (review) {
       main.classList.remove('submission-review');
+      document.getElementById('submission-heading').scrollIntoView();
     } else {
       document.querySelector('#submission-header h2')?.focus();
     }
