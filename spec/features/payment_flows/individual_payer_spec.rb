@@ -6,6 +6,7 @@ RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
   include Mocks::DataFile
   include Mocks::Stripe
   include Mocks::Salesforce
+  include Mocks::Domains
 
   let(:tenant) { create(:tenant) }
   let(:user) { create(:user, tenant: tenant) }
@@ -17,6 +18,7 @@ RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
     mock_file_content!
     mock_stripe!
     mock_salesforce!
+    mock_domains!
 
     sign_in(user)
     start_new_dataset

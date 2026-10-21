@@ -6,10 +6,12 @@ RSpec.feature 'NewCollection', type: :feature do
   include Mocks::RSolr
   include Mocks::Salesforce
   include Mocks::Datacite
+  include Mocks::Domains
 
   before(:each) do
     mock_salesforce!
     mock_solr!
+    mock_domains!
     mock_good_doi_resolution(doi: %r{.*/doi\.org/.*})
     sign_in(create(:user, role: 'curator'))
   end

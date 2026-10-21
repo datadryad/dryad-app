@@ -7,6 +7,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
   include Mocks::Salesforce
   include Mocks::Stripe
   include Mocks::DataFile
+  include Mocks::Domains
 
   before(:each) do
     mock_aws!
@@ -15,6 +16,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
     mock_stripe!
     mock_datacite!
     mock_file_content!
+    mock_domains!
     neuter_curation_callbacks!
   end
 

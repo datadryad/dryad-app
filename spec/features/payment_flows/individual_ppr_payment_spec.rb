@@ -6,6 +6,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
   include Mocks::DataFile
   include Mocks::Stripe
   include Mocks::Salesforce
+  include Mocks::Domains
 
   let(:tenant) { create(:tenant) }
   let(:user) { create(:user, tenant: tenant) }
@@ -16,6 +17,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
     mock_file_content!
     mock_stripe!
     mock_salesforce!
+    mock_domains!
 
     sign_in(user)
     start_new_dataset

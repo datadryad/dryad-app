@@ -6,6 +6,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
   include Mocks::RSolr
   include Mocks::Salesforce
   include Mocks::DataFile
+  include Mocks::Domains
   include Mocks::Aws
 
   let(:user) { create(:user) }
@@ -26,6 +27,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
       mock_solr!
       mock_salesforce!
       mock_file_content!
+      mock_domains!
       mock_aws!
     end
 
