@@ -6,6 +6,7 @@ module StashDatacite
     # PATCH/PUT /fos_subjects/1
     # We are using this for both new/update, id is resource_id, fos_subjects is the subject
     def update
+      p resource
       # this removes the current associated fos subjects, but doesn't delete subject entries from subjects table
       resource.subjects.permissive_fos.each do |sub_id|
         ResourcesSubjects.where(resource_id: resource, subject_id: sub_id).destroy_all
@@ -14,6 +15,7 @@ module StashDatacite
         resource.subjects << make_or_get_subject(subj)
       end
       @subjects = resource.reload.subjects
+      p @subjects
       respond_to do |format|
         format.js
         format.json { render json: @subjects }

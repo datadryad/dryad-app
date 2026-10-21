@@ -56,10 +56,10 @@ RSpec.configure do |config|
 
   # *** js debugging ***
 
-  # config.after(:each, type: :feature, js: true) do |spec|
-  #   js_logs = page.driver.browser.logs.get(:browser).map(&:message)
-  #   puts js_logs.join("\n\n") if js_logs.present?
-  # end
+  config.after(:each, type: :feature, js: true) do |_spec|
+    js_logs = page.driver.browser.logs.get(:browser).map(&:message)
+    puts js_logs.join("\n\n") if js_logs.present?
+  end
 
   # ----------------------
 
