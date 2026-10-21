@@ -5,6 +5,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
   include Mocks::Aws
   include Mocks::DataFile
   include Mocks::Stripe
+  include Mocks::Salesforce
 
   let(:tenant) { create(:tenant) }
   let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: false) }
@@ -16,6 +17,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
     mock_aws!
     mock_file_content!
     mock_stripe!
+    mock_salesforce!
 
     sign_in(user)
     start_new_dataset

@@ -1,10 +1,11 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useRef, useEffect, useCallback} from 'react';
 import axios from 'axios';
 import {debounce} from 'lodash';
 import MarkdownEditor from '../../MarkdownEditor';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
-function Title({resource, setResource, onBlur}) {
+function Title({resource, setResource, setTouched}) {
+  const prevTitle = useRef('');
   const [value, setValue] = useState(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
@@ -15,12 +16,10 @@ function Title({resource, setResource, onBlur}) {
       {authenticity_token, id: resource.id, title: newValue},
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     )
-      .then((data) => {
-        if (data.status !== 200) {
-          console.log('Not a 200 response while saving Title form');
-        }
-        if (data.data) {
-          const {descriptions, title} = data.data;
+      .then(({data}) => {
+        if (data) {
+          const {descriptions, title} = data;
+          prevTitle.current = title;
           setResource((r) => ({...r, title, descriptions}));
         }
         showSavedMsg();
@@ -29,11 +28,21 @@ function Title({resource, setResource, onBlur}) {
 
   const checkSubmit = useCallback(debounce(submit, 900), []);
 
+  const onBlur = async() => {
+    checkSubmit.flush();
+    /* eslint-disable-next-line no-undef */
+    await awaitSelector('.saving_text[hidden]');
+    setTouched(true);
+  }
+
   useEffect(() => {
-    if (document.activeElement?.getAttribute('name') !== 'title') {
-      const p = document.createElement('p');
-      p.innerHTML = resource.title;
-      setValue(p);
+    if (resource.title !== prevTitle.current) {
+      if (document.activeElement?.getAttribute('name') !== 'title') {
+        const p = document.createElement('p');
+        p.innerHTML = resource.title;
+        setValue(p);
+      }
+      prevTitle.current = resource.title;
     }
   }, [resource.title]);
 

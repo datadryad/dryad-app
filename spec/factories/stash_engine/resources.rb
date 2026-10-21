@@ -79,7 +79,7 @@ FactoryBot.define do
       create(:right, resource: resource)
       create(:contributor, resource: resource)
       create(:resource_type, resource: resource)
-      resource.subjects << create(:subject, subject: Faker::Lorem.unique.word, subject_scheme: 'fos')
+      resource.subjects << create(:subject, subject: Faker::Job.unique.field, subject_scheme: 'fos')
       3.times { resource.subjects << create(:subject, subject: Faker::Lorem.unique.word) }
     end
 

@@ -78,6 +78,8 @@ module StashEngine
       present_files.where(upload_content_type: ['text/csv', 'text/tab-separated-values', 'text/plain'])
         .or(present_files.where("upload_file_name RLIKE '.*\\.(csv|tsv|txt|log)$'"))
     }
+    scope :created_without_deleted, -> { created.without_deleted_files }
+
     enum(:file_state, %w[created copied deleted].to_h { |i| [i.to_sym, i] })
     enum(:digest_type, %w[md5 sha-1 sha-256 sha-384 sha-512].to_h { |i| [i.to_sym, i] })
 

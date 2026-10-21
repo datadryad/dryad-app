@@ -18,6 +18,7 @@ module StashApi
     before_action :optional_api_user, except: %i[create update em_submission_metadata]
     before_action :require_permission, only: :update
     before_action :lock_down_admin_only_params, only: %i[create update]
+    before_action :set_download_service
     after_action :record_journal_integration, only: %i[create update em_submission_metadata]
 
     # get /datasets/<id>
@@ -346,7 +347,7 @@ module StashApi
       res = @stash_identifier.latest_downloadable_resource(user: @user)
       @version_presigned = Stash::Download::VersionPresigned.new(controller_context: self, resource: res)
       if res&.may_download?(ui_user: @user) && @version_presigned&.valid_resource?
-        @version_presigned.download(resource: res)
+        @version_presigned.download(resource: res, from_api: true)
       else
         render plain: 'Download for this version of the dataset is unavailable', status: :not_found
       end

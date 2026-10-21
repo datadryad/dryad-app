@@ -111,9 +111,6 @@ module StashEngine
         resource.update_repo_queue_state(state: 'completed')
       end
 
-      id = resource.identifier
-      total_dataset_size = id.resources.sum { |r| r.data_files.created.sum(&:upload_file_size) }
-      id.update(storage_size: total_dataset_size)
       resource_submission_service.cleanup_files
       true
     end

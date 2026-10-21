@@ -5,7 +5,7 @@ import MarkdownEditor from '../../MarkdownEditor';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
 export default function Description({
-  setResource, dcsDescription, mceLabel, onBlur,
+  setResource, dcsDescription, mceLabel, setTouched,
 }) {
   const [desc, setDesc] = useState(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
@@ -38,6 +38,15 @@ export default function Description({
   };
 
   const checkSubmit = useCallback(debounce(submit, 900), []);
+
+  const onBlur = async() => {
+    checkSubmit.flush();
+    if (typeof setTouched === 'function') {
+      /* eslint-disable-next-line no-undef */
+      await awaitSelector('.saving_text[hidden]');
+      setTouched(true);
+    }
+  }
 
   useEffect(() => {
     const div = document.createElement('div');
