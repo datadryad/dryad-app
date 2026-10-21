@@ -131,6 +131,7 @@ test:
   stripe_ic_webhook_secret: whsec_some_secret_key
   scholar_one:
     api_base_url: https://api.url.com
+    check_type: 1111
 
 <% else %>
 
@@ -281,6 +282,7 @@ defaults: &DEFAULTS
   stripe_ic_webhook_secret: <%= Rails.application.credentials[Rails.env.to_sym][:stripe_ic_webhook_secret] %>
   scholar_one:
     api_base_url: https://mc-beta-api.manuscriptcentral.com
+    check_type: 1111
 
 dev: &DEV
   <<: *DEFAULTS
@@ -441,5 +443,6 @@ production:
     rack_attack_url: 'redis://master.rack-attack-cache.zkdynt.usw2.cache.amazonaws.com:6381/0'
   stripe_payment_url: <%= "https://dashboard.stripe.com/#{Rails.application.credentials[Rails.env.to_sym][:stripe_account_key]}" %>
   scholar_one:
-    api_base_url: https://mc-api.manuscriptcentral.com
+    api_base_url: https://mc04-api.manuscriptcentral.com
+    check_type: 5801
 <% end %>
