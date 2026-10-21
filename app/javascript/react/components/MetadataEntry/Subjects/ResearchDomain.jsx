@@ -24,17 +24,11 @@ function ResearchDomain({
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     )
       .then((data) => {
-        if (data.status === 200) {
-        // console.log('Response failure not a 200 response');
+        if (data.status !== 200) {
+          console.log('Response failure not a 200 response');
         }
         showSavedMsg();
-        setResource((r) => ({
-          ...r,
-          subjects: [
-            ...data.data,
-            ...r.subjects.filter((s) => !['fos', 'bad_fos'].includes(s.subject_scheme)),
-          ],
-        }));
+        setResource((r) => ({...r, subjects: data.data}));
       });
   };
 
