@@ -14,27 +14,21 @@ function ResearchDomain({
 
   const submit = (items) => {
     showSavingMsg();
-    axios.patch(
+    axios.post(
       '/stash_datacite/fos_subjects/update',
       {
         authenticity_token,
         fos_subjects: items,
-        id: resource.id,
+        resource_id: resource.id,
       },
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     )
       .then((data) => {
-        if (data.status === 200) {
-        // console.log('Response failure not a 200 response');
+        if (data.status !== 200) {
+          console.log('Response failure not a 200 response');
         }
         showSavedMsg();
-        setResource((r) => ({
-          ...r,
-          subjects: [
-            ...data.data,
-            ...r.subjects.filter((s) => !['fos', 'bad_fos'].includes(s.subject_scheme)),
-          ],
-        }));
+        setResource((r) => ({...r, subjects: data.data}));
       });
   };
 
