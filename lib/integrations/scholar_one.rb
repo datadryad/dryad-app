@@ -1,6 +1,7 @@
 module Integrations
   class ScholarOne
     BASE_URL = APP_CONFIG.scholar_one.api_base_url
+    CHECK_TYPE = APP_CONFIG.scholar_one.check_type
 
     attr_reader :resource, :status
 
@@ -101,7 +102,7 @@ module Integrations
           payload: {
             documentId: document_id,
             content: html_content,
-            checkType: 1111,
+            checkType: CHECK_TYPE,
             url: dataset_url,
             effectiveDate: 1.year.from_now.to_date.to_s,
             score: resource.stash_version.version,
