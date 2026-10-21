@@ -10,7 +10,7 @@
 #  digest_type         :string(8)
 #  download_filename   :text(65535)
 #  file_deleted_at     :datetime
-#  file_state          :string(7)
+#  file_state          :string
 #  original_filename   :text(65535)
 #  original_url        :text(65535)
 #  status_code         :integer

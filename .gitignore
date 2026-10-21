@@ -214,6 +214,7 @@ flycheck_*.el
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity
+/node_server/node_modules
 
 /config/credentials/development.key
 __pycache__/
