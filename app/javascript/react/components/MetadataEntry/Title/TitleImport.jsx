@@ -122,7 +122,7 @@ export default function TitleImport({
       <p id="population-warnings" role="status" className="o-metadata__autopopulate-message">
         {importError}
       </p>
-      <Title resource={resource} setResource={setResource} onBlur={() => setTouched(true)} />
+      <Title resource={resource} setResource={setResource} setTouched={setTouched} />
 
       <div role="alert">{touched && error}</div>
 
