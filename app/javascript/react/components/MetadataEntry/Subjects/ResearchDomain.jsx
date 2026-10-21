@@ -9,7 +9,8 @@ function ResearchDomain({
 }) {
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const [selected, setSelected] = useState(domains || []);
-  const [subjects, setSubjects] = useState(null);
+  const [retry, setRetry] = useState(0);
+  const [subjects, setSubjects] = useState([]);
 
   const submit = (items) => {
     showSavingMsg();
@@ -46,11 +47,14 @@ function ResearchDomain({
   useEffect(() => {
     async function getList() {
       axios.get('/stash_datacite/fos_subjects').then(({data}) => {
-        setSubjects(data);
+        setSubjects(data)
+        if (current && retry < 3) {
+          setRetry(retry + 1)
+        }
       });
     }
-    if (!subjects?.length) getList();
-  }, [current, subjects]);
+    if (subjects.length < 1) getList()
+  }, [current, subjects, retry]);
 
   return (
     <form className="input-stack" style={{marginBottom: '1.5em'}}>
@@ -61,7 +65,7 @@ function ResearchDomain({
         example={<div id="r_domain-ex"><i aria-hidden="true" />The main scholarly or technical fields for the data or project</div>}
         remove={(subj) => setSelected((s) => s.filter((k) => k !== subj))}
       >
-        {subjects && (
+        {subjects.length > 0 && (
           <select
             id="r_domain"
             aria-describedby="r_domain-ex"
