@@ -205,7 +205,8 @@ module DatasetHelper
   end
 
   def fill_in_research_domain
-    # fos options must exist
+    # the fos field must exist
+    StashDatacite::Subject.create(subject: Faker::Job.unique.field, subject_scheme: 'fos')
     click_button 'Subjects'
     expect(page).to have_select('r_domain', wait: 5)
     find('#r_domain option:last-child').select_option
