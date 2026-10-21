@@ -9,6 +9,7 @@ function ResearchDomain({
 }) {
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const [selected, setSelected] = useState(domains || []);
+  const [retry, setRetry] = useState(0);
   const [subjects, setSubjects] = useState([]);
 
   const submit = (items) => {
@@ -46,11 +47,14 @@ function ResearchDomain({
   useEffect(() => {
     async function getList() {
       axios.get('/stash_datacite/fos_subjects').then(({data}) => {
-        setSubjects(data);
+        setSubjects(data)
+        if (current && retry < 3) {
+          setRetry(retry + 1)
+        }
       });
     }
-    if (subjects.length < 1) getList();
-  }, [current, subjects]);
+    if (subjects.length < 1) getList()
+  }, [current, subjects, retry]);
 
   return (
     <form className="input-stack" style={{marginBottom: '1.5em'}}>
