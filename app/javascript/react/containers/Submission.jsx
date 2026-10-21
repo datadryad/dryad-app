@@ -221,19 +221,23 @@ function Submission({
     .then(({data}) => updateStore({affSuggest: data}));
 
   useEffect(() => {
-    if (!refreshFees) return;
-    if (resource.identifier.old_payment_system) {
-      updateStore({refreshFees: false});
+    if (!refreshFees) {
+      updateStore({waitSubmit: false});
       return;
     }
-    async function updateFees() {
-      await Promise.allSettled([getFees(), suggestAff()])     
+    if (resource.identifier.old_payment_system) {
+      updateStore({refreshFees: false, waitSubmit: false});
+      return;
+    }
+    const updateFees = async() => {
+      await Promise.allSettled([getFees(), getDPCStatus(), suggestAff()])     
     }
     updateFees();
+    updateStore({waitSubmit: false});
   }, [refreshFees, invoice]);
 
   useEffect(() => {
-    async function updatePayer() {
+    const updatePayer = async() => {
       await Promise.allSettled([updateStore({waitSubmit: true}), getFees(), getDPCStatus()])     
     }
     updatePayer();
