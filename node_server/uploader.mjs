@@ -1,29 +1,21 @@
 import http from "node:http";
 
 const RAILS = process.env.RAILS_INTERNAL_URL ?? "http://localhost:3000";
-// const SECRET = process.env.INTERNAL_API_SECRET;
 const PORT = Number(process.env.PORT ?? 3001);
-const PART_SIZE = Number(process.env.PART_SIZE_MB ?? 128) * 1024 * 1024;
+const PART_SIZE = Number(process.env.PART_SIZE_MB ?? 100) * 1024 * 1024;
+const PART_RETRIES = Number(process.env.PART_RETRIES ?? 3);
 const QUEUE_SIZE = Number(process.env.QUEUE_SIZE ?? 3);
 const MAX_PARTS = 10_000;
-const MAX_SIZE = Math.min(1024 ** 4, PART_SIZE * MAX_PARTS);
-
-// if (!SECRET) {
-//   console.error("INTERNAL_API_SECRET is not set");
-//   process.exit(1);
-// }
-
+const MAX_SIZE = Math.min(2 * 1024 ** 4, PART_SIZE * MAX_PARTS);
 const ROUTE = /^\/api\/v2\/datasets\/([^/?]+)\/files\/([^/?]+)(?:\?.*)?$/;
-
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // POST to Rails: ${RAILS}/api/v2/file_uploads${path}
-async function rails(path, {body, headers = {}, timeout = 30_000} = {}) {
+const rails = async(path, {body, headers = {}, timeout = 30_000} = {}) => {
   return fetch(`${RAILS}/api/v2/file_uploads${path}`, {
     method: "POST",
     headers: {
-      // "X-Internal-Secret": SECRET,
       "Content-Type": "application/json",
       ...headers,
     },
@@ -33,7 +25,7 @@ async function rails(path, {body, headers = {}, timeout = 30_000} = {}) {
 }
 
 // Split on "/" BEFORE decoding so an encoded %2F inside the DOI stays intact
-function parseRoute(req) {
+const parseRoute = (req) => {
   if (req.method !== "PUT") return null;
   const m = ROUTE.exec(req.url);
   if (!m) return null;
@@ -53,11 +45,11 @@ const getBody = (req) => {
 };
 
 // Presign + PUT one part; every attempt gets a fresh URL
-async function putPart(req, id, partNumber, buf) {
+const putPart =  async(req, id, partNumber, buf) => {
   const {doi, fileName} = getBody(req);
 
   let lastErr;
-  for (let attempt = 1; attempt <= 1; attempt++) {
+  for (let attempt = 1; attempt <= PART_RETRIES; attempt++) {
     try {
       const pr = await rails(`/${id}/part_url`, {
         headers: {Authorization: req.headers.authorization ?? ""},
@@ -82,9 +74,7 @@ async function putPart(req, id, partNumber, buf) {
   throw lastErr;
 }
 
-
-
-async function handle(req, res, isContinue = false) {
+const handle = async(req, res, isContinue = false) => {
   const reply = (status, body) => {
     res.writeHead(status, {"Content-Type": "application/json", Connection: "close"});
     res.end(JSON.stringify(body));
