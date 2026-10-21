@@ -208,6 +208,7 @@ module DatasetHelper
     # fos options must exist
     click_button 'Subjects'
     expect(page).to have_select('r_domain', wait: 5)
+    create(:subject, subject: find('#r_domain option:last-child')['value'], subject_scheme: 'fos')
     find('#r_domain option:last-child').select_option
     expect(page).to have_content('All progress saved', wait: 5)
   end
