@@ -43,6 +43,7 @@ module StashEngine
     belongs_to :sponsor, class_name: 'StashEngine::JournalOrganization', optional: true
     has_one :payment_configuration, as: :partner, dependent: :destroy
     has_many :payment_logs, class_name: 'SponsoredPaymentLog', as: :payer
+    has_many :external_integrations, as: :integrator, dependent: :destroy
     has_many :payment_records, class_name: 'PaymentRecord', as: :payment
 
     validates_associated :issns
@@ -195,6 +196,10 @@ module StashEngine
 
     def limits_sponsor
       sponsor
+    end
+
+    def has_integration?(integration)
+      external_integrations.where(integration: integration).exists?
     end
   end
 end

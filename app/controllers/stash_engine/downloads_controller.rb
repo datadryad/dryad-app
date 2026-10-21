@@ -46,6 +46,7 @@ module StashEngine
       return render json: ['unauthorized'], status: :unauthorized unless @resource&.may_download?(ui_user: current_user) || @sharing_link
 
       @resource.identifier.update_columns(downloaded_at: Time.now.utc)
+      Current.download_service.create(nil, @resource.id, as_zip: true)
       respond_to do |format|
         format.json do
           info = @resource.data_files.present_files.map do |f|
@@ -138,6 +139,7 @@ module StashEngine
       if res && (res&.may_download?(ui_user: current_user) || share&.identifier_id == res&.identifier&.id) &&
           [StashEngine::SuppFile, StashEngine::SoftwareFile].include?(zen_upload.class)
         if res.zenodo_published?
+          Current.download_service.create(zen_upload.id, zen_upload.resource_id)
           redirect_to zen_upload.public_zenodo_download_url, allow_other_host: true
         else
           zen_presign = zen_upload.zenodo_presigned_url
@@ -146,6 +148,7 @@ module StashEngine
             return
           end
 
+          Current.download_service.create(zen_upload.id, zen_upload.resource_id)
           redirect_to zen_presign, allow_other_host: true
         end
       else

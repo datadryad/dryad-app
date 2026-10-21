@@ -1,0 +1,238 @@
+{
+  "abstractText": "This is just some text content for an abstract.",
+  "archiveStatus": "NORMAL",
+  "archiveStatusId": 0,
+  "attributes": {
+    "attribute": [
+      {
+        "attributeId": 39024713,
+        "attributeName": "Education, Distance",
+        "attributeTypeId": 21632,
+        "attributeTypeName": "Keywords"
+      },
+      {
+        "attributeId": 39024714,
+        "attributeName": "Test",
+        "attributeTypeId": 21633,
+        "attributeTypeName": "Keywords"
+      },
+      {
+        "attributeId": 39025154,
+        "attributeName": "Chemical Synthesis Program",
+        "attributeTypeId": 21634,
+        "attributeTypeName": "Classification"
+      }
+    ]
+  },
+  "authorFullName": "Test, Dr. Dryad",
+  "authorMembershipId": "",
+  "authorPersonId": 151985512,
+  "documentId": 65919449,
+  "documentIdLatest": 65919449,
+  "documentIdOriginal": 65919449,
+  "inputIndex": 0,
+  "journalDigitalIssn": "5678-1234",
+  "journalName": "Support Demo Plus",
+  "OAPublicationConfirmedFlag": false,
+  "preferredPerson": {
+    "comment": "test",
+    "email": "vetianalin@gmail.com",
+    "firstName": "Alin",
+    "lastName": "Vetian",
+    "personTypeName": "REVIEWER",
+    "preferredTypeName": "PREFERRED"
+  },
+  "proofUrl": "https://clarivate-scholarone-dev-us-west-2-s1m-files.s3.us-west-2.amazonaws.com/docfiles/beta1/supportdemoplus/2026/09/65919449/docfiles/_system_appendPDF_proof_hi.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQD3sHyfCzQoAnMU%2BgWo9r8d7%2BrU6y2%2BfC4nIVdCmGvo2AIhAOPExsvR02xZomKM2sPYod0nXCvlx1MHT68f3NaJoBgMKrIFCGYQAxoMMjIzODc2ODcyNDgzIgz0TDB5yHgEE6pZL78qjwV5f9BixiQtL3mg6WxN%2ByCPPaYxLruSHFZJyQfxfvNpG6dJE%2B6nOPiRNndCx8Vz7lSqLMM61wUQ59CnPByFybzonCHPjcoXjaujO2KC6abHSLfvaiIsv3js8USnTMtJJWnGIa9umlQeFtR4UMybXMU%2FYaDW%2FOTuzMGYsWoF8tT%2BizVcKOhQGSN5Y7E0XpYXrrHoN8RDGWOUqtup8HIzHnBafJgr%2FLQOtBxjeZNJq5oCkkyV1hqqrNKuFxBamozaLnB%2F3BcUNaIPJ1Yr7ZkPC8k4nphHlOD%2B6VhVA3A6tYSCRwZIIRYjo9TMU2nHM3e275qgWarrW%2Fu082KIg8YW4P3UAywZglH0u8fVhYlfi3O09qZ8zxr3LomvSXsbdxunDQE5CuAPRid6T3%2FC3eh6HJMN5RCsjWegfIN%2BWMexdm5pEbIAbEMcQqzHkNs%2BMq0FJnNqb%2FqYBBsMv%2F9KpQ1M62Tbh%2BMKzg10abq8yqWzCtaHy%2FOm%2BTlBfghuLnwJP9d53MvivjMC%2FWCbY3vdYx6XLkyE%2FQ6C5QIZN%2BJ3aETFcI8j50lYMow2z0An284qdlslUH5mEwVA7kegvAgqvkwUcLM8BYO%2FYVYpLf4fPO28ZXlyUg%2BWpmp9MjYf5Nr9TJXyFgqX9ukkpI3uD6KybUkeypz%2FSIoIC0IriMhoT8SIh8ybMLkqTmYqfnUI22CFIvStBlRuXStzAbacdwX2TDQAR4TK3yvQQl%2FP8gALSNN5Aas443rdJvOSM0cn8zF8XF478aPH%2BkdwKNubq4%2FX7Lw0Lm%2FJIdUw9mVVZwB7hNFoqT%2BRqLT8Qg%2BRFE5wEZ0ObefqdYHOFVijNPUolJeLbWVWhN2pHLvjyL%2BToY7IrNfVzghDMPKJ9NUGOrABbsr0knVXhzLinc1SoUVtWee3vt%2BPjm7XvaCTrhRp7KNx%2FJioVPOO2LHsturW10Dusdza5Z8wPnPb3893ATSOxPHhrosbTZWlNkvTGx73Lub66GuzuZpH9e9k8Mh8kdnIWDGmsqlbxcSPRUeHrY%2B07oXHduFl22hElEDLXCATUw0RC61DZT4buEzS%2BYKjzVUgs7bGJb2PxlUpagerFJAPO%2Bp4XoK4yaYbsxJMG0vn9wc%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20260930T145806Z&X-Amz-SignedHeaders=host&X-Amz-Credential=ASIATIIAZ7ERYLSRUZL3%2F20260930%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Expires=259200&X-Amz-Signature=ed9884bee3a5894ab4135c817cb08a6cf107aeb0ca32ee4a0b34ff63d75e1622",
+  "revisionNumber": 0,
+  "submissionCustomQuestions": [
+    {
+      "answerType": "TYPE_RADIO",
+      "customQuestionId": 462901,
+      "questionName": "Special Issue",
+      "questionStatus": "ACTIVE",
+      "questionText": "Is this manuscript a candidate for a Special Issue?",
+      "submissionCustomAnswer": {
+        "abbreviatedResponse": "",
+        "answerId": 854296,
+        "answerName": "No",
+        "answerStatus": "ACTIVE",
+        "answerText": "No"
+      }
+    },
+    {
+      "answerType": "TYPE_RADIO",
+      "customQuestionId": 1375970,
+      "questionName": "Dryad",
+      "questionText": "Do you have additional datasets associated with this manuscript that you would like to deposit in Dryad?",
+      "submissionCustomAnswer": {
+        "abbreviatedResponse": "",
+        "answerId": 2700398,
+        "answerName": "Yes",
+        "answerStatus": "ACTIVE",
+        "answerText": "Yes"
+      }
+    }
+  ],
+  "submissionDate": "2026-09-30T14:17:38Z",
+  "submissionDateOriginal": "2026-09-30T14:17:38Z",
+  "submissionFiles": [
+    {
+      "customerFileName": "Empty-file-5-doc.pdf",
+      "docLink": "https://clarivate-scholarone-dev-us-west-2-s1m-files.s3.us-west-2.amazonaws.com/docfiles/beta1/supportdemoplus/2026/09/65919449/docfiles/original-files/65919449_File000000_1592811889.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQD3sHyfCzQoAnMU%2BgWo9r8d7%2BrU6y2%2BfC4nIVdCmGvo2AIhAOPExsvR02xZomKM2sPYod0nXCvlx1MHT68f3NaJoBgMKrIFCGYQAxoMMjIzODc2ODcyNDgzIgz0TDB5yHgEE6pZL78qjwV5f9BixiQtL3mg6WxN%2ByCPPaYxLruSHFZJyQfxfvNpG6dJE%2B6nOPiRNndCx8Vz7lSqLMM61wUQ59CnPByFybzonCHPjcoXjaujO2KC6abHSLfvaiIsv3js8USnTMtJJWnGIa9umlQeFtR4UMybXMU%2FYaDW%2FOTuzMGYsWoF8tT%2BizVcKOhQGSN5Y7E0XpYXrrHoN8RDGWOUqtup8HIzHnBafJgr%2FLQOtBxjeZNJq5oCkkyV1hqqrNKuFxBamozaLnB%2F3BcUNaIPJ1Yr7ZkPC8k4nphHlOD%2B6VhVA3A6tYSCRwZIIRYjo9TMU2nHM3e275qgWarrW%2Fu082KIg8YW4P3UAywZglH0u8fVhYlfi3O09qZ8zxr3LomvSXsbdxunDQE5CuAPRid6T3%2FC3eh6HJMN5RCsjWegfIN%2BWMexdm5pEbIAbEMcQqzHkNs%2BMq0FJnNqb%2FqYBBsMv%2F9KpQ1M62Tbh%2BMKzg10abq8yqWzCtaHy%2FOm%2BTlBfghuLnwJP9d53MvivjMC%2FWCbY3vdYx6XLkyE%2FQ6C5QIZN%2BJ3aETFcI8j50lYMow2z0An284qdlslUH5mEwVA7kegvAgqvkwUcLM8BYO%2FYVYpLf4fPO28ZXlyUg%2BWpmp9MjYf5Nr9TJXyFgqX9ukkpI3uD6KybUkeypz%2FSIoIC0IriMhoT8SIh8ybMLkqTmYqfnUI22CFIvStBlRuXStzAbacdwX2TDQAR4TK3yvQQl%2FP8gALSNN5Aas443rdJvOSM0cn8zF8XF478aPH%2BkdwKNubq4%2FX7Lw0Lm%2FJIdUw9mVVZwB7hNFoqT%2BRqLT8Qg%2BRFE5wEZ0ObefqdYHOFVijNPUolJeLbWVWhN2pHLvjyL%2BToY7IrNfVzghDMPKJ9NUGOrABbsr0knVXhzLinc1SoUVtWee3vt%2BPjm7XvaCTrhRp7KNx%2FJioVPOO2LHsturW10Dusdza5Z8wPnPb3893ATSOxPHhrosbTZWlNkvTGx73Lub66GuzuZpH9e9k8Mh8kdnIWDGmsqlbxcSPRUeHrY%2B07oXHduFl22hElEDLXCATUw0RC61DZT4buEzS%2BYKjzVUgs7bGJb2PxlUpagerFJAPO%2Bp4XoK4yaYbsxJMG0vn9wc%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20260930T145806Z&X-Amz-SignedHeaders=host&X-Amz-Credential=ASIATIIAZ7ERYLSRUZL3%2F20260930%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Expires=259200&X-Amz-Signature=df1a1542c69ae10b751fdd84be7dd93ff48c0e5662c8c9ed84e9bcb2028d515b",
+      "fileDesignation": "Figure",
+      "fileId": 1592811889,
+      "systemFileName": "65919449_File000000_1592811889.pdf"
+    },
+    {
+      "customerFileName": "Empty-file-6-doc.pdf",
+      "docLink": "https://clarivate-scholarone-dev-us-west-2-s1m-files.s3.us-west-2.amazonaws.com/docfiles/beta1/supportdemoplus/2026/09/65919449/docfiles/original-files/65919449_File000001_1592811890.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQD3sHyfCzQoAnMU%2BgWo9r8d7%2BrU6y2%2BfC4nIVdCmGvo2AIhAOPExsvR02xZomKM2sPYod0nXCvlx1MHT68f3NaJoBgMKrIFCGYQAxoMMjIzODc2ODcyNDgzIgz0TDB5yHgEE6pZL78qjwV5f9BixiQtL3mg6WxN%2ByCPPaYxLruSHFZJyQfxfvNpG6dJE%2B6nOPiRNndCx8Vz7lSqLMM61wUQ59CnPByFybzonCHPjcoXjaujO2KC6abHSLfvaiIsv3js8USnTMtJJWnGIa9umlQeFtR4UMybXMU%2FYaDW%2FOTuzMGYsWoF8tT%2BizVcKOhQGSN5Y7E0XpYXrrHoN8RDGWOUqtup8HIzHnBafJgr%2FLQOtBxjeZNJq5oCkkyV1hqqrNKuFxBamozaLnB%2F3BcUNaIPJ1Yr7ZkPC8k4nphHlOD%2B6VhVA3A6tYSCRwZIIRYjo9TMU2nHM3e275qgWarrW%2Fu082KIg8YW4P3UAywZglH0u8fVhYlfi3O09qZ8zxr3LomvSXsbdxunDQE5CuAPRid6T3%2FC3eh6HJMN5RCsjWegfIN%2BWMexdm5pEbIAbEMcQqzHkNs%2BMq0FJnNqb%2FqYBBsMv%2F9KpQ1M62Tbh%2BMKzg10abq8yqWzCtaHy%2FOm%2BTlBfghuLnwJP9d53MvivjMC%2FWCbY3vdYx6XLkyE%2FQ6C5QIZN%2BJ3aETFcI8j50lYMow2z0An284qdlslUH5mEwVA7kegvAgqvkwUcLM8BYO%2FYVYpLf4fPO28ZXlyUg%2BWpmp9MjYf5Nr9TJXyFgqX9ukkpI3uD6KybUkeypz%2FSIoIC0IriMhoT8SIh8ybMLkqTmYqfnUI22CFIvStBlRuXStzAbacdwX2TDQAR4TK3yvQQl%2FP8gALSNN5Aas443rdJvOSM0cn8zF8XF478aPH%2BkdwKNubq4%2FX7Lw0Lm%2FJIdUw9mVVZwB7hNFoqT%2BRqLT8Qg%2BRFE5wEZ0ObefqdYHOFVijNPUolJeLbWVWhN2pHLvjyL%2BToY7IrNfVzghDMPKJ9NUGOrABbsr0knVXhzLinc1SoUVtWee3vt%2BPjm7XvaCTrhRp7KNx%2FJioVPOO2LHsturW10Dusdza5Z8wPnPb3893ATSOxPHhrosbTZWlNkvTGx73Lub66GuzuZpH9e9k8Mh8kdnIWDGmsqlbxcSPRUeHrY%2B07oXHduFl22hElEDLXCATUw0RC61DZT4buEzS%2BYKjzVUgs7bGJb2PxlUpagerFJAPO%2Bp4XoK4yaYbsxJMG0vn9wc%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20260930T145806Z&X-Amz-SignedHeaders=host&X-Amz-Credential=ASIATIIAZ7ERYLSRUZL3%2F20260930%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Expires=259200&X-Amz-Signature=d2fb2555307f5b37a7624148cadcdac4354ae35d1f634cad07f1108eefda4a9c",
+      "fileDesignation": "test",
+      "fileId": 1592811890,
+      "systemFileName": "65919449_File000001_1592811890.pdf"
+    }
+  ],
+  "submissionFunders": {
+    "fundRefInfo": {
+      "identifier": "http://dx.doi.org/10.13039/100000025",
+      "name": "National Institute of Mental Health",
+      "parentIdentifier": "http://dx.doi.org/10.13039/100000016",
+      "parentName": "U.S. Department of Health and Human Services"
+    },
+    "grants": {
+      "number": "5R01MH106552-05"
+    },
+    "name": "National Institute of Mental Health"
+  },
+  "submissionId": "WRK4-2026-09-0013",
+  "submissionIdLatest": "WRK4-2026-09-0013",
+  "submissionIdOriginal": "WRK4-2026-09-0013",
+  "submissionStatus": {
+    "documentStatusId": 3,
+    "documentStatusName": "Submitted",
+    "inDraftFlag": false,
+    "task": [
+      {
+        "assignmentRoleId": 69518,
+        "datetimeCompleted": "2026-09-30T14:17:38Z",
+        "datetimeDue": "2026-10-20T14:17:38Z",
+        "datetimeStarted": "2026-09-30T14:17:38Z",
+        "taskId": 586500818,
+        "taskName": "Forward to Admin",
+        "taskStatus": "COMPLETED",
+        "taskStatusName": "OPEN TASK 0"
+      },
+      {
+        "assignmentPersonId": 88084321,
+        "datetimeCompleted": "2026-09-30T14:17:39Z",
+        "datetimeStarted": "2026-09-30T14:17:39Z",
+        "taskId": 586500819,
+        "taskName": "Forward to EIC",
+        "taskStatus": "COMPLETED",
+        "taskStatusName": "OPEN TASK 1"
+      },
+      {
+        "assignmentRoleId": 69518,
+        "datetimeDue": "2026-10-30T14:17:39Z",
+        "datetimeStarted": "2026-09-30T14:17:39Z",
+        "taskId": 586500820,
+        "taskName": "Admin Checklist",
+        "taskStatus": "PENDING",
+        "taskStatusName": "Complete Checklist"
+      },
+      {
+        "assignmentPersonId": 88084321,
+        "datetimeDue": "2026-10-01T14:17:39Z",
+        "datetimeStarted": "2026-09-30T14:17:39Z",
+        "taskId": 586500821,
+        "taskName": "EIC Immediate Decision",
+        "taskStatus": "PENDING",
+        "taskStatusName": "Make Immediate Decision"
+      },
+      {
+        "assignmentRoleId": 113265,
+        "datetimeCompleted": "2026-09-30T14:17:39Z",
+        "datetimeStarted": "2026-09-30T14:17:39Z",
+        "taskId": 586500822,
+        "taskName": "Forward To Viewer",
+        "taskStatus": "COMPLETED",
+        "taskStatusName": "OPEN TASK 4"
+      },
+      {
+        "assignmentRoleId": 69518,
+        "datetimeStarted": "2026-09-30T14:17:39Z",
+        "taskId": 586500823,
+        "taskName": "Forms Tracking - COI",
+        "taskStatus": "PENDING",
+        "taskStatusName": "Track Conflict Forms"
+      },
+      {
+        "assignmentPersonId": 151985512,
+        "datetimeDue": "2026-10-05T14:17:39Z",
+        "datetimeStarted": "2026-09-30T14:17:39Z",
+        "taskId": 586500824,
+        "taskName": "Forms Completion - COI",
+        "taskStatus": "PENDING",
+        "taskStatusName": "OPEN TASK 6"
+      },
+      {
+        "assignmentPersonId": 151985818,
+        "datetimeDue": "2026-10-05T14:17:39Z",
+        "datetimeStarted": "2026-09-30T14:17:39Z",
+        "taskId": 586500825,
+        "taskName": "Forms Completion - COI",
+        "taskStatus": "PENDING",
+        "taskStatusName": "OPEN TASK 7"
+      },
+      {
+        "assignmentPersonId": 151985819,
+        "datetimeDue": "2026-10-05T14:17:39Z",
+        "datetimeStarted": "2026-09-30T14:17:39Z",
+        "taskId": 586500826,
+        "taskName": "Forms Completion - COI",
+        "taskStatus": "PENDING",
+        "taskStatusName": "OPEN TASK 8"
+      },
+      {
+        "assignmentRoleId": 69518,
+        "datetimeDue": "2026-10-05T14:17:39Z",
+        "datetimeStarted": "2026-09-30T14:17:39Z",
+        "taskId": 586500827,
+        "taskName": "Forms Tracking - CTA",
+        "taskStatus": "PENDING",
+        "taskStatusName": "Track Copyright Forms"
+      },
+      {
+        "assignmentPersonId": 151985512,
+        "datetimeDue": "2026-10-05T14:17:39Z",
+        "datetimeStarted": "2026-09-30T14:17:39Z",
+        "taskId": 586500828,
+        "taskName": "Forms Completion - CTA",
+        "taskStatus": "PENDING",
+        "taskStatusName": "OPEN TASK 10"
+      },
+      {
+        "assignmentPersonId": 151985818,
+        "datetimeDue": "2026-10-05T14:17:40Z",
+        "datetimeStarted": "2026-09-30T14:17:40Z",
+        "taskId": 586500829,
+        "taskName": "Forms Completion - CTA",
+        "taskStatus": "PENDING",
+        "taskStatusName": "OPEN TASK 11"
+      },
+      {
+        "assignmentPersonId": 151985819,
+        "datetimeDue": "2026-10-05T14:17:40Z",
+        "datetimeStarted": "2026-09-30T14:17:40Z",
+        "taskId": 586500830,
+        "taskName": "Forms Completion - CTA",
+        "taskStatus": "PENDING",
+        "taskStatusName": "OPEN TASK 12"
+      }
+    ]
+  },
+  "submissionTitle": "Test title of the manuscript",
+  "submissionType": "Original Article New New",
+  "systemTransmittalDate": "2026-09-30 10:17:38.358",
+  "transferSubId": "90a27b85-0aed-42fa-b898-765c71314a2e1",
+  "transmissionDate": "2026-09-30T14:17:38Z"
+}

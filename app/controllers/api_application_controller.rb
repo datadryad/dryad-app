@@ -34,7 +34,7 @@ class ApiApplicationController < StashEngine::ApplicationController
 
       # TODO: hook into bugsnag when we get to it
       # Bugsnag.notify(err)
-      AuthFailureService.new(request, @user, params).create(:api_unauthorized) if response_status == 401
+      AuthFailureService.new(request, @user.id, params).create(:api_unauthorized) if response_status == 401
       object = StashApi::Error::ServerError.new(err.message, original: err)
     end
 
@@ -126,7 +126,7 @@ class ApiApplicationController < StashEngine::ApplicationController
 
     if doorkeeper_token.expired?
       api_logger.error('require_api_user')
-      AuthFailureService.new(request, @user, params).create(:api_expired_token)
+      AuthFailureService.new(request, @user.id, params).create(:api_expired_token)
       render json: { error: 'Token expired' }.to_json, status: 401 and return
     end
 
@@ -220,5 +220,9 @@ class ApiApplicationController < StashEngine::ApplicationController
   def log_unauthorized_access(message: 'unauthorized')
     AuthFailureService.new(request, nil, params).create(:api_unauthorized)
     render json: { error: message }.to_json, status: 401
+  end
+
+  def set_download_service
+    Current.download_service = DownloadService.new(request, @user&.id)
   end
 end

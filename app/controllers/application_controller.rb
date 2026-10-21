@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   before_action :add_security_headers
   before_action :set_paper_trail_whodunnit
   before_action :protect_from_host_header_attack
+  before_action :set_download_service
 
   def process_action(*args)
     super
@@ -49,11 +50,16 @@ class ApplicationController < ActionController::Base
   def log_auth_failure(type: :unauthorized)
     return if controller_name == 'csp_violation_reports'
 
-    user = begin
-      current_user
-    rescue StandardError
-      nil
-    end
-    AuthFailureService.new(request, user, params).create(type)
+    AuthFailureService.new(request, current_user_id, params).create(type)
+  end
+
+  def set_download_service
+    Current.download_service = DownloadService.new(request, current_user_id)
+  end
+
+  def current_user_id
+    current_user.id
+  rescue StandardError
+    nil
   end
 end

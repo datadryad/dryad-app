@@ -7,8 +7,13 @@ export default function Subjects({
 }) {
   const [touched, setTouched] = useState(false);
   return (
-    <>
-      <ResearchDomain current={current} resource={resource} setResource={setResource} onBlur={() => setTouched(true)} />
+    <>      
+      <ResearchDomain
+        current={current} 
+        domains={resource.subjects?.filter((s) => ['fos', 'bad_fos'].includes(s.subject_scheme)).map((s) => s.subject)} 
+        resourceId={resource.id}
+        setResource={setResource} 
+        onBlur={() => setTouched(true)} />
       <Keywords resource={resource} setResource={setResource} onBlur={() => setTouched(true)} />
       <div role="alert">{touched && error}</div>
     </>

@@ -50,11 +50,11 @@
 <h3>Parent org</h3>
 <div class="c-input">
   <%
-    options = StashEngine::JournalOrganization.all.collect { |o| [ o.name, o.id ] } 
+    options = StashEngine::JournalOrganization.all.collect { |o| [ o.name, o.id ] }
     options.unshift(['None', ''])
   %>
   <%= label_tag 'sponsor_id', 'Choose a sponsoring organization'%>
-  <%= select_tag('sponsor_id', options_for_select(options, @journal.sponsor_id), class: 'c-input__select') %>  
+  <%= select_tag('sponsor_id', options_for_select(options, @journal.sponsor_id), class: 'c-input__select') %>
 </div>
 
 <div id="payment_notice" role="status" class="callout warn">
