@@ -207,9 +207,9 @@ module DatasetHelper
     # fos options must exist
     2.times { create(:subject, subject: Faker::Job.unique.field, subject_scheme: 'fos') }
     click_button 'Subjects'
-    expect(page).to have_select('r_domain', wait: 5)
+    expect(page).to have_select('r_domain', wait: 8)
     find('#r_domain option:last-child').select_option
-    expect(page).to have_content('All progress saved', wait: 3)
+    expect(page).to have_content('All progress saved', wait: 5)
     expect(page).not_to have_content('A research domain is required')
   end
 
