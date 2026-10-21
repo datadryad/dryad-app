@@ -151,8 +151,9 @@ module DatasetHelper
 
   def fill_in_keywords
     expect(page).to have_field('keyword_ac')
+    find('#keyword_ac').click
     find('#keyword_ac').send_keys(3.times.map { Faker::Creature::Animal.unique.name }.join(','))
-    page.send_keys(:tab)
+    page.send_keys(:enter)
     expect(page).to have_content('All progress saved', wait: 5)
     expect(page).to have_css('.c-keywords__keyword-remove', minimum: 3, wait: 3)
     Faker::Creature::Animal.unique.clear
