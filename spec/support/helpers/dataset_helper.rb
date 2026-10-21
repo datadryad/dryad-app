@@ -3,7 +3,7 @@ module DatasetHelper
   def start_new_dataset
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    3.times { create(:subject, subject: Faker::Job.unique.field, subject_scheme: 'fos') }
+    3.times { StashDatacite::Subject.create(subject: Faker::Job.unique.field, subject_scheme: 'fos') }
     click_button 'Create a new dataset'
     expect(page).to have_content('Dataset submission', wait: 5)
   end
@@ -208,7 +208,6 @@ module DatasetHelper
     # fos options must exist
     click_button 'Subjects'
     expect(page).to have_select('r_domain', wait: 5)
-    create(:subject, subject: find('#r_domain option:last-child')['value'], subject_scheme: 'fos')
     find('#r_domain option:last-child').select_option
     expect(page).to have_content('All progress saved', wait: 5)
   end
