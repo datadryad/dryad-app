@@ -26,7 +26,7 @@ module StashDatacite
     end
 
     def resource
-      @resource ||= StashEngine::Resource.find(params[:id])
+      @resource ||= StashEngine::Resource.find(params[:resource_id])
     end
 
     private

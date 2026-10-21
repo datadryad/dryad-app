@@ -14,12 +14,12 @@ function ResearchDomain({
 
   const submit = (items) => {
     showSavingMsg();
-    axios.patch(
+    axios.post(
       '/stash_datacite/fos_subjects/update',
       {
         authenticity_token,
         fos_subjects: items,
-        id: resource.id,
+        resource_id: resource.id,
       },
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     )
