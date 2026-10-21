@@ -2,6 +2,7 @@ module StashApi
   module FilesMixin
 
     private
+
     def pre_upload_checks
       setup_file_path { yield }
       check_header_file_size { yield }
@@ -41,12 +42,13 @@ module StashApi
       return if Stash::Aws::S3.new.size(s3_key: @file_path) <= APP_CONFIG.maximums.merritt_size
 
       api_logger.error('file too large')
-      (render json: { error:
-                        "Your file size is larger than the maximum submission size of #{view_context.filesize(APP_CONFIG.maximums.merritt_size)}" }.to_json,
+      (render json: {
+        error: "Your file size is larger than the maximum submission size of #{view_context.filesize(APP_CONFIG.maximums.merritt_size)}"
+      }.to_json,
               status: 403) && yield
     end
 
-    def save_file_to_db(file_state: 'created', upload_file_size:)
+    def save_file_to_db(upload_file_size:, file_state: 'created')
       handle_previous_duplicates(upload_filename: @sanitized_name)
       file_params = {
         download_filename: @sanitized_name,
@@ -75,7 +77,7 @@ module StashApi
       end
     end
 
-    def check_total_size_violations(size: )
+    def check_total_size_violations(size:)
       size ||= @resource.new_size
       return if size <= APP_CONFIG.maximums.merritt_size && @resource.size <= APP_CONFIG.maximums.merritt_size
 

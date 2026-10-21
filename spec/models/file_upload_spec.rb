@@ -13,11 +13,10 @@
 #  resource_id :integer
 #  upload_id   :string(191)
 #  user_id     :integer
-#
-require "test_helper"
 
-class FileUploadTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+RSpec.describe FileUpload, type: :model do
+
+  describe 'associations' do
+    it { is_expected.to belong_to(:file) }
+  end
 end

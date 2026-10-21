@@ -17,9 +17,12 @@
 FactoryBot.define do
   factory :file_upload do
     user_id { 1 }
-    key { "MyString" }
-    upload_id { "MyString" }
-    status { "MyString" }
-    size { "" }
+    key { 'MyString' }
+    upload_id { 'MyString' }
+    file_id { 'MyString' }
+    resource_id { 'MyString' }
+    status { 'pending' }
+    part_number { 1 }
+    size { '' }
   end
 end

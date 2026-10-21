@@ -21,16 +21,16 @@ module StashApi
       check_total_size_violations(size: request.headers['CONTENT-LENGTH'].to_i) { yield }
 
       s3_upload_id = s3.create_multipart_upload(
-        bucket: BUCKET, key: @file_path, content_type: "application/octet-stream"
+        bucket: BUCKET, key: @file_path, content_type: 'application/octet-stream'
       ).upload_id
 
       upload = FileUpload.create!(
         user_id: @user.id,
         key: @file_path,
         upload_id: s3_upload_id,
-        status: "pending",
+        status: 'pending',
         resource_id: @resource.id,
-        file_id: @file.id,
+        file_id: @file.id
       )
       render json: { id: upload.id }
     end
@@ -63,7 +63,7 @@ module StashApi
 
       file = @upload.file
       file.update(file_state: 'created', upload_file_size: size)
-      @upload.update!(status: "complete", size: size)
+      @upload.update!(status: 'complete', size: size)
 
       result = StashApi::File.new(file_id: file.id, user: @user)
       render json: result.metadata_with_url, status: 201
@@ -71,7 +71,7 @@ module StashApi
 
     def abort
       s3.abort_multipart_upload(bucket: BUCKET, key: @upload.key, upload_id: @upload.upload_id)
-      @upload.update!(status: "aborted")
+      @upload.update!(status: 'aborted')
       head :no_content
     end
 
@@ -89,22 +89,21 @@ module StashApi
         api_logger.error('require_api_user')
         log_unauthorized_access(message: 'unauthorized')
 
-        return head :unauthorized
+        head :unauthorized
       end
-
     end
 
     def load_upload
       pp params
-      @upload = FileUpload.find_by!(id: params[:id], status: "pending")
+      @upload = FileUpload.find_by!(id: params[:id], status: 'pending')
     end
 
     def s3        = (@s3 ||= Aws::S3::Client.new)
     def presigner = (@presigner ||= Aws::S3::Presigner.new(client: s3))
 
     def require_internal_secret
-      provided = request.headers["X-Internal-Secret"].to_s
-      head :forbidden unless ActiveSupport::SecurityUtils.secure_compare(provided, ENV.fetch("INTERNAL_API_SECRET"))
+      provided = request.headers['X-Internal-Secret'].to_s
+      head :forbidden unless ActiveSupport::SecurityUtils.secure_compare(provided, ENV.fetch('INTERNAL_API_SECRET'))
     end
   end
 end
