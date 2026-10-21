@@ -30,7 +30,9 @@ export default function AuthorSteps({resource, setResource, current, review, use
   };
 
   useEffect(() => {
-    setAuthors(resource.authors)
+    if (!isEqual(resource.authors, authors)) {
+      setAuthors(resource.authors)
+    }
   }, [resource.authors]);
 
   const secTitles = ['Author list', 'Affiliations', 'Contributions']
