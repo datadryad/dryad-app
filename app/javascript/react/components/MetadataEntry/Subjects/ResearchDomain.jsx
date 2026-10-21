@@ -5,11 +5,11 @@ import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 import SubjectSelect from './SubjectSelect';
 
 function ResearchDomain({
-  current, domains, resourceId, setResource, onBlur,
+  current, resource, setResource, onBlur,
 }) {
+  const domains = resource.subjects?.filter((s) => ['fos', 'bad_fos'].includes(s.subject_scheme)).map((s) => s.subject);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const [selected, setSelected] = useState(domains || []);
-  const [retry, setRetry] = useState(0);
   const [subjects, setSubjects] = useState([]);
 
   const submit = (items) => {
@@ -19,7 +19,7 @@ function ResearchDomain({
       {
         authenticity_token,
         fos_subjects: items,
-        id: resourceId,
+        id: resource.id,
       },
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     )
@@ -48,13 +48,10 @@ function ResearchDomain({
     async function getList() {
       axios.get('/stash_datacite/fos_subjects').then(({data}) => {
         setSubjects(data)
-        if (current && retry < 3) {
-          setRetry(retry + 1)
-        }
       });
     }
     if (subjects.length < 1) getList()
-  }, [current, subjects, retry]);
+  }, [current, subjects]);
 
   return (
     <form className="input-stack" style={{marginBottom: '1.5em'}}>
