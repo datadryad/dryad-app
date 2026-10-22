@@ -61,6 +61,13 @@ class PaymentRecord < ApplicationRecord
     type.parameterize.sub('stashengine-', '').sub('tenant', 'institution')
   end
 
+  def payer
+    return payment.payer if payment_type == 'SponsoredPaymentLog'
+    return nil if ['StashEngine::Waiver', 'ResourcePayment'].include?(payment_type)
+
+    payment
+  end
+
   def link
     return nil if payment_type == 'StashEngine::Waiver'
 
@@ -69,23 +76,14 @@ class PaymentRecord < ApplicationRecord
       id = payment.payment_id.presence || payment.invoice_id
       url = "#{ResourcePayment::STRIPE_LINK}/#{str.pluralize}/#{id}"
       text = str.upcase_first
-    elsif payment_type == 'SponsoredPaymentLog'
-      case payment.payer_type
-      when 'StashEngine::Journal'
-        url = Rails.application.routes.url_helpers.journal_admin_path(id: payment.payer_id)
-        text = payment.payer.title
-      when 'StashEngine::Tenant'
-        url = Rails.application.routes.url_helpers.tenant_admin_path(id: payment.payer_id)
-        text = payment.payer.short_name
-      end
     else
-      case payment_type
+      case payer.class.to_s
       when 'StashEngine::Journal'
-        url = Rails.application.routes.url_helpers.journal_admin_path(id: payment_id)
-        text = payment.title
+        url = Rails.application.routes.url_helpers.journal_admin_path(id: payer.id)
+        text = payer.title
       when 'StashEngine::Tenant'
-        url = Rails.application.routes.url_helpers.tenant_admin_path(id: payment_id)
-        text = payment.short_name
+        url = Rails.application.routes.url_helpers.tenant_admin_path(id: payer.id)
+        text = payer.short_name
       end
     end
     ActionController::Base.helpers.link_to text, url, target: '_blank'
