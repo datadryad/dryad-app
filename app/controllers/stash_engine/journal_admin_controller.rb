@@ -10,7 +10,7 @@ module StashEngine
       @journals = authorize StashEngine::Journal.with_sponsorship
 
       if params[:id]
-        @tenants = @tenants.where(id: params[:id])
+        @journals = @journals.where(id: params[:id])
       elsif params[:q]
         q = params[:q]
         # search the query in any searchable field
