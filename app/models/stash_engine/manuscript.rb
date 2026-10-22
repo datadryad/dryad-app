@@ -31,17 +31,6 @@ module StashEngine
     belongs_to :identifier, optional: true
     serialize :metadata, coder: YAML
 
-    def self.parsed_number(journal, msid)
-      regex = journal&.manuscript_number_regex
-      return if regex.blank?
-
-      logger.debug("- found regex /#{regex}/")
-      return if msid.blank? || msid.match(regex).blank?
-
-      logger.debug("- after regex applied: #{msid.match(regex)[1]}")
-      msid.match(regex)[1]
-    end
-
     def accepted?
       STATUSES_MAPPING[:accepted_statuses].include?(status)
       Manuscript.where(
@@ -59,6 +48,46 @@ module StashEngine
         manuscript_number: manuscript_number,
         status: STATUSES_MAPPING[:rejected_statuses]
       ).exists?
+    end
+
+    def update_existing_dataset_status
+      return unless identifier
+
+      resource = identifier.latest_resource
+
+      if rejected?
+        reject_manuscript(resource, 'notification from journal')
+      elsif accepted?
+        target_note = "setting manuscript status based on notification from journal #{journal&.title} " \
+                      "-- manuscript #{manuscript_number}, status #{status}"
+        target_status = identifier.payment_needed? ? 'awaiting_payment' : 'queued'
+
+        # if the status is being updated based on notification from a journal, DON'T go backwards in workflow,
+        # that is, don't change a status other than queued or peer_review
+        unless %w[queued peer_review].include?(resource.current_curation_status)
+          target_note = "received notification from journal module that the associated manuscript is #{status}, " \
+                        "but the dataset is #{resource.current_curation_status}, so it will retain that status"
+          target_status = resource.current_curation_status
+        end
+        return unless target_status
+
+        # once we receive a notification from the journal, we know that the manuscript is no longer in
+        # review, so remove the hold_for_peer_review setting
+        resource.update(hold_for_peer_review: false)
+        CurationService.new(resource: resource, status: target_status, user_id: 0, note: target_note).process
+        StashEngine::ResourceMailer.peer_review_payment_needed(@new_res).deliver_now if target_status == 'awaiting_payment'
+      end
+    end
+
+    def self.parsed_number(journal, msid)
+      regex = journal&.manuscript_number_regex
+      return if regex.blank?
+
+      logger.debug("- found regex /#{regex}/")
+      return if msid.blank? || msid.match(regex).blank?
+
+      logger.debug("- after regex applied: #{msid.match(regex)[1]}")
+      msid.match(regex)[1]
     end
 
     # Create a new Manuscript from the content of an email message
@@ -79,7 +108,7 @@ module StashEngine
                                  metadata: parser.metadata_hash)
 
         if manu.present? && manu.id.present?
-          update_existing_dataset_status(manu)
+          manu.update_existing_dataset_status
           parser.journal&.update(integrated_at: manu.created_at)
           result.delete_field('error')
           result[:success?] = true
@@ -88,35 +117,6 @@ module StashEngine
       end
 
       result
-    end
-
-    def self.update_existing_dataset_status(manuscript)
-      return unless manuscript.identifier
-
-      resource = manuscript.identifier.latest_resource
-
-      if manuscript.rejected?
-        reject_manuscript(resource, 'notification from journal')
-      elsif manuscript.accepted?
-        target_note = "setting manuscript status based on notification from journal #{manuscript.journal&.title} " \
-                      "-- manuscript #{manuscript.manuscript_number}, status #{manuscript.status}"
-        target_status = manuscript.identifier.payment_needed? ? 'awaiting_payment' : 'queued'
-
-        # if the status is being updated based on notification from a journal, DON'T go backwards in workflow,
-        # that is, don't change a status other than queued or peer_review
-        unless %w[queued peer_review].include?(resource.current_curation_status)
-          target_note = "received notification from journal module that the associated manuscript is #{manuscript.status}, " \
-                        "but the dataset is #{resource.current_curation_status}, so it will retain that status"
-          target_status = resource.current_curation_status
-        end
-        return unless target_status
-
-        # once we receive a notification from the journal, we know that the manuscript is no longer in
-        # review, so remove the hold_for_peer_review setting
-        resource.update(hold_for_peer_review: false)
-        CurationService.new(resource: resource, status: target_status, user_id: 0, note: target_note).process
-        StashEngine::ResourceMailer.peer_review_payment_needed(@new_res).deliver_now if target_status == 'awaiting_payment'
-      end
     end
 
     def self.check_parsing_errors(parser)
