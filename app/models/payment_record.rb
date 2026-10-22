@@ -69,6 +69,15 @@ class PaymentRecord < ApplicationRecord
       id = payment.payment_id.presence || payment.invoice_id
       url = "#{ResourcePayment::STRIPE_LINK}/#{str.pluralize}/#{id}"
       text = str.upcase_first
+    elsif payment_type == 'SponsoredPaymentLog'
+      case payment.payer_type
+      when 'StashEngine::Journal'
+        url = Rails.application.routes.url_helpers.journal_admin_path(id: payment.payer_id)
+        text = payment.payer.title
+      when 'StashEngine::Tenant'
+        url = Rails.application.routes.url_helpers.tenant_admin_path(id: payment.payer_id)
+        text = payment.payer.short_name
+      end
     else
       case payment_type
       when 'StashEngine::Journal'
