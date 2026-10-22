@@ -6,7 +6,7 @@ FactoryBot.define do
     enabled { true }
 
     after(:create) do |funder|
-      create(:payment_configuration, partner: funder, payment_plan: nil, covers_dpc: true)
+      create(:payment_configuration, partner: funder, payment_plan: nil)
     end
   end
 end

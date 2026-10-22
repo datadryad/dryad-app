@@ -8,7 +8,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
   include Mocks::Salesforce
 
   let(:tenant) { create(:tenant) }
-  let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true) }
+  let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025') }
   let(:payer_name) { tenant.long_name }
   let(:user) { create(:user, tenant: tenant) }
   let(:resource_file_size) { 10 }
@@ -49,7 +49,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
       end
 
       context 'when LDF is covered' do
-        let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true) }
+        let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: true) }
         let(:resource_file_size) { 53_200_000_000 }
 
         it 'sponsored user does not pay anything' do
@@ -60,8 +60,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
 
         context 'and limited by size' do
           let!(:payment_conf) do
-            create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true,
-                                           covers_ldf: true, ldf_limit: 2)
+            create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: true, ldf_limit: 2)
           end
 
           context 'dataset is under the limit' do
@@ -87,8 +86,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
 
         context 'and limited by yearly amount' do
           let!(:payment_conf) do
-            create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true,
-                                           covers_ldf: true, yearly_ldf_limit: 1_000)
+            create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: true, yearly_ldf_limit: 1_000)
           end
 
           context 'dataset is under the limit' do
@@ -113,7 +111,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
 
       context 'when payer is not on 2025' do
         context 'all is sponsored' do
-          let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: 'TIERED', covers_dpc: true, covers_ldf: false) }
+          let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: 'TIERED', covers_ldf: false) }
           let(:resource_file_size) { 153_200_000_000 }
 
           it 'sponsored user does not pay anything' do
@@ -194,7 +192,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
       end
 
       context 'ldf is covered but not limited' do
-        let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true) }
+        let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: true) }
 
         context 'when nothing changes' do
           it 'user pays nothing and no LDF log created' do
@@ -229,8 +227,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
 
       context 'ldf is covered and limited by size' do
         let!(:payment_conf) do
-          create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true,
-                                         ldf_limit: 2)
+          create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: true, ldf_limit: 2)
         end
 
         context 'when nothing changes' do
@@ -279,8 +276,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
 
       context 'ldf is covered and limited by yearly amount' do
         let!(:payment_conf) do
-          create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true,
-                                         yearly_ldf_limit: 1_000)
+          create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: true, yearly_ldf_limit: 1_000)
         end
 
         context 'when nothing changes' do
@@ -329,8 +325,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
 
       context 'ldf is covered and limited by size and yearly amount' do
         let!(:payment_conf) do
-          create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true,
-                                         ldf_limit: 2, yearly_ldf_limit: 1_000)
+          create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: true, ldf_limit: 2, yearly_ldf_limit: 1_000)
         end
 
         context 'when nothing changes' do
@@ -404,7 +399,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
         end
 
         context 'all is sponsored' do
-          let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: 'TIERED', covers_dpc: true, covers_ldf: false) }
+          let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: 'TIERED', covers_ldf: false) }
           let(:resource_file_size) { 153_200_000_000 }
 
           it 'user pays nothing and no LDF log created' do
