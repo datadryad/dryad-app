@@ -64,6 +64,7 @@ module.exports = function(api) {
       'babel-plugin-macros',
       '@babel/plugin-syntax-dynamic-import',
       '@babel/plugin-transform-destructuring',
+      '@babel/plugin-transform-class-static-block',
       [
         '@babel/plugin-transform-class-properties',
         {
