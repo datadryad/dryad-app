@@ -1,0 +1,20 @@
+# A unit file for systemd, to launch the Node server for Dryad
+[Unit]
+Description=Node Server
+Documentation=https://github.com/datadryad/dryad-app.git
+After=remote-fs.target network.target
+
+[Service]
+User=ec2-user
+WorkingDirectory=/home/ec2-user/deploy/current/node_server
+StandardOutput=append:/home/ec2-user/deploy/shared/log/node_access.log
+StandardError=append:/home/ec2-user/deploy/shared/log/node_error.log
+
+ExecStart=/usr/bin/node uploader.mjs
+Restart=always
+RestartSec=2
+TimeoutStopSec=6h
+KillSignal=SIGTERM
+
+[Install]
+WantedBy=multi-user.target

@@ -83,6 +83,11 @@ const handle = async(req, res, isContinue = false) => {
     res.end(JSON.stringify(body));
   };
 
+  // Health check: no auth, no Rails, no body
+  if (req.method === "GET" && req.url.split("?")[0] === "/health") {
+    return reply(200, { status: "ok", uptime: Math.round(process.uptime()) });
+  }
+
   const forward = (status, text) => {
     let body;
     try {
