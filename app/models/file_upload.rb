@@ -16,4 +16,6 @@
 #
 class FileUpload < ApplicationRecord
   belongs_to :file, class_name: 'StashEngine::GenericFile'
+
+  enum :status, %w[pending complete aborted].index_by(&:to_sym)
 end

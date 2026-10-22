@@ -80,7 +80,9 @@ module StashApi
     def set_user
       if doorkeeper_token
         @user = doorkeeper_token.application.owner
-        if doorkeeper_token.expired?
+        # Only check token expiration on upload start
+        # To avoid an upload failing because of a token expiring in the middle of a large file transfer
+        if params[:action] == 'start' && doorkeeper_token.expired?
           api_logger.error('require_api_user')
           AuthFailureService.new(request, @user.id, params).create(:api_expired_token)
           render json: { error: 'Token expired' }.to_json, status: 401 and return
