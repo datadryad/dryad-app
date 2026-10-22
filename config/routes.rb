@@ -452,7 +452,7 @@ Rails.application.routes.draw do
 
     # fos subjects are a special subject that is treated differently for the OECD Field of Science
     get 'fos_subjects', to: 'fos_subjects#index'
-    patch 'fos_subjects/update', to: 'fos_subjects#update'
+    post 'fos_subjects/update', to: 'fos_subjects#update'
 
     get 'related_identifiers/new', to: 'related_identifiers#new'
     post 'related_identifiers/create', to: 'related_identifiers#create'

@@ -25,7 +25,7 @@ module Manuscript
       return if manu&.id.blank?
 
       journal&.update(integrated_at: Time.current)
-      StashEngine::Manuscript.update_existing_dataset_status(manu)
+      manu.update_existing_dataset_status
       manu
     end
 

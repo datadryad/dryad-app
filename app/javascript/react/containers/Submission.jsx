@@ -221,24 +221,28 @@ function Submission({
     .then(({data}) => updateStore({affSuggest: data}));
 
   useEffect(() => {
-    if (!refreshFees) return;
-    if (resource.identifier.old_payment_system) {
-      updateStore({refreshFees: false});
+    if (!refreshFees) {
+      updateStore({waitSubmit: false});
       return;
     }
-    async function updateFees() {
-      await Promise.all([getFees(), suggestAff()])     
+    if (resource.identifier.old_payment_system) {
+      updateStore({refreshFees: false, waitSubmit: false});
+      return;
+    }
+    const updateFees = async() => {
+      await Promise.allSettled([getFees(), getDPCStatus(), suggestAff()])     
     }
     updateFees();
+    updateStore({waitSubmit: false});
   }, [refreshFees, invoice]);
 
   useEffect(() => {
-    async function updatePayer() {
-      await Promise.all([updateStore({waitSubmit: true}), getFees(), getDPCStatus()])     
+    const updatePayer = async() => {
+      await Promise.allSettled([updateStore({waitSubmit: true}), getFees(), getDPCStatus()])     
     }
     updatePayer();
     updateStore({waitSubmit:false});
-  }, [resource.tenant, resource.authors, resource.journal, resource.contributors, resource.total_file_size, resource.hold_for_peer_review]);
+  }, [resource.tenant, resource.journal, resource.contributors, resource.total_file_size, resource.hold_for_peer_review]);
 
   const markInvalid = (el) => {
     const et = el.querySelector('.error-text');
