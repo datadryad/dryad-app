@@ -163,7 +163,7 @@ module StashApi
           CurationService.new(user_id: @user.id, resource: @resource, status: status, note: note).process
         else
           # any other article disposition -> rejected manuscript
-          reject_manuscript(@resource, 'API notification from Editorial Manager', @user)
+          reject_manuscript(@resource, 'API notification from Editorial Manager', @user.id)
         end
       end
 

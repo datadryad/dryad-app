@@ -23,11 +23,11 @@ module PublicationMixin
     end
   end
 
-  def reject_manuscript(resource, integration, user = 0)
+  def reject_manuscript(resource, integration, user_id = 0)
     return unless resource == resource.identifier.latest_resource
 
     resource.resource_publication.update(publication_name: nil, publication_issn: nil)
-    CurationService.new(resource: resource, user: user, status: resource.current_curation_status,
+    CurationService.new(resource: resource, user_id: user_id, status: resource.current_curation_status,
                         note: "manuscript rejected through #{integration}").process
 
     check_resource_payment(resource)
