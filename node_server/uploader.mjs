@@ -13,7 +13,8 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // POST to Rails: ${RAILS}/api/v2/file_uploads${path}
 const rails = async(path, {body, headers = {}, timeout = 30_000} = {}) => {
-  console.log("Endpoint call:", path, body.doi);
+  const part_number = body?.part_number ? ` - ${body?.part_number}` : '';
+  console.log("Endpoint call:", [new Date().toISOString(), body.doi, path + part_number, headers['X-Forwarded-For']].join(', '));
 
   return fetch(`${RAILS}/api/v2/file_uploads${path}`, {
     method: "POST",
@@ -54,7 +55,7 @@ const putPart =  async(req, reply, id, partNumber, buf) => {
   for (let attempt = 1; attempt <= PART_RETRIES; attempt++) {
     try {
       const pr = await rails(`/${id}/part_url`, {
-        headers: {Authorization: req.headers.authorization ?? ""},
+        headers: {Authorization: req.headers.authorization ?? "", "X-Forwarded-For": req.headers["x-forwarded-for"]},
         body: {doi, filename: fileName, part_number: partNumber}
       });
       if (!pr.ok) throw new Error(`part_url ${pr.status} ${await pr.text()}`);
@@ -109,7 +110,7 @@ const handle = async(req, res, isContinue = false) => {
   let id;
   try {
     const r = await rails("/start", {
-      headers: {Authorization: req.headers.authorization ?? ""},
+      headers: {Authorization: req.headers.authorization ?? "", "X-Forwarded-For": req.headers["x-forwarded-for"]},
       body: {doi, filename: fileName, content_length: contentLength},
     });
     if (!r.ok) {
@@ -173,7 +174,7 @@ const handle = async(req, res, isContinue = false) => {
 
     // 3.Notify that upload has finished
     const r = await rails(`/${id}/complete`, {
-      headers: {Authorization: req.headers.authorization ?? ""},
+      headers: {Authorization: req.headers.authorization ?? "", "X-Forwarded-For": req.headers["x-forwarded-for"]},
       body: {doi, filename: fileName, content_length: contentLength, parts},
       timeout: 15 * 60_000
     });
@@ -184,7 +185,7 @@ const handle = async(req, res, isContinue = false) => {
     console.error("upload failed", id, err);
     await Promise.allSettled(inflight);
     await rails(`/${id}/abort`, {
-      headers: {Authorization: req.headers.authorization ?? ""},
+      headers: {Authorization: req.headers.authorization ?? "", "X-Forwarded-For": req.headers["x-forwarded-for"]},
       body: {doi, filename: fileName, content_length: contentLength},
     }).catch(() => {
     });
