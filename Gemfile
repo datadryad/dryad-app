@@ -47,7 +47,6 @@ gem 'charlock_holmes', '~> 0.7.9'
 gem 'commonmarker', '~> 2.7.0'
 gem 'concurrent-ruby', '~> 1.3.7'
 gem 'daemons', '~> 1.4.1'
-gem 'database_cleaner', '~> 2.1.0'
 gem 'datacite-mapping'
 gem 'data_migrate'
 gem 'doorkeeper', '~> 5.9.0'
@@ -117,6 +116,7 @@ group :test do
   gem 'capybara'
   # Automatically create snapshots when Cucumber steps fail with Capybara and Rails (http://github.com/mattheworiordan/capybara-screenshot)
   gem 'capybara-screenshot'
+  gem 'database_cleaner-active_record', '~> 2.2'
   # required for weird-ass rspec_custom_matchers that isn't in any actual gem/engine, but gets loaded in some weird circumstances
   gem 'diffy' # used to define custom matchers in rspec_custom_matchers.rb
   # required for weird-ass rspec_custom_matchers that isn't in any actual gem/engine, but gets loaded in some weird circumstances

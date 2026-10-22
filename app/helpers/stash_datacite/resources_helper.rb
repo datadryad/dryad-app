@@ -1,15 +1,23 @@
 module StashDatacite
   module ResourcesHelper
 
+    # rubocop:disable Layout/LineLength, Metrics/AbcSize
     def author_display(authors, affs)
-      # rubocop:disable Layout/LineLength
-      authors.map do |author|
+      authors.map.with_index do |author, ind|
         next unless author.author_full_name
 
-        if author.author_orcid.present?
-          str = "<a class=\"o-metadata__author\" href=\"#{new_search_path(orcid: author.author_orcid)}\">#{author.author_full_name}</a>"
+        str = ''
+
+        if authors.length > 15
+          str += "<button class=\"o-button__plain-textlink expander\" aria-controls=\"author-expander\" aria-expanded=\"false\" title=\"See all #{authors.length} authors\" aria-label=\"See all #{authors.length} authors\">[&#8230;+]</button><span id=\"author-expander\" hidden>" if ind == 9
+          str += '</span>' if ind == authors.length - 1
         end
-        str ||= "<span class=\"o-metadata__author\">#{author.author_full_name}</span>"
+
+        str += if author.author_orcid.present?
+                 "<a class=\"o-metadata__author\" href=\"#{new_search_path(orcid: author.author_orcid)}\">#{author.author_full_name}</a>"
+               else
+                 "<span class=\"o-metadata__author\">#{author.author_full_name}</span>"
+               end
         af = author.affiliations.map do |a|
           next unless a.smart_name.present? && ![',', '.'].include?(a.smart_name)
 
@@ -24,8 +32,8 @@ module StashDatacite
         end
         str
       end.reject(&:blank?).join('; ')
-      # rubocop:enable Layout/LineLength
     end
+    # rubocop:enable Layout/LineLength, Metrics/AbcSize
 
     def affs_list(authors)
       authors.map(&:affiliations).flatten.uniq.each_with_object([]) do |a, arr|

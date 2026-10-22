@@ -3,6 +3,7 @@ module DatasetHelper
   def start_new_dataset
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
+    3.times { StashDatacite::Subject.create(subject: Faker::Job.unique.field, subject_scheme: 'fos') }
     click_button 'Create a new dataset'
     expect(page).to have_content('Dataset submission', wait: 5)
   end
@@ -151,8 +152,11 @@ module DatasetHelper
 
   def fill_in_keywords
     expect(page).to have_field('keyword_ac')
+    find('#keyword_ac').click
     find('#keyword_ac').send_keys(3.times.map { Faker::Creature::Animal.unique.name }.join(','))
-    page.send_keys(:tab)
+    page.send_keys(:enter)
+    expect(page).to have_content('All progress saved', wait: 5)
+    expect(page).to have_css('.c-keywords__keyword-remove', minimum: 3, wait: 3)
     Faker::Creature::Animal.unique.clear
   end
 
@@ -195,17 +199,18 @@ module DatasetHelper
   end
 
   def fill_in_no_funder
-    find(:label, 'No funding received').click
+    expect(page).to have_field('no-funding', disabled: false, wait: 3)
+    find('#no-funding').set(true)
     expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"', wait: 5)
   end
 
   def fill_in_research_domain
-    fos = 'Biological sciences'
-    StashDatacite::Subject.create(subject: fos, subject_scheme: 'fos') # the fos field must exist
+    # the fos field must exist
+    StashDatacite::Subject.create(subject: Faker::Job.unique.field, subject_scheme: 'fos')
     click_button 'Subjects'
-    expect(page).to have_content('Research domain', wait: 10)
-    select(fos, from: 'Research domain')
-    page.send_keys(:tab)
+    expect(page).to have_select('r_domain', wait: 5)
+    find('#r_domain option:last-child').select_option
+    expect(page).to have_css('.c-keywords__keyword-remove', wait: 3)
   end
 
   def agree_to_everything

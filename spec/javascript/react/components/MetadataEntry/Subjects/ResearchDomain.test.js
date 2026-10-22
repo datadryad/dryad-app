@@ -31,6 +31,6 @@ describe('ResearchDomain', () => {
     render(<ResearchDomain resource={resource} setResource={setResource} />);
 
     await waitFor(() => subjectList.map((s) => s.subject));
-    expect(screen.getByLabelText('Research domains')).toBeVisible();
+    await waitFor(() => expect(screen.getByLabelText('Research domains')).toBeVisible());
   });
 });
