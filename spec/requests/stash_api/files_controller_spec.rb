@@ -98,7 +98,7 @@ module StashApi
         put "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/files/#{CGI.escape(::File.basename(@file_path))}",
             params: IO.read(@file_path),
             headers: default_authenticated_headers.merge('Content-Type' => @mime_type)
-        hsh = response_body_hash
+        pp hsh = response_body_hash
         @the_path = hsh['_links']['self']['href']
         @file_id = @the_path.match(%r{/(\d+)$})[1].to_i
       end

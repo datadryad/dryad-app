@@ -95,7 +95,7 @@ module StashApi
     end
 
     def load_upload
-      @upload = FileUpload.find_by!(id: params[:id], status: 'pending')
+      @upload = FileUpload.find_by!(id: params[:id], status: 'pending', user_id: @user.id)
     end
 
     def s3

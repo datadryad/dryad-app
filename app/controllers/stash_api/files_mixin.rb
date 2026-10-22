@@ -48,7 +48,7 @@ module StashApi
               status: 403) && yield
     end
 
-    def save_file_to_db(upload_file_size:, file_state: 'created')
+    def save_file_to_db(upload_file_size: nil, file_state: 'created')
       handle_previous_duplicates(upload_filename: @sanitized_name)
       file_params = {
         download_filename: @sanitized_name,
@@ -77,7 +77,7 @@ module StashApi
       end
     end
 
-    def check_total_size_violations(size:)
+    def check_total_size_violations(size: nil)
       size ||= @resource.new_size
       return if size <= APP_CONFIG.maximums.merritt_size && @resource.size <= APP_CONFIG.maximums.merritt_size
 
