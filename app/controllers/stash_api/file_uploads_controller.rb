@@ -58,7 +58,7 @@ module StashApi
         multipart_upload: { parts: parts }
       )
 
-      # Don't trust the size Node reports; ask S3
+      # Read file size from S3
       size = s3.head_object(bucket: BUCKET, key: @upload.key).content_length
 
       file = @upload.file
@@ -79,31 +79,29 @@ module StashApi
 
     def set_user
       if doorkeeper_token
+        @user = doorkeeper_token.application.owner
         if doorkeeper_token.expired?
           api_logger.error('require_api_user')
           AuthFailureService.new(request, @user.id, params).create(:api_expired_token)
           render json: { error: 'Token expired' }.to_json, status: 401 and return
         end
-        @user = doorkeeper_token.application.owner
-      else
-        api_logger.error('require_api_user')
-        log_unauthorized_access(message: 'unauthorized')
-
-        head :unauthorized
+        return
       end
+
+      api_logger.error('require_api_user')
+      log_unauthorized_access(message: 'Unauthorized')
     end
 
     def load_upload
-      pp params
       @upload = FileUpload.find_by!(id: params[:id], status: 'pending')
     end
 
-    def s3        = (@s3 ||= Aws::S3::Client.new)
-    def presigner = (@presigner ||= Aws::S3::Presigner.new(client: s3))
+    def s3
+      @s3 ||= Aws::S3::Client.new
+    end
 
-    def require_internal_secret
-      provided = request.headers['X-Internal-Secret'].to_s
-      head :forbidden unless ActiveSupport::SecurityUtils.secure_compare(provided, ENV.fetch('INTERNAL_API_SECRET'))
+    def presigner
+      @presigner ||= Aws::S3::Presigner.new(client: s3)
     end
   end
 end

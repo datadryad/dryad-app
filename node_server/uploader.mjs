@@ -13,6 +13,8 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // POST to Rails: ${RAILS}/api/v2/file_uploads${path}
 const rails = async(path, {body, headers = {}, timeout = 30_000} = {}) => {
+  console.log("Endpoint call:", path, body.doi);
+
   return fetch(`${RAILS}/api/v2/file_uploads${path}`, {
     method: "POST",
     headers: {
@@ -24,7 +26,6 @@ const rails = async(path, {body, headers = {}, timeout = 30_000} = {}) => {
   });
 }
 
-// Split on "/" BEFORE decoding so an encoded %2F inside the DOI stays intact
 const parseRoute = (req) => {
   if (req.method !== "PUT") return null;
   const m = ROUTE.exec(req.url);
@@ -32,11 +33,12 @@ const parseRoute = (req) => {
   try {
     return {doi: decodeURIComponent(m[1]), fileName: decodeURIComponent(m[2])};
   } catch {
-    return null; // malformed percent-encoding
+    // malformed encoding
+    return null;
   }
 }
 
-const getBody = (req) => {
+const getBody = (req, reply) => {
   const route = parseRoute(req);
   if (!route) return reply(404, {error: "not found"});
 
@@ -45,8 +47,8 @@ const getBody = (req) => {
 };
 
 // Presign + PUT one part; every attempt gets a fresh URL
-const putPart =  async(req, id, partNumber, buf) => {
-  const {doi, fileName} = getBody(req);
+const putPart =  async(req, reply, id, partNumber, buf) => {
+  const {doi, fileName} = getBody(req, reply);
 
   let lastErr;
   for (let attempt = 1; attempt <= PART_RETRIES; attempt++) {
@@ -79,11 +81,22 @@ const handle = async(req, res, isContinue = false) => {
     res.writeHead(status, {"Content-Type": "application/json", Connection: "close"});
     res.end(JSON.stringify(body));
   };
-  const {doi, fileName} = getBody(req);
 
+  const forward = (status, text) => {
+    let body;
+    try {
+      body = JSON.parse(text);
+    } catch {
+      body = { error: text.slice(0, 200) || "request failed" };
+    }
+    reply(status, body);
+  };
+
+  const {doi, fileName} = getBody(req, reply);
   // Validate Content-Length (Node lowercases header names)
   const raw = req.headers["content-length"];
   const contentLength = raw !== undefined ? Number(raw) : null; // null = chunked
+
   if (contentLength !== null && (!Number.isSafeInteger(contentLength) || contentLength < 0)) {
     return reply(400, {error: "invalid content-length"});
   }
@@ -102,10 +115,8 @@ const handle = async(req, res, isContinue = false) => {
     if (!r.ok) {
       const text = await r.text();
       console.warn("start rejected:", r.status, text);
-      if ([401, 403, 404, 413, 422].includes(r.status)) {
-        return reply(r.status, {error: "rejected"});
-      }
-      return reply(502, {error: "backend error"});
+      const status = [401, 403, 404, 409, 413, 422].includes(r.status) ? r.status : 502;
+      return forward(status, text);
     }
     ({id} = await r.json());
   } catch (err) {
@@ -129,7 +140,7 @@ const handle = async(req, res, isContinue = false) => {
     if (partNumber >= MAX_PARTS) throw new Error("file too large for part size");
 
     const n = ++partNumber;
-    const p = putPart(req, id, n, buf)
+    const p = putPart(req, reply, id, n, buf)
       .then(
         (etag) => parts.push({part_number: n, etag}),
         (e) => {
@@ -160,7 +171,7 @@ const handle = async(req, res, isContinue = false) => {
     if (failure) throw failure;
     if (total === 0) throw Object.assign(new Error("empty body"), {status: 400});
 
-    // 3. Complete (S3 can take a while to assemble huge objects)
+    // 3.Notify that upload has finished
     const r = await rails(`/${id}/complete`, {
       headers: {Authorization: req.headers.authorization ?? ""},
       body: {doi, filename: fileName, content_length: contentLength, parts},
