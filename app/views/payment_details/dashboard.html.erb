@@ -4,16 +4,7 @@
     <%= @sponsor_details.name %>
     <span style="color: black; font-size: 1.25rem;">Partner dashboard</span>
   </h1>
-  <div class="expand-button" style="position: relative">
-    <button aria-controls="partner-links" aria-expanded="false" style="text-align: right;">Quick links</button>
-    <nav id="partner-links" class="quick-links" aria-label="Quick links for partners" hidden>
-      <ul class="o-list">
-        <li><a href="/admin_dashboard">Admin dashboard</a></li>
-        <li><a href="/<%= @sponsor.is_a?(StashEngine::Tenant) ? 'institutions' : 'publishers' %>#fee-calculator">Partner fees</a></li>
-        <li><a href="/help/requirements/costs#your-data-publishing-charge">User fee calculator</a></li>
-      </ul>
-    </nav>
-  </div>
+  <%= render partial: 'quick_links' %>
 </div>
 <div class="partner-dashboard">
   <%= render partial: 'details' %>
