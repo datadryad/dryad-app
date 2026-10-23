@@ -464,7 +464,7 @@ describe SponsoredPaymentsService do
 
       context 'when payer exists with a 2025 payment plan' do
         context 'when LDF amount limit is reached' do
-          let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: tenant) }
+          let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: journal) }
           let!(:log) { create(:sponsored_payment_log, resource: resource, ldf: 1_001, payer: journal, sponsor_id: org.id) }
 
           context 'when size tier does not change' do
