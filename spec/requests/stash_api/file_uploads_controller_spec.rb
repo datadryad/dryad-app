@@ -4,12 +4,6 @@ require_relative 'helpers'
 
 RSpec.describe 'StashApi::FileUploads', type: :request do
   include Mocks::Aws
-  include Mocks::CurationActivity
-  include Mocks::RSolr
-  include Mocks::Salesforce
-  include Mocks::Stripe
-  include Mocks::UrlUpload
-  include Mocks::Datacite
 
   let(:user) { create(:user, role: 'superuser') }
   let(:application) { create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob', owner_id: user.id, owner_type: 'StashEngine::User') }
@@ -26,11 +20,7 @@ RSpec.describe 'StashApi::FileUploads', type: :request do
   let(:mime_type) { 'image/vnd.microsoft.icon' }
 
   before do
-    neuter_curation_callbacks!
-    mock_solr!
-    mock_aws!
-    mock_salesforce!
-    mock_datacite!
+    mock_multipart_api_upload!
 
     allow(SecureRandom).to receive(:uuid).and_return('b16368dc-53b1-4232-a048-bf24fc7ae973')
   end
