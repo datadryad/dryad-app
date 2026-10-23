@@ -23,7 +23,6 @@ module Middleware
       # returning a 400 Bad Request directly to the scanner
       Rails.logger.warn("AuthFailureLogger intercepted invalid IP address: #{e.message}")
       [400, { 'Content-Type' => 'text/plain' }, ['Bad Request: Invalid IP Address']]
-
     rescue StandardError => e
       Rails.logger.error("AuthFailureLogger error: #{e.message}")
       Rails.logger.error(e.backtrace.join("\n"))
