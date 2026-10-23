@@ -106,7 +106,12 @@ Find a file on your file system to upload, get its path and determine its Conten
 For direct file uploads, do a PUT to {{url-domain-name}}/api/v2/datasets/{{doi_encoded}}/files/{{filename-encoded}} and the body being sent would be the binary file. Set the HTTP "Content-Description" header to add a short description. Set the HTTP Content-Type appropriately for the file type (for example image/jpeg).
 
 ```bash
-curl --data-binary "@</path/to/my/file>" -i -X PUT "https://<domain-name>/api/v2/datasets/<encoded-doi>/files/<encoded-file-name>" -H "Authorization: Bearer <token>" -H "Content-Type: <mime-type>" -H "Accept: application/json"
+curl -T </path/to/my/file> -i -X PUT "https://<domain-name>/api/v2/datasets/<encoded-doi>/files/<encoded-file-name>" -H "Authorization: Bearer <token>"
+```
+In case you want to see a progress on your upload you can just add `--progress-bar | jq` at the end of this command
+
+```bash
+curl -T </path/to/my/file> -i -X PUT "https://<domain-name>/api/v2/datasets/<encoded-doi>/files/<encoded-file-name>" -H "Authorization: Bearer <token>" --progress-bar | jq
 ```
 
 Or
