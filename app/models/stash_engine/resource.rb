@@ -124,10 +124,11 @@ module StashEngine
     has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
     has_many :flags, ->(resource) { unscope(where: :resource_id).where(flaggable: [resource.journal, resource.tenant, resource.users]) }
     has_many :action_reports, class_name: 'ActionRequiredReport'
-    has_one :payment, class_name: 'ResourcePayment'
+    has_one :payment, class_name: 'ResourcePayment', dependent: :destroy
     has_one :fee_record, class_name: 'FeeRecord', dependent: :destroy
     has_one :receipt, -> { receipt }, class_name: 'FeeRecord', dependent: :destroy
     has_one :sponsored_payment_log, dependent: :destroy
+    has_many :payment_records, class_name: 'PaymentRecord'
 
     after_create :create_process_date, unless: :process_date
     after_update_commit :update_salesforce_metadata, if: [:saved_change_to_user_id?, proc { |res| res.curator&.min_curator? }]

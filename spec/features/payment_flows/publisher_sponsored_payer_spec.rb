@@ -202,8 +202,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
     let(:last_invoiced_file_size) { 34 }
     let(:resource_file_size) { 10 }
     let!(:identifier) do
-      create(:identifier, payment_type: 'journal-2025', payment_id: journal&.single_issn,
-                          last_invoiced_file_size: last_invoiced_file_size, license_id: :cc0)
+      create(:identifier, last_invoiced_file_size: last_invoiced_file_size, license_id: :cc0)
     end
     let(:resource) do
       create(:resource, identifier: identifier, user: user, accepted_agreement: true,
@@ -223,6 +222,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
       CurationService.new(user: user, resource: resource, status: 'queued').process
       resource.current_state = :submitted
+      create(:payment_record, resource: resource, identifier: identifier, payment: journal)
 
       identifier.reload
       resource.reload
