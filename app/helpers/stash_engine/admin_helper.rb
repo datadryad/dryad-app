@@ -18,10 +18,22 @@ module StashEngine
       end
     end
 
-    def payer_payment_details_debug_path(payer)
-      type = payer.class.name.parameterize.sub('stashengine-', '').sub('tenant', 'institution').sub('journalorganization', 'publisher')
+    def make_type(partner)
+      partner.class.name.parameterize.sub('stashengine-', '').sub('tenant', 'institution').sub('journalorganization', 'publisher')
+    end
 
-      payment_details_sponsor_path(id: payer.id, type: type)
+    def payer_payment_details_debug_path(payer)
+      payment_details_sponsor_path(id: payer.id, type: make_type(payer))
+    end
+
+    def partner_nav_list
+      return if current_user.system_user?
+      return if current_user.roles.admin_roles.length == 1
+
+      current_user.roles.admin_roles.map do |role|
+        link_to PayerDetailsService.new(role.role_object).details.name,
+                partner_dashboard_path(type: make_type(role.role_object), id: role.role_object.id)
+      end
     end
   end
 end
