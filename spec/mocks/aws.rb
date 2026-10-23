@@ -19,6 +19,12 @@ module Mocks
 
       # Add a default database configuration, which is needed by Resource.s3_dir_name
       allow(Rails).to receive(:configuration).and_return(OpenStruct.new(database_configuration: { 'test' => { 'host' => 'localhost' } }))
+
+      # new API file upload
+      allow_any_instance_of(::Aws::S3::Client).to receive_message_chain(:create_multipart_upload, :upload_id).and_return('multipart_upload_id')
+      allow_any_instance_of(::Aws::S3::Client).to receive(:complete_multipart_upload).and_return(true)
+      allow_any_instance_of(::Aws::S3::Client).to receive_message_chain(:head_object, :content_length).and_return(5_000)
+      allow_any_instance_of(::Aws::S3::Client).to receive(:abort_multipart_upload).and_return(true)
     end
 
   end

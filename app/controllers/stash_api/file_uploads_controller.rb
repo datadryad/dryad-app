@@ -36,8 +36,10 @@ module StashApi
     end
 
     def part_url
+      render json: { error: 'Missing part number' }, status: :unprocessable_content and return if params[:part_number].blank?
+
       n = params.require(:part_number).to_i
-      return head :unprocessable_entity unless (1..MAX_PARTS).cover?(n)
+      render json: { error: 'Invalid part number' }, status: :unprocessable_content and return unless (1..MAX_PARTS).cover?(n)
 
       url = presigner.presigned_url(
         :upload_part,
@@ -49,14 +51,17 @@ module StashApi
     end
 
     def complete
+      render json: { error: 'Missing parts' }, status: :unprocessable_content and return if params[:parts].blank?
+
       parts = params.require(:parts).map { |p| p.permit(:etag, :part_number).to_h.symbolize_keys }
       parts = parts.map { |p| { etag: p[:etag], part_number: p[:part_number].to_i } }
         .sort_by { |p| p[:part_number] }
 
-      s3.complete_multipart_upload(
+      complete_file = s3.complete_multipart_upload(
         bucket: BUCKET, key: @upload.key, upload_id: @upload.upload_id,
         multipart_upload: { parts: parts }
       )
+      render json: { error: 'Invalid parts' }, status: :unprocessable_content and return unless complete_file
 
       # Read file size from S3
       size = s3.head_object(bucket: BUCKET, key: @upload.key).content_length
