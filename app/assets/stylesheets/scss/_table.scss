@@ -67,6 +67,24 @@ table.columned {
   }
 }
 
+table.clear-table {
+  border: 0;
+  background-color: transparent;
+  tr, th, td {
+    border: 0;
+    background-color: transparent;
+  }
+  th, td {
+    padding: .5ch $spacing-base;
+  }
+  th:first-child, td:first-child {
+    padding-left: 0;
+  }
+  th:last-child, td:last-child {
+    padding-right: 0;
+  }
+}
+
 #activity_log_table {
   width: 100%;
   font-size: .99rem;
