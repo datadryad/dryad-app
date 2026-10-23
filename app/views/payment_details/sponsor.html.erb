@@ -17,34 +17,19 @@
     <% end %>
   <% end %>
 </div>
+
 <div id="configuration">
   <%= render partial: 'configuration' %>
 </div>
 
 <h2>Calculations</h2>
-<p>Calculation year: <%= @calculation_year %></p>
 <div class="payment-tables">
   <table>
-    <caption>Payment totals</caption>
-    <tr>
-      <th scope="row">Total DPC</th>
-      <td class="align-end"><%= number_to_currency(@service.total_dpc) %></td>
-    </tr>
+    <caption>Calculation year: <%= @calculation_year %></caption>
     <tr>
       <th scope="row">DPC dataset count</th>
-      <td class="align-end"><%= number_with_delimiter(@service.identifiers.where.not(pub_state: 'withdrawn').count) %></td>
+      <td class="align-end"><%= number_with_delimiter(@service.identifiers.count) %></td>
     </tr>
-    <tr>
-      <th scope="row">Total LDF</th>
-      <td class="align-end"><%= number_to_currency(@service.total_ldf) %></td>
-    </tr>
-    <tr>
-      <th scope="row">Total</th>
-      <td class="align-end"><%= number_to_currency(@service.total_dpc + @service.total_ldf) %></td>
-    </tr>
-  </table>
-  <table>
-    <caption>LDF calculations</caption>
     <tr>
       <th scope="row">LDF Commitment</th>
       <td class="align-end"><%= number_to_currency(@service.payment_configuration&.yearly_ldf_limit) %></th>
@@ -58,6 +43,10 @@
       <td class="align-end"><%= number_to_currency(@service.spent_ldf) %></td>
     </tr>
     <tr>
+      <th scope="row">Total LDF</th>
+      <td class="align-end"><%= number_to_currency(@service.total_ldf) %></td>
+    </tr>
+    <tr>
       <th scope="row">LDF Remaining</th>
       <td class="align-end">
         <% if @service.payment_configuration&.yearly_ldf_limit.present? %>
@@ -67,7 +56,7 @@
   </table>
 </div>
 
-<h3 id="id_head" style="cursor: help" title="Includes withdrawn datasets"><%= number_with_delimiter(@service.identifiers.count) %> sponsored datasets</h3>
+<h3 id="id_head"><%= number_with_delimiter(@service.identifiers.count) %> sponsored <%= 'dataset'.pluralize(@service.identifiers.count) %></h3>
 <div class="table-wrapper c-lined-table-wrapper" style="margin-top: .5rem" tabindex="0" role="region" aria-labelledby="id_head">
   <table class="c-lined-table">
     <thead>
