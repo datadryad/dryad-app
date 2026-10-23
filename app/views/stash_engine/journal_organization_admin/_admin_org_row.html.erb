@@ -16,17 +16,26 @@
 <td><%= o.journals_sponsored_deep.map(&:title).join(', ') %></td>
 <td>
   <% if o.top_level_org.payment_configuration&.payment_plan&.present? %>
-    <b>Plan:</b> <%= o.top_level_org.payment_configuration&.payment_plan&.humanize %><br/>
-    <b>Covers LDF:</b> <%= o.payment_configuration&.covers_ldf ? "Yes" : "No" %>
-    <% if o.payment_configuration&.covers_ldf %>
-      <% if o.payment_configuration.ldf_limit.present? %>
-        (Up to <%= filesize(ESTIMATED_FILES_SIZE.find{|tier| tier[:tier] == o.payment_configuration.ldf_limit }[:range].max) %>)
+  <div class="c-lined-table__with-actions">
+    <div class="c-lined-table__data">
+      <b>Plan:</b> <%= o.top_level_org.payment_configuration&.payment_plan&.humanize %><br/>
+      <b>Covers LDF:</b> <%= o.payment_configuration&.covers_ldf ? "Yes" : "No" %>
+      <% if o.payment_configuration&.covers_ldf %>
+        <% if o.payment_configuration.ldf_limit.present? %>
+          (Up to <%= filesize(ESTIMATED_FILES_SIZE.find{|tier| tier[:tier] == o.payment_configuration.ldf_limit }[:range].max) %>)
+        <% end %>
+        <% if o.payment_configuration.yearly_ldf_limit.present? %>
+          <br/><b>Remaining commitment:</b> $<%= o.payment_configuration.yearly_ldf_limit - Payments::Sponsor.new(o).total_ldf %>
+        <% end %>
       <% end %>
-      <% if o.payment_configuration.yearly_ldf_limit.present? %>
-        <br/><b>Remaining LDF commitment:</b> $<%= o.payment_configuration.yearly_ldf_limit - SponsoredPaymentLog.for_current_year.where(payer: o.payers_sponsored).sum(:ldf) %>
-      <% end %>
+    </div>
+    <% if PaymentDetailsPolicy.new(current_user, o).dashboard? %>
+      <a href="<%= partner_dashboard_path(type: 'publisher', id: o.id) %>" class="c-admin-edit-icon" title="Partner dashboard" aria-label="Partner dashboard"><i class="fas fa-gauge-simple-high" aria-hidden="true"></i></a>
     <% end %>
-    <%= payer_payment_details_debugger(o) %>
+    <% if policy(:payment_details).sponsor? %>
+      <a href="<%= payer_payment_details_debug_path(o) %>" class="c-admin-edit-icon" title="Payment details" aria-label="Payment details"><i class="fas fa-code" aria-hidden="true"></i></a>
+    <% end %>
+  </div>
   <% else %>
     <span style="color: rgb(209, 44, 29)">Disabled</span>
   <% end %>

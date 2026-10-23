@@ -13,18 +13,15 @@ module StashEngine
       return unless current_user.system_user?
 
       content_tag :div do
-        link_to '<i class="fas fa-receipt" aria-hidden="true"></i>'.html_safe, payment_details_identifier_path(id: identifier_id),
+        link_to '<i class="fas fa-code" aria-hidden="true"></i>'.html_safe, payment_details_identifier_path(id: identifier_id),
                 { 'aria-label': 'Developer details', title: 'Developer details' }
       end
     end
 
-    def payer_payment_details_debugger(payer)
-      return unless current_user.system_user?
+    def payer_payment_details_debug_path(payer)
+      type = payer.class.name.parameterize.sub('stashengine-', '').sub('tenant', 'institution').sub('journalorganization', 'publisher')
 
-      content_tag :div do
-        link_to '<i class="fas fa-receipt" aria-hidden="true"></i>'.html_safe, payment_details_sponsor_path(id: payer.id, type: payer.class.name),
-                { 'aria-label': 'Payment details', title: 'Payment details' }
-      end
+      payment_details_sponsor_path(id: payer.id, type: type)
     end
   end
 end

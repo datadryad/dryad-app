@@ -1,0 +1,64 @@
+<div class="table-wrapper c-lined-table-wrapper" style="margin-top: .5rem" tabindex="0" role="region" aria-labelledby="id_head">
+  <table class="c-lined-table">
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th>Publication status</th>
+        <th>Publication date</th>
+        <th>Current size</th>
+        <th>Last invoiced size</th>
+        <% if @sponsor.is_a?(StashEngine::JournalOrganization) %>
+          <th>Journal</th>
+        <% end %>
+        <th>Sponsored LDF</th>
+        <th>User paid LDF</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @identifiers.includes(:payments, latest_resource: [:last_curation_activity]).each do |ident| %>
+      <% res = ident.latest_resource %>
+      <tr>
+        <td>
+          <%= link_to res.title.html_safe, activity_log_path(id: ident.id) %>
+          <div class="c-lined-table__digits">DOI: <%= ident.identifier %></div>
+        </td>
+        <td><%= ident.pub_state.upcase_first %></td>
+        <td class="align-end c-lined-table__digits"><%= formatted_date(ident.publication_date) %></td>
+        <td class="align-end c-lined-table__digits"><%= filesize res.total_file_size %></td>
+        <td class="align-end c-lined-table__digits"><%= filesize ident.last_invoiced_file_size %></td>
+        <% if @sponsor.is_a?(StashEngine::JournalOrganization) %>
+          <td><%= ident.payer&.title %></td>
+        <% end %>
+        <td class="align-end c-lined-table__digits">
+          <% sum = ident.sponsored_payment_logs.sum(:ldf) %>
+          <%= number_to_currency(sum) if sum > 0 %>
+        </td>
+        <td class="align-end c-lined-table__digits">
+          <% sum = ident.payments.paid.sum(:amount) %>
+          <%= number_to_currency(sum) if sum > 0 %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="c-space-paginator admin-dashboard-buttons">
+  <span style="font-size:.98rem">Questions? Contact <a href="mailto:partnerships@datadryad.org">partnerships@datadryad.org</a></span>
+  <div>
+    <%= paginate @identifiers, params: { page_size: @page_size } %>
+    <div class="c-paginator-page_size">
+      Page size:
+      <%
+        current_ps = params[:page_size].to_i
+        current_ps = 25 if current_ps == 0
+        [25, 50, 100].each do |ps| %>
+        <% if ps == current_ps %>
+          <span class="page-current"><%= ps %></span>
+        <% else %>
+          <%= link_to(ps, request.params.except(:action, :controller).merge(page_size: ps, page: 1), 'aria-label': "#{ps} results per page") %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>
