@@ -11,9 +11,12 @@ module Payments
     def identifiers
       return @identifiers if @identifiers
 
+      # ids by plan (default 2025) and specified year (default current)
+      # should not include withdrawn datasets
+      # ids for the current year include any processing & not yet published
       ids = StashEngine::Identifier.where.not(pub_state: 'withdrawn')
         .where(id: sponsor.dpcs_sponsored.where(payment_plan: plan).pluck(:identifier_id))
-      ids = ids.where('YEAR(publication_date) = ?', year) if year != Date.today.year.to_i
+      ids = ids.where("#{'publication_date IS NULL or ' if year == Date.today.year.to_i}YEAR(publication_date) = ?", year)
       @identifiers = ids
     end
 
