@@ -248,19 +248,30 @@ module StashEngine
         search_string = %r{^10.\S+/\S+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string
         @datasets = @datasets.where("MATCH(stash_engine_identifiers.search_words) AGAINST(#{ActiveRecord::Base.connection.quote(search_string)}) > 0")
       end
-      @datasets = @datasets.left_outer_joins(:related_identifiers).left_outer_joins(:resource_publication)
-        .where(
-          'LOWER(dcs_related_identifiers.related_identifier) like ? or LOWER(stash_engine_resource_publications.manuscript_number) like LOWER(?)',
-          "%#{@filters[:identifiers]}%", "%#{@filters[:identifiers]}%"
-        ) unless @filters[:identifiers].blank?
       @datasets = @datasets.joins(:funders).where(
         'dcs_contributors.award_number like (?)',
         "%#{@filters[:awards]}%"
       ) unless @filters[:awards].blank?
 
+      pub_filters
       user_filters
       date_filters
       size_filter
+      dpc_filter
+    end
+
+    def pub_filters
+      if @filters[:doi_limit].present?
+        @datasets = @datasets.joins(
+          "INNER JOIN dcs_related_identifiers ON stash_engine_resources.id = dcs_related_identifiers.resource_id AND dcs_related_identifiers.work_type = 6 AND dcs_related_identifiers.related_identifier like 'http%'"
+        )
+      end
+      return if @filters[:identifiers].blank?
+
+      @datasets = @datasets.left_outer_joins(:related_identifiers).left_outer_joins(:resource_publication).where(
+        'LOWER(dcs_related_identifiers.related_identifier) like ? or LOWER(stash_engine_resource_publications.manuscript_number) like LOWER(?)',
+        "%#{@filters[:identifiers]}%", "%#{@filters[:identifiers]}%"
+      )
     end
 
     def user_filters
@@ -321,7 +332,7 @@ module StashEngine
         tenant_orgs = []
       end
 
-      tenant_orgs = [] if @filters[:submitter_limit].present?
+      # tenant_orgs = [] if @filters[:submitter_limit].present?
 
       @datasets = @datasets.left_outer_joins(authors: :affiliations, identifier: :dpc_payment)
         .joins('left outer join dcs_contributors contributors on stash_engine_resources.id = contributors.resource_id')
@@ -366,6 +377,34 @@ module StashEngine
         "inner join dcs_contributors funders on stash_engine_resources.id = funders.resource_id and funders.contributor_type = 'funder'"
       )
         .where('funders.name_identifier_id': funder_ror)
+    end
+
+    def dpc_filter
+      return unless @filters[:dpc_limit].present?
+      return unless @role_object.present? || @filters[:dpc_limit_for].present?
+
+      @datasets = @datasets.joins(identifier: [:dpc_payment])
+      @datasets = case @filters[:dpc_limit_for].presence || @role_object.class.to_s.parameterize.sub('stashengine-', '')
+                  when 'journal'
+                    if @role_object.is_a?(StashEngine::Journal)
+                      @datasets.where(payment_records: { payment: @role_object })
+                    else
+                      @datasets.where(payment_records: { payment_type: 'StashEngine::Journal', payment_id: @filters.dig(:journal, :value)&.to_i })
+                    end
+                  when 'journalorganization'
+                    if @journal_limit.present?
+                      @datasets.where(payment_records: { payment: @journal_limit })
+                    else
+                      journal_limit = StashEngine::JournalOrganization.find_by(id: @filters[:sponsor].to_i).journals_sponsored_deep
+                      @datasets.where(payment_records: { payment: journal_limit })
+                    end
+                  when 'tenant'
+                    if @filters[:member].present?
+                      @datasets.where(payment_records: { payment: @tenant_limit.where(id: @filters[:member]) })
+                    else
+                      @datasets.where(payment_records: { payment: @tenant_limit })
+                    end
+                  end
     end
 
     def date_string(date_hash)
