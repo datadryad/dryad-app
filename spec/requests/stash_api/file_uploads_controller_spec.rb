@@ -2,7 +2,7 @@
 require 'rails_helper'
 require_relative 'helpers'
 
-RSpec.describe 'StashApi::FileUploads', type: :request do
+RSpec.describe 'StashApi::FileUploadsController', type: :request do
   include Mocks::Aws
 
   let(:user) { create(:user, role: 'superuser') }

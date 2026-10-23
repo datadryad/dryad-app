@@ -27,6 +27,9 @@ module Mocks
       allow_any_instance_of(::Aws::S3::Client).to receive(:complete_multipart_upload).and_return(true)
       allow_any_instance_of(::Aws::S3::Client).to receive_message_chain(:head_object, :content_length).and_return(5_000)
       allow_any_instance_of(::Aws::S3::Client).to receive(:abort_multipart_upload).and_return(true)
+      allow_any_instance_of(::Aws::S3::Presigner).to receive(:presigned_url).and_return(
+        "https://somebucket.amazonaws.com/presignedURL-#{Faker::Alphanumeric.alphanumeric(number: 10)}"
+      )
     end
   end
 
