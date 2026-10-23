@@ -34,7 +34,7 @@ export default function PPRSetting({resource, setResource, preview, previous}) {
   };
 
   useEffect(() => {
-    if (Object.hasOwn(dpc, 'total_file_size')) {
+    if (Object.hasOwn(dpc, 'automatic_ppr')) {
       if (resource.identifier.pub_state === 'published') {
         setReason(', because the data has been previously published');
       } else if (dpc.man_decision_made) {
