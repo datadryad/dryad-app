@@ -9,6 +9,13 @@
 <div class="partner-dashboard">
   <%= render partial: 'details' %>
 </div>
+<% if @sponsor != @sponsor.limits_sponsor %>
+  <p style="margin: 0.5ch 0; font-style: italic; font-size: .98rem">Settings are inherited from <%= @limits_details.name %>
+    <% if @sponsor.limits_sponsor.payment_configuration.yearly_ldf_limit.present? %>
+      and commitment is shared between members
+    <% end %>
+  </p>
+<% end %>
 <%= form_with(url: request.path, method: 'get') do %>
 <div class="admin-dashboard-results" style="margin-top: 1.5rem; justify-content: space-between;">
   <b id="id_head" role="heading" aria-level="2" style="font-size: 1.35em;">Sponsored datasets</b>
