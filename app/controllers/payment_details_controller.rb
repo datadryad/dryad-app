@@ -39,7 +39,6 @@ class PaymentDetailsController < StashEngine::ApplicationController
     @years = (start..Date.today.year).to_a
     identifiers = identifiers.send(params[:status]) if params[:status].present?
     @identifiers = identifiers.page(@page).per(@page_size)
-    @limits_service = Payments::Sponsor.new(@sponsor.limits_sponsor, plan: @payment_plan)
     @limits_details = PayerDetailsService.new(@sponsor.limits_sponsor).details
   end
 
@@ -62,6 +61,7 @@ class PaymentDetailsController < StashEngine::ApplicationController
     @payment_plan = params[:plan] || '2025'
     @sponsor_details = PayerDetailsService.new(@sponsor).details
     @service = Payments::Sponsor.new(@sponsor, plan: @payment_plan)
+    @limits_service = Payments::Sponsor.new(@sponsor.limits_sponsor, plan: @payment_plan)
   end
 
   def setup_paging

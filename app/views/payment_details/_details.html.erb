@@ -15,6 +15,7 @@
             <dt>LDF commitment:</dt>
             <dd><%= number_to_currency(@sponsor.limits_sponsor.payment_configuration.yearly_ldf_limit) %>
         <% end %>
+        <% # only display LDF email addresses if set on this level %>
         <% if @sponsor.payment_configuration.ldf_limit_notification.present? %>
             </dd>
           </div>
@@ -25,13 +26,13 @@
       <% end %>
       </dd>
     </div>
-      <% if @sponsor.limits_sponsor.payment_configuration.submitter_contact.present? %>
-        <div>
-          <dt>Contact for submitters:</dt>
-          <dd><%= @sponsor.limits_sponsor.payment_configuration.submitter_contact %>
-          </dd>
-        </div>
-      <% end %>
+    <% if @sponsor.limits_sponsor.payment_configuration.submitter_contact.present? %>
+      <div>
+        <dt>Contact for submitters:</dt>
+        <dd><%= @sponsor.limits_sponsor.payment_configuration.submitter_contact %>
+        </dd>
+      </div>
+    <% end %>
   </dl>
 </div>
 <div>

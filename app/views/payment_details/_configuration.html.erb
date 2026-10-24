@@ -7,7 +7,7 @@
         (Up to <%= filesize(ESTIMATED_FILES_SIZE.find{|tier| tier[:tier] == @sponsor.limits_sponsor.payment_configuration.ldf_limit }[:range].max) %>)
       <% end %>
       <% if @sponsor.limits_sponsor.payment_configuration.yearly_ldf_limit.present? %>
-        <br/><b>Remaining LDF commitment:</b> <%= number_to_currency(@sponsor.limits_sponsor.payment_configuration.yearly_ldf_limit - @service.total_ldf) %>
+        <br/><b>Remaining LDF commitment:</b> <%= number_to_currency(@sponsor.limits_sponsor.payment_configuration.yearly_ldf_limit - @limits_service.total_ldf) %>
       <% end %>
       <% if @sponsor.limits_sponsor.payment_configuration.ldf_limit_notification.present? %>
         <br/><b>LDF contacts:</b> <%= @sponsor.limits_sponsor.payment_configuration.ldf_limit_notification&.join(', ') %>
@@ -15,7 +15,7 @@
     <% end %>
     <% arr = [@sponsor.limits_sponsor, @sponsor.payment_sponsor].uniq.reject{|s| s == @sponsor} %>
     <% if arr.present? %>
-      <br/><b>Inherited from:</b> <%= arr.map {|s| "<a href=\"#{payer_payment_details_debug_path(s)}\">#{s.name}</a>" }.join(', ').html_safe %>
+      <br/><b>Inherited from:</b> <%= arr.map {|s| "<a href=\"#{payer_payment_details_debug_path(s)}\">#{PayerDetailsService.new(s)details.name}</a>" }.join(', ').html_safe %>
     <% end %>
   <% end %>
 </div>
