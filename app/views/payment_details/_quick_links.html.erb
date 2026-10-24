@@ -1,0 +1,24 @@
+<div class="admin-dashboard-results">
+  <% if partner_nav_list.present?%>
+    <div class="expand-button" style="position: relative">
+      <button aria-controls="extra-partners" aria-expanded="false" style="text-align: right;">Partner switcher</button>    
+      <nav id="extra-partners" class="quick-links" aria-label="View other partner dashboards" hidden>
+        <ul class="o-list">
+          <% partner_nav_list.each do |link| %>
+            <li><%= link.html_safe %></li>
+          <% end %>
+        </ul>
+      </nav>
+    </div>
+  <% end %>
+  <div class="expand-button" style="position: relative">
+    <button aria-controls="partner-links" aria-expanded="false" style="text-align: right;">Quick links</button>
+    <nav id="partner-links" class="quick-links" aria-label="Quick links for partners" hidden>
+      <ul class="o-list">
+        <li><a href="/admin_dashboard">Admin dashboard</a></li>
+        <li><a href="/<%= @sponsor.is_a?(StashEngine::Tenant) ? 'institutions' : 'publishers' %>#fee-calculator">Partner fees</a></li>
+        <li><a href="/help/requirements/costs#your-data-publishing-charge">User fee calculator</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>

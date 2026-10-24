@@ -1,7 +1,7 @@
 class PaymentDetailsController < StashEngine::ApplicationController
   before_action :require_user_login
   before_action :set_sponsor, except: :identifier
-  before_action :setup_paging, only: :sponsor
+  before_action :setup_paging, only: %i[sponsor dashboard]
 
   def sponsor
     authorize current_user, policy_class: PaymentDetailsPolicy
@@ -32,29 +32,41 @@ class PaymentDetailsController < StashEngine::ApplicationController
     @price_calculation = ResourceFeeCalculatorService.new(@identifier.latest_resource).calculate({})
   end
 
+  def dashboard
+    authorize @sponsor, policy_class: PaymentDetailsPolicy
+    identifiers = @service.identifiers
+    start = identifiers.publicly_viewable.pluck(:publication_date).min&.year || 2026
+    @years = (start..Date.today.year).to_a
+    identifiers = identifiers.send(params[:status]) if params[:status].present?
+    @identifiers = identifiers.page(@page).per(@page_size)
+    @limits_service = Payments::Sponsor.new(@sponsor.limits_sponsor, plan: @payment_plan)
+    @limits_details = PayerDetailsService.new(@sponsor.limits_sponsor).details
+  end
+
   private
 
   def set_sponsor
     @sponsor = case params[:type]
-               when 'StashEngine::Tenant'
+               when 'institution'
                  StashEngine::Tenant.find(params[:id])
-               when 'StashEngine::Journal'
+               when 'journal'
                  StashEngine::Journal.find(params[:id])
-               when 'StashEngine::JournalOrganization'
+               when 'publisher'
                  StashEngine::JournalOrganization.find(params[:id])
-               when 'StashEngine::Funder'
+               when 'funder'
                  StashEngine::Funder.find(params[:id])
                else
                  raise "Unknown sponsor type: #{params[:type]}"
                end
-    @sponsor_details = PayerDetailsService.new(@sponsor).details
     @calculation_year = params[:year] || Date.today.year
-    @service = Payments::Sponsor.new(@sponsor, year: @calculation_year)
+    @payment_plan = params[:plan] || '2025'
+    @sponsor_details = PayerDetailsService.new(@sponsor).details
+    @service = Payments::Sponsor.new(@sponsor, plan: @payment_plan)
   end
 
   def setup_paging
     @page = params[:page] || 1
-    @page_size = 50 if params[:page_size].blank? || params[:page_size].to_i == 0
+    @page_size = 25 if params[:page_size].blank? || params[:page_size].to_i == 0
     @page_size ||= params[:page_size].to_i
   end
 

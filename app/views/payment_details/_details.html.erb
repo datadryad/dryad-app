@@ -1,0 +1,78 @@
+<div>
+  <b role="heading" aria-level="2">Partner settings</b>
+  <dl>
+    <div>
+      <dt>Large Data Fees:</dt>
+      <dd><%= @sponsor.limits_sponsor.payment_configuration.covers_ldf ? "Sponsored" : "Not sponsored" %>
+      <% if @sponsor.limits_sponsor.payment_configuration.covers_ldf %>
+        <% if @sponsor.limits_sponsor.payment_configuration.ldf_limit.present? %>
+          (Up to <%= filesize(ESTIMATED_FILES_SIZE.find{|tier| tier[:tier] == @sponsor.limits_sponsor.payment_configuration.ldf_limit }[:range].max) %>)
+        <% end %>
+        <% if @sponsor.limits_sponsor.payment_configuration.yearly_ldf_limit.present? %>
+            </dd>
+          </div>
+          <div>        
+            <dt>LDF commitment:</dt>
+            <dd><%= number_to_currency(@sponsor.limits_sponsor.payment_configuration.yearly_ldf_limit) %>
+        <% end %>
+        <% if @sponsor.payment_configuration.ldf_limit_notification.present? %>
+            </dd>
+          </div>
+          <div>
+            <dt>LDF notification contacts:</dt>
+            <dd><%= @sponsor.payment_configuration.ldf_limit_notification&.join(', ') %>
+        <% end %>
+      <% end %>
+      </dd>
+    </div>
+      <% if @sponsor.limits_sponsor.payment_configuration.submitter_contact.present? %>
+        <div>
+          <dt>Contact for submitters:</dt>
+          <dd><%= @sponsor.limits_sponsor.payment_configuration.submitter_contact %>
+          </dd>
+        </div>
+      <% end %>
+  </dl>
+</div>
+<div>
+  <b role="heading" aria-level="2"><%= @calculation_year %> DPC Sponsorship</b>
+  <table class="clear-table">
+    <tr>
+      <th scope="row">Number of datasets published</th>
+      <td><%= @service.identifiers.publicly_viewable.count %></td>
+    </tr>
+    <tr>
+      <th scope="row">Additional datasets processing</th>
+      <td><%= @service.identifiers.unpublished.count %></td>
+    </tr>
+    <tr>
+      <th scope="row">Total</th>
+      <td><%= @service.identifiers.count %></td>
+    </tr>
+  </table>
+</div>
+<% if @sponsor.limits_sponsor.payment_configuration.covers_ldf %>
+<div>
+  <b role="heading" aria-level="2"><%= @calculation_year %> Large Data Fees</b>
+  <table class="clear-table">
+    <tr>
+      <th scope="row">LDF spent</th>
+      <td><%= number_to_currency(@service.spent_ldf) %></td>
+    </tr>
+    <tr>
+      <th scope="row">LDF reserved</th>
+      <td><%= number_to_currency(@service.reserved_ldf) %></td>
+    </tr>
+    <tr>
+      <th scope="row">Total</th>
+      <td><%= number_to_currency(@service.total_ldf) %></td>
+    </tr>
+    <% if @calculation_year == Date.today.year && @sponsor.limits_sponsor.payment_configuration.yearly_ldf_limit.present? %>
+    <tr>
+      <th scope="row">Remaining LDF commitment</th>
+      <td><%= number_to_currency(@sponsor.limits_sponsor.payment_configuration.yearly_ldf_limit - @limits_service.total_ldf) %></td>
+    </tr>
+    <% end %>
+  </table>
+</div>
+<% end %>

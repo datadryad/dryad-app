@@ -68,7 +68,8 @@ describe PaymentLimitsService do
           end
 
           context 'when limit is already exceeded' do
-            let!(:log) { create(:sponsored_payment_log, payer: tenant, ldf: 1_001, sponsor_id: sponsor_tenant.id) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: tenant) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: tenant, ldf: 1_001, sponsor_id: sponsor_tenant.id) }
 
             it { is_expected.to be_truthy }
 
@@ -80,14 +81,16 @@ describe PaymentLimitsService do
           end
 
           context 'when limit is not reached but with current resource it will be exceeded' do
-            let!(:log) { create(:sponsored_payment_log, payer: tenant, ldf: 999, sponsor_id: sponsor_tenant.id) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: tenant) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: tenant, ldf: 999, sponsor_id: sponsor_tenant.id) }
             let(:total_file_size) { 50_000_000_001 }
 
             it { is_expected.to be_truthy }
           end
 
           context 'when limit is not reached and with current resource it will not be exceeded' do
-            let!(:log) { create(:sponsored_payment_log, payer: tenant, ldf: 100, sponsor_id: sponsor_tenant.id) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: tenant) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: tenant, ldf: 100, sponsor_id: sponsor_tenant.id) }
 
             it { is_expected.to be_falsey }
           end
@@ -99,7 +102,9 @@ describe PaymentLimitsService do
           end
 
           context 'with logs on previous year' do
-            let!(:log) { create(:sponsored_payment_log, payer: tenant, ldf: 1_001, created_at: 1.year.ago, sponsor_id: sponsor_tenant.id) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: tenant) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: tenant, ldf: 1_001, sponsor_id: sponsor_tenant.id) }
+            before { identifier.update(pub_state: 'published', publication_date: 1.year.ago) }
 
             it { is_expected.to be_falsey }
           end
@@ -111,7 +116,8 @@ describe PaymentLimitsService do
           end
 
           context 'when limit is already exceeded' do
-            let!(:log) { create(:sponsored_payment_log, payer: other_tenant, ldf: 1_001, sponsor_id: sponsor_tenant.id) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: other_tenant) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: other_tenant, ldf: 1_001, sponsor_id: sponsor_tenant.id) }
 
             it { is_expected.to be_truthy }
 
@@ -134,7 +140,8 @@ describe PaymentLimitsService do
             end
 
             context 'when amounts are already huge' do
-              let!(:log) { create(:sponsored_payment_log, payer: other_tenant, ldf: 1_000_001, sponsor_id: sponsor_tenant.id) }
+              let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: other_tenant) }
+              let!(:log) { create(:sponsored_payment_log, resource: resource, payer: other_tenant, ldf: 1_000_001, sponsor_id: sponsor_tenant.id) }
 
               it { is_expected.to be_falsey }
 
@@ -164,7 +171,8 @@ describe PaymentLimitsService do
             end
 
             context 'when limit is already exceeded' do
-              let!(:log) { create(:sponsored_payment_log, payer: other_tenant, ldf: 1_001, sponsor_id: sponsor_tenant.id) }
+              let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: other_tenant) }
+              let!(:log) { create(:sponsored_payment_log, resource: resource, payer: other_tenant, ldf: 1_001, sponsor_id: sponsor_tenant.id) }
 
               it { is_expected.to be_truthy }
 
@@ -177,13 +185,15 @@ describe PaymentLimitsService do
           end
 
           context 'when limit is not reached but with current resource it will be exceeded' do
-            let!(:log) { create(:sponsored_payment_log, payer: other_tenant, ldf: 999, sponsor_id: sponsor_tenant.id) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: other_tenant) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: other_tenant, ldf: 999, sponsor_id: sponsor_tenant.id) }
 
             it { is_expected.to be_truthy }
           end
 
           context 'when limit is not reached and with current resource it will not be exceeded' do
-            let!(:log) { create(:sponsored_payment_log, payer: other_tenant, ldf: 100, sponsor_id: sponsor_tenant.id) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: other_tenant) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: other_tenant, ldf: 100, sponsor_id: sponsor_tenant.id) }
 
             it { is_expected.to be_falsey }
           end
@@ -214,14 +224,16 @@ describe PaymentLimitsService do
           end
 
           context 'when limit is exceeded on the old sponsor' do
-            let!(:log) { create(:sponsored_payment_log, payer: tenant, ldf: 1_001, sponsor_id: sponsor_tenant.id) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: tenant) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: tenant, ldf: 1_001, sponsor_id: sponsor_tenant.id) }
             before { tenant.update(sponsor: sponsor_org_2) }
 
             it { is_expected.to be_falsey }
           end
 
           context 'when limit is exceeded with a different tenant on the old sponsor' do
-            let!(:log) { create(:sponsored_payment_log, payer: other_tenant, ldf: 1_001, sponsor_id: sponsor_tenant.id) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: other_tenant) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: other_tenant, ldf: 1_001, sponsor_id: sponsor_tenant.id) }
             before { tenant.update(sponsor: sponsor_org_2) }
 
             it { is_expected.to be_falsey }
@@ -234,7 +246,8 @@ describe PaymentLimitsService do
           end
 
           context 'when limit is not reached but with current version it will be exceeded' do
-            let!(:log) { create(:sponsored_payment_log, payer: tenant, ldf: 900, sponsor_id: sponsor_tenant.id) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: tenant) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: tenant, ldf: 900, sponsor_id: sponsor_tenant.id) }
             let(:total_file_size) { 50_000_000_001 }
 
             it { is_expected.to be_truthy }
@@ -368,7 +381,8 @@ describe PaymentLimitsService do
           end
 
           context 'when limit is already exceeded' do
-            let!(:log) { create(:sponsored_payment_log, payer: journal, ldf: 1_001, sponsor_id: sponsor_journal_org.id) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: journal) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: journal, ldf: 1_001, sponsor_id: sponsor_journal_org.id) }
 
             it { is_expected.to be_truthy }
 
@@ -380,13 +394,15 @@ describe PaymentLimitsService do
           end
 
           context 'when limit is not reached but with current resource it will be exceeded' do
-            let!(:log) { create(:sponsored_payment_log, payer: journal, ldf: 999, sponsor_id: sponsor_journal_org.id) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: journal) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: journal, ldf: 999, sponsor_id: sponsor_journal_org.id) }
 
             it { is_expected.to be_truthy }
           end
 
           context 'when limit is not reached and with current resource it will not be exceeded' do
-            let!(:log) { create(:sponsored_payment_log, payer: journal, ldf: 100, sponsor_id: sponsor_journal_org.id) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: journal) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: journal, ldf: 100, sponsor_id: sponsor_journal_org.id) }
 
             it { is_expected.to be_falsey }
           end
@@ -398,7 +414,9 @@ describe PaymentLimitsService do
           end
 
           context 'with logs on previous year' do
-            let!(:log) { create(:sponsored_payment_log, payer: journal, ldf: 1_001, created_at: 1.year.ago) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: journal) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: journal, ldf: 1_001) }
+            before { identifier.update(pub_state: 'published', publication_date: 1.year.ago) }
 
             it { is_expected.to be_falsey }
           end
@@ -419,7 +437,8 @@ describe PaymentLimitsService do
           end
 
           context 'when limit is already exceeded' do
-            let!(:log) { create(:sponsored_payment_log, payer: other_journal, ldf: 1_001, sponsor_id: sponsor_journal_org.id) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: other_journal) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: other_journal, ldf: 1_001, sponsor_id: sponsor_journal_org.id) }
 
             it { is_expected.to be_truthy }
 
@@ -431,13 +450,15 @@ describe PaymentLimitsService do
           end
 
           context 'when limit is not reached but with current resource it will be exceeded' do
-            let!(:log) { create(:sponsored_payment_log, payer: other_journal, ldf: 999, sponsor_id: sponsor_journal_org.id) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: other_journal) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: other_journal, ldf: 999, sponsor_id: sponsor_journal_org.id) }
 
             it { is_expected.to be_truthy }
           end
 
           context 'when limit is not reached and with current resource it will not be exceeded' do
-            let!(:log) { create(:sponsored_payment_log, payer: other_journal, ldf: 100, sponsor_id: sponsor_journal_org.id) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: other_journal) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: other_journal, ldf: 100, sponsor_id: sponsor_journal_org.id) }
 
             it { is_expected.to be_falsey }
           end
@@ -449,9 +470,16 @@ describe PaymentLimitsService do
           end
 
           context 'with logs on previous year' do
-            let!(:log) { create(:sponsored_payment_log, payer: journal, ldf: 1_001, created_at: 1.year.ago, sponsor_id: sponsor_journal_org.id) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: journal) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: journal, ldf: 1_001, sponsor_id: sponsor_journal_org.id) }
             let!(:log2) do
-              create(:sponsored_payment_log, payer: other_journal, ldf: 1_001, created_at: 1.year.ago, sponsor_id: sponsor_journal_org.id)
+              create(:sponsored_payment_log,
+                     resource: create(:resource, identifier: create(:identifier)),
+                     payer: other_journal, ldf: 1_001, sponsor_id: sponsor_journal_org.id)
+            end
+            before do
+              resource.identifier.update(pub_state: 'published', publication_date: 1.year.ago)
+              log2.resource.identifier.update(pub_state: 'published', publication_date: 1.year.ago)
             end
 
             it { is_expected.to be_falsey }
@@ -470,14 +498,16 @@ describe PaymentLimitsService do
           end
 
           context 'when limit is exceeded on the old sponsor' do
-            let!(:log) { create(:sponsored_payment_log, payer: journal, ldf: 1_001, sponsor_id: sponsor_journal_org.id) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: journal) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: journal, ldf: 1_001, sponsor_id: sponsor_journal_org.id) }
             before { journal.update(sponsor: sponsor_org_2) }
 
             it { is_expected.to be_falsey }
           end
 
           context 'when limit is exceeded with a different journal on the old sponsor' do
-            let!(:log) { create(:sponsored_payment_log, payer: other_journal, ldf: 1_001, sponsor_id: sponsor_journal_org.id) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: other_journal) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: other_journal, ldf: 1_001, sponsor_id: sponsor_journal_org.id) }
             before { journal.update(sponsor: sponsor_org_2) }
 
             it { is_expected.to be_falsey }
@@ -490,7 +520,8 @@ describe PaymentLimitsService do
           before { sponsor_journal_org.update(parent_org_id: second_level_sponsor.id) }
 
           context 'when limit is already exceeded' do
-            let!(:log) { create(:sponsored_payment_log, payer: other_journal, ldf: 1_001, sponsor_id: second_level_sponsor.id) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: other_journal) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: other_journal, ldf: 1_001, sponsor_id: second_level_sponsor.id) }
 
             it { is_expected.to be_truthy }
 
@@ -502,13 +533,15 @@ describe PaymentLimitsService do
           end
 
           context 'when limit is not reached but with current resource it will be exceeded' do
-            let!(:log) { create(:sponsored_payment_log, payer: other_journal, ldf: 999, sponsor_id: second_level_sponsor.id) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: other_journal) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: other_journal, ldf: 999, sponsor_id: second_level_sponsor.id) }
 
             it { is_expected.to be_truthy }
           end
 
           context 'when limit is not reached and with current resource it will not be exceeded' do
-            let!(:log) { create(:sponsored_payment_log, payer: other_journal, ldf: 100, sponsor_id: second_level_sponsor.id) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: journal) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: other_journal, ldf: 100, sponsor_id: second_level_sponsor.id) }
 
             it { is_expected.to be_falsey }
           end
@@ -520,9 +553,16 @@ describe PaymentLimitsService do
           end
 
           context 'with logs on previous year' do
-            let!(:log) { create(:sponsored_payment_log, payer: journal, ldf: 1_001, created_at: 1.year.ago, sponsor_id: second_level_sponsor.id) }
+            let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: journal) }
+            let!(:log) { create(:sponsored_payment_log, resource: resource, payer: journal, ldf: 1_001, sponsor_id: sponsor_journal_org.id) }
             let!(:log2) do
-              create(:sponsored_payment_log, payer: other_journal, ldf: 1_001, created_at: 1.year.ago, sponsor_id: second_level_sponsor.id)
+              create(:sponsored_payment_log,
+                     resource: create(:resource, identifier: create(:identifier)),
+                     payer: other_journal, ldf: 1_001, sponsor_id: sponsor_journal_org.id)
+            end
+            before do
+              resource.identifier.update(pub_state: 'published', publication_date: 1.year.ago)
+              log2.resource.identifier.update(pub_state: 'published', publication_date: 1.year.ago)
             end
 
             it { is_expected.to be_falsey }
