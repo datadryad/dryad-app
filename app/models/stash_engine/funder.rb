@@ -26,5 +26,12 @@ module StashEngine
     has_many :payment_records, class_name: 'PaymentRecord', as: :payment
 
     scope :exemptions, -> { joins(:payment_configuration).where(enabled: true, payment_configurations: { covers_dpc: true }) }
+
+    def dpcs_sponsored
+      payment_records.dpc.active
+    end
+
+    def payments_sponsor = self
+    def limits_sponsor = self
   end
 end
