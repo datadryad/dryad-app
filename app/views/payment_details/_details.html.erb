@@ -8,12 +8,12 @@
         <% if @sponsor.limits_sponsor.payment_configuration.ldf_limit.present? %>
           (Up to <%= filesize(ESTIMATED_FILES_SIZE.find{|tier| tier[:tier] == @sponsor.limits_sponsor.payment_configuration.ldf_limit }[:range].max) %>)
         <% end %>
-        <% if @sponsor.payment_sponsor.payment_configuration.yearly_ldf_limit.present? %>
+        <% if @sponsor.limits_sponsor.payment_configuration.yearly_ldf_limit.present? %>
             </dd>
           </div>
           <div>        
             <dt>LDF commitment:</dt>
-            <dd><%= number_to_currency(@sponsor.payment_sponsor.payment_configuration.yearly_ldf_limit) %>
+            <dd><%= number_to_currency(@sponsor.limits_sponsor.payment_configuration.yearly_ldf_limit) %>
         <% end %>
         <% if @sponsor.payment_configuration.ldf_limit_notification.present? %>
             </dd>
@@ -67,10 +67,10 @@
       <th scope="row">Total</th>
       <td><%= number_to_currency(@service.total_ldf) %></td>
     </tr>
-    <% if @sponsor.payment_sponsor.payment_configuration.yearly_ldf_limit.present? %>
+    <% if @calculation_year == Date.today.year && @sponsor.limits_sponsor.payment_configuration.yearly_ldf_limit.present? %>
     <tr>
       <th scope="row">Remaining LDF commitment</th>
-      <td><%= number_to_currency(@sponsor.limits_sponsor.payment_configuration.yearly_ldf_limit - @service.total_ldf) %></td>
+      <td><%= number_to_currency(@sponsor.limits_sponsor.payment_configuration.yearly_ldf_limit - @limits_service.total_ldf) %></td>
     </tr>
     <% end %>
   </table>
