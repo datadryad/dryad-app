@@ -31,7 +31,7 @@ module StashEngine
       payment_records.dpc.active
     end
 
-    def payments_sponsor = self
+    def payment_sponsor = self
     def limits_sponsor = self
   end
 end
