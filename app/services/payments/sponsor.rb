@@ -25,7 +25,7 @@ module Payments
     end
 
     def total_ldf
-      @total_ldf = sponsor_logs.sum(:ldf)
+      @total_ldf ||= sponsor_logs.sum(:ldf)
     end
 
     def spent_ldf
@@ -33,7 +33,7 @@ module Payments
     end
 
     def reserved_ldf
-      @reserved_ldf = sponsor_logs.where(identifier: { pub_state: 'unpublished' }).sum(:ldf)
+      @reserved_ldf ||= sponsor_logs.where(identifier: { pub_state: 'unpublished' }).sum(:ldf)
     end
 
     def sponsor_logs
