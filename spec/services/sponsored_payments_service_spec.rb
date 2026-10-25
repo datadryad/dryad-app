@@ -111,9 +111,8 @@ describe SponsoredPaymentsService do
             it 'has correct info' do
               subject.log_payment
 
-              expect(tenant.payment_logs.count).to eq(0)
-              expect(sponsor_tenant.payment_logs.count).to eq(1)
-              expect(sponsor_tenant.payment_logs.last.attributes).to include(
+              expect(tenant.payment_logs.count).to eq(1)
+              expect(tenant.payment_logs.last.attributes).to include(
                 {
                   resource_id: resource.id,
                   payer_id: tenant.id,
@@ -163,9 +162,8 @@ describe SponsoredPaymentsService do
             it 'has correct info' do
               subject.log_payment
 
-              expect(tenant.payment_logs.count).to eq(0)
-              expect(sponsor_tenant.payment_logs.count).to eq(1)
-              expect(sponsor_tenant.payment_logs.last.attributes).to include(
+              expect(tenant.payment_logs.count).to eq(1)
+              expect(tenant.payment_logs.last.attributes).to include(
                 {
                   resource_id: resource.id,
                   payer_id: tenant.id,
