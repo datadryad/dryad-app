@@ -146,17 +146,16 @@ module StashDatacite
       affiliations.try(:first)
     end
 
-    def payment_exempted?
-      return false if contributor_name.blank? || contributor_type != 'funder'
-      return true if StashEngine::Funder.exemptions.find_by(name: contributor_name)
+    def payer_funder
+      return nil if contributor_name.blank? || name_identifier_id.blank? || contributor_type != 'funder'
 
-      false
+      StashEngine::Funder.id_funder(name_identifier_id)
     end
 
-    def payer_funder
-      return nil if contributor_name.blank? || contributor_type != 'funder'
+    def payment_exempted?
+      return false if payer_funder.nil?
 
-      StashEngine::Funder.exemptions.find_by(name: contributor_name)
+      true
     end
 
     def api_integration

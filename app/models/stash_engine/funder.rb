@@ -18,7 +18,8 @@ module StashEngine
     self.table_name = 'stash_engine_funders'
     PAYMENT_PLANS = %w[SUBSCRIPTION TIERED 2025].freeze
 
-    belongs_to :ror_org, class_name: 'StashEngine::RorOrg', primary_key: 'ror_id', foreign_key: 'ror_id', optional: true
+    belongs_to :ror_org, class_name: 'StashEngine::RorOrg', primary_key: :ror_id, foreign_key: :ror_id, optional: true
+    has_one :grouping, class_name: 'StashDatacite::ContributorGrouping', primary_key: :ror_id, foreign_key: :name_identifier_id
     has_many :roles, class_name: 'StashEngine::Role', as: :role_object, dependent: :destroy
     has_many :users, through: :roles
     has_one :payment_configuration, as: :partner, dependent: :destroy
@@ -26,5 +27,15 @@ module StashEngine
     has_many :payment_records, class_name: 'PaymentRecord', as: :payment
 
     scope :exemptions, -> { joins(:payment_configuration).where(enabled: true).merge(PaymentConfiguration.covering_dpc) }
+
+    def self.id_funder(ror_id)
+      StashEngine::Funder.exemptions.joins(:grouping)
+        .where("json_overlaps(json_contains->'$[*].name_identifier_id', json_array(?)) or ror_id = ?", ror_id, ror_id).first
+    end
+
+    def funded_ids
+      grouping.json_contains.map { |g| g['name_identifier_id'] } << ror_id
+    end
+
   end
 end
