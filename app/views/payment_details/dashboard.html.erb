@@ -27,8 +27,8 @@
     </div>
   <% end %>
   <div class="o-admin-form-pair">
-    <label for="status">Fee status:</label>
-    <%= select_tag :status, options_for_select([['All', ''], ['Spent', 'publicly_viewable'], ['Reserved', 'unpublished']], params[:status]), class: 'c-input__select' %>
+    <label for="status">Status:</label>
+    <%= select_tag :status, options_for_select([['All', ''], ['Published', 'publicly_viewable'], ['Processing', 'unpublished']], params[:status]), class: 'c-input__select' %>
   </div>
    <%= submit_tag('Apply', name: nil, class: 'o-button__plain-text2' ) %>
 </div>

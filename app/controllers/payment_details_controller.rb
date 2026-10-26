@@ -3,6 +3,8 @@ class PaymentDetailsController < StashEngine::ApplicationController
   before_action :set_sponsor, except: :identifier
   before_action :setup_paging, only: %i[sponsor dashboard]
 
+  helper StashEngine::SortableTableHelper
+
   def sponsor
     authorize current_user, policy_class: PaymentDetailsPolicy
     @identifiers = @service.identifiers.page(@page).per(@page_size)
@@ -38,7 +40,7 @@ class PaymentDetailsController < StashEngine::ApplicationController
     start = identifiers.publicly_viewable.pluck(:publication_date).min&.year || 2026
     @years = (start..Date.today.year).to_a
     identifiers = identifiers.send(params[:status]) if params[:status].present?
-    @identifiers = identifiers.page(@page).per(@page_size)
+    @identifiers = identifiers.order(setup_order).page(@page).per(@page_size)
     @limits_details = PayerDetailsService.new(@sponsor.limits_sponsor).details
   end
 
@@ -68,6 +70,14 @@ class PaymentDetailsController < StashEngine::ApplicationController
     @page = params[:page] || 1
     @page_size = 25 if params[:page_size].blank? || params[:page_size].to_i == 0
     @page_size ||= params[:page_size].to_i
+  end
+
+  def setup_order
+    if params[:sort].blank?
+      params[:sort] = 'created_at'
+      params[:direction] = 'desc'
+    end
+    helpers.sortable_table_order(whitelist: %w[created_at publication_date last_invoiced_file_size])
   end
 
   def edit_params

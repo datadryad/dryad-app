@@ -5,9 +5,9 @@
       <tr>
         <th>Description</th>
         <th>Publication status</th>
-        <th>Publication date</th>
+        <th class="c-lined-table__sort"><%= sortable_column_head sort_field: 'publication_date', title: 'Publication date' %></th>
         <th>Current size</th>
-        <th>Last invoiced size</th>
+        <th class="c-lined-table__sort"> <%= sortable_column_head sort_field: 'last_invoiced_file_size', title: 'Last invoiced size' %></th>
         <% if higher_level %>
           <th>DPC paid by</th>
         <% end %>
