@@ -74,7 +74,8 @@ describe PaymentsService do
     end
 
     context 'when fees contain a coupon ID' do
-      let(:identifier) { create(:identifier, payment_type: 'waiver') }
+      let(:identifier) { create(:identifier) }
+      let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment_type: 'StashEngine::Waiver', payment_id: 'other') }
       let(:total_file_size) { 16_320_000_000 }
 
       it 'is true' do
@@ -109,7 +110,8 @@ describe PaymentsService do
 
     context 'when fees contain a coupon ID' do
       context 'when payer is a waiver' do
-        let(:identifier) { create(:identifier, payment_type: 'waiver') }
+        let(:identifier) { create(:identifier) }
+        let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment_type: 'StashEngine::Waiver', payment_id: 'other') }
 
         context 'under free limit' do
           let(:total_file_size) { 6_320_000_000 }
