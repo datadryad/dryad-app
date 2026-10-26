@@ -4,7 +4,7 @@ import UploadInput from './UploadInput';
 
 export default function UploadType(
   {
-    name, description, type, changed, clickedModal, licenses, resource, setResource, current,
+    name, description, type, changed, clickedModal, licenses, resource, setResource, setWarning, current,
   },
 ) {
   const dragover = (e) => {
@@ -17,7 +17,7 @@ export default function UploadType(
   return (
     <div>
       <div id={`${type}file_drop`} className="c-uploadwidget" onDragOver={dragover} onDrop={dragleave} onDragLeave={dragleave}>
-        <UploadInput id={type} changed={changed} errorId={`${type}_error`} />
+        <UploadInput id={type} changed={changed} errorId={`${type}_error`} setWarning={setWarning}/>
         <h4>
           <img src="../../../images/logo_zenodo.svg" alt="Zenodo" />
           {name}
