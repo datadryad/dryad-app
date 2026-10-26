@@ -17,7 +17,7 @@ class CreatePaymentRecords < ActiveRecord::Migration[8.0]
         PaymentRecord.find_or_create_by(identifier: id, resource_id: res_id, payment: journal, payment_plan: id.payment_type.sub('journal-', ''), fee_type: 'dpc', created_at: change_to&.created_at || id.latest_resource.created_at)
       elsif id.payment_type.start_with?('institution')
         inst = StashEngine::Tenant.find_by(id: id.payment_id)
-        plan = inst.id == 'wayne' || (change_to&.created_at&.year && change_to.created_at.year >= 2026) ? '2025' : nil
+        plan = inst&.id == 'wayne' || (change_to&.created_at&.year && change_to.created_at.year >= 2026) ? '2025' : nil
         PaymentRecord.find_or_create_by(identifier: id, resource_id: res_id, payment: inst, payment_plan: id.payment_type.sub('institution-', '').presence || plan, fee_type: 'dpc', created_at: change_to&.created_at || id.latest_resource.created_at)
       elsif id.payment_type.start_with?('funder')
         PaymentRecord.find_or_create_by(identifier: id, resource_id: res_id, payment: StashEngine::Funder.first, fee_type: 'dpc', created_at: change_to&.created_at || id.latest_resource.created_at)
