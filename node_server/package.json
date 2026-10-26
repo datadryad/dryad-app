@@ -1,0 +1,16 @@
+{
+  "name": "node_uploader",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1152.0",
+    "@aws-sdk/lib-storage": "^3.1152.0"
+  },
+  "scripts": {
+    "start": "node uploader.mjs",
+    "dev": "node --watch uploader.mjs"
+  }
+}
