@@ -3,8 +3,8 @@
   <dl>
     <div>
       <dt>Large Data Fees:</dt>
-      <dd><%= @sponsor.limits_sponsor.payment_configuration.covers_ldf ? "Sponsored" : "Not sponsored" %>
-      <% if @sponsor.limits_sponsor.payment_configuration.covers_ldf %>
+      <dd><%= @sponsor.limits_sponsor.payment_configuration&.covers_ldf ? "Sponsored" : "Not sponsored" %>
+      <% if @sponsor.limits_sponsor.payment_configuration&.covers_ldf %>
         <% if @sponsor.limits_sponsor.payment_configuration.ldf_limit.present? %>
           (Up to <%= filesize(ESTIMATED_FILES_SIZE.find{|tier| tier[:tier] == @sponsor.limits_sponsor.payment_configuration.ldf_limit }[:range].max) %>)
         <% end %>
@@ -26,7 +26,7 @@
       <% end %>
       </dd>
     </div>
-    <% if @sponsor.limits_sponsor.payment_configuration.submitter_contact.present? %>
+    <% if @sponsor.limits_sponsor.payment_configuration&.submitter_contact&.present? %>
       <div>
         <dt>Contact for submitters:</dt>
         <dd><%= @sponsor.limits_sponsor.payment_configuration.submitter_contact %>
@@ -52,7 +52,7 @@
     </tr>
   </table>
 </div>
-<% if @sponsor.limits_sponsor.payment_configuration.covers_ldf %>
+<% if @sponsor.limits_sponsor.payment_configuration&.covers_ldf %>
 <div>
   <b role="heading" aria-level="2"><%= @calculation_year %> Large Data Fees</b>
   <table class="clear-table">
