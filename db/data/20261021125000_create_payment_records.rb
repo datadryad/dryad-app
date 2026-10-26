@@ -85,6 +85,7 @@ class CreatePaymentRecords < ActiveRecord::Migration[8.0]
 
   def down
     PaymentRecord.dpc.active.each do |r|    
+      next unless r.payment_type.present?
       next if r.payment_type == 'SponsoredPaymentLog'
 
       type = if r.payment_type == 'ResourcePayment'
