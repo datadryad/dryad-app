@@ -37,6 +37,7 @@ class CreatePaymentRecords < ActiveRecord::Migration[8.0]
       PaymentRecord.find_or_create_by(payment: payment, resource: payment.resource, identifier: payment.resource.identifier, fee_type: fee_type, created_at: payment.created_at)
     end
     ResourcePayment.created.where("invoice_id like 'in_%'").each do |payment|
+      next unless payment.resource
       fee_type = if payment.invoice_id == payment.resource.identifier.payment_id
                   'dpc'
                  else
@@ -45,13 +46,16 @@ class CreatePaymentRecords < ActiveRecord::Migration[8.0]
       PaymentRecord.find_or_create_by(payment: payment, resource: payment.resource, identifier: payment.resource.identifier, fee_type: fee_type, created_at: payment.created_at)
     end
     ResourcePayment.refunded.each do |payment|
+      next unless payment.resource
       PaymentRecord.find_or_create_by(payment: payment, resource: payment.resource, identifier: payment.resource.identifier, active: false, created_at: payment.created_at)
     end
     ResourcePayment.voided.each do |payment|
+      next unless payment.resource
       PaymentRecord.find_or_create_by(payment: payment, resource: payment.resource, identifier: payment.resource.identifier, active: false, created_at: payment.created_at)
     end
     # SponsoredPaymentLogs
     SponsoredPaymentLog.all.each do |payment|
+      next unless payment.resource
       PaymentRecord.find_or_create_by(payment: payment, resource: payment.resource, identifier: payment.resource.identifier, fee_type: 'ldf', created_at: payment.created_at)
     end
     # History (excluding ResourcePayments)
