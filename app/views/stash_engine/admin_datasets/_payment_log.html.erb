@@ -2,7 +2,7 @@
 <h1 id="dialog-title">Payment log</h1>
 <b role="heading" aria-level="2">Current</b>
 <ul class="o-list zebra-list payment-log">
-<% @identifier.payment_records.active.each do |log| %>
+<% @identifier.payment_records.active.order(created_at: :desc).each do |log| %>
   <%= render partial: 'payment_log_line', locals: { log: log } %>
 <% end %>
 </ul>

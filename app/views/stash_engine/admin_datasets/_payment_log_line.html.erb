@@ -12,7 +12,7 @@ end
     <%= log.fee_type.upcase %>
     <% if !['waiver', 'stripe'].include?(log.readable_type) %> sponsored by <% end %>
     <%= log.link %>
-    <% if readable == 'stripe' %>(<%= log.payment.status %>)<% end %>
+    <% if readable == 'stripe' %>(<%= log.payment.status %><%= " #{formatted_date(log.payment.paid_at)}" if log.payment.paid? %>)<% end %>
   </span>
   <% if log.payment&.has_attribute?(:amount) || log.payment&.has_attribute?(:ldf) %>
     <span>

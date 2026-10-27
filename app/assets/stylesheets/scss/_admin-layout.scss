@@ -558,9 +558,13 @@
     column-gap: 2ch;
     align-items: baseline;
   }
+  span {
+    white-space: nowrap;
+  }
   span:first-child {
     font-size: .98rem;
-    flex-basis: 180px;
+    flex-basis: 190px;
+    flex-shrink: 0;
   }
   &:nth-of-type(2) {
     span:nth-of-type(2) {

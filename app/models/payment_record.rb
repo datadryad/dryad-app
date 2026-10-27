@@ -43,7 +43,7 @@ class PaymentRecord < ApplicationRecord
   }, class_name: 'SponsoredPaymentLog', foreign_key: 'payment_id', optional: true
 
   scope :active, -> { where(active: true) }
-  scope :inactive, -> { where(active: false) }
+  scope :inactive, -> { where(active: false).order(created_at: :desc) }
 
   vals = %w[ppr dpc ldf]
   enum :fee_type, vals.index_by(&:to_sym), default: 'dpc', validate: true
