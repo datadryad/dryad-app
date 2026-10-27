@@ -175,10 +175,12 @@ class CurationService
     return unless @activity.ready_for_payment?
 
     inv = Stash::Payments::Invoicer.new(resource: @resource, curator: user)
-    if @resource.identifier.payment_type == 'stripe' && @activity.previously_published?
+    if @resource.identifier.user_paid_dpc? && @activity.previously_published?
       inv.check_new_overages(@resource.identifier.last_invoiced_file_size)
     else
-      inv.charge_user_via_invoice
+      invoice = inv.charge_user_via_invoice
+      payment = resource.create_payment(payment_type: 'stripe', status: :created, pay_with_invoice: true, invoice_id: invoice.id)
+      PaymentRecord.create(payment: payment, resource: resource, identifier: resource.identifier) unless resource.identifier.waiver?
     end
   end
 

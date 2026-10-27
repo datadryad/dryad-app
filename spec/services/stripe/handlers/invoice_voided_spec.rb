@@ -2,11 +2,12 @@ require 'rails_helper'
 
 RSpec.describe Stripe::Handlers::InvoiceVoided do
   subject(:subject) { described_class.new(event: event) }
-
+  let!(:identifier) { create(:identifier) }
   let(:invoice_id) { 'in_123' }
   let(:latest_revision) { nil }
-  let(:resource) { create(:resource) }
+  let(:resource) { create(:resource, identifier: identifier) }
   let!(:payment) { create(:resource_payment, pay_with_invoice: true, invoice_id: invoice_id, status: 'created', resource: resource) }
+  let!(:payment_record) { create(:payment_record, payment: payment, resource: resource, identifier: identifier) }
   let(:event) do
     instance_double(
       Stripe::Event,
@@ -57,6 +58,12 @@ RSpec.describe Stripe::Handlers::InvoiceVoided do
 
           expect(payment.reload.status).to eq('voided')
           expect(payment.status_time).to eq(Time.at(1_700_000_000))
+        end
+
+        it 'resets the payment' do
+          expect(payment_record.active).to eq(true)
+          subject.call
+          expect(payment_record.reload.active).to eq(false)
         end
       end
 

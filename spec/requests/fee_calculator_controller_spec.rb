@@ -340,8 +340,9 @@ RSpec.describe 'FeeCalculatorController', type: :request do
     describe '#waiver fee' do
       let(:type) { 'waiver' }
       let(:options) { {} }
-      let(:identifier) { create(:identifier, payment_type: 'waiver') }
+      let(:identifier) { create(:identifier) }
       let(:resource) { create(:resource, identifier: identifier) }
+      let!(:record) { create(:payment_record, payment_type: 'StashEngine::Waiver', payment_id: 'other', resource: resource, identifier: identifier) }
 
       before do
         get resource_fee_calculator_url(resource), params: options

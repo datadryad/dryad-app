@@ -108,7 +108,8 @@ module Stash
           end
 
           context 'if this is a fee waiver user' do
-            let(:identifier) { create(:identifier, old_payment_system: false, payment_type: 'waiver') }
+            let(:identifier) { create(:identifier, old_payment_system: false) }
+            let!(:record) { create(:payment_record, identifier: identifier, payment_type: 'StashEngine::Waiver', payment_id: 'other') }
 
             it 'generates an invoice' do
               invoice = OpenStruct.new(id: 1, send_invoice: OpenStruct.new(id: 1))
@@ -182,15 +183,6 @@ module Stash
             expect(author.reload.stripe_customer_id).to be_nil
             invoicer.create_invoice
             expect(author.reload.stripe_customer_id).to eq('stripe_customer_id')
-          end
-
-          it 'updates payment information on identifier' do
-            expect(identifier.reload.payment_id).to be_nil
-            invoicer.create_invoice
-            identifier.reload
-            expect(identifier.payment_id).not_to be_nil
-            expect(identifier.payment_type).to eq('stripe')
-            expect(identifier.last_invoiced_file_size).to eq(100)
           end
         end
 
