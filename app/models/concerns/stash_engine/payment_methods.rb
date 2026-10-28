@@ -115,8 +115,16 @@ module StashEngine
         payment_records.create(payment: sponsor, payment_plan: payment_plan, resource: latest_resource)
 
       elsif payments.paid.where(ppr_fee_paid: false).any? && !old_system_valid_payer?
-        payment = payments.paid.last
-        payment_records.find_or_create_by(payment: payment, resource: payment.resource, fee_type: :dpc, active: true)
+        # as the user becomes unsponsored,
+        # move all LDF payments from when the user was sponsored
+        # as DPC payments as unsponsored user
+        # old ones are kept in the inactive state for history purposes
+        payments.paid.where(ppr_fee_paid: false).each do |payment|
+          old_payment = payment_records.find_by(payment: payment, resource: payment.resource, fee_type: :ldf, active: true)
+          old_payment.update(active: false)
+
+          payment_records.find_or_create_by(payment: payment, resource: payment.resource, fee_type: :dpc, active: true)
+        end
       end
       reload
     end
