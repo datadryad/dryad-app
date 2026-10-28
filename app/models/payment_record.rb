@@ -72,8 +72,8 @@ class PaymentRecord < ApplicationRecord
     return nil if payment_type == 'StashEngine::Waiver'
 
     if payment_type == 'ResourcePayment'
-      str = payment.payment_id.presence ? 'payment' : 'invoice'
-      id = payment.payment_id.presence || payment.invoice_id
+      str = payment.invoice_id.presence ? 'invoice' : 'payment'
+      id = payment.invoice_id.presence || payment.payment_id
       url = "#{ResourcePayment::STRIPE_LINK}/#{str.pluralize}/#{id}"
       text = str.upcase_first
     else

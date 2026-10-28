@@ -32,7 +32,7 @@ module Stripe
                  end
       identifier.record_payment
       if fee_type.present?
-        PaymentRecord.create(payment: payment, resource: @resource, identifier: identifier, fee_type: fee_type)
+        ::PaymentRecord.create(payment: payment, resource: @resource, identifier: identifier, fee_type: fee_type)
       else
         @resource.fee_record&.update(status: :receipt)
         identifier.update(last_invoiced_file_size: [identifier.last_invoiced_file_size.to_i, @resource.total_file_size.to_i].max)
