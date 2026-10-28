@@ -65,6 +65,7 @@ class CreatePaymentRecords < ActiveRecord::Migration[8.0]
         type = log.object_changes.dig('payment_type', 1).presence || log.object['payment_type']
         next if pay_id.nil?
         next if type.blank? || ['stripe', 'unknown'].include?(type)
+        next if type == 'waiver' && log.object_changes.dig('waiver_basis', 1) == id.waiver_basis
 
         payment = case type
           when 'waiver'
