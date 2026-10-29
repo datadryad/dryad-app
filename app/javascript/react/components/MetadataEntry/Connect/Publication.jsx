@@ -106,7 +106,7 @@ export default function Publication({
 
       {sponsored && (
         <div className="callout">
-          <p>Payment for this submission is sponsored by <b>{sponsored}</b></p>
+          <p>Payment for this submission is currently sponsored by <b>{sponsored}</b></p>
         </div>
       )}
 

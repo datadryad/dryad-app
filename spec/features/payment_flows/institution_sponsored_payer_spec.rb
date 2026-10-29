@@ -35,7 +35,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
     context 'payment value' do
       it 'user does not pay DPC' do
         expect(page).to have_content('All data publishing fees are covered by your sponsorship.')
-        expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
+        expect(page).to have_text("Payment for this submission is currently sponsored by #{tenant.long_name}")
       end
 
       context 'when LDF is not covered' do
@@ -43,7 +43,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
 
         it 'user pays LDF value' do
           expect(page).to have_content('This 53.2 GB dataset has a Large Data Fee of $464.00.')
-          expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
+          expect(page).to have_text("Payment for this submission is currently sponsored by #{tenant.long_name}")
           expect(page).to have_css('button', exact_text: 'Pay & submit for publication')
         end
       end
@@ -54,7 +54,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
 
         it 'sponsored user does not pay anything' do
           expect(page).to have_content('All data publishing fees are covered by your sponsorship.')
-          expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
+          expect(page).to have_text("Payment for this submission is currently sponsored by #{tenant.long_name}")
           expect(page).to have_css('button', exact_text: 'Submit for publication')
         end
 
@@ -69,7 +69,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
 
             it 'sponsored user does not pay anything' do
               expect(page).to have_content('All data publishing fees are covered by your sponsorship.')
-              expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
+              expect(page).to have_text("Payment for this submission is currently sponsored by #{tenant.long_name}")
               expect(page).to have_css('button', exact_text: 'Submit for publication')
             end
           end
@@ -79,7 +79,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
 
             it 'user pays only the difference' do
               expect(page).to have_content('This 123.2 GB dataset has a Large Data Fee of $659.00')
-              expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
+              expect(page).to have_text("Payment for this submission is currently sponsored by #{tenant.long_name}")
               expect(page).to have_css('button', exact_text: 'Pay & submit for publication')
             end
           end
@@ -96,7 +96,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
 
             it 'sponsored user does not pay anything' do
               expect(page).to have_content('All data publishing fees are covered by your sponsorship.')
-              expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
+              expect(page).to have_text("Payment for this submission is currently sponsored by #{tenant.long_name}")
             end
           end
 
@@ -105,7 +105,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
 
             it 'user pays the entire amount' do
               expect(page).to have_content('This 123.2 GB dataset has a Large Data Fee of $1,123.00')
-              expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
+              expect(page).to have_text("Payment for this submission is currently sponsored by #{tenant.long_name}")
             end
           end
         end
@@ -118,7 +118,7 @@ RSpec.feature 'Institution sponsored PaymentFlows', type: :feature, js: true do
 
           it 'sponsored user does not pay anything' do
             expect(page).not_to have_content('Large Data Fee')
-            expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
+            expect(page).to have_text("Payment for this submission is currently sponsored by #{tenant.long_name}")
             expect(page).to have_css('button', exact_text: 'Submit for publication')
           end
         end
