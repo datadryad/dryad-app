@@ -22,7 +22,7 @@ class AffiliationsService
   end
 
   def affiliations_with_same_name
-    @affiliations_with_same_name ||= StashDatacite::Affiliation.where("LOWER(long_name) = LOWER(?)", affiliation.long_name)
+    @affiliations_with_same_name ||= StashDatacite::Affiliation.where('LOWER(long_name) = LOWER(?)', affiliation.long_name)
   end
 
   private

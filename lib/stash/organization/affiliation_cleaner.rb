@@ -14,8 +14,8 @@ module Stash
         puts "Found #{duplicates.count} duplicated names used in #{duplicates.sum { |a| a[1] }} records."
 
         duplicates.each do |name, counts|
-          aff = StashDatacite::Affiliation.where("LOWER(long_name) = LOWER(?)", name).where.not(ror_id: nil).first
-          aff ||= StashDatacite::Affiliation.where("LOWER(long_name) = LOWER(?)", name).last
+          aff = StashDatacite::Affiliation.where('LOWER(long_name) = LOWER(?)', name).where.not(ror_id: nil).first
+          aff ||= StashDatacite::Affiliation.where('LOWER(long_name) = LOWER(?)', name).last
 
           if skip_affiliation(aff)
             puts "Found different ROR IDs for \"#{name}\""
@@ -26,10 +26,8 @@ module Stash
         end
       end
 
-      private
-
       def self.skip_affiliation(aff)
-        StashDatacite::Affiliation.where("LOWER(long_name) = LOWER(?)", aff.long_name).where.not(ror_id: nil).pluck(:ror_id).uniq.count > 1
+        StashDatacite::Affiliation.where('LOWER(long_name) = LOWER(?)', aff.long_name).where.not(ror_id: nil).pluck(:ror_id).uniq.count > 1
       end
     end
   end
