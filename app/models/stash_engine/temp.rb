@@ -1,7 +1,7 @@
 module StashEngine
   module Temp
     class Resource
-      attr_accessor :id, :total_file_size, :tenant, :payment_type, :payment_id, :journal
+      attr_accessor :id, :total_file_size, :tenant, :journal
 
       def resource_type
         OpenStruct.new(resource_type: 'dataset')
@@ -14,8 +14,6 @@ module StashEngine
       def identifier
         id = StashEngine::Temp::Identifier.new
         id.latest_resource = self
-        id.payment_type = payment_type
-        id.payment_id = payment_id
         id.journal = journal
         id
       end
@@ -29,7 +27,7 @@ module StashEngine
       include StashEngine::PaymentMethods
       include StashEngine::Limits
 
-      attr_accessor :latest_resource, :payment_type, :payment_id, :journal
+      attr_accessor :latest_resource, :journal
 
       def last_invoiced_file_size
         nil
@@ -41,6 +39,10 @@ module StashEngine
 
       def old_payment_system?
         false
+      end
+
+      def dpc_payment
+        nil
       end
 
       def payments

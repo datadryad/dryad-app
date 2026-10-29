@@ -81,6 +81,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
 
       CurationService.new(user: user, resource: resource, status: 'queued').process
       resource.current_state = :submitted
+      create(:payment_record, payment: payment, resource: resource, identifier: identifier, fee_type: 'dpc')
 
       identifier.reload
       resource.reload

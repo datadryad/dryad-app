@@ -2,9 +2,11 @@ require 'rails_helper'
 
 RSpec.describe Stripe::Handlers::ChargeRefunded do
   subject(:subject) { described_class.new(event: event) }
-
   let(:payment_intent) { 'pi_123' }
-  let!(:payment) { create(:resource_payment, pay_with_invoice: false, payment_intent: payment_intent, status: 'paid') }
+  let!(:identifier) { create(:identifier) }
+  let!(:resource) { create(:resource, :submitted, identifier: identifier) }
+  let!(:payment) { create(:resource_payment, pay_with_invoice: false, payment_intent: payment_intent, status: 'paid', resource: resource) }
+  let!(:payment_record) { create(:payment_record, payment: payment, resource: resource, identifier: identifier) }
   let(:event) do
     instance_double(
       Stripe::Event,
@@ -57,6 +59,12 @@ RSpec.describe Stripe::Handlers::ChargeRefunded do
         subject.call
         expect(payment.reload.status).to eq('refunded')
         expect(payment.status_time).to eq(Time.at(1_700_000_000))
+      end
+
+      it 'resets the payment' do
+        expect(payment_record.active).to eq(true)
+        subject.call
+        expect(payment_record.reload.active).to eq(false)
       end
     end
 
