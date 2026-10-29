@@ -115,7 +115,6 @@ module StashApi
 
     def check_header_file_size
       resource_limit = @resource.identifier.size_limit
-      return if @resource.size <= resource_limit
       return if request.headers['CONTENT-LENGTH'].blank? || request.headers['CONTENT-LENGTH'].to_i <= resource_limit
 
       api_logger.error('file too large')
