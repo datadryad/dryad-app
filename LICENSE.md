@@ -1,6 +1,6 @@
 The MIT License (MIT)
 
-Copyright (c) 2023-2024 Dryad
+Copyright (c) 2023-2026 Dryad
 Copyright (c) 2015-2023 The Regents of the University of California
 
 Permission is hereby granted, free of charge, to any person obtaining
