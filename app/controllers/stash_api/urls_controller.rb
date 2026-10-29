@@ -76,12 +76,13 @@ module StashApi
     end
 
     def check_file_size(data_file:)
-      return if @resource.size <= APP_CONFIG.maximums.merritt_size
+      resource_limit = @resource.identifier.size_limit
+      return if @resource.size <= resource_limit
 
       data_file.destroy # because this item won't fit
       (render json: { error:
                           'This file would make your submission size larger than the maximum of ' \
-                          "#{view_context.filesize(APP_CONFIG.maximums.merritt_size)}" }.to_json, status: 403) && yield
+                          "#{view_context.filesize(resource_limit)}" }.to_json, status: 403) && yield
     end
 
     # only allow to proceed if no other current uploads or only other url-type uploads
