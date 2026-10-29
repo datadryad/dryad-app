@@ -14,10 +14,11 @@
   <div class="expand-button" style="position: relative">
     <button aria-controls="partner-links" aria-expanded="false" style="text-align: right;">Quick links</button>
     <nav id="partner-links" class="quick-links" aria-label="Quick links for partners" hidden>
-      <ul class="o-list">
-        <li><a href="/admin_dashboard">Admin dashboard</a></li>
+      <ul class="o-list">        
         <li><a href="/<%= @sponsor.is_a?(StashEngine::Tenant) ? 'institutions' : 'publishers' %>#fee-calculator">Partner fees</a></li>
         <li><a href="/help/requirements/costs#your-data-publishing-charge">User fee calculator</a></li>
+        <li><a href="/partner_terms">Partner Terms of Service</a></li>
+        <li><a href="/admin_dashboard">Admin dashboard</a></li>
       </ul>
     </nav>
   </div>
