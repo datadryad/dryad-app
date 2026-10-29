@@ -57,7 +57,7 @@ export default function Agreements({
       {isSubmitter && (
         <>
           {(subType !== 'collection'
-            && (!resource.identifier.payment_type || resource.identifier.payment_type === 'unknown')
+            && (!resource.identifier.last_invoiced_file_size)
             && (userMustPay || institutionPaying)) && (
             <>
               {institutionPaying && !!affSuggest && affSuggest.id !== resource.tenant_id && (

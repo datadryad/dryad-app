@@ -14,9 +14,6 @@ module Stash
         before do
           @identifier = double(StashEngine::Identifier)
           allow(@identifier).to receive(:to_s).and_return('doi:10.123/a1b.c2d3')
-          allow(@identifier).to receive(:payment_type)
-          allow(@identifier).to receive(:payment_id=)
-          allow(@identifier).to receive(:payment_type=)
           allow(@identifier).to receive(:save).and_return(true)
           allow(@identifier).to receive(:created_at).and_return(Time.now)
 
@@ -54,13 +51,13 @@ module Stash
         end
 
         it 'creates an invoice for a new stripe customer' do
-          expect(@invoicer.charge_user_via_invoice).to eql('STRIPE1234')
+          expect(@invoicer.charge_user_via_invoice.send_invoice).to eql('STRIPE1234')
         end
 
         it 'creates an invoice for an existing stripe customer' do
           allow(@invoicer).to receive(:lookup_prior_stripe_customer_id).and_return('999911')
           allow(@author).to receive(:stripe_customer_id).and_return('999911')
-          expect(@invoicer.charge_user_via_invoice).to eql('STRIPE1234')
+          expect(@invoicer.charge_user_via_invoice.send_invoice).to eql('STRIPE1234')
         end
 
         it 'does not create an invoice when the resource has no primary author' do
@@ -104,7 +101,7 @@ module Stash
       end
 
       describe 'invoice charges' do
-        let(:identifier) { create(:identifier, payment_type: 'stripe', payment_id: 'stripe-123') }
+        let(:identifier) { create(:identifier) }
         let(:res_1) { create(:resource, identifier: identifier, total_file_size: 103_807_000_000, created_at: 1.minute.ago) }
         let(:res_2) { create(:resource, identifier: identifier, total_file_size: new_res_file_size) }
         let(:new_res_file_size) { 103_807_000_000 }
@@ -191,7 +188,7 @@ module Stash
         end
 
         context 'on second publish' do
-          let(:identifier) { create(:identifier, payment_type: 'stripe', payment_id: 'stripe-123', last_invoiced_file_size: 103_807_000_000) }
+          let(:identifier) { create(:identifier, last_invoiced_file_size: 103_807_000_000) }
           subject { described_class.new(resource: res_2, curator: curator) }
 
           context 'if file size did not change' do

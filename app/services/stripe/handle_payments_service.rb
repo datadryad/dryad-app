@@ -18,18 +18,25 @@ module Stripe
         status_time: paid_at
       )
 
-      update_identifier_files_size
+      update_identifier_files_size(payment)
       update_payment_details(session_id)
     end
 
     private
 
-    def update_identifier_files_size
-      return if payment.ppr_fee_paid?
-      return if SponsoredPaymentsService.new(resource).loggable?
-
-      resource.fee_record&.update(status: :receipt)
-      identifier.update(last_invoiced_file_size: [identifier.last_invoiced_file_size.to_i, resource.total_file_size.to_i].max)
+    def update_identifier_files_size(payment)
+      fee_type = if payment.ppr_fee_paid?
+                   'ppr'
+                 elsif SponsoredPaymentsService.new(@resource).loggable?
+                   'ldf'
+                 end
+      identifier.record_payment
+      if fee_type.present?
+        ::PaymentRecord.create(payment: payment, resource: @resource, identifier: identifier, fee_type: fee_type)
+      else
+        @resource.fee_record&.update(status: :receipt)
+        identifier.update(last_invoiced_file_size: [identifier.last_invoiced_file_size.to_i, @resource.total_file_size.to_i].max)
+      end
     end
 
     def update_payment_details(session_id)

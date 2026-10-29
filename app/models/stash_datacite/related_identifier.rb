@@ -17,7 +17,7 @@
 #  work_type               :integer          default("undefined")
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  fixed_id                :text(65535)
+#  fixed_id                :text(16777215)
 #  resource_id             :integer
 #
 # Indexes

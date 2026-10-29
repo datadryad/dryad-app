@@ -49,6 +49,7 @@ module Submission
     def cleanup_files
       remove_public_dir # where the local manifest file is stored
       remove_submission_data_files
+      update_storage_size
     rescue StandardError => e
       msg = "An unexpected error occurred when cleaning up files for resource #{resource.id}: "
       msg << e.full_message
@@ -68,7 +69,7 @@ module Submission
 
       payment = resource.payment
       if payment.nil?
-        if resource.identifier.waiver? && resource.identifier.payment_id.blank?
+        if resource.identifier.waiver? && resource.identifier.dpc_payment.nil?
           payment = create_missing_invoice
           return if payment.nil?
         else
@@ -130,6 +131,12 @@ module Submission
       return if file.blank?
 
       FileUtils.remove_entry_secure(file, true)
+    end
+
+    def update_storage_size
+      id = resource.identifier
+      total_dataset_size = id.resources.sum { |r| r.data_files.created_without_deleted.sum(&:upload_file_size) }
+      id.update(storage_size: total_dataset_size)
     end
   end
 end

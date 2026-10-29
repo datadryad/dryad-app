@@ -297,6 +297,7 @@ Rails.application.routes.draw do
     post 'admin_dashboard/:id', to: 'admin_dashboard#update', as: 'admin_dash_update'
     get 'admin_search', to: 'admin_dashboard#new_search', as: 'new_admin_search'
     match 'admin_search/:id', to: 'admin_dashboard#save_search', via: %i[put patch], as: 'save_admin_search'
+    get 'admin_dashboard/definitions', to: 'admin_dashboard#definitions', format: :html
 
     # activity log
     get 'ds_admin/:id', to: 'admin_datasets#index', as: 'activity_log'
@@ -317,7 +318,6 @@ Rails.application.routes.draw do
     post 'ds_admin/:id/make_report', to: 'admin_datasets#make_report', as: 'make_report'
     post 'ds_admin/:id/issue', to: 'admin_datasets#create_issue', as: 'ds_admin_issue'
     delete 'ds_admin/:id', to: 'admin_datasets#destroy', as: 'ds_admin_destroy'
-    
 
     # curation notes
     post 'curation_note/:id', to: 'curation_activity#curation_note', as: 'curation_note'
@@ -374,6 +374,13 @@ Rails.application.routes.draw do
   get 'research_integrity/history', to: 'research_integrity_case#history'
   get 'research_integrity/:id', to: 'research_integrity_case#edit', as: 'research_integrity_edit'
   match 'research_integrity/:id', to: 'research_integrity_case#update', via: %i[put post], as: 'research_integrity_update'
+
+  # external integration
+  resources :external_integrations, only: [:create, :update] do
+    collection do
+      get :form
+    end
+  end
 
   ########################## StashDatacite support ######################################
 
@@ -435,7 +442,7 @@ Rails.application.routes.draw do
 
     # fos subjects are a special subject that is treated differently for the OECD Field of Science
     get 'fos_subjects', to: 'fos_subjects#index'
-    patch 'fos_subjects/update', to: 'fos_subjects#update'
+    post 'fos_subjects/update', to: 'fos_subjects#update'
 
     get 'related_identifiers/new', to: 'related_identifiers#new'
     post 'related_identifiers/create', to: 'related_identifiers#create'
@@ -641,4 +648,7 @@ Rails.application.routes.draw do
   get '/resource/:doi_prefix/:doi_suffix*file',
       constraints: { doi_prefix: /doi:10.\d{4,9}/i, doi_suffix: /[A-Z0-9]+\.[A-Z0-9]+/i },
       to: redirect{ |p, req| "/dataset/#{p[:doi_prefix]}/#{p[:doi_suffix]}" }
+
+  get '/scolarone/notification', to: 'scholar_one#notification'
+  get '/scholarone/notification', to: 'scholar_one#notification'
 end

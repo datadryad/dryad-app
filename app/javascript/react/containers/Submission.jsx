@@ -103,13 +103,13 @@ function Submission({
     },
     {
       name: 'Support',
-      pass: !fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
-      fail: (review || step.index > 4) && fundingCheck(resource.contributors),
+      pass: !fundingCheck(resource),
+      fail: (review || step.index > 4) && fundingCheck(resource),
       component: <Support
         current={step.name === 'Support'}
         resource={resource}
         setResource={setResource}
-        error={fundingCheck(resource.contributors)}
+        error={fundingCheck(resource)}
       />,
       help: <SuppHelp type={resource.resource_type.resource_type} />,
       preview: <SuppPreview resource={resource} previous={previous} curator={user.curator} />,
@@ -221,24 +221,28 @@ function Submission({
     .then(({data}) => updateStore({affSuggest: data}));
 
   useEffect(() => {
-    if (!refreshFees) return;
-    if (resource.identifier.old_payment_system) {
-      updateStore({refreshFees: false});
+    if (!refreshFees) {
+      updateStore({waitSubmit: false});
       return;
     }
-    async function updateFees() {
-      await Promise.all([getFees(), suggestAff()])     
+    if (resource.identifier.old_payment_system) {
+      updateStore({refreshFees: false, waitSubmit: false});
+      return;
+    }
+    const updateFees = async() => {
+      await Promise.allSettled([getFees(), getDPCStatus(), suggestAff()])     
     }
     updateFees();
+    updateStore({waitSubmit: false});
   }, [refreshFees, invoice]);
 
   useEffect(() => {
-    async function updatePayer() {
-      await Promise.all([updateStore({waitSubmit: true}), getFees(), getDPCStatus()])     
+    const updatePayer = async() => {
+      await Promise.allSettled([updateStore({waitSubmit: true}), getFees(), getDPCStatus()])     
     }
     updatePayer();
     updateStore({waitSubmit:false});
-  }, [resource.tenant, resource.authors, resource.journal, resource.contributors, resource.total_file_size, resource.hold_for_peer_review]);
+  }, [resource.tenant, resource.journal, resource.contributors, resource.total_file_size, resource.hold_for_peer_review]);
 
   const markInvalid = (el) => {
     const et = el.querySelector('.error-text');
@@ -283,6 +287,7 @@ function Submission({
       document.title = 'Dryad | Submission | Preview';
     } else if (review) {
       main.classList.remove('submission-review');
+      document.getElementById('submission-heading').scrollIntoView();
     } else {
       document.querySelector('#submission-header h2')?.focus();
     }

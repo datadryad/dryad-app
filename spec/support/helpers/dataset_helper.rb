@@ -3,6 +3,7 @@ module DatasetHelper
   def start_new_dataset
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
+    3.times { StashDatacite::Subject.create(subject: Faker::Job.unique.field, subject_scheme: 'fos') }
     click_button 'Create a new dataset'
     expect(page).to have_content('Dataset submission', wait: 5)
   end
@@ -24,11 +25,18 @@ module DatasetHelper
   def navigate_to_upload
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    expect(page).to have_button('Files')
+    expect(page).to have_content('Data files hosted by Dryad' || 'Files are required', wait: 5) if page.has_content?('submission preview')
     click_button 'Files'
-    find('button[data-slug="files"]').click if page.has_css?('button[data-slug="files"]')
     expect(page).to have_content('Files may be uploaded from your computer')
-    expect(page).to have_button('Enter URLs', wait: 8)
+    expect(page).to have_button('Enter URLs', wait: 5)
+  end
+
+  def switch_ppr_from_preview
+    expect(page).to have_content('Data files hosted by Dryad' || 'Files are required', wait: 5)
+    click_button 'Agreements'
+    expect(page).to have_content('Dryad submissions are made publicly available')
+    find('input[name="peer_review"]:not([checked])').click
+    expect(page).to have_content('All progress saved')
   end
 
   def navigate_to_review
@@ -144,8 +152,11 @@ module DatasetHelper
 
   def fill_in_keywords
     expect(page).to have_field('keyword_ac')
+    find('#keyword_ac').click
     find('#keyword_ac').send_keys(3.times.map { Faker::Creature::Animal.unique.name }.join(','))
-    page.send_keys(:tab)
+    page.send_keys(:enter)
+    expect(page).to have_content('All progress saved', wait: 5)
+    expect(page).to have_css('.c-keywords__keyword-remove', minimum: 3, wait: 3)
     Faker::Creature::Animal.unique.clear
   end
 
@@ -188,17 +199,18 @@ module DatasetHelper
   end
 
   def fill_in_no_funder
-    find(:label, 'No funding received').click
+    expect(page).to have_field('no-funding', disabled: false, wait: 3)
+    find('#no-funding').set(true)
     expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"', wait: 5)
   end
 
   def fill_in_research_domain
-    fos = 'Biological sciences'
-    StashDatacite::Subject.create(subject: fos, subject_scheme: 'fos') # the fos field must exist
+    # the fos field must exist
+    StashDatacite::Subject.create(subject: Faker::Job.unique.field, subject_scheme: 'fos')
     click_button 'Subjects'
-    expect(page).to have_content('Research domain')
-    select(fos, from: 'Research domain')
-    page.send_keys(:tab)
+    expect(page).to have_select('r_domain', wait: 5)
+    find('#r_domain option:last-child').select_option
+    expect(page).to have_css('.c-keywords__keyword-remove', wait: 3)
   end
 
   def agree_to_everything

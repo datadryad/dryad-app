@@ -2,7 +2,7 @@
 #
 # Table name: stash_engine_ror_orgs
 #
-#  id         :bigint           not null, primary key
+#  id         :integer          not null, primary key
 #  acronyms   :json
 #  aliases    :json
 #  country    :string(191)
@@ -10,13 +10,12 @@
 #  isni_ids   :json
 #  name       :string(191)
 #  status     :integer          default("active")
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  created_at :datetime
+#  updated_at :datetime
 #  ror_id     :string(191)
 #
 # Indexes
 #
-#  index_stash_engine_ror_orgs_on_ror_id  (ror_id)
 #  index_stash_engine_ror_orgs_on_status  (status)
 #
 module StashEngine

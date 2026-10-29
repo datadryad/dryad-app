@@ -3,7 +3,7 @@
 # Table name: stash_engine_edit_histories
 #
 #  id           :integer          not null, primary key
-#  user_comment :text(65535)
+#  user_comment :text(16777215)
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #  resource_id  :integer

@@ -74,7 +74,7 @@ describe CurationService do
         neuter_emails!
         @mock_invoicer = double('inv')
         allow(@mock_invoicer).to receive(:check_new_overages).and_return(true)
-        allow(@mock_invoicer).to receive(:charge_user_via_invoice).and_return(true)
+        allow(@mock_invoicer).to receive(:charge_user_via_invoice).and_return(OpenStruct.new(id: 'stripe123'))
         allow(Stash::Payments::Invoicer).to receive(:new).and_return(@mock_invoicer)
         allow_any_instance_of(StashEngine::CurationActivity).to receive(:ready_for_payment?).and_return(true)
       end
@@ -109,7 +109,7 @@ describe CurationService do
     end
 
     describe 'calls proper Stash::Payments::Invoicer method' do
-      let(:identifier) { create(:identifier, payment_type: 'stripe', payment_id: 'stripe-123', old_payment_system: true) }
+      let(:identifier) { create(:identifier, old_payment_system: true) }
       let(:res_1) { create(:resource, identifier: identifier, total_file_size: 103_807_000_000, skip_datacite_update: false) }
       subject { Stash::Payments::Invoicer.new(resource: res_1, curator: curator) }
 
@@ -118,7 +118,7 @@ describe CurationService do
       context 'on first publish' do
         it 'calls #charge_user_via_invoice' do
           expect(Stash::Payments::Invoicer).to receive(:new).with(resource: res_1, curator: curator).and_return(subject)
-          expect(subject).to receive(:charge_user_via_invoice).and_return(true)
+          expect(subject).to receive(:charge_user_via_invoice).and_return(OpenStruct.new(id: 'stripe123'))
           CurationService.new(resource: res_1, status: 'published', note: 'first publish', user: curator).process
         end
       end
@@ -127,7 +127,7 @@ describe CurationService do
         context 'if identifier has no last_invoiced_file_size value' do
           it 'it should not be processed by any invoicer' do
             expect(Stash::Payments::Invoicer).to receive(:new).with(resource: res_1, curator: curator).and_return(subject)
-            expect(subject).to receive(:charge_user_via_invoice).and_return(true)
+            expect(subject).to receive(:charge_user_via_invoice).and_return(OpenStruct.new(id: 'stripe123'))
             CurationService.new(resource: res_1, status: 'published', note: 'first publish', user: curator).process
 
             Timecop.travel(1.minute) do
@@ -142,12 +142,12 @@ describe CurationService do
 
         context 'if identifier has last_invoiced_file_size value' do
           let(:identifier) do
-            create(:identifier, payment_type: 'stripe', payment_id: 'stripe-123', last_invoiced_file_size: 100_000, old_payment_system: true)
+            create(:identifier, last_invoiced_file_size: 100_000, old_payment_system: true)
           end
 
           it 'it should not be processed by any invoicer' do
             expect(Stash::Payments::Invoicer).to receive(:new).with(resource: res_1, curator: curator).and_return(subject)
-            expect(subject).to receive(:charge_user_via_invoice).and_return(true)
+            expect(subject).to receive(:charge_user_via_invoice).and_return(OpenStruct.new(id: 'stripe123'))
             CurationService.new(resource: res_1, status: 'published', note: 'first publish', user: curator).process
 
             Timecop.travel(1.minute) do

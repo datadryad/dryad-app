@@ -12,6 +12,7 @@ module Stripe
           update_payment(invoice.latest_revision)
         else
           payment.update(status: :voided, status_time: voided_at(invoice))
+          payment.payment_record.update(active: false)
         end
       end
 
@@ -27,6 +28,7 @@ module Stripe
         updates = { invoice_id: new_invoice_id }
         case stripe_invoice.status
         when 'void'
+          payment.payment_record.update(active: false)
           updates.merge!(status: :voided, status_time: voided_at(stripe_invoice), paid_at: nil)
         when 'paid'
           updates.merge!(status: :paid, status_time: paid_at(stripe_invoice), paid_at: paid_at(stripe_invoice))

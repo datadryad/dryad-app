@@ -5,7 +5,7 @@
 #  id            :integer          not null, primary key
 #  deleted_at    :datetime
 #  keywords      :string(191)
-#  note          :text(65535)
+#  note          :text(16777215)
 #  status        :string(191)      default("in_progress")
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
@@ -211,7 +211,7 @@ module StashEngine
       return false unless resource.identifier.old_payment_system
 
       APP_CONFIG&.payments&.service == 'stripe' &&
-        (resource.identifier.payment_type.nil? || %w[unknown waiver stripe].include?(resource.identifier.payment_type)) &&
+        (resource.identifier.dpc_payment.nil? || resource.identifier.waiver?) &&
         %w[published to_be_published embargoed].include?(status)
     end
 

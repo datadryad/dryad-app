@@ -38,6 +38,12 @@ export default function AuthorSteps({resource, setResource, current, review, use
   }
 
   useEffect(() => {
+    if (!isEqual(resource.authors, authors)) {
+      setAuthors(resource.authors)
+    }
+  }, [resource.authors]);
+
+  useEffect(() => {
     if (!isEqual(resource.authors, authors) || !isEqual(resource.users, users)) {
       setResource((r) => ({...r, authors, users}));
     }
