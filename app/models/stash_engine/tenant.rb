@@ -42,7 +42,8 @@ module StashEngine
     has_many :email_tokens, class_name: 'StashEngine::EmailToken', dependent: :destroy
     has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
     has_one :payment_configuration, as: :partner, dependent: :destroy
-    has_many :payment_logs, class_name: 'SponsoredPaymentLog', as: :payer
+    has_many :payer_logs, class_name: 'SponsoredPaymentLog', as: :payer
+    has_many :sponsor_logs, class_name: 'SponsoredPaymentLog', foreign_key: :sponsor_id
     has_many :payment_records, class_name: 'PaymentRecord', as: :payment
 
     accepts_nested_attributes_for :flag, allow_destroy: true
@@ -134,8 +135,8 @@ module StashEngine
       [self] + sponsored_deep
     end
 
-    def sponsored_identifiers
-      StashEngine::Identifier.where(id: payment_records.dpc.active.pluck(:identifier_id))
+    def dpcs_sponsored
+      PaymentRecord.where(payment: payers_sponsored).dpc.active
     end
 
     def payment_sponsor
@@ -146,6 +147,12 @@ module StashEngine
 
     def limits_sponsor
       payment_sponsor
+    end
+
+    def payment_logs
+      return payer_logs if payment_sponsor != self
+
+      sponsor_logs
     end
   end
 end
