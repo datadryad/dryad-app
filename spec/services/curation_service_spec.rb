@@ -249,16 +249,9 @@ describe CurationService do
         allow_any_instance_of(StashEngine::CurationActivity).to receive(:curation_status_changed?).and_return(true)
       end
 
-      %w[queued embargoed published].each do |status|
+      StashEngine::CurationActivity.statuses.each_key do |status|
         it "calls notify_partner_of_large_data_submission on #{status}" do
           expect(mock_cost_reporting_service).to receive(:notify_partner_of_large_data_submission)
-          CurationService.new(resource: resource, user: curator, status: status).process
-        end
-      end
-
-      (StashEngine::CurationActivity.statuses.keys - %w[queued embargoed published]).each do |status|
-        it "does not call notify_partner_of_large_data_submission on #{status}" do
-          expect(mock_cost_reporting_service).not_to receive(:notify_partner_of_large_data_submission)
           CurationService.new(resource: resource, user: curator, status: status).process
         end
       end
@@ -269,7 +262,7 @@ describe CurationService do
         allow_any_instance_of(StashEngine::CurationActivity).to receive(:curation_status_changed?).and_return(false)
       end
 
-      %w[queued embargoed published].each do |status|
+      StashEngine::CurationActivity.statuses.each_key do |status|
         it "does not call notify_partner_of_large_data_submission on #{status}" do
           expect(mock_cost_reporting_service).not_to receive(:notify_partner_of_large_data_submission)
           CurationService.new(resource: resource, user: curator, status: status).process
