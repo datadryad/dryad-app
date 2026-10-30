@@ -560,6 +560,7 @@ module StashEngine
 
       it 'records a funder-based payment' do
         org = create(:funder, name: 'Zorgast Industries')
+        create(:payment_configuration, partner: org, payment_plan: '2025', covers_ldf: false)
         allow_any_instance_of(StashEngine::Resource).to receive(:contributors).and_return(
           [
             StashDatacite::Contributor.new(contributor_name: 'Johann Strauss University', contributor_type: 'funder', award_number: 'Latke153'),
