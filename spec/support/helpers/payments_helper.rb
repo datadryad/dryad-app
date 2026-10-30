@@ -1,13 +1,13 @@
 module PaymentsHelper
   # For journal sponsorship
   def sponsored_no_fee
-    expect(page).to have_text("Payment for this submission is sponsored by #{payer_name}")
+    expect(page).to have_text("Payment for this submission is currently sponsored by #{payer_name}")
     expect(page).to have_button('submit_button')
     expect(page).not_to have_button('Pay')
   end
 
   def sponsored_with_fee(size, amount)
-    expect(page).to have_text("Payment for this submission is sponsored by #{payer_name}")
+    expect(page).to have_text("Payment for this submission is currently sponsored by #{payer_name}")
     expect(page).to have_content('This dataset has been previously submitted')
     expect(page).to have_content(
       "Since the dataset size has increased to #{size}, submitting this new version will come with an additional charge of $#{amount}.",

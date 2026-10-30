@@ -24,6 +24,8 @@ Dryad had an email-based account system prior to 2020. If there are published Dr
 
 Dryad has publishing and institutional partners that sponsor the [cost of publishing data](/help/requirements/costs) for authors. Our institutional partners require their sponsored authors to authenticate with their systems or through a valid institutional email address. This can be done during account creation, and institutional partner sponsorship can be changed at any time from the [My account](/account) page.
 
+Changes to partnership agreements may affect the sponsorship until the dataset is published, at which point the sponsorship is finalized.
+
 ## Account creation steps
 
 1. Visit the [Dryad login page](/sessions/choose_login)

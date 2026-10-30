@@ -30,7 +30,7 @@ RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
 
       it 'user pays DPC' do
         expect(page).to have_content('This 10 B dataset has a Data Publishing Charge of $150.00')
-        expect(page).not_to have_content('Payment for this submission is sponsored by')
+        expect(page).not_to have_content('Payment for this submission is currently sponsored by')
       end
 
       context 'larger dataset' do
@@ -38,7 +38,7 @@ RSpec.feature 'Individual user PaymentFlows', type: :feature, js: true do
 
         it 'user pays larger DPC based on file size' do
           expect(page).to have_content('This 53.2 GB dataset has a Data Publishing Charge of $808.00')
-          expect(page).not_to have_content('Payment for this submission is sponsored by')
+          expect(page).not_to have_content('Payment for this submission is currently sponsored by')
         end
       end
     end

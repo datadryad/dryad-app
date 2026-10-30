@@ -29,7 +29,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
     context 'payment value' do
       it 'user pays DPC' do
         expect(page).to have_content('dataset has a Data Publishing Charge of $150.00')
-        expect(page).not_to have_content('Payment for this submission is sponsored by')
+        expect(page).not_to have_content('Payment for this submission is currently sponsored by')
       end
 
       context 'when is set to PPR' do
@@ -67,7 +67,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
           end
 
           it 'user can choose between full fee and PPR fee' do
-            expect(page).not_to have_content('Payment for this submission is sponsored by')
+            expect(page).not_to have_content('Payment for this submission is currently sponsored by')
             expect(page).to have_content('This 54 GB dataset has a Data Publishing Charge of $808.00', wait: 5)
             expect(page).to have_content(
               'You may choose to pay only $50.00, with the remainder due at the end of the ' \

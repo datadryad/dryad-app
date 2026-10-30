@@ -13,7 +13,7 @@ The dataset submitter may review and submit the data, either for curation and pu
 
 ## Payment 
 
-If the submitter is affiliated with a partner institution, or the related primary publication is associated with a sponsoring journal title, the sponsor of the [Data Publishing Charge](/help/requirements/costs) (DPC) will be indicated on the submission preview.
+If the submitter is affiliated with a partner institution, or the related primary publication is associated with a sponsoring journal title, the sponsor of the [Data Publishing Charge](/help/requirements/costs) (DPC) will be indicated on the submission preview. Changes to partnership agreements may affect the sponsorship until the dataset is published, at which point the sponsorship is finalized.
 
 Otherwise, the submitter will be asked to pay the DPC upon submission. Payment is completed through Stripe, which allows different payment methods depending on your country and other factors.
 

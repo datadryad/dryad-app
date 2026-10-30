@@ -30,7 +30,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
 
     context 'payment value' do
       it 'user does not pay DPC' do
-        expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
+        expect(page).to have_text("Payment for this submission is currently sponsored by #{tenant.long_name}")
         expect(page).to have_css('button', exact_text: 'Submit for publication')
       end
 
