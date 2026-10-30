@@ -47,7 +47,11 @@ RSpec.feature 'ReviewDataset', type: :feature do
   end
 
   context :payment, js: true do
+    let(:ror) { create(:ror_org, name: 'Happy Clown School') }
+    let!(:funder) { create(:funder, name: 'Happy Clown School', ror_id: ror.ror_id) }
+
     before do
+      mock_rors_solr!(include_rors: [ror])
       start_new_dataset
       navigate_to_metadata
     end
@@ -103,13 +107,14 @@ RSpec.feature 'ReviewDataset', type: :feature do
     end
 
     it 'waives the fee when funder will pay' do
-      funder = create(:funder, name: 'Happy Clown School')
-      create(:payment_configuration, partner: funder, payment_plan: '2025')
+      funder.payment_configuration.update(payment_plan: '2025')
       click_button 'Support'
-      fill_in_funder(name: 'Happy Clown School')
+      find_field('Granting organization').send_keys('Happy Clown School')
+      expect(page).to have_css('.searchselect ul li[name="Happy Clown School"]', wait: 5)
+      page.send_keys(:tab)
 
       click_button 'Agreements'
-      expect(page).to have_text('Payment for this submission is currently sponsored by Happy Clown School', wait: 15)
+      expect(page).to have_text('Payment for this submission is currently sponsored by Happy Clown School', wait: 5)
     end
 
     it "doesn't waive the fee when funder won't pay" do

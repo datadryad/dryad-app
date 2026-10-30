@@ -80,10 +80,9 @@ module StashDatacite
 
         context 'when matches a funder' do
           context 'when the funder has a payment plan' do
-            let!(:payment_plan) { create(:payment_configuration, partner: funder, payment_plan: '2025') }
-
             it 'is exempted' do
-              @contrib.update(contributor_name: 'Nugget', contributor_type: 'funder')
+              funder.payment_configuration.update(payment_plan: '2025')
+              @contrib.update(contributor_name: 'Nugget', name_identifier_id: funder.ror_id, contributor_type: 'funder')
               @contrib.reload
               expect(@contrib.payment_exempted?).to be_truthy
             end
@@ -91,7 +90,7 @@ module StashDatacite
 
           context 'when the funder has no payment configured' do
             it 'is not exempted' do
-              @contrib.update(contributor_name: 'Nugget', contributor_type: 'funder')
+              @contrib.update(contributor_name: 'Nugget', name_identifier_id: funder.ror_id, contributor_type: 'funder')
               @contrib.reload
               expect(@contrib.payment_exempted?).to be_falsey
             end
@@ -109,7 +108,7 @@ module StashDatacite
 
     describe 'identifier_type_mapping_obj' do
       it 'returns the Datacite::Mapping enum instance' do
-        expect(@contrib.identifier_type_mapping_obj).to be(Datacite::Mapping::FunderIdentifierType::CROSSREF_FUNDER_ID)
+        expect(@contrib.identifier_type_mapping_obj).to be(Datacite::Mapping::FunderIdentifierType::ROR)
       end
 
       it 'maps nil to nil' do
@@ -125,7 +124,7 @@ module StashDatacite
       end
 
       it 'returns a readable name (correct capitalization)' do
-        expect(@contrib.identifier_type_friendly).to eq('Crossref Funder ID')
+        expect(@contrib.identifier_type_friendly).to eq('ROR')
       end
     end
 
