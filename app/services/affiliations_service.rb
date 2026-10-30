@@ -13,14 +13,16 @@ class AffiliationsService
       # updating authors affiliation with new affiliation
       aff.authors.each do |author|
         author.affiliations.destroy(aff)
-        author.affiliations << base_affiliation unless author.affiliations.include?(base_affiliation)
+        next if author.affiliations.include?(base_affiliation)
+
+        author.affiliations << base_affiliation
       end
       aff.destroy
     end
   end
 
   def affiliations_with_same_name
-    @affiliations_with_same_name ||= StashDatacite::Affiliation.where(long_name: affiliation.long_name)
+    @affiliations_with_same_name ||= StashDatacite::Affiliation.where('LOWER(long_name) = LOWER(?)', affiliation.long_name)
   end
 
   private
