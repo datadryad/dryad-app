@@ -29,12 +29,8 @@ module StashEngine
     scope :exemptions, -> { joins(:payment_configuration).where(enabled: true).merge(PaymentConfiguration.covering_dpc) }
 
     def self.id_funder(ror_id)
-      StashEngine::Funder.exemptions.joins(:grouping)
+      StashEngine::Funder.exemptions.left_outer_joins(:grouping)
         .where("json_overlaps(json_contains->'$[*].name_identifier_id', json_array(?)) or ror_id = ?", ror_id, ror_id).first
-    end
-
-    def funded_ids
-      grouping.json_contains.map { |g| g['name_identifier_id'] } << ror_id
     end
 
   end

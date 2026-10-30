@@ -378,11 +378,12 @@ module FeeCalculator
 
       context 'when payer is a funder' do
         let(:resource) { create(:resource, identifier: identifier, total_file_size: new_files_size) }
+        let(:ror_id) { Faker::Pid.ror }
         let(:contributor) do
-          create(:contributor, contributor_name: 'National Cancer Institute',
-                               contributor_type: 'funder', resource_id: resource.id)
+          create(:contributor,
+                 contributor_name: 'National Cancer Institute', name_identifier_id: ror_id, contributor_type: 'funder', resource_id: resource.id)
         end
-        let!(:funder) { create(:funder, name: contributor.contributor_name, enabled: true) }
+        let!(:funder) { create(:funder, name: contributor.contributor_name, ror_id: ror_id, enabled: true) }
 
         context 'and is on 2025 fee model' do
           let!(:payment_conf) { create(:payment_configuration, partner: funder, payment_plan: '2025') }
