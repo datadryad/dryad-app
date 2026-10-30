@@ -36,9 +36,6 @@ class CostReportingService
     # NO - not the first status occurrence on resource
     return false if resource.curation_activities.where(status: @status).count > 1
 
-    # NO - payer is an individual user
-    return false if resource.identifier.user_must_pay?
-
     ldf_tier = ResourceFeeCalculatorService.new(resource).storage_fee_tier
     # NO - is not a large data submission
     return false if ldf_tier.nil? || ldf_tier[:price] == 0
