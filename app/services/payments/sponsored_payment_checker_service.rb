@@ -2,10 +2,10 @@ module Payments
   class SponsoredPaymentCheckerService
     def self.check
       StashEngine::Identifier
-        .joins(:process_date)
+        .joins(:process_date, :dpc_payment)
         .where(process_date: { processing: ['2026-01-01'.to_datetime.beginning_of_day..] })
         .where(last_invoiced_file_size: nil)
-        .where.not(payment_type: ['stripe', 'unknown', '', nil])
+        .where.not(dpc_payment: { payment_type: 'ResourcePayment' })
         .order(id: :desc)
         .reject { |i| i.latest_resource.last_curation_activity.status.in?(%w[peer_review in_progress withdrawn]) }
         .select { |i| i.sponsored_payment_logs.none? }

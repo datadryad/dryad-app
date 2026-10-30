@@ -31,6 +31,7 @@ class CurationService
       end
       update_salesforce_metadata if @resource.curation_activities.count > 1
       processed_sponsored_resource
+      notify_scholar_one
     end
 
     @resource.identifier.reload
@@ -38,6 +39,13 @@ class CurationService
   end
 
   private
+
+  def notify_scholar_one
+    journal = @resource&.journal
+    return unless journal&.has_integration?(:scholarone)
+
+    Integrations::ScholarOne.new(journal, resource, status).relay_notification
+  end
 
   def copy_to_zenodo
     # Copy only software and supplemental files to zenodo
@@ -167,10 +175,12 @@ class CurationService
     return unless @activity.ready_for_payment?
 
     inv = Stash::Payments::Invoicer.new(resource: @resource, curator: user)
-    if @resource.identifier.payment_type == 'stripe' && @activity.previously_published?
+    if @resource.identifier.user_paid_dpc? && @activity.previously_published?
       inv.check_new_overages(@resource.identifier.last_invoiced_file_size)
     else
-      inv.charge_user_via_invoice
+      invoice = inv.charge_user_via_invoice
+      payment = resource.create_payment(payment_type: 'stripe', status: :created, pay_with_invoice: true, invoice_id: invoice.id)
+      PaymentRecord.create(payment: payment, resource: resource, identifier: resource.identifier) unless resource.identifier.waiver?
     end
   end
 

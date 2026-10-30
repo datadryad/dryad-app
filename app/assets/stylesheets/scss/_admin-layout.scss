@@ -213,9 +213,6 @@
         padding: 0;
         gap: 1ch;
         flex-wrap: wrap;
-        &:last-of-type {
-          margin-left: auto;
-        }
       }
       legend {
         display: inline;
@@ -552,4 +549,26 @@
       text-decoration: line-through;
     }
   }  
+}
+
+.payment-log {
+  li {
+    display: flex;
+    row-gap: 1ch;
+    column-gap: 2ch;
+    align-items: baseline;
+  }
+  span:first-child {
+    font-size: .98rem;
+    flex-basis: 190px;
+    flex-shrink: 0;
+  }
+  span:nth-child(2) {
+    flex-basis: 400px;
+  }
+  &:nth-of-type(2) {
+    span:nth-of-type(2) {
+      font-style: italic;
+    }
+  }
 }

@@ -79,7 +79,7 @@ FactoryBot.define do
       create(:right, resource: resource)
       create(:contributor, resource: resource)
       create(:resource_type, resource: resource)
-      resource.subjects << create(:subject, subject: Faker::Lorem.unique.word, subject_scheme: 'fos')
+      resource.subjects << create(:subject, subject: Faker::Job.unique.field, subject_scheme: 'fos')
       3.times { resource.subjects << create(:subject, subject: Faker::Lorem.unique.word) }
     end
 
@@ -97,7 +97,13 @@ FactoryBot.define do
     trait :paid do
       after(:create) do |resource|
         2.times { create(:data_file, resource: resource) }
-        create(:resource_payment, resource: resource, status: 'paid')
+        payment = if resource.submitter.tenant_id.present? && resource.identifier.reload.institution_will_pay?
+                    resource.submitter.tenant
+                  else
+                    create(:resource_payment, resource: resource,
+                                              status: 'paid')
+                  end
+        create(:payment_record, payment: payment, resource: resource, identifier: resource.identifier)
         resource.reload
         resource.identifier.update(last_invoiced_file_size: resource.total_file_size)
       end

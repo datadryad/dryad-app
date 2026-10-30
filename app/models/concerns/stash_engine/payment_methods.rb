@@ -12,7 +12,7 @@ module StashEngine
     # returns false if the user chooses to pay via invoice
     def user_must_pay?
       return false if old_system_valid_payer?
-      return false if latest_resource.resource_type&.resource_type == 'collection'
+      return false if collection?
       return false if waiver? && old_payment_system
       if sponsored?
         return PaymentLimitsService.new(latest_resource, payer).limits_exceeded?
@@ -23,16 +23,14 @@ module StashEngine
       true
     end
 
+    def user_paid_dpc?
+      dpc_payment&.payment_type == 'ResourcePayment'
+    end
+
     def payer
       return @payer if defined?(@payer)
 
-      @payer = if funder_will_pay?
-                 funder_payment_info&.payer_funder
-               elsif institution_will_pay?
-                 latest_resource&.tenant
-               elsif journal_will_pay?
-                 journal
-               end
+      @payer = sponsor
       @payer
     end
 
@@ -46,7 +44,7 @@ module StashEngine
     end
 
     def payer_name
-      return 'Individual' if user_must_pay?
+      return 'Submitter' if payer.nil?
 
       payer_record = payer
       case payer_record.class.to_s
@@ -56,8 +54,6 @@ module StashEngine
         payer_record.long_name || payer_record.short_name
       when 'StashEngine::Funder'
         payer_record.name
-      when 'StashDatacite::Contributor'
-        payer_record.contributor_name
       end
     end
 
@@ -80,6 +76,16 @@ module StashEngine
       true
     end
 
+    def sponsor
+      if funder_will_pay?
+        funder_payment_info&.payer_funder
+      elsif institution_will_pay?
+        latest_resource&.tenant
+      elsif journal_will_pay?
+        journal
+      end
+    end
+
     def sponsored?
       payer.present?
     end
@@ -94,64 +100,44 @@ module StashEngine
       current_payer.payment_configuration&.valid_payer?
     end
 
-    # rubocop:disable Metrics/AbcSize
     def record_payment
       # once we have assigned payment to an entity, keep that entity
       # unless a journal was removed or added an institution
       clear_payment_for_changed_sponsor
-      return if payment_type.present? && payment_type != 'unknown'
+      return unless dpc_payment.nil?
+      return if collection?
 
-      if collection?
-        self.payment_type = 'no_data'
-        self.payment_id = nil
-      elsif funder_will_pay?
-        contrib = funder_payment_info
-        self.payment_type = 'funder'
-        self.payment_id = "funder:#{contrib.contributor_name}|award:#{contrib.award_number}"
-        self.old_payment_system = false
-      elsif institution_will_pay?
-        payer_sponsor = PayersService.new(latest_resource&.tenant).payment_sponsor
-        self.payment_id = latest_resource&.tenant&.id
-        self.payment_type = "institution#{'-TIERED' if payer_sponsor&.payment_configuration&.payment_plan == 'TIERED'}"
-        self.old_payment_system = false
-      elsif journal_will_pay?
-        payer_sponsor = PayersService.new(journal).payment_sponsor
-        self.payment_type = "journal-#{payer_sponsor&.payment_configuration&.payment_plan}"
-        self.payment_id = publication_issn
-        self.old_payment_system = false
-      elsif payments.any? && !old_system_valid_payer?
-        self.payment_type = 'stripe'
-        self.payment_id = payments.paid.last&.payment_id
-      else
-        self.payment_type = 'unknown'
-        self.payment_id = nil
+      if sponsor.present?
+        payer_sponsor = PayersService.new(sponsor).payment_sponsor
+        payment_plan = payer_sponsor&.payment_configuration&.payment_plan
+
+        update(old_payment_system: false)
+        payment_records.create(payment: sponsor, payment_plan: payment_plan, resource: latest_resource)
+
+      elsif payments.paid.where(ppr_fee_paid: false).any? && !old_system_valid_payer?
+        payment = payments.paid.last
+        payment_records.find_or_create_by(payment: payment, resource: payment.resource, fee_type: :dpc, active: true)
       end
-      save
+      reload
     end
-    # rubocop:enable Metrics/AbcSize
 
     def recorded_payer
-      return nil if payment_type.blank?
-      return funder_payment_info&.payer_funder if payment_type == 'funder'
-      return StashEngine::Tenant.find(payment_id) if payment_type.start_with?('institution')
-      return StashEngine::Journal.find_by_issn(payment_id) if payment_type.start_with?('journal')
-      return latest_resource.submitter if payment_type == 'stripe'
+      return nil if dpc_payment.nil? || waiver? || user_paid_dpc?
 
-      nil
+      dpc_payment.payment
     end
 
     def display_payer
-      sponsor = recorded_payer if published? && recorded_payer.present?
-      sponsor ||= payer
-      sponsor = nil if sponsor.is_a?(StashEngine::User)
-      sponsor.present? ? PayerDetailsService.new(sponsor).details.to_h : {}
+      info = recorded_payer if published? && recorded_payer.present?
+      info ||= sponsor
+      info.present? ? PayerDetailsService.new(info).details.to_h : {}
     end
 
     def institution_will_pay?
       tenant = latest_resource&.tenant
 
       # do not remove recorded institution sponsor due to sponsorship change
-      return true if payment_id.present? && payment_id == tenant&.id
+      return true if dpc_payment&.payment == tenant
       return false unless PayersService.new(tenant).payment_sponsor&.payment_configuration&.covers_dpc?
 
       if tenant&.authentication&.strategy == 'author_match'
@@ -186,33 +172,59 @@ module StashEngine
     end
 
     def waiver?
-      payment_type == 'waiver'
+      dpc_payment&.payment_type == 'StashEngine::Waiver'
+    end
+
+    # "old_" methods for reporting purposes. Can be removed if we adjust reporting!
+
+    def old_payment_type
+      return nil unless dpc_payment
+
+      type = dpc_payment.readable_type
+      type += "-#{dpc_payment.payment_plan}" if dpc_payment&.payment_plan
+      type
+    end
+
+    def old_payment_id
+      return nil unless dpc_payment
+
+      case dpc_payment.payment_type
+      when 'StashEngine::Waiver'
+        nil
+      when 'ResourcePayment'
+        dpc_payment.payment.payment_intent.presence || dpc_payment.payment.invoice_id
+      when 'StashEngine::Funder'
+        "funder:#{dpc_payment.payment.name}"
+      when 'StashEngine::Tenant'
+        dpc_payment.payment.id
+      when 'StashEngine::Journal'
+        dpc_payment.payment.single_issn
+      end
     end
 
     private
 
     def clear_payment_for_changed_sponsor
-      return unless payment_type.present?
+      return if dpc_payment.nil?
+      return if user_paid_dpc?
 
       if funder_will_pay?
         # remove existing payment for added funder
-        return if payment_type == 'funder' && payment_id.include?(funder_payment_info&.contributor_name)
+        return if dpc_payment.payment == funder_payment_info&.payer_funder
       elsif institution_will_pay?
         # remove existing payment for added institution
-        return if payment_type.include?('institution') && payment_id == latest_resource.tenant_id
-      else
+        return if dpc_payment.payment == latest_resource.tenant
+      elsif journal_will_pay?
         # remove payment if paying journal has changed or been removed
-        return unless payment_type.include?('journal') || journal_will_pay?
-        return if payment_id == journal&.single_issn
+        return if dpc_payment.payment == journal
+      elsif waiver?
+        return
       end
-      return if payments.where.not(resource_id: latest_resource.id).paid.any?
 
-      self.payment_type = nil
-      self.payment_id = nil
+      dpc_payment.update(active: false)
+      sponsored_payment_logs.each(&:destroy)
       self.last_invoiced_file_size = 0
       save
-
-      sponsored_payment_logs.each(&:destroy)
       reload
     end
   end

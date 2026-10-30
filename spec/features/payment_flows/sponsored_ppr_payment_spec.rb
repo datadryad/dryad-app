@@ -5,6 +5,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
   include Mocks::Aws
   include Mocks::DataFile
   include Mocks::Stripe
+  include Mocks::Salesforce
 
   let(:tenant) { create(:tenant) }
   let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: false) }
@@ -16,6 +17,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
     mock_aws!
     mock_file_content!
     mock_stripe!
+    mock_salesforce!
 
     sign_in(user)
     start_new_dataset
@@ -34,10 +36,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
 
       context 'when is set to PPR' do
         before do
-          find('button[data-slug="agreements"]').click
-          expect(page).to have_content('Dryad submissions are made publicly available')
-          find('label', text: 'Keep my files private while my manuscript undergoes peer review').click
-          expect(page).to have_content('All progress saved')
+          switch_ppr_from_preview
           click_button 'Preview'
         end
 
@@ -82,6 +81,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
 
       CurationService.new(user: user, resource: resource, status: 'queued').process
       resource.current_state = :submitted
+      create(:payment_record, payment: payment, resource: resource, identifier: identifier, fee_type: 'dpc')
 
       identifier.reload
       resource.reload
@@ -126,10 +126,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
 
     context 'when removed from PPR' do
       before do
-        find('button[data-slug="agreements"]').click
-        expect(page).to have_content('Dryad submissions are made publicly available')
-        find('label', text: 'My files should be available for public download as soon as possible').click
-        expect(page).to have_content('All progress saved')
+        switch_ppr_from_preview
         click_button 'Preview'
       end
 

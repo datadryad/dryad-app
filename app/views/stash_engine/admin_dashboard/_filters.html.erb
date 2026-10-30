@@ -1,6 +1,6 @@
 <%
 def selecter(id, options)
-  h = { pub_state: 'Publication status', member: 'Institution partner', sponsor: 'Publishing partner' }
+  h = { member: 'Institution partner', sponsor: 'Publishing partner' }
   label = h[id.to_sym] || id.capitalize
 
   "<label for='filter-#{id}'>#{label}:</label>" +
@@ -16,27 +16,27 @@ end
     <p class="help" id="edit_filters-desc" style="grid-column: span 2;">
       By default, the result datasets on your admin dashboard are limited to those datasets
       <% if @role_object.is_a?(StashEngine::Tenant) %>
-        with affiliations, funders, research stations, or a submitter sponsor with an institution ROR ID included under the <%= @role_object.short_name %> partner record.
+        with affiliations, funders, research stations, or a submitter sponsor with a ROR ID included under the <%= @role_object.short_name %> partner record.
       <% elsif @role_object.is_a?(StashEngine::JournalOrganization) %>
-        listing a <%= @role_object.name %> journal or preprint server as publishing the primary article or preprint
+        listing a <%= @role_object.name %> sponsored journal or preprint server as publishing the primary article or preprint.
       <% elsif @role_object.is_a?(StashEngine::Journal) %>
-        listing <%= @role_object.title %> as publishing the primary article or preprint
+        listing <%= @role_object.title %> as publishing the primary article or preprint.
       <% elsif @role_object.is_a?(StashEngine::Funder) %>
-        funded by <%= @role_object.name %>
+        funded by <%= @role_object.name %>.
       <% end %>
     </p>
   <% end %>
-  <% if @tenant_limit.length == 1 %>
-    <div class="o-admin-form-pair half-width">
-      <%= check_box_tag 'submitter_limit', checked: @filters[:submitter_limit].present?, name: 'filters[submitter_limit]', 'aria-describedby': 'submitter_limit-desc' %>
-      <label for="submitter_limit">Limit results to those with a matching submitter sponsor</span>
-    </div>
-    <p class="help" id="submitter_limit-desc">Search for only submitter sponsors matching <%= @tenant_limit.first.short_name %>, rather than including datasets with affiliations, funders, and research stations with an institution ROR ID included under the partner record.</p>
-  <% end %>
   <div class="o-admin-form-pair half-width">
-    <%= selecter('pub_state', [['', '']] + pub_state_select).html_safe %>
+    <%= render partial: 'stash_engine/shared/multi_select', locals: {
+      id: 'pub_state',
+      label: 'Publication status:',
+      field_name: 'filters[pub_state]',
+      options: pub_state_select,
+      selected: @filters.dig(:pub_state),
+      describedby: 'pub_state_select-desc'
+    } %>
   </div>
-  <p class="help" id="filter-curator-desc">Filter results by whether the dataset and DOI are publicly available on Dryad.</p>
+  <p class="help" id="pub_state_select-desc">Filter results by whether the dataset and DOI are publicly available on Dryad. Multiple statuses can be selected. <a href="/admin_dashboard/definitions" target="_blank">Status definitions<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a></p>
   <div class="o-admin-form-pair half-width">
     <%= render partial: 'stash_engine/shared/multi_select', locals: {
       id: 'status',
@@ -47,12 +47,12 @@ end
       describedby: 'status_select-desc'
     } %>
   </div>
-  <p class="help" id="status_select-desc">Filter result datasets by the status of the current revision in the curation workflow. Multiple statuses can be selected.</p>
+  <p class="help" id="status_select-desc">Filter result datasets by the status of the current revision in the curation workflow. Multiple statuses can be selected. <a href="/admin_dashboard/definitions" target="_blank">Status definitions<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a></p>
   <% if @role_object.blank? || @user_role.role == 'curator' %>
     <div class="o-admin-form-pair quarter-width">
       <%= selecter('flag', [['', '']] + flag_select).html_safe %>
     </div>
-    <p class="help" id="filter-flag-desc">Filter by the type of curation flag set. Internal to Dryad</p>
+    <p class="help" id="filter-flag-desc">Filter by the type of curation flag set. Internal to Dryad.</p>
     <div class="o-admin-form-pair quarter-width">
       <%= selecter('curator', [['', ''], ['Unassigned', 'unassigned']] + editor_select).html_safe %>
     </div>
@@ -67,8 +67,9 @@ end
         describedby: 'editor_select-desc'
       } %>
     </div>
-    <p class="help" id="editor_select-desc">Filter by curators currently editing a dataset. Multiple curators can be selected. Internal to Dryad</p>
+    <p class="help" id="editor_select-desc">Filter by curators currently editing a dataset. Multiple curators can be selected. Internal to Dryad.</p>
   <% end %>
+  <% if @role_object.nil? || @role_object.is_a?(StashEngine::JournalOrganization) %>
   <% unless @journal_limit.present? && @sponsor_limit.length < 2 %>
     <div class="o-admin-form-pair half-width">
       <% if @sponsor_limit.length > 1 %>
@@ -77,17 +78,16 @@ end
         <%= selecter('sponsor', [['', '']] + sponsor_select).html_safe %>
       <% end %>
     </div>
-    <p class="help" id="filter-sponsor-desc">Filter result datasets by the journal or preprint server publishing the primary article or preprint associated with the dataset and published or managed by one of Dryad&apos;s publishing partners</p>
+    <p class="help" id="filter-sponsor-desc">Filter result datasets by the journal or preprint server publishing the primary article or preprint associated with the dataset and published or managed by one of Dryad&apos;s publishing partners.</p>
   <% end %>
+  <% end %>
+  <% if @role_object.nil? || @role_object.is_a?(StashEngine::Tenant) %>
   <% if @tenant_limit.length > 1 %>
     <div class="o-admin-form-pair half-width">
       <%= selecter('member', [['', '']] + @tenant_limit.map { |t| [t.short_name, t.id] }).html_safe %>
-      <span class="limiter">
-        <%= check_box_tag 'submitter_limit', checked: @filters[:submitter_limit].present?, name: 'filters[submitter_limit]' %>
-        <label for="submitter_limit">Limit to submitter</span>
-      </span>
     </div>
-    <p class="help" id="filter-member-desc">Filter result datasets by Dryad institutional partners. Searches affiliations, funders, research stations, and submitter sponsor for partner institution ROR IDs. Limiting to submitter sets the search to submitter sponsors only.</p>
+    <p class="help" id="filter-member-desc">Filter result datasets by Dryad institutional partners. Searches affiliations, funders, research stations, and submitter sponsor for partner institution ROR IDs.</p>
+  <% end %>
   <% end %>
   <div class="o-admin-form-pair half-width">
     <%= render partial: 'stash_engine/shared/search_select', locals: {
@@ -115,7 +115,7 @@ end
     } %>
     <span class="limiter">
       <%= check_box_tag 'funder_limit', checked: @filters[:funder_limit].present?, name: 'filters[funder_limit]' %>
-      <label for="funder_limit">Exclude children</span>
+      <label for="funder_limit">Exclude child orgs</span>
     </span>
   </div>
   <p class="help" id="filter-funder-desc">Filter result datasets by funding organizations matched with a <a href="https://ror.org/" target="_blank" rel="noreferrer">ROR ID<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>.</p>
@@ -125,6 +125,7 @@ end
         <label for='filter-journal'>Journal:</label>
         <%= select_tag("filters[journal][value]", options_for_select([['', '']] + @journal_limit.map { |j| [j.title, j.id] }, @filters.dig(:journal, :value)), id: "filter-journal", 'aria-describedby': 'filter-journal-desc', class: "c-input__select#{@filters.dig(:journal, :value).present? ? ' selected' : ''}") %>
       </div>
+      <p class="help" id="filter-journal-desc">Filter result datasets by the journal or preprint server publishing the primary article or preprint associated with the dataset.</p>
     <% end %>
   <% else %>
     <div class="o-admin-form-pair half-width">
@@ -139,18 +140,51 @@ end
         describedby: 'filter-journal-desc'
       } %>
     </div>
+    <p class="help" id="filter-journal-desc">Filter result datasets by the journal or preprint server publishing the primary article or preprint associated with the dataset.</p>
   <% end %>
-  <p class="help" id="filter-journal-desc">Filter result datasets by the journal or preprint server publishing the primary article or preprint associated with the dataset</p>
+  <div class="o-admin-form-pair half-width">
+    <div class="input-stack">
+      <b id="edit_filters" role="heading" aria-level="4">Limit results to datasets with:</b>
+      <div class="input-line" style="align-items: center;">
+        <div class="o-admin-form-pair">
+          <%= check_box_tag 'doi_limit', checked: @filters[:doi_limit].present?, name: 'filters[doi_limit]', 'aria-describedby': 'filter-limits-desc' %>
+          <label for="doi_limit">Primary article link</label>
+        </div>
+        <div class="o-admin-form-pair">
+          <%= check_box_tag 'dpc_limit', checked: @filters[:dpc_limit].present?, name: 'filters[dpc_limit]', 'aria-describedby': 'submitter_limit-desc' %>
+          <label for="dpc_limit" id="dpc_limit_label">
+            DPC paid by
+            <% if @role_object.present? %>
+              <% if @role_object.is_a?(StashEngine::Tenant) %>
+                my <%= @tenant_limit.length > 1 ? 'consortium' : 'institution' %>
+              <% elsif @role_object.is_a?(StashEngine::JournalOrganization) %>
+                a sponsored journal
+              <% elsif @role_object.is_a?(StashEngine::Journal) %>
+                my journal
+              <% elsif  @role_object.is_a?(StashEngine::Funder) %>
+                my organization
+              <% end %>
+              </label>
+            <% else %>
+              </label>
+              <span id="dpc_selector_label">selected:</span>
+              <%= select_tag("filters[dpc_limit_for]", options_for_select([['', ''], ['institution', 'tenant'], ['publisher', 'journalorganization'], ['journal', 'journal']], @filters.dig(:dpc_limit_for)), id: "filter-dpc_limit_for", 'aria-labelledby': 'dpc_limit_label dpc_selector_label', 'aria-describedby': "filter-limits-desc", class: "c-input__select#{@filters.dig(:dpc_limit_for).present? ? ' selected' : ''}")%>
+            <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="help" id="filter-limits-desc">Filter for dataset results that have an linked primary article, or for results where the DPC was covered by <%= @role_object.nil? ? 'a specific Dryad partner' : 'the Dryad partner you administer' %>.</p>
   <div class="date-flex">
-    <%= render partial: 'filter_date', locals: { id: 'submit_date', label: 'Submitted' } %>
-    <p class="help" id="submit_date-filter-desc">Filter results by the date the latest revision of the dataset was submitted.</p>
-    <%= render partial: 'filter_date', locals: { id: 'first_sub_date', label: 'First submitted' } %>
+    <%= render partial: 'filter_date', locals: { id: 'first_sub_date', label: 'Dataset submitted' } %>
     <p class="help" id="first_sub_date-filter-desc">Filter results by the date the dataset was first submitted.</p>
-    <%= render partial: 'filter_date', locals: { id: 'publication_date', label: 'Published' } %>
-    <p class="help" id="publication_date-filter-desc">Filter results by the date the latest revision of the dataset was published.</p>
-    <%= render partial: 'filter_date', locals: { id: 'first_pub_date', label: 'First published' } %>
+    <%= render partial: 'filter_date', locals: { id: 'submit_date', label: 'Version submitted' } %>
+    <p class="help" id="submit_date-filter-desc">Filter results by the date the latest revision of the dataset was submitted.</p>
+    <%= render partial: 'filter_date', locals: { id: 'first_pub_date', label: 'Dataset published' } %>
     <p class="help" id="first_pub_date-filter-desc">Filter results by the date the dataset was first published.</p>
-    <%= render partial: 'filter_date', locals: { id: 'queue_date', label: 'First queued' } %>
+    <%= render partial: 'filter_date', locals: { id: 'publication_date', label: 'Version published' } %>
+    <p class="help" id="publication_date-filter-desc">Filter results by the date the latest revision of the dataset was published.</p>    
+    <%= render partial: 'filter_date', locals: { id: 'queue_date', label: 'Dataset queued' } %>
     <p class="help" id="queue_date-filter-desc">Filter results by the date the dataset was first queued for curation.</p>
     <div class="o-admin-form-pair full-width">
       <span id="size-slider-label">Dataset size:</span>

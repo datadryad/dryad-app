@@ -2,8 +2,10 @@ class ApplicationController < ActionController::Base
 
   include Pundit::Authorization
 
+  before_action :add_security_headers
   before_action :set_paper_trail_whodunnit
   before_action :protect_from_host_header_attack
+  before_action :set_download_service
 
   def process_action(*args)
     super
@@ -24,7 +26,21 @@ class ApplicationController < ActionController::Base
     response.headers['X-Frame-Options'] = 'ALLOWALL' # or 'SAMEORIGIN'
   end
 
+  def add_security_headers
+    response.headers['Cache-Control'] = 'no-cache, no-store'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = 'Mon, 01 Jan 1990 00:00:00 GMT'
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    response.headers['Referrer-Policy'] = 'same-origin'
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+    response.headers['Strict-Transport-Security'] = 'max-age=63072000; includeSubDomains; preload'
+
+    response.headers.delete('Server')
+  end
+
   def protect_from_host_header_attack
+    return if controller_name == 'help'
     return if request.host == Rails.application.default_url_options[:host]
 
     log_auth_failure
@@ -34,11 +50,16 @@ class ApplicationController < ActionController::Base
   def log_auth_failure(type: :unauthorized)
     return if controller_name == 'csp_violation_reports'
 
-    user = begin
-      current_user
-    rescue StandardError
-      nil
-    end
-    AuthFailureService.new(request, user, params).create(type)
+    AuthFailureService.new(request, current_user_id, params).create(type)
+  end
+
+  def set_download_service
+    Current.download_service = DownloadService.new(request, current_user_id)
+  end
+
+  def current_user_id
+    current_user.id
+  rescue StandardError
+    nil
   end
 end

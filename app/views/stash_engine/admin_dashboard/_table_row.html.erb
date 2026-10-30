@@ -89,17 +89,15 @@
   <% end %>
   <% if @fields.include?('dpc') %>
     <td>
-      <% dpc = ''
-        dpc = dataset.tenant&.short_name if dataset.identifier.payment_id == dataset.tenant_id
-        dpc = dataset.journal&.title if dataset.journal&.issn_array&.include?(dataset.identifier.payment_id)
-        dpc = dataset.identifier.payment_id.split("funder:").last.split("|").first if dataset.identifier.payment_id&.starts_with?('funder')
-      %>
-      <%= dpc %>
+      <%= dataset.identifier.payer_name %>
+      <% if dataset.identifier.payer_name && dataset.identifier.dpc_payment.nil? %>
+       <em>(expected)</em>
+      <% end %>
       <% if dataset.identifier.receipts.present? && policy(dataset.identifier.receipts.last).show? %>
         <%= form_with(url: receipt_path(dataset.identifier.receipts.last), method: :get, local: false) do %>
           <button class="c-admin-edit-icon" id="d<%=dataset.identifier.id%>_receipt" aria-labelledby="d<%=dataset.identifier.id%>_title d<%=dataset.identifier.id%>_receipt"><i class="fas fa-receipt" aria-hidden="true"></i> Fees</button>
         <% end %>
-      <% end %>
+      <% end %>      
     </td>
   <% end %>
   <% if @fields.include?('curator') %>
@@ -115,15 +113,15 @@
       <%= formatted_datetime(dataset.last_curation_activity.updated_at) %>
     </td>
   <% end %>
-  <% if @fields.include?('submit_date') %>
-    <td class="c-lined-table__digits"><%= formatted_datetime(dataset.submitted_date) %></td>
+  <% if @fields.include?('created_at') %>
+    <td class="c-lined-table__digits"><%= formatted_datetime(dataset.identifier.created_at) %></td>
   <% end %>
   <% if @fields.include?('first_sub_date') %>
     <td class="c-lined-table__digits"><%= formatted_datetime(dataset.identifier.process_date.processing) %></td>
   <% end %>
-  <% if @fields.include?('publication_date') %>
-    <td class="c-lined-table__digits" id="dataset_published_<%= dataset.identifier_id %>">
-      <%= formatted_date(dataset.publication_date) %>
+  <% if @fields.include?('queue_date') %>
+    <td class="c-lined-table__digits">
+      <%= formatted_datetime(dataset.identifier.process_date.queued) %>
     </td>
   <% end %>
   <% if @fields.include?('first_pub_date') %>
@@ -131,12 +129,12 @@
       <%= formatted_date(dataset.identifier.publication_date) %>
     </td>
   <% end %>
-  <% if @fields.include?('created_at') %>
-    <td class="c-lined-table__digits"><%= formatted_datetime(dataset.identifier.created_at) %></td>
+  <% if @fields.include?('submit_date') %>
+    <td class="c-lined-table__digits"><%= formatted_datetime(dataset.submitted_date) %></td>
   <% end %>
-  <% if @fields.include?('queue_date') %>
-    <td class="c-lined-table__digits">
-      <%= formatted_datetime(dataset.identifier.process_date.queued) %>
+  <% if @fields.include?('publication_date') %>
+    <td class="c-lined-table__digits" id="dataset_published_<%= dataset.identifier_id %>">
+      <%= formatted_date(dataset.publication_date) %>
     </td>
   <% end %>
   <% if @fields.include?('status_date') %>

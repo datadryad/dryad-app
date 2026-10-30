@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import PropTypes from 'prop-types';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 import SubjectSelect from './SubjectSelect';
 import KeywordAutocomplete from './KeywordAutocomplete';
@@ -47,6 +46,13 @@ function Keywords({resource, setResource, onBlur}) {
   };
 
   useEffect(() => {
+    const newSubjects = resource.subjects.filter((s) => !['fos', 'bad_fos'].includes(s.subject_scheme));
+    if(JSON.stringify(subjs) === JSON.stringify(newSubjects)) return;
+
+    setSubjs(newSubjects);
+  }, [resource.subjects]);
+
+  useEffect(() => {
     setResource((r) => ({...r, subjects: [...r.subjects.filter((s) => ['fos', 'bad_fos'].includes(s.subject_scheme)), ...subjs]}));
   }, [subjs]);
 
@@ -83,8 +89,3 @@ function Keywords({resource, setResource, onBlur}) {
 }
 
 export default Keywords;
-
-Keywords.propTypes = {
-  resource: PropTypes.object.isRequired,
-  setResource: PropTypes.func.isRequired,
-};

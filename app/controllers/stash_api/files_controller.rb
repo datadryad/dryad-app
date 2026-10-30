@@ -23,6 +23,7 @@ module StashApi
     before_action :require_permission, only: %i[update destroy]
     before_action :require_viewable_file, only: %i[show download]
     before_action -> { require_viewable_resource(resource_id: params[:version_id]) }, only: :index
+    before_action :set_download_service
 
     # GET /files/<id>
     def show
@@ -68,7 +69,7 @@ module StashApi
     def download
       if @resource.may_download?(ui_user: @user)
         @file_presigned = Stash::Download::FilePresigned.new(controller_context: self)
-        @file_presigned.download(file: @stash_file)
+        @file_presigned.download(file: @stash_file, from_api: true)
       else
         render status: 404, plain: 'Not found'
       end
@@ -113,20 +114,22 @@ module StashApi
     end
 
     def check_header_file_size
-      return if request.headers['CONTENT-LENGTH'].blank? || request.headers['CONTENT-LENGTH'].to_i <= APP_CONFIG.maximums.merritt_size
+      resource_limit = @resource.identifier.size_limit
+      return if request.headers['CONTENT-LENGTH'].blank? || request.headers['CONTENT-LENGTH'].to_i <= resource_limit
 
       api_logger.error('file too large')
       (render json: { error:
-                         "Your file size is larger than the maximum submission size of #{APP_CONFIG.maximums.merritt_size} bytes" }.to_json,
+                         "Your file size is larger than the maximum submission size of #{resource_limit} bytes" }.to_json,
               status: 403) && yield
     end
 
     def check_file_size
-      return if Stash::Aws::S3.new.size(s3_key: @file_path) <= APP_CONFIG.maximums.merritt_size
+      resource_limit = @resource.identifier.size_limit
+      return if Stash::Aws::S3.new.size(s3_key: @file_path) <= resource_limit
 
       api_logger.error('file too large')
       (render json: { error:
-          "Your file size is larger than the maximum submission size of #{view_context.filesize(APP_CONFIG.maximums.merritt_size)}" }.to_json,
+          "Your file size is larger than the maximum submission size of #{view_context.filesize(resource_limit)}" }.to_json,
               status: 403) && yield
     end
 
@@ -160,7 +163,8 @@ module StashApi
     end
 
     def check_total_size_violations
-      return if @resource.new_size <= APP_CONFIG.maximums.merritt_size && @resource.size <= APP_CONFIG.maximums.merritt_size
+      resource_limit = @resource.identifier.size_limit
+      return if @resource.new_size <= resource_limit && @resource.size <= resource_limit
 
       api_logger.error('file too large')
       (render json: { error:

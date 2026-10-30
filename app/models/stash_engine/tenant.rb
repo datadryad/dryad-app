@@ -43,6 +43,7 @@ module StashEngine
     has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
     has_one :payment_configuration, as: :partner, dependent: :destroy
     has_many :payment_logs, class_name: 'SponsoredPaymentLog', as: :payer
+    has_many :payment_records, class_name: 'PaymentRecord', as: :payment
 
     accepts_nested_attributes_for :flag, allow_destroy: true
     accepts_nested_attributes_for :payment_configuration
@@ -134,7 +135,7 @@ module StashEngine
     end
 
     def sponsored_identifiers
-      StashEngine::Identifier.where("payment_type like 'institution%'").where(payment_id: id).distinct
+      StashEngine::Identifier.where(id: payment_records.dpc.active.pluck(:identifier_id))
     end
 
     def payment_sponsor

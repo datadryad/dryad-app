@@ -59,7 +59,7 @@ export default function DescriptionGroup({
 
   return (
     <>
-      <Description dcsDescription={abstract} setResource={setResource} mceLabel={abstractLabel} curator={curator} onBlur={() => setTouched(true)} />
+      <Description dcsDescription={abstract} setResource={setResource} mceLabel={abstractLabel} curator={curator} setTouched={setTouched} />
       <div role="alert">{touched && error}</div>
       {resource.resource_type.resource_type !== 'collection' && (
         <>

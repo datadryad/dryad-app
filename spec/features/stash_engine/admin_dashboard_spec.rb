@@ -235,7 +235,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
         find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(find('#identifiers')).to be_checked
-        expect(find('thead')).to have_text('Publication IDs')
+        expect(find('thead')).to have_text('Related work IDs')
         expect(find('#curator')).to be_checked
         expect(find('thead')).to have_text('Curator')
       end
@@ -453,9 +453,10 @@ RSpec.feature 'AdminDashboard', type: :feature do
           end
         end
         @consortium = create(:tenant, id: 'consortium', short_name: 'Consortium', long_name: 'Consortium')
+        create(:payment_configuration, partner: @consortium, payment_plan: '2025')
         # Create user, identifier, and 2 resources for consortium
         %w[member1 member2].each do |member|
-          create(:tenant, id: member, short_name: member, sponsor_id: 'consortium')
+          create(:tenant, id: member, short_name: member, long_name: "Consortium #{member}", sponsor_id: 'consortium')
           user = create(:user, tenant_id: member)
           2.times do
             identifier = create(:identifier)
@@ -493,6 +494,21 @@ RSpec.feature 'AdminDashboard', type: :feature do
         click_button('Apply')
         assert_selector('tbody tr', count: 2)
         expect(find('#search_results')).to have_text('member1', count: 2)
+      end
+
+      it 'filters datasets limited to paid DPCs', js: true do
+        visit root_path
+        find_button('Datasets').hover
+        click_link 'Admin dashboard'
+        expect(page).to have_text('Admin dashboard')
+        find('#dpc').set(true)
+        find('#dpc_limit').set(true)
+        click_button('Apply')
+        assert_selector('tbody tr', count: 4)
+        expect(page).to have_text('DPC paid by', minimum: 2)
+        expect(page).to have_text('Consortium member1', minimum: 2)
+        expect(page).to have_text(@res2.title)
+        expect(page).not_to have_text(@res1.title)
       end
     end
 
@@ -532,7 +548,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
         find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(find('#identifiers')).to be_checked
-        expect(find('thead')).to have_text('Publication IDs')
+        expect(find('thead')).to have_text('Related work IDs')
       end
     end
 

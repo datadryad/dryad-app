@@ -16,7 +16,7 @@ function AffiliationsForm({author, updateItem}) {
     const a = structuredClone(author)
     a.affiliations = affiliations
     await updateItem(a)
-    updateStore({refreshFees: true});
+    updateStore({refreshFees: true, waitSubmit: true});
   }
 
   useEffect(() => {

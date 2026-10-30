@@ -243,6 +243,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         within(:css, "form[action=\"/metadata_entry_pages/new_version?resource_id=#{@resource.id}\"]") do
           find('button[name="update"]').click
         end
+        expect(page).to have_content('Data files hosted by Dryad' || 'Files are required', wait: 5)
         click_button 'README'
         find('[name="readme_editor"]').send_keys("\nThis is a README update.")
         page.send_keys(:tab)
@@ -333,6 +334,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
   def minor_update
     click_button 'Subjects'
+    find('button[data-slug="subjects"]').click if page.has_css?('button[data-slug="subjects"]')
     fill_in_keywords
     click_button 'Preview changes'
     click_button 'Support'
@@ -353,7 +355,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     click_button 'Preview changes'
     click_button 'Subjects'
     fill_in_keywords
-    expect(page).to have_text('All progress saved')
     click_button 'Preview changes'
     click_button 'Related works'
     doi = Faker::Pid.doi

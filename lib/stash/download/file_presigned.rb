@@ -18,7 +18,7 @@ module Stash
       end
 
       # file is file from ActiveRecord object
-      def download(file:)
+      def download(file:, from_api: false)
         tenant = file&.resource&.tenant
         if file.blank? || tenant.blank?
           cc.render status: 404, plain: 'Not found'
@@ -38,6 +38,7 @@ module Stash
           StashEngine::NotificationMailer.general_error(file&.resource, error_text).deliver_now
         else
           file&.resource&.identifier&.update_columns(downloaded_at: Time.now.utc)
+          Current.download_service.create(file.id, file.resource_id, from_api: from_api)
           cc.redirect_to url, allow_other_host: true
         end
       rescue HTTP::Error => e
@@ -67,6 +68,7 @@ module Stash
                        "Filename: #{file.download_filename}\n"
           StashEngine::NotificationMailer.general_error(file&.resource, error_text).deliver_now
         else
+          Current.download_service.create(file.id, file.resource_id)
           cc.redirect_to url, allow_other_host: true
         end
       rescue HTTP::Error => e

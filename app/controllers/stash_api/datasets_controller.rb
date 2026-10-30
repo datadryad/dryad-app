@@ -8,6 +8,7 @@ module StashApi
   class DatasetsController < ApiApplicationController
     include ActionView::Helpers::DateHelper
     include SubmissionMixin
+    include PublicationMixin
 
     before_action :require_json_headers, only: %i[show create index update]
     before_action :force_json_content_type, except: :download
@@ -18,6 +19,7 @@ module StashApi
     before_action :optional_api_user, except: %i[create update em_submission_metadata]
     before_action :require_permission, only: :update
     before_action :lock_down_admin_only_params, only: %i[create update]
+    before_action :set_download_service
     after_action :record_journal_integration, only: %i[create update em_submission_metadata]
 
     # get /datasets/<id>
@@ -157,11 +159,11 @@ module StashApi
             note = 'received API request to change status to queued, but submission needs further payment'
             StashEngine::ResourceMailer.peer_review_payment_needed(@resource).deliver_now
           end
+          @resource.update(hold_for_peer_review: false)
           CurationService.new(user_id: @user.id, resource: @resource, status: status, note: note).process
         else
-          # any other article disposition -> transition peer_review to withdrawn
-          CurationService.new(user_id: @user.id, resource: @resource, status: 'withdrawn',
-                              note: 'updating status based on API notification from Editorial Manager').process
+          # any other article disposition -> rejected manuscript
+          reject_manuscript(@resource, 'API notification from Editorial Manager', @user.id)
         end
       end
 
@@ -346,7 +348,7 @@ module StashApi
       res = @stash_identifier.latest_downloadable_resource(user: @user)
       @version_presigned = Stash::Download::VersionPresigned.new(controller_context: self, resource: res)
       if res&.may_download?(ui_user: @user) && @version_presigned&.valid_resource?
-        @version_presigned.download(resource: res)
+        @version_presigned.download(resource: res, from_api: true)
       else
         render plain: 'Download for this version of the dataset is unavailable', status: :not_found
       end
@@ -504,9 +506,8 @@ module StashApi
       end
 
       return if check_restricted_params == false
-      return if check_may_set_user_id == false
 
-      nil if check_may_set_payment_id == false
+      nil if check_may_set_user_id == false
     end
 
     def check_restricted_params
@@ -541,16 +542,6 @@ module StashApi
       return if @user.journals_as_admin.include?(@journal)
 
       render json: { error: 'Unauthorized: only superusers and journal administrators may set a specific user' }.to_json, status: 401
-      false
-    end
-
-    def check_may_set_payment_id
-      return if params['paymentId'].nil?
-
-      unless @user.superuser?
-        render json: { error: 'Unauthorized: only superuser roles may set a paymentId' }.to_json, status: 401
-        return false
-      end
       false
     end
 

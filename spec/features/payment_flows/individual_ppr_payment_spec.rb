@@ -5,6 +5,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
   include Mocks::Aws
   include Mocks::DataFile
   include Mocks::Stripe
+  include Mocks::Salesforce
 
   let(:tenant) { create(:tenant) }
   let(:user) { create(:user, tenant: tenant) }
@@ -14,6 +15,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
     mock_aws!
     mock_file_content!
     mock_stripe!
+    mock_salesforce!
 
     sign_in(user)
     start_new_dataset
@@ -32,10 +34,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
 
       context 'when is set to PPR' do
         before do
-          find('button[data-slug="agreements"]').click
-          expect(page).to have_content('Dryad submissions are made publicly available')
-          find('label', text: 'Keep my files private while my manuscript undergoes peer review').click
-          find('input[name="peer_review"][value="1"]').click
+          switch_ppr_from_preview
           expect(page).to have_content(
             'You may choose to pay only $50.00, with the remainder due at the end of the ' \
             'peer review period. The Private for Peer Review Fee is nonrefundable.',
@@ -113,6 +112,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
 
       CurationService.new(user: user, resource: resource, status: 'queued').process
       resource.current_state = :submitted
+      create(:payment_record, payment: payment, resource: resource, identifier: identifier, fee_type: 'dpc') if payment.amount == 150
 
       identifier.reload
       resource.reload
@@ -153,8 +153,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
 
                 expect(page).not_to have_content(
                   'You may choose to pay only $50.00, with the remainder due at the ' \
-                  'end of the peer review period. The Private for Peer Review Fee is nonrefundable.',
-                  wait: 5
+                  'end of the peer review period. The Private for Peer Review Fee is nonrefundable.'
                 )
 
                 click_button 'Pay & submit for peer review'
@@ -178,6 +177,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
               let!(:payment) do
                 create(:resource_payment, resource: resource, amount: 50, payment_type: 'stripe', status: :paid, ppr_fee_paid: true)
               end
+              before { create(:payment_record, payment: payment, resource: resource, identifier: identifier, fee_type: 'ppr') }
 
               it 'notifies the user that the PPR fee was already paid' do
                 unsponsored_no_fee
@@ -194,10 +194,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
 
       context 'when removed from PPR' do
         before do
-          find('button[data-slug="agreements"]').click
-          expect(page).to have_content('Dryad submissions are made publicly available')
-          find('label', text: 'My files should be available for public download as soon as possible').click
-          find('input[name="peer_review"][value="0"]').click
+          switch_ppr_from_preview
           expect(page).not_to have_content(
             'You may choose to pay only $50.00, with the remainder due at the ' \
             'end of the peer review period. The Private for Peer Review Fee is nonrefundable.'
@@ -227,6 +224,7 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
 
           context 'and tier is exceeded' do
             let(:resource_file_size) { 20_000_000_000 }
+            before { create(:payment_record, payment: payment, resource: resource, identifier: identifier, fee_type: 'ppr') }
 
             context 'when DPC was paid in full (not the PPR fee)' do
               it 'user is not prompted to pay the PPR fee' do
@@ -257,6 +255,9 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
               let(:last_invoiced_file_size) { nil }
               let!(:payment) do
                 create(:resource_payment, resource: resource, amount: 50, payment_type: 'stripe', status: :paid, ppr_fee_paid: true)
+              end
+              before do
+                create(:payment_record, payment: payment, resource: resource, identifier: identifier, fee_type: 'ppr')
               end
 
               it 'shows correct PPR fee paid discount' do

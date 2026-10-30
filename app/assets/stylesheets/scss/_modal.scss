@@ -12,6 +12,14 @@
     min-width: 30rem;
   }
 
+  &.wide {
+    min-width: 45rem;
+    max-width: 1160px;
+    @include bp(screen2) {
+      padding: 1em 2em;
+    }
+  }
+
   &.extra-wide {
     width: 80vw;
     max-width: 1160px;
