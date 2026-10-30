@@ -453,7 +453,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
           end
         end
         @consortium = create(:tenant, id: 'consortium', short_name: 'Consortium', long_name: 'Consortium')
-        create(:payment_configuration, partner: @consortium, payment_plan: '2025', covers_dpc: true)
+        create(:payment_configuration, partner: @consortium, payment_plan: '2025')
         # Create user, identifier, and 2 resources for consortium
         %w[member1 member2].each do |member|
           create(:tenant, id: member, short_name: member, long_name: "Consortium #{member}", sponsor_id: 'consortium')
