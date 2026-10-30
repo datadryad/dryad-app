@@ -44,7 +44,7 @@ module StashEngine
     end
 
     def payer_name
-      return 'Individual' if user_must_pay?
+      return 'Submitter' if payer.nil?
 
       payer_record = payer
       case payer_record.class.to_s
