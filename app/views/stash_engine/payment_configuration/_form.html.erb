@@ -10,11 +10,11 @@
         <br />
       <% end %>
     </fieldset>
-    <p class="input-stack">
-      <%= pf.label :submitter_contact, 'Email address for sponsored submitter contact' %>
-      <%= pf.text_field :submitter_contact, value: payment_configuration.submitter_contact, class: 'c-input__text' %>
-    </p>
   </div>
+  <p class="input-stack">
+    <%= pf.label :submitter_contact, 'Email address for sponsored submitter contact' %>
+    <%= pf.text_field :submitter_contact, value: payment_configuration.submitter_contact, class: 'c-input__text' %>
+  </p>
   <h3>Large Data Fees</h3>
   <p>
     <%= pf.check_box :covers_ldf, {checked: payment_configuration.covers_ldf}, 1, 0 %>

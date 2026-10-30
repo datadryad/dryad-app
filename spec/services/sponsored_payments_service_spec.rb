@@ -47,6 +47,7 @@ describe SponsoredPaymentsService do
 
       context 'when payer exists with a 2025 payment plan' do
         context 'when LDF amount limit is reached' do
+          let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: tenant) }
           let!(:log) { create(:sponsored_payment_log, resource: resource, ldf: 1_001, payer: tenant, sponsor_id: tenant.id) }
 
           context 'when size tier does not change' do
@@ -219,6 +220,7 @@ describe SponsoredPaymentsService do
             end
 
             context 'when ldf exists and needs to be paid entirely by the user' do
+              let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: tenant) }
               let!(:log) { create(:sponsored_payment_log, resource: resource, ldf: 999, payer: tenant, sponsor_id: tenant.id) }
 
               include_examples('does not create sponsored payment log')
@@ -460,6 +462,7 @@ describe SponsoredPaymentsService do
 
       context 'when payer exists with a 2025 payment plan' do
         context 'when LDF amount limit is reached' do
+          let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: journal) }
           let!(:log) { create(:sponsored_payment_log, resource: resource, ldf: 1_001, payer: journal, sponsor_id: org.id) }
 
           context 'when size tier does not change' do
@@ -614,6 +617,7 @@ describe SponsoredPaymentsService do
           let(:new_resource) { create(:resource, identifier: new_identifier, total_file_size: 500_000_000_001, created_at: 1.minute.ago) }
           let!(:new_publication) { create(:resource_publication, resource: new_resource, publication_issn: journal.single_issn) }
           let!(:log) { create(:sponsored_payment_log, resource: resource, ldf: 100, payer: journal, sponsor_id: org.id) }
+          let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: journal) }
 
           context 'when creating a new dataset' do
             context 'when ldf is in free tier' do
