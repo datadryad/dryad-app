@@ -9,7 +9,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
   let!(:top_level_sponsor) { create(:journal_organization, parent_org: nil) }
   let!(:sponsor_payment) do
-    create(:payment_configuration, partner: top_level_sponsor, payment_plan: '2025', covers_dpc: true)
+    create(:payment_configuration, partner: top_level_sponsor, payment_plan: '2025')
   end
   let!(:level_one_sponsor) { create(:journal_organization, parent_org: top_level_sponsor) }
   let!(:limits_payment) { create(:payment_configuration, partner: level_one_sponsor) }
@@ -184,7 +184,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
       context 'when payer is not on 2025' do
         context 'all is sponsored' do
           let!(:sponsor_payment) do
-            create(:payment_configuration, partner: top_level_sponsor, payment_plan: 'SUBSCRIPTION', covers_dpc: true)
+            create(:payment_configuration, partner: top_level_sponsor, payment_plan: 'SUBSCRIPTION')
           end
           let!(:limits_payment) { create(:payment_configuration, partner: level_one_sponsor, covers_ldf: false) }
           let(:resource_file_size) { 151_200_000_000 }
@@ -468,7 +468,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
         context 'all is sponsored' do
           let!(:sponsor_payment) do
-            create(:payment_configuration, partner: top_level_sponsor, payment_plan: 'SUBSCRIPTION', covers_dpc: true)
+            create(:payment_configuration, partner: top_level_sponsor, payment_plan: 'SUBSCRIPTION')
           end
           let!(:limits_payment) { create(:payment_configuration, partner: level_one_sponsor, covers_ldf: false) }
           let(:resource_file_size) { 151_200_000_000 }

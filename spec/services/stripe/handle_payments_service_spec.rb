@@ -22,7 +22,7 @@ RSpec.describe Stripe::HandlePaymentsService do
   describe '#mark_session_paid' do
     context 'when the user needs to pay' do
       context 'when dataset is sponsored' do
-        let!(:payment_config) { create(:payment_configuration, partner: publisher, payment_plan: '2025', covers_dpc: true) }
+        let!(:payment_config) { create(:payment_configuration, partner: publisher, payment_plan: '2025') }
         let!(:dpc_payment) { create(:payment_record, identifier: identifier, payment: journal) }
 
         it 'does not overwrite sposnored payment fields' do
