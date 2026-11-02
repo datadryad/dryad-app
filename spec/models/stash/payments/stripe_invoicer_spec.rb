@@ -95,6 +95,11 @@ module Stash
       end
 
       describe '#create_invoice' do
+        it 'creates correct number of line items' do
+          expect(Stripe::InvoiceItem).to receive(:create).twice
+          invoicer.create_invoice
+        end
+
         context 'if total fee is zero' do
           before do
             allow_any_instance_of(ResourceFeeCalculatorService).to receive(:calculate).and_return(
@@ -177,11 +182,6 @@ module Stash
             expect(invoice).to receive(:send_invoice).and_return(OpenStruct.new(id: 1))
 
             expect(invoicer.create_invoice).to eq(OpenStruct.new(id: 1))
-          end
-
-          it 'creates correct number of line items' do
-            expect(Stripe::InvoiceItem).to receive(:create).twice
-            invoicer.create_invoice
           end
 
           it 'saves customer id on author' do
