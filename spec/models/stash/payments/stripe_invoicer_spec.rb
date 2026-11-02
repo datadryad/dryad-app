@@ -100,6 +100,18 @@ module Stash
           invoicer.create_invoice
         end
 
+        context 'sponsored but over LDF' do
+          let(:tenant) { create(:tenant) }
+          let!(:payment_config) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: true, ldf_limit: 2) }
+          let!(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: 123_200_000_000) }
+
+          it 'creates correct number of line items' do
+            # no invoice fee
+            expect(Stripe::InvoiceItem).to receive(:create).once
+            invoicer.create_invoice
+          end
+        end
+
         context 'if total fee is zero' do
           before do
             allow_any_instance_of(ResourceFeeCalculatorService).to receive(:calculate).and_return(
