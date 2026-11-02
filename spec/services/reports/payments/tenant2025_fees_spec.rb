@@ -4,7 +4,7 @@ describe Reports::Payments::Tenant2025Fees do
   let!(:tenant_consortium) { create(:tenant, id: '2056-3744', short_name: 'consortium') }
   let!(:tenant1) { create(:tenant, id: 'member1', sponsor_id: '2056-3744', short_name: 'member1') }
   let!(:tenant2) { create(:tenant, id: 'member2', sponsor_id: '2056-3744', short_name: 'member2') }
-  let!(:payment_configuration) { create(:payment_configuration, partner: tenant_consortium, payment_plan: '2025', covers_dpc: true) }
+  let!(:payment_configuration) { create(:payment_configuration, partner: tenant_consortium, payment_plan: '2025') }
 
   let(:fake_pdf) { '%PDF-1.4 FAKE PDF CONTENT' }
 

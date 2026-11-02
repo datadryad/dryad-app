@@ -32,5 +32,9 @@ class CustomVersion < ApplicationVersion
   self.table_name = :paper_trail_versions
 
   has_one :user, class_name: 'StashEngine::User', primary_key: 'whodunnit', foreign_key: 'id', touch: false, dependent: nil
+
+  def readable_changes
+    slice(*%i[id created_at object_changes])
+  end
 end
 # rubocop:enable Style/OneClassPerFile

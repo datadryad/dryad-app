@@ -64,9 +64,7 @@ module StashDatacite
       end
 
       describe '#payment_exempted?' do
-        before(:each) do
-          create(:funder, name: 'Nugget')
-        end
+        let!(:funder) { create(:funder, name: 'Nugget') }
 
         it 'is not exempted if it is not a funder' do
           @contrib.update(contributor_name: 'Nugget')
@@ -80,10 +78,24 @@ module StashDatacite
           expect(@contrib.payment_exempted?).to be_falsey
         end
 
-        it 'is exempted if it matches a funder' do
-          @contrib.update(contributor_name: 'Nugget', contributor_type: 'funder')
-          @contrib.reload
-          expect(@contrib.payment_exempted?).to be_truthy
+        context 'when matches a funder' do
+          context 'when the funder has a payment plan' do
+            let!(:payment_plan) { create(:payment_configuration, partner: funder, payment_plan: '2025') }
+
+            it 'is exempted' do
+              @contrib.update(contributor_name: 'Nugget', contributor_type: 'funder')
+              @contrib.reload
+              expect(@contrib.payment_exempted?).to be_truthy
+            end
+          end
+
+          context 'when the funder has no payment configured' do
+            it 'is not exempted' do
+              @contrib.update(contributor_name: 'Nugget', contributor_type: 'funder')
+              @contrib.reload
+              expect(@contrib.payment_exempted?).to be_falsey
+            end
+          end
         end
       end
     end

@@ -158,7 +158,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
       let(:options) { {} }
       let(:type) { 'institution' }
       let!(:tenant) { create(:tenant) }
-      let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true) }
+      let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025') }
       let(:identifier) { create(:identifier) }
       let(:resource) { create(:resource, identifier: identifier, tenant: tenant) }
 
@@ -253,7 +253,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
                              contributor_type: 'funder', resource_id: resource.id)
       end
       let!(:funder) { create(:funder, name: contributor.contributor_name, enabled: true) }
-      let!(:payment_conf) { create(:payment_configuration, partner: funder, payment_plan: '2025', covers_dpc: true) }
+      let!(:payment_conf) { create(:payment_configuration, partner: funder, payment_plan: '2025') }
 
       before do
         get resource_fee_calculator_url(resource), params: options

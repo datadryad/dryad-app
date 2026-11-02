@@ -90,7 +90,7 @@ FactoryBot.define do
         tenant.reload
       end
 
-      create(:payment_configuration, partner: tenant, covers_dpc: true) if tenant.id.in?(%w[email_auth match_tenant ucop])
+      create(:payment_configuration, partner: tenant) if tenant.id.in?(%w[email_auth match_tenant ucop])
     end
   end
 
