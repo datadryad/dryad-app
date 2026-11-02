@@ -67,7 +67,7 @@ RSpec.describe 'PaymentsController', type: :request do
           it 'overwrites identifier payment fields' do
             subject
 
-            expect(identifier.dpc_payment.payment.payment_id).to eq(stripe_response.payment_intent)
+            expect(identifier.payment_records.dpc.last.payment.payment_id).to eq(stripe_response.payment_intent)
           end
         end
       end
