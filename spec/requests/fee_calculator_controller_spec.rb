@@ -252,7 +252,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         create(:contributor, contributor_name: 'National Cancer Institute',
                              contributor_type: 'funder', resource_id: resource.id)
       end
-      let!(:funder) { create(:funder, name: contributor.contributor_name, enabled: true) }
+      let!(:funder) { create(:funder, name: contributor.contributor_name, ror_id: contributor.name_identifier_id, enabled: true) }
       let!(:payment_conf) { create(:payment_configuration, partner: funder, payment_plan: '2025') }
 
       before do

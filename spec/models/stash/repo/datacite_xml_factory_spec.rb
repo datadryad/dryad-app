@@ -96,7 +96,7 @@ module Datacite
         x_funder = doc.xpath('//resource/fundingReferences/fundingReference').first
 
         expect(x_funder.xpath('funderName').to_s).to include(contributor.contributor_name.encode(xml: :text))
-        expect(x_funder.xpath('funderIdentifier').to_s).to include('funderIdentifierType="Crossref Funder ID"')
+        expect(x_funder.xpath('funderIdentifier').to_s).to include('funderIdentifierType="ROR"')
         expect(x_funder.xpath('funderIdentifier').to_s).to include(contributor.name_identifier_id.encode(xml: :text))
         expect(x_funder.xpath('awardNumber').to_s).to include(contributor.award_number.encode(xml: :text))
       end
@@ -194,7 +194,7 @@ module Datacite
           expect(doc.xpath('//fundingReferences//fundingReference/funderIdentifier').first.text)
             .to eql(@resource.contributors.where(contributor_type: 'funder').first.name_identifier_id)
           expect(doc.xpath('//fundingReferences//fundingReference/funderIdentifier').first.attributes['funderIdentifierType'].value)
-            .to eql('Crossref Funder ID')
+            .to eql('ROR')
         end
       end
     end

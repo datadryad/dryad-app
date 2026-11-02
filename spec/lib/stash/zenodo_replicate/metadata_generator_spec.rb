@@ -95,10 +95,10 @@ module Stash
 
       it 'puts funder information into notes' do
         expect(@mg.notes).to include(CGI.escapeHTML("Funding provided by: #{@funder1.contributor_name}"))
-        expect(@mg.notes).to include(CGI.escapeHTML("Crossref Funder Registry ID: #{@funder1.name_identifier_id}"))
+        expect(@mg.notes).to include(CGI.escapeHTML("ROR ID: #{@funder1.name_identifier_id}"))
         expect(@mg.notes).to include(CGI.escapeHTML("Award Number: #{@funder1.award_number}"))
         expect(@mg.notes).to include(CGI.escapeHTML("Funding provided by: #{@funder2.contributor_name}"))
-        expect(@mg.notes).to include(CGI.escapeHTML("Crossref Funder Registry ID: #{@funder2.name_identifier_id}"))
+        expect(@mg.notes).to include(CGI.escapeHTML("ROR ID: #{@funder2.name_identifier_id}"))
         expect(@mg.notes.scan('Award Number').count).to eq(1)
       end
 
