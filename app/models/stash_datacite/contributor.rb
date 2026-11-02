@@ -153,9 +153,7 @@ module StashDatacite
     end
 
     def payment_exempted?
-      return false if payer_funder.nil?
-
-      true
+      !payer_funder.nil?
     end
 
     def api_integration
