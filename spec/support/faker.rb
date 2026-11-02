@@ -35,6 +35,10 @@ module Faker
         (%i[0 1].include?(val.last) ? val.sub(/\d$/, 'X') : val)
       end
 
+      def ror
+        "https://ror.org/#{Faker::Number.number(digits: 7)}"
+      end
+
     end
 
   end

@@ -3,7 +3,6 @@
 # Table name: payment_configurations
 #
 #  id                     :bigint           not null, primary key
-#  covers_dpc             :boolean
 #  covers_ldf             :boolean
 #  ldf_limit              :integer
 #  ldf_limit_notification :text(65535)
@@ -25,11 +24,13 @@ class PaymentConfiguration < ApplicationRecord
   belongs_to :partner, polymorphic: true, optional: true
 
   enum :payment_plan, { SUBSCRIPTION: 1, PREPAID: 2, DEFERRED: 3, TIERED: 4, '2025': 5 }
-  before_save :reset_limit, :set_covers_dpc
+  before_save :reset_limit
   before_validation :notification_json
 
+  scope :covering_dpc, -> { where.not(payment_plan: nil) }
+
   def valid_payer?
-    covers_dpc? && payment_plan.present?
+    payment_plan.present?
   end
 
   def ldf_limit_notification
@@ -44,6 +45,11 @@ class PaymentConfiguration < ApplicationRecord
     end
   end
 
+  def covers_dpc?
+    payment_plan.present?
+  end
+  alias covers_dpc covers_dpc?
+
   private
 
   def notification_json
@@ -55,11 +61,5 @@ class PaymentConfiguration < ApplicationRecord
 
     self.ldf_limit = nil
     self.yearly_ldf_limit = nil
-  end
-
-  def set_covers_dpc
-    return unless covers_dpc.nil?
-
-    self.covers_dpc = payment_plan.present?
   end
 end

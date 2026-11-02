@@ -38,7 +38,10 @@ export function PublicationHelp({type}) {
     <>
       <p>If your submission is linked to an article, preprint, or manuscript, sharing that information connects your data to the work. Metadata information for your submission can be imported from some connections.</p>
       {type === 'dataset' && (
-        <p>Some <a href="/journals" target="_blank">partner journals<ExitIcon /></a> will also cover the <a href="/costs" target="_blank">Data Publishing Charge<ExitIcon /></a>.</p>
+        <>
+          <p>Some <a href="/journals" target="_blank">partner journals<ExitIcon /></a> will also cover the <a href="/costs" target="_blank">Data Publishing Charge<ExitIcon /></a>.</p>
+          <p>Changes to partnership agreements may affect the sponsorship until the dataset is published, at which point the sponsorship is finalized.</p>
+        </>
       )}
     </>
   );
@@ -224,7 +227,12 @@ export function AgreeHelp({type}) {
   return (
     <>
       <p>After <a href="/mission#our-curation-and-publication-process" target="_blank">curation<ExitIcon /></a>, <b>Dryad submissions are made publicly available</b>. If curation should be delayed because your submission needs to be kept private while the associated manuscript undergoes peer review, choose that option on this page.</p>
-      {type !== 'collection' && <p>Many <a href="/join_us#members" target="_blank" rel="noreferrer">Dryad partners<ExitIcon /></a> sponsor the cost of submitting a dataset to Dryad. If you belong to a Dryad partner institution and it is not shown here, click &quot;Add a Dryad partner institution&quot;, choose your institution, and verify your credentials.</p>}
+      {type !== 'collection' && (
+        <>
+          <p>Many <a href="/join_us#members" target="_blank" rel="noreferrer">Dryad partners<ExitIcon /></a> sponsor the cost of submitting a dataset to Dryad. If you belong to a Dryad partner institution and it is not shown here, click &quot;Add a Dryad partner institution&quot;, choose your institution, and verify your credentials.</p>
+          <p>Changes to partnership agreements may affect the sponsorship until the dataset is published, at which point the sponsorship is finalized.</p>
+        </>
+      )}
     </>
   );
 }

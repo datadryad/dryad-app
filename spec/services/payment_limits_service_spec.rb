@@ -10,7 +10,6 @@ describe PaymentLimitsService do
       create(:payment_configuration,
              partner: sponsor_tenant,
              payment_plan: '2025',
-             covers_dpc: true,
              covers_ldf: true,
              ldf_limit: 1,
              yearly_ldf_limit: 1_000)
@@ -28,7 +27,7 @@ describe PaymentLimitsService do
     end
 
     describe 'payment limits configuration' do
-      let!(:tenant_payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true) }
+      let!(:tenant_payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025') }
 
       context 'when tenant has no sponsor' do
         let!(:sponsor_tenant) { nil }
@@ -48,7 +47,7 @@ describe PaymentLimitsService do
 
       context 'when tenant has multiple sponsors chain' do
         let(:second_level_sponsor) { create(:tenant, sponsor: nil) }
-        let!(:second_level_payment_conf) { create(:payment_configuration, partner: second_level_sponsor, payment_plan: '2025', covers_dpc: true) }
+        let!(:second_level_payment_conf) { create(:payment_configuration, partner: second_level_sponsor, payment_plan: '2025') }
         let!(:sponsor_tenant) { create(:tenant, id: 'sponsor', sponsor: second_level_sponsor) }
 
         it 'is taken from tenant\'s top level sponsor' do
@@ -133,7 +132,6 @@ describe PaymentLimitsService do
               create(:payment_configuration,
                      partner: sponsor_tenant,
                      payment_plan: '2025',
-                     covers_dpc: true,
                      covers_ldf: true,
                      ldf_limit: nil,
                      yearly_ldf_limit: nil)
@@ -164,7 +162,6 @@ describe PaymentLimitsService do
               create(:payment_configuration,
                      partner: sponsor_tenant,
                      payment_plan: '2025',
-                     covers_dpc: true,
                      covers_ldf: false,
                      ldf_limit: nil,
                      yearly_ldf_limit: nil)
@@ -218,7 +215,6 @@ describe PaymentLimitsService do
             create(:payment_configuration,
                    partner: sponsor_org_2,
                    payment_plan: '2025',
-                   covers_dpc: true,
                    covers_ldf: true,
                    yearly_ldf_limit: 1_000)
           end
@@ -262,7 +258,7 @@ describe PaymentLimitsService do
 
         context 'when no limit is set' do
           let!(:payment_conf) do
-            create(:payment_configuration, partner: sponsor_tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true, yearly_ldf_limit: nil)
+            create(:payment_configuration, partner: sponsor_tenant, payment_plan: '2025', covers_ldf: true, yearly_ldf_limit: nil)
           end
 
           it { is_expected.to be_falsey }
@@ -270,7 +266,7 @@ describe PaymentLimitsService do
 
         context 'when ldf is not covered' do
           let!(:payment_conf) do
-            create(:payment_configuration, partner: sponsor_tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: false, yearly_ldf_limit: nil)
+            create(:payment_configuration, partner: sponsor_tenant, payment_plan: '2025', covers_ldf: false, yearly_ldf_limit: nil)
           end
 
           context 'when ldf amount is 0' do
@@ -291,13 +287,13 @@ describe PaymentLimitsService do
       end
 
       context 'when payer has different payment plan than 2025' do
-        let!(:payment_conf) { create(:payment_configuration, partner: sponsor_tenant, payment_plan: 'TIERED', covers_dpc: true) }
+        let!(:payment_conf) { create(:payment_configuration, partner: sponsor_tenant, payment_plan: 'TIERED') }
 
         it { is_expected.to be_truthy }
       end
 
-      context 'when payer has different payment plan is not set' do
-        let!(:payment_conf) { create(:payment_configuration, partner: sponsor_tenant, payment_plan: nil, covers_dpc: true) }
+      context 'when payer payment plan is not set' do
+        let!(:payment_conf) { create(:payment_configuration, partner: sponsor_tenant, payment_plan: nil) }
 
         it { is_expected.to be_truthy }
       end
@@ -326,7 +322,6 @@ describe PaymentLimitsService do
       create(:payment_configuration,
              partner: sponsor_journal_org,
              payment_plan: '2025',
-             covers_dpc: true,
              covers_ldf: true,
              ldf_limit: 1,
              yearly_ldf_limit: 1_000)
@@ -361,7 +356,7 @@ describe PaymentLimitsService do
 
       context 'when journal has multiple sponsors chain' do
         let(:second_level_sponsor) { create(:journal_organization) }
-        let!(:second_level_payment_conf) { create(:payment_configuration, partner: second_level_sponsor, payment_plan: '2025', covers_dpc: true) }
+        let!(:second_level_payment_conf) { create(:payment_configuration, partner: second_level_sponsor, payment_plan: '2025') }
         let!(:sponsor_journal_org) { create(:journal_organization, parent_org: second_level_sponsor) }
 
         it 'is taken from journal\'s immediate sponsor' do
@@ -427,7 +422,6 @@ describe PaymentLimitsService do
             create(:payment_configuration,
                    partner: sponsor_journal_org,
                    payment_plan: '2025',
-                   covers_dpc: true,
                    covers_ldf: true,
                    yearly_ldf_limit: 1_000)
           end
@@ -492,7 +486,6 @@ describe PaymentLimitsService do
             create(:payment_configuration,
                    partner: sponsor_org_2,
                    payment_plan: '2025',
-                   covers_dpc: true,
                    covers_ldf: true,
                    yearly_ldf_limit: 1_000)
           end
@@ -516,7 +509,7 @@ describe PaymentLimitsService do
 
         context 'when journal has multiple sponsors chain' do
           let(:second_level_sponsor) { create(:journal_organization) }
-          let!(:second_level_payment_conf) { create(:payment_configuration, partner: second_level_sponsor, payment_plan: '2025', covers_dpc: true) }
+          let!(:second_level_payment_conf) { create(:payment_configuration, partner: second_level_sponsor, payment_plan: '2025') }
           before { sponsor_journal_org.update(parent_org_id: second_level_sponsor.id) }
 
           context 'when limit is already exceeded' do
@@ -589,7 +582,7 @@ describe PaymentLimitsService do
 
         context 'when no limit is set' do
           let!(:payment_conf) do
-            create(:payment_configuration, partner: sponsor_journal_org, payment_plan: '2025', covers_dpc: true, covers_ldf: true,
+            create(:payment_configuration, partner: sponsor_journal_org, payment_plan: '2025', covers_ldf: true,
                                            yearly_ldf_limit: nil)
           end
 
@@ -603,7 +596,7 @@ describe PaymentLimitsService do
       end
 
       context 'when payer has different payment plan than 2025' do
-        let!(:payment_conf) { create(:payment_configuration, partner: sponsor_journal_org, payment_plan: 'TIERED', covers_dpc: true) }
+        let!(:payment_conf) { create(:payment_configuration, partner: sponsor_journal_org, payment_plan: 'TIERED') }
 
         it { is_expected.to be_truthy }
       end

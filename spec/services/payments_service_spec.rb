@@ -49,7 +49,7 @@ describe PaymentsService do
       let(:new_files_size) { 11_000_000_000 }
       let(:covers_ldf) { false }
       let!(:tenant) { create(:tenant) }
-      let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: covers_ldf) }
+      let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: covers_ldf) }
       let(:identifier) { create(:identifier, last_invoiced_file_size: prev_files_size) }
       let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: new_files_size) }
 

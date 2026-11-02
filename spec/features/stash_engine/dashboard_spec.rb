@@ -11,7 +11,8 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
     mock_salesforce!
     mock_datacite!
     mock_aws!
-    create(:tenant)
+    tenant = create(:tenant, id: 'email_auth')
+    create(:payment_configuration, partner: tenant, payment_plan: '2025')
   end
 
   describe :user_datasets do

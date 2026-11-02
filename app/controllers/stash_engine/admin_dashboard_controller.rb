@@ -384,27 +384,31 @@ module StashEngine
       return unless @role_object.present? || @filters[:dpc_limit_for].present?
 
       @datasets = @datasets.joins(identifier: [:dpc_payment])
-      @datasets = case @filters[:dpc_limit_for].presence || @role_object.class.to_s.parameterize.sub('stashengine-', '')
-                  when 'journal'
-                    if @role_object.is_a?(StashEngine::Journal)
-                      @datasets.where(payment_records: { payment: @role_object })
-                    else
-                      @datasets.where(payment_records: { payment_type: 'StashEngine::Journal', payment_id: @filters.dig(:journal, :value)&.to_i })
-                    end
-                  when 'journalorganization'
-                    if @journal_limit.present?
-                      @datasets.where(payment_records: { payment: @journal_limit })
-                    else
-                      journal_limit = StashEngine::JournalOrganization.find_by(id: @filters[:sponsor].to_i).journals_sponsored_deep
-                      @datasets.where(payment_records: { payment: journal_limit })
-                    end
-                  when 'tenant'
-                    if @filters[:member].present?
-                      @datasets.where(payment_records: { payment: @tenant_limit.where(id: @filters[:member]) })
-                    else
-                      @datasets.where(payment_records: { payment: @tenant_limit })
-                    end
-                  end
+
+      if @filters[:dpc_limit_for].present?
+        case @filters[:dpc_limit_for].presence
+        when 'journal'
+          if @filters.dig(:journal, :value).present?
+            @datasets = @datasets.where(payment_records: { payment_type: 'StashEngine::Journal', payment_id: @filters.dig(:journal, :value)&.to_i })
+          end
+        when 'journalorganization'
+          if @filters[:sponsor].present?
+            journal_limit = StashEngine::JournalOrganization.find_by(id: @filters[:sponsor].to_i).journals_sponsored_deep
+            @datasets = @datasets.where(payment_records: { payment: journal_limit })
+          end
+        when 'tenant'
+          @datasets = @datasets.where(payment_records: { payment: @tenant_limit.where(id: @filters[:member]) }) if @filters[:member].present?
+        end
+      elsif @role_object.present?
+        case @role_object.class.to_s.parameterize.sub('stashengine-', '')
+        when 'journal'
+          @datasets = @datasets.where(payment_records: { payment: @role_object }) if @role_object.is_a?(StashEngine::Journal)
+        when 'journalorganization'
+          @datasets = @datasets.where(payment_records: { payment: @journal_limit }) if @journal_limit.present?
+        when 'tenant'
+          @datasets = @datasets.where(payment_records: { payment: @tenant_limit }) if @role_object.present?
+        end
+      end
     end
 
     def date_string(date_hash)

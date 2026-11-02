@@ -17,7 +17,7 @@ describe SponsoredPaymentsService do
   context 'tenant payer' do
     let!(:tenant) { create(:tenant) }
     let!(:payment_conf) do
-      create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true, yearly_ldf_limit: 1_000)
+      create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: true, yearly_ldf_limit: 1_000)
     end
     let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: total_file_size) }
 
@@ -59,8 +59,7 @@ describe SponsoredPaymentsService do
             let!(:sponsor_tenant) { create(:tenant, id: 'sponsor') }
             let!(:tenant) { create(:tenant, id: 'payer', sponsor_id: sponsor_tenant.id) }
             let!(:payment_conf) do
-              create(:payment_configuration, partner: sponsor_tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true,
-                                             yearly_ldf_limit: 1_000)
+              create(:payment_configuration, partner: sponsor_tenant, payment_plan: '2025', covers_ldf: true, yearly_ldf_limit: 1_000)
             end
 
             include_examples('does not create sponsored payment log')
@@ -69,7 +68,7 @@ describe SponsoredPaymentsService do
 
         context 'when LDF size is not reached' do
           let!(:payment_conf) do
-            create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true, ldf_limit: 5)
+            create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: true, ldf_limit: 5)
           end
 
           context 'and a payment record exists' do
@@ -103,7 +102,7 @@ describe SponsoredPaymentsService do
             let!(:sponsor_tenant) { create(:tenant, id: 'sponsor') }
             let!(:tenant) { create(:tenant, id: 'payer', sponsor_id: sponsor_tenant.id) }
             let!(:payment_conf) do
-              create(:payment_configuration, partner: sponsor_tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true, ldf_limit: 5)
+              create(:payment_configuration, partner: sponsor_tenant, payment_plan: '2025', covers_ldf: true, ldf_limit: 5)
             end
 
             include_examples('creates sponsored payment log')
@@ -128,7 +127,7 @@ describe SponsoredPaymentsService do
         context 'when LDF size is reached' do
           let(:total_file_size) { 50_000_000_001 }
           let!(:payment_conf) do
-            create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true, ldf_limit: 1)
+            create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: true, ldf_limit: 1)
           end
 
           context 'and a payment record exists' do
@@ -154,7 +153,7 @@ describe SponsoredPaymentsService do
             let!(:sponsor_tenant) { create(:tenant, id: 'sponsor') }
             let!(:tenant) { create(:tenant, id: 'payer', sponsor_id: sponsor_tenant.id) }
             let!(:payment_conf) do
-              create(:payment_configuration, partner: sponsor_tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true, ldf_limit: 2)
+              create(:payment_configuration, partner: sponsor_tenant, payment_plan: '2025', covers_ldf: true, ldf_limit: 2)
             end
 
             include_examples('creates sponsored payment log')
@@ -194,8 +193,7 @@ describe SponsoredPaymentsService do
         context 'when amount limit is not reached' do
           let(:subject) { SponsoredPaymentsService.new(new_resource) }
           let!(:payment_conf) do
-            create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true, ldf_limit: 2,
-                                           yearly_ldf_limit: 1_000)
+            create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: true, ldf_limit: 2, yearly_ldf_limit: 1_000)
           end
           let(:new_identifier) { create(:identifier) }
           let(:new_resource) do
@@ -229,9 +227,7 @@ describe SponsoredPaymentsService do
         end
 
         context 'if files are deleted' do
-          let!(:payment_conf) do
-            create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: true)
-          end
+          let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: true) }
           let(:identifier) { create(:identifier, last_invoiced_file_size: 110_000_000_000) }
 
           context 'when each tier has its own log' do
@@ -432,7 +428,7 @@ describe SponsoredPaymentsService do
     let!(:org) { create(:journal_organization) }
     let!(:journal) { create(:journal, sponsor: org) }
     let!(:payment_conf) do
-      create(:payment_configuration, partner: org, payment_plan: '2025', covers_dpc: true, covers_ldf: true, yearly_ldf_limit: 1_000)
+      create(:payment_configuration, partner: org, payment_plan: '2025', covers_ldf: true, yearly_ldf_limit: 1_000)
     end
     let(:resource) { create(:resource, identifier: identifier, total_file_size: total_file_size) }
     let!(:publication) { create(:resource_publication, resource: resource, publication_issn: journal.single_issn) }
@@ -474,11 +470,10 @@ describe SponsoredPaymentsService do
             let!(:sponsor_org) { create(:journal_organization) }
             let!(:org) { create(:journal_organization, parent_org_id: sponsor_org.id) }
             let!(:payment_conf) do
-              create(:payment_configuration, partner: org, payment_plan: nil, covers_dpc: true, covers_ldf: true, yearly_ldf_limit: 1_000)
+              create(:payment_configuration, partner: org, payment_plan: nil, yearly_ldf_limit: 1_000)
             end
             let!(:payment_conf2) do
-              create(:payment_configuration, partner: sponsor_org, payment_plan: '2025', covers_dpc: false, covers_ldf: false,
-                                             yearly_ldf_limit: false)
+              create(:payment_configuration, partner: sponsor_org, payment_plan: '2025', covers_ldf: false, yearly_ldf_limit: false)
             end
 
             include_examples('does not create sponsored payment log')
@@ -487,7 +482,7 @@ describe SponsoredPaymentsService do
 
         context 'when LDF size is not reached' do
           let!(:payment_conf) do
-            create(:payment_configuration, partner: org, payment_plan: '2025', covers_dpc: true, covers_ldf: true, ldf_limit: 5)
+            create(:payment_configuration, partner: org, payment_plan: '2025', covers_ldf: true, ldf_limit: 5)
           end
 
           context 'and a payment record exists' do
@@ -513,10 +508,10 @@ describe SponsoredPaymentsService do
             let!(:sponsor_org) { create(:journal_organization) }
             let!(:org) { create(:journal_organization, parent_org_id: sponsor_org.id) }
             let!(:payment_conf) do
-              create(:payment_configuration, partner: org, payment_plan: nil, covers_dpc: true, covers_ldf: true, yearly_ldf_limit: 1_000)
+              create(:payment_configuration, partner: org, payment_plan: nil, covers_ldf: true, yearly_ldf_limit: 1_000)
             end
             let!(:payment_conf2) do
-              create(:payment_configuration, partner: sponsor_org, payment_plan: '2025', covers_dpc: true, covers_ldf: true, ldf_limit: 5)
+              create(:payment_configuration, partner: sponsor_org, payment_plan: '2025', covers_ldf: true, ldf_limit: 5)
             end
 
             include_examples('creates sponsored payment log')
@@ -541,7 +536,7 @@ describe SponsoredPaymentsService do
         context 'when LDF size is reached' do
           let(:total_file_size) { 50_000_000_001 }
           let!(:payment_conf) do
-            create(:payment_configuration, partner: org, payment_plan: '2025', covers_dpc: true, covers_ldf: true, ldf_limit: 1)
+            create(:payment_configuration, partner: org, payment_plan: '2025', covers_ldf: true, ldf_limit: 1)
           end
 
           context 'and a payment record exists' do
@@ -567,10 +562,10 @@ describe SponsoredPaymentsService do
             let!(:sponsor_org) { create(:journal_organization) }
             let!(:org) { create(:journal_organization, parent_org_id: sponsor_org.id) }
             let!(:payment_conf) do
-              create(:payment_configuration, partner: org, payment_plan: nil, covers_dpc: true, covers_ldf: true, yearly_ldf_limit: 1_000)
+              create(:payment_configuration, partner: org, payment_plan: '2025', covers_ldf: true, yearly_ldf_limit: 1_000)
             end
             let!(:payment_conf2) do
-              create(:payment_configuration, partner: sponsor_org, payment_plan: '2025', covers_dpc: true, covers_ldf: true, ldf_limit: 2)
+              create(:payment_configuration, partner: sponsor_org, payment_plan: '2025', ldf_limit: 2)
             end
 
             include_examples('creates sponsored payment log')
@@ -610,8 +605,7 @@ describe SponsoredPaymentsService do
         context 'when amount limit is not reached' do
           let(:subject) { SponsoredPaymentsService.new(new_resource) }
           let!(:payment_conf) do
-            create(:payment_configuration, partner: org, payment_plan: '2025', covers_dpc: true, covers_ldf: true, ldf_limit: 2,
-                                           yearly_ldf_limit: 1_000)
+            create(:payment_configuration, partner: org, payment_plan: '2025', covers_ldf: true, ldf_limit: 2, yearly_ldf_limit: 1_000)
           end
           let(:new_identifier) { create(:identifier) }
           let(:new_resource) { create(:resource, identifier: new_identifier, total_file_size: 500_000_000_001, created_at: 1.minute.ago) }
@@ -642,9 +636,7 @@ describe SponsoredPaymentsService do
         end
 
         context 'if files are deleted' do
-          let!(:payment_conf) do
-            create(:payment_configuration, partner: org, payment_plan: '2025', covers_dpc: true, covers_ldf: true)
-          end
+          let!(:payment_conf) { create(:payment_configuration, partner: org, payment_plan: '2025', covers_ldf: true) }
           let(:identifier) { create(:identifier, last_invoiced_file_size: 110_000_000_000) }
 
           context 'when each tier has its own log' do

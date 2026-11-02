@@ -43,15 +43,25 @@ tenant_hash = {
   long_name: '', # any alternate, longer tenant name, or duplicate of short_name
   authentication: {}.to_json, # a json object, for property options see below
   campus_contacts: [].to_json, # a json array
-  payment_plan: nil, # an enum for different agreed payment plans, default is nil
   enabled: true, # whether the tenant is enabled to be claimed by users
   partner_display: true, # whether the tenant should appear on the member list
-  covers_dpc: true, # whether the tenant will cover associated user datasets
-  sponsor_id: nil, # for consortium members
+  sponsor_id: nil # for consortium members
 }
 
 # You can insert a new tenant in the database, or with the rails console:
-StashEngine::Tenant.create!(tenant_hash)
+tenant = StashEngine::Tenant.create!(tenant_hash)
+
+# configure payment
+# this step can be skipped if the institution is not a sponsor
+PaymentConfiguration.create(
+  partner: tenant,
+  payment_plan: nil, # an enum for different agreed payment plans, default is nil
+  covers_ldf: false, # whether the tenant will cover LDF fees
+  ldf_limit: nil, # number of the tier you want to be sponsored
+  yearly_ldf_limit: nil, # LDF sponsored amount per year
+  ldf_limit_notification: 'contact@email.com', # then email where Dryad sends LDF notifications
+  submitter_contact: 'contact@email.com', # then email address that will appear on the payment page
+)
 ```
 
 After the tenant is created in the table, you must also add any associated
