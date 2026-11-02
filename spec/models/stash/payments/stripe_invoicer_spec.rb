@@ -138,7 +138,7 @@ module Stash
           end
         end
 
-        context 'with total grater than 0' do
+        context 'with total greater than 0' do
           before do
             allow_any_instance_of(ResourceFeeCalculatorService).to receive(:calculate).and_return(
               { storage_fee: 150, storage_fee_label: 'Some line item name', invoice_fee: 199, total: 150 }
@@ -177,6 +177,11 @@ module Stash
             expect(invoice).to receive(:send_invoice).and_return(OpenStruct.new(id: 1))
 
             expect(invoicer.create_invoice).to eq(OpenStruct.new(id: 1))
+          end
+
+          it 'creates correct number of line items' do
+            expect(Stripe::InvoiceItem).to receive(:create).twice
+            invoicer.create_invoice
           end
 
           it 'saves customer id on author' do
