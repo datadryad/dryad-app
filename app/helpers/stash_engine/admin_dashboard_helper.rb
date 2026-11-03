@@ -96,11 +96,7 @@ module StashEngine
       row << dataset.curator_name if @fields.include?('curator')
       row << dataset.editor_name if @fields.include?('editor')
       if @fields.include?('dpc')
-        dpc = ''
-        dpc = dataset.tenant&.short_name if dataset.identifier.payment_id == dataset.tenant_id
-        dpc = dataset.journal&.title if dataset.journal&.issn_array&.include?(dataset.identifier.payment_id)
-        dpc = dataset.identifier.payment_id.split('funder:').last.split('|').first if dataset.identifier.payment_id&.starts_with?('funder')
-        row << dpc
+        row << "#{dataset.identifier.payer_name}#{' (expected)' if dataset.identifier.payer_name && dataset.identifier.dpc_payment.nil?}"
       end
       row << dataset.last_curation_activity.updated_at if @fields.include?('updated_at')
       row << dataset.identifier.created_at if @fields.include?('created_at')

@@ -36,6 +36,9 @@ module StashApi
     end
 
     def sort_query
+      allowed_columns = %w[date+asc date+desc]
+      return unless filters['sort'].in?(allowed_columns)
+
       filters['sort'].split.first(2).join(' ').sub('date ', 'dct_issued_dt ')
     end
 

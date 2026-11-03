@@ -79,18 +79,17 @@ class CurationService
   end
 
   def email_status_change_notices
+    CostReportingService.new(@resource).notify_partner_of_large_data_submission
     return if @activity.previously_published?
 
     case @status
     when 'published', 'embargoed'
-      CostReportingService.new(@resource).notify_partner_of_large_data_submission
       StashEngine::ResourceMailer.status_change(@resource, @status).deliver_now
       StashEngine::JournalMailer.journal_published_notice(@resource, @status).deliver_now
     when 'peer_review'
       StashEngine::ResourceMailer.status_change(@resource, @status).deliver_now
       StashEngine::JournalMailer.journal_review_notice(@resource, @status).deliver_now
     when 'queued'
-      CostReportingService.new(@resource).notify_partner_of_large_data_submission
       # Don't send multiple emails for the same resource, or for submission made by curator
       return unless @activity.first_time_in_status?
 
@@ -175,10 +174,12 @@ class CurationService
     return unless @activity.ready_for_payment?
 
     inv = Stash::Payments::Invoicer.new(resource: @resource, curator: user)
-    if @resource.identifier.payment_type == 'stripe' && @activity.previously_published?
+    if @resource.identifier.user_paid_dpc? && @activity.previously_published?
       inv.check_new_overages(@resource.identifier.last_invoiced_file_size)
     else
-      inv.charge_user_via_invoice
+      invoice = inv.charge_user_via_invoice
+      payment = resource.create_payment(payment_type: 'stripe', status: :created, pay_with_invoice: true, invoice_id: invoice.id)
+      PaymentRecord.create(payment: payment, resource: resource, identifier: resource.identifier) unless resource.identifier.waiver?
     end
   end
 

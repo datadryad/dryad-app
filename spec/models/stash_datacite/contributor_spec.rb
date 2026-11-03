@@ -64,9 +64,7 @@ module StashDatacite
       end
 
       describe '#payment_exempted?' do
-        before(:each) do
-          create(:funder, name: 'Nugget')
-        end
+        let!(:funder) { create(:funder, name: 'Nugget') }
 
         it 'is not exempted if it is not a funder' do
           @contrib.update(contributor_name: 'Nugget')
@@ -80,10 +78,23 @@ module StashDatacite
           expect(@contrib.payment_exempted?).to be_falsey
         end
 
-        it 'is exempted if it matches a funder' do
-          @contrib.update(contributor_name: 'Nugget', contributor_type: 'funder')
-          @contrib.reload
-          expect(@contrib.payment_exempted?).to be_truthy
+        context 'when matches a funder' do
+          context 'when the funder has a payment plan' do
+            it 'is exempted' do
+              funder.payment_configuration.update(payment_plan: '2025')
+              @contrib.update(contributor_name: 'Nugget', name_identifier_id: funder.ror_id, contributor_type: 'funder')
+              @contrib.reload
+              expect(@contrib.payment_exempted?).to be_truthy
+            end
+          end
+
+          context 'when the funder has no payment configured' do
+            it 'is not exempted' do
+              @contrib.update(contributor_name: 'Nugget', name_identifier_id: funder.ror_id, contributor_type: 'funder')
+              @contrib.reload
+              expect(@contrib.payment_exempted?).to be_falsey
+            end
+          end
         end
       end
     end
@@ -97,7 +108,7 @@ module StashDatacite
 
     describe 'identifier_type_mapping_obj' do
       it 'returns the Datacite::Mapping enum instance' do
-        expect(@contrib.identifier_type_mapping_obj).to be(Datacite::Mapping::FunderIdentifierType::CROSSREF_FUNDER_ID)
+        expect(@contrib.identifier_type_mapping_obj).to be(Datacite::Mapping::FunderIdentifierType::ROR)
       end
 
       it 'maps nil to nil' do
@@ -113,7 +124,7 @@ module StashDatacite
       end
 
       it 'returns a readable name (correct capitalization)' do
-        expect(@contrib.identifier_type_friendly).to eq('Crossref Funder ID')
+        expect(@contrib.identifier_type_friendly).to eq('ROR')
       end
     end
 

@@ -51,3 +51,6 @@ bundle exec rails internal:csp_reports >> /home/ec2-user/deploy/shared/log/csp_r
 
 # Automatic reports that run based on current date
 bundle exec rails automatic_reports:reports_by_date >> /home/ec2-user/deploy/shared/log/reports_by_date.log 2>&1
+
+# Cleanup sessions that were not used in more than 30 days
+bundle exec rails db:sessions:trim

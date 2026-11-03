@@ -632,7 +632,7 @@ namespace :identifiers do
     alert_list = []
     voids.each do |invoice_id|
       log "voided invoice #{invoice_id}"
-      in_dryad = StashEngine::Identifier.where(payment_id: invoice_id)
+      in_dryad = StashEngine::Identifier.joins(:payments).where(payments: { invoice_id: invoice_id }).distinct
       alert_list << in_dryad.first if in_dryad.present?
     end
 
@@ -676,7 +676,7 @@ namespace :identifiers do
         curation_start_date_str = curation_start_date&.strftime('%Y-%m-%d')
         ppr_payment = i.payments.where(ppr_fee_paid: true).first
 
-        dpc_date = if i.payment_type && !i.payment_type.to_s.in?(%w[stripe waiver])
+        dpc_date = if i.dpc_payment && ['StashEngine::Waiver', 'ResourcePayment'].include?(i.dpc_payment.payment_type)
                      i.publication_date&.strftime('%Y-%m-%d')
                    elsif ppr_payment
                      i.payments.where(ppr_fee_paid: false, id: [ppr_payment.id...]).first&.created_at&.strftime('%Y-%m-%d')
@@ -684,12 +684,14 @@ namespace :identifiers do
                      date = i.process_date.processing || i.process_date.queued
                      date&.strftime('%Y-%m-%d')
                    end
-        payment_transaction_id = Integrations::StripeIntegration.get_balance_transaction(i.payment_id)
+        payment_transaction_id = Integrations::StripeIntegration.get_balance_transaction(i.old_payment_id)
+
+        waiver_basis = i.dpc_payment&.payment_type == 'StashEngine::Waiver' ? i.dpc_payment.payment_id : nil
 
         csv << [
           i.identifier, i.publication_article_doi, created_date_str, curation_start_date_str, approval_date_str,
           i.storage_size, i.latest_resource&.total_file_size, i.last_invoiced_file_size.to_i,
-          i.payment_type, i.payment_id, i.waiver_basis, dpc_date, payment_transaction_id,
+          i.old_payment_type, i.old_payment_id, waiver_basis, dpc_date, payment_transaction_id,
           i.submitter_affiliation&.long_name, i.publication_name, i.publication_issn, i.journal&.sponsor&.name,
           i.latest_resource&.current_curation_status
         ]
@@ -1127,7 +1129,7 @@ namespace :identifiers do
                 first_res&.submitted_date, i.date_first_published, i.resources.last.updated_at,
                 i.storage_size,
                 stat&.unique_investigation_count, stat&.unique_request_count, stat&.citation_count,
-                i.payment_type, i.publication_name, i.journal&.sponsor&.name,
+                i.old_payment_type, i.publication_name, i.journal&.sponsor&.name,
                 res&.contributors&.map(&:contributor_name)&.compact,
                 res&.authors&.map(&:author_full_name)&.delete_if { |x| x == u&.author_full_name },
                 i.publication_name]
@@ -1192,7 +1194,7 @@ namespace :identifiers do
                 res&.current_curation_status,
                 i.process_date.queued&.to_date, i.date_first_published&.to_date, i.resources.last.updated_at.to_date,
                 i.storage_size,
-                i.payment_type, i.publication_name, i.journal&.sponsor&.name,
+                i.old_payment_type, i.publication_name, i.journal&.sponsor&.name,
                 res&.contributors&.map(&:contributor_name)&.compact,
                 i.publication_name]
       end
@@ -1258,9 +1260,11 @@ namespace :identifiers do
   desc 'populate payment info'
   task load_payment_info: :environment do
     log 'Populating payment information for published/embargoed items'
-    StashEngine::Identifier.publicly_viewable.where(payment_type: nil).each do |i|
+    StashEngine::Identifier.publicly_viewable.each do |i|
+      next unless dpc_payment.nil?
+
       i.record_payment
-      log "#{i.id} #{i.identifier} #{i.payment_type} #{i.payment_id}"
+      log "#{i.id} #{i.identifier} #{i.old_payment_type} #{i.old_payment_id}"
     end
   end
 
@@ -1433,7 +1437,7 @@ namespace :curation_stats do
 
         csv << [i.identifier, # DOI
                 i.journal&.title,
-                i.payment_type,
+                i.old_payment_type,
                 cas.find(&:in_progress?)&.created_at,
                 cas.find(&:peer_review?)&.created_at,
                 cas.find(&:queued?)&.created_at,

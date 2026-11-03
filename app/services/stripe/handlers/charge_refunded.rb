@@ -19,6 +19,10 @@ module Stripe
           status: :refunded,
           status_time: status_time
         )
+        return unless payment.payment_record.present?
+
+        payment.payment_record.update(active: false)
+        payment.payment_record.identifier.reload.record_payment
       end
 
       private

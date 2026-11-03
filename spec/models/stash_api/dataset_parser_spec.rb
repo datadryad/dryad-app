@@ -44,8 +44,6 @@ module StashApi
         'publicationISSN' => '0000-1111',
         'publicationName' => 'Some Great Journal',
         'manuscriptNumber' => 'ABC123',
-        'paymentId' => 'invoice-123',
-        'paymentType' => 'stripe',
         'holdForPeerReview' => true
       }.with_indifferent_access
 
@@ -238,11 +236,6 @@ module StashApi
         expect(@stash_identifier.publication_issn).to eq('0000-1111')
         expect(@stash_identifier.publication_name).to eq('Some Great Journal')
         expect(@stash_identifier.manuscript_number).to eq('ABC123')
-      end
-
-      it 'puts the paymentId on the identifier' do
-        expect(@stash_identifier.payment_id).to eq('invoice-123')
-        expect(@stash_identifier.payment_type).to eq('stripe')
       end
 
       context 'validates authors email' do

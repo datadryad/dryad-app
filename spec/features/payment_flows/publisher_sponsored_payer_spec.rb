@@ -9,7 +9,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
   let!(:top_level_sponsor) { create(:journal_organization, parent_org: nil) }
   let!(:sponsor_payment) do
-    create(:payment_configuration, partner: top_level_sponsor, payment_plan: '2025', covers_dpc: true)
+    create(:payment_configuration, partner: top_level_sponsor, payment_plan: '2025')
   end
   let!(:level_one_sponsor) { create(:journal_organization, parent_org: top_level_sponsor) }
   let!(:limits_payment) { create(:payment_configuration, partner: level_one_sponsor) }
@@ -39,9 +39,9 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
       build_min_dataset(resource_file_size: resource_file_size)
 
       connect_journal(journal)
-      expect(page).to have_content("Payment for this submission is sponsored by #{journal.title}")
+      expect(page).to have_content("Payment for this submission is currently sponsored by #{journal.title}")
       click_button 'Preview'
-      expect(page).to have_content("Payment for this submission is sponsored by #{journal.title}")
+      expect(page).to have_content("Payment for this submission is currently sponsored by #{journal.title}")
     end
 
     context 'payment value' do
@@ -184,7 +184,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
       context 'when payer is not on 2025' do
         context 'all is sponsored' do
           let!(:sponsor_payment) do
-            create(:payment_configuration, partner: top_level_sponsor, payment_plan: 'SUBSCRIPTION', covers_dpc: true)
+            create(:payment_configuration, partner: top_level_sponsor, payment_plan: 'SUBSCRIPTION')
           end
           let!(:limits_payment) { create(:payment_configuration, partner: level_one_sponsor, covers_ldf: false) }
           let(:resource_file_size) { 151_200_000_000 }
@@ -202,8 +202,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
     let(:last_invoiced_file_size) { 34 }
     let(:resource_file_size) { 10 }
     let!(:identifier) do
-      create(:identifier, payment_type: 'journal-2025', payment_id: journal&.single_issn,
-                          last_invoiced_file_size: last_invoiced_file_size, license_id: :cc0)
+      create(:identifier, last_invoiced_file_size: last_invoiced_file_size, license_id: :cc0)
     end
     let(:resource) do
       create(:resource, identifier: identifier, user: user, accepted_agreement: true,
@@ -223,6 +222,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
       CurationService.new(user: user, resource: resource, status: 'queued').process
       resource.current_state = :submitted
+      create(:payment_record, resource: resource, identifier: identifier, payment: journal)
 
       identifier.reload
       resource.reload
@@ -468,7 +468,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
 
         context 'all is sponsored' do
           let!(:sponsor_payment) do
-            create(:payment_configuration, partner: top_level_sponsor, payment_plan: 'SUBSCRIPTION', covers_dpc: true)
+            create(:payment_configuration, partner: top_level_sponsor, payment_plan: 'SUBSCRIPTION')
           end
           let!(:limits_payment) { create(:payment_configuration, partner: level_one_sponsor, covers_ldf: false) }
           let(:resource_file_size) { 151_200_000_000 }

@@ -1,7 +1,7 @@
 class ScholarOneController < ApplicationController
 
   def notification
-    if params[:taskStatus].downcase == 'completed' && params[:subscriptionType].downcase == 'task_status_change'
+    if params[:taskStatus]&.downcase == 'completed' && params[:subscriptionType]&.downcase == 'task_status_change'
       journal = ExternalIntegration.where("details->'$.site_name' = ?", params[:siteName]).first.integrator
       return if journal.nil?
 

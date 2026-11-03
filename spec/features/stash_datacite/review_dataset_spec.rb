@@ -47,7 +47,11 @@ RSpec.feature 'ReviewDataset', type: :feature do
   end
 
   context :payment, js: true do
+    let(:ror) { create(:ror_org, name: 'Happy Clown School') }
+    let!(:funder) { create(:funder, name: 'Happy Clown School', ror_id: ror.ror_id) }
+
     before do
+      mock_rors_solr!(include_rors: [ror])
       start_new_dataset
       navigate_to_metadata
     end
@@ -58,11 +62,13 @@ RSpec.feature 'ReviewDataset', type: :feature do
     end
 
     it 'waives the fee when the institution will pay' do
-      create(:tenant_email)
+      tenant = create(:tenant_email)
+      create(:payment_configuration, partner: tenant, payment_plan: '2025')
+
       user.update(tenant_id: 'email_auth')
       refresh
       click_button 'Agreements'
-      expect(page).to have_text('Payment for this submission is sponsored by Email Test Organization')
+      expect(page).to have_text('Payment for this submission is currently sponsored by Email Test Organization')
     end
 
     it 'waives the fee when the journal will pay' do
@@ -79,9 +85,9 @@ RSpec.feature 'ReviewDataset', type: :feature do
       fill_in 'Manuscript number', with: 'NA'
       page.send_keys(:tab)
 
-      expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
+      expect(page).to have_text("Payment for this submission is currently sponsored by #{journal.title}")
       click_button 'Agreements'
-      expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
+      expect(page).to have_text("Payment for this submission is currently sponsored by #{journal.title}")
     end
 
     it "doesn't waive the fee when the journal won't pay" do
@@ -95,18 +101,20 @@ RSpec.feature 'ReviewDataset', type: :feature do
       fill_in 'Manuscript number', with: 'NA'
       page.send_keys(:tab)
 
-      expect(page).not_to have_text("Payment for this submission is sponsored by #{journal.title}")
+      expect(page).not_to have_text("Payment for this submission is currently sponsored by #{journal.title}")
       click_button 'Agreements'
-      expect(page).not_to have_text("Payment for this submission is sponsored by #{journal.title}")
+      expect(page).not_to have_text("Payment for this submission is currently sponsored by #{journal.title}")
     end
 
     it 'waives the fee when funder will pay' do
-      create(:funder, name: 'Happy Clown School')
+      funder.payment_configuration.update(payment_plan: '2025')
       click_button 'Support'
-      fill_in_funder(name: 'Happy Clown School')
+      find_field('Granting organization').send_keys('Happy Clown School')
+      expect(page).to have_css('.searchselect ul li[name="Happy Clown School"]', wait: 5)
+      page.send_keys(:tab)
 
       click_button 'Agreements'
-      expect(page).to have_text('Payment for this submission is sponsored by Happy Clown School', wait: 15)
+      expect(page).to have_text('Payment for this submission is currently sponsored by Happy Clown School', wait: 5)
     end
 
     it "doesn't waive the fee when funder won't pay" do
@@ -114,7 +122,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
       fill_in_funder(name: 'Wiring Harness Solutions', value: '12XU')
 
       click_button 'Agreements'
-      expect(page).not_to have_text('Payment for this submission is sponsored by')
+      expect(page).not_to have_text('Payment for this submission is currently sponsored by')
     end
   end
 end
