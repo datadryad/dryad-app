@@ -68,7 +68,7 @@
               <%= dataset.editor.name %> is editing
             <% end %>
           <% elsif dataset.identifier.pub_state == 'unpublished' %>
-            <% if policy(dataset).destroy? %>        
+            <% if policy(dataset).withdraw? %>        
               <%= form_with(url: contact_helpdesk_form_path(id: dataset.identifier.id), method: :get, local: false, class: 'o-button__inline-form') do %>
                 <button class="o-button__plain-text7" id="d<%=dataset.identifier.id%>_delete" aria-labelledby="d<%=dataset.identifier.id%>_delete d<%=dataset.identifier.id%>_title"><i class="fas fa-trash-can" aria-hidden="true"></i>Withdraw</button>
               <% end %>

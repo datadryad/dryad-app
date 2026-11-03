@@ -95,7 +95,7 @@ module Stash
       end
 
       def create_invoice_items(invoice_id)
-        @fees.except(:storage_fee_label, :total, :coupon_id).map do |fee_key, amount|
+        @fees.except(:storage_fee_label, :dpc_sponsored, :storage_sponsored, :total, :coupon_id, :ppr_warning).map do |fee_key, amount|
           next if amount.zero? && !stripe_user_waiver?
 
           Stripe::InvoiceItem.create(

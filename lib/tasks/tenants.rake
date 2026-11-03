@@ -14,7 +14,6 @@ namespace :tenants do
       payment_plan: nil,
       enabled: true,
       partner_display: false,
-      covers_dpc: false,
       sponsor_id: nil,
       ror_orgs: ['https://ror.org/00x6h5n95']
     },
@@ -27,7 +26,6 @@ namespace :tenants do
       payment_plan: nil,
       enabled: !Rails.env.include?('production'),
       partner_display: false,
-      covers_dpc: false,
       sponsor_id: nil,
       ror_orgs: nil
     }

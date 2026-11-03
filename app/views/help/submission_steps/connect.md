@@ -9,6 +9,8 @@ There are two steps in the submission checklist for entering related works infor
 
 If your submission contains the foundational data for a primary article or manuscript submission to one of our sponsoring [partner journals](/journals), that journal will sponsor the [Data Publishing Charge](/costs). Follow the steps on the **Connect** screen and enter the DOI for your article, or select the journal and enter the manuscript number for your submitted manuscript, to connect your publication and receive sponsorship.
 
+Changes to partnership agreements may affect the sponsorship until the dataset is published, at which point the sponsorship is finalized.
+
 
 ## Importing metadata
 

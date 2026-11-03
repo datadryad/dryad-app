@@ -41,7 +41,7 @@ RSpec.describe 'PaymentsController', type: :request do
     describe 'update_payment_details' do
       context 'when the user needs to pay' do
         context 'when dataset is sponsored' do
-          let!(:payment_config) { create(:payment_configuration, partner: publisher, payment_plan: '2025', covers_dpc: true) }
+          let!(:payment_config) { create(:payment_configuration, partner: publisher, payment_plan: '2025') }
 
           it 'does not overwrite identifier payment fields' do
             subject
@@ -67,7 +67,7 @@ RSpec.describe 'PaymentsController', type: :request do
           it 'overwrites identifier payment fields' do
             subject
 
-            expect(identifier.dpc_payment.payment.payment_id).to eq(stripe_response.payment_intent)
+            expect(identifier.payment_records.dpc.last.payment.payment_id).to eq(stripe_response.payment_intent)
           end
         end
       end

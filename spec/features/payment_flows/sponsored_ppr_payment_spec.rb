@@ -8,7 +8,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
   include Mocks::Salesforce
 
   let(:tenant) { create(:tenant) }
-  let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: false) }
+  let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: false) }
   let(:user) { create(:user, tenant: tenant) }
   let(:payer_name) { tenant.long_name }
 
@@ -30,7 +30,7 @@ RSpec.feature 'PPR PaymentFlows for sponsored user', type: :feature, js: true do
 
     context 'payment value' do
       it 'user does not pay DPC' do
-        expect(page).to have_text("Payment for this submission is sponsored by #{tenant.long_name}")
+        expect(page).to have_text("Payment for this submission is currently sponsored by #{tenant.long_name}")
         expect(page).to have_css('button', exact_text: 'Submit for publication')
       end
 
