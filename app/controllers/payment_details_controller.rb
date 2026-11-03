@@ -36,9 +36,9 @@ class PaymentDetailsController < StashEngine::ApplicationController
 
   def dashboard
     authorize @sponsor, policy_class: PaymentDetailsPolicy
-    identifiers = @service.identifiers
-    start = identifiers.publicly_viewable.pluck(:publication_date).min&.year || 2026
+    start = Payments::Sponsor.new(@sponsor, plan: @payment_plan).identifiers.publicly_viewable.pluck(:publication_date).min&.year || Date.today.year
     @years = (start..Date.today.year).to_a
+    identifiers = @service.identifiers
     identifiers = identifiers.send(params[:status]) if params[:status].present?
     @identifiers = identifiers.order(setup_order).page(@page).per(@page_size)
     @limits_details = PayerDetailsService.new(@sponsor.limits_sponsor).details
@@ -62,7 +62,7 @@ class PaymentDetailsController < StashEngine::ApplicationController
     @calculation_year = params[:year] || Date.today.year
     @payment_plan = params[:plan] || '2025'
     @sponsor_details = PayerDetailsService.new(@sponsor).details
-    @service = Payments::Sponsor.new(@sponsor, plan: @payment_plan)
+    @service = Payments::Sponsor.new(@sponsor, plan: @payment_plan, year: @calculation_year)
     @limits_service = Payments::Sponsor.new(@sponsor.limits_sponsor, plan: @payment_plan)
   end
 

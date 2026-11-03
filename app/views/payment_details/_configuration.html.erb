@@ -15,7 +15,7 @@
     <% end %>
     <% arr = [@sponsor.limits_sponsor, @sponsor.payment_sponsor].uniq.reject{|s| s == @sponsor} %>
     <% if arr.present? %>
-      <br/><b>Inherited from:</b> <%= arr.map {|s| "<a href=\"#{payer_payment_details_debug_path(s)}\">#{PayerDetailsService.new(s)details.name}</a>" }.join(', ').html_safe %>
+      <br/><b>Inherited from:</b> <%= arr.map {|s| "<a href=\"#{payer_payment_details_debug_path(s)}\">#{PayerDetailsService.new(s).details.name}</a>" }.join(', ').html_safe %>
     <% end %>
   <% end %>
 </div>

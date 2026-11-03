@@ -33,5 +33,12 @@ module StashEngine
         .where("json_overlaps(json_contains->'$[*].name_identifier_id', json_array(?)) or ror_id = ?", ror_id, ror_id).first
     end
 
+    def dpcs_sponsored
+      payment_records.dpc.active
+    end
+
+    def payment_sponsor = self
+    def limits_sponsor = self
+
   end
 end
