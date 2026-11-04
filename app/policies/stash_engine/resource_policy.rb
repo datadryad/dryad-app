@@ -14,7 +14,7 @@ module StashEngine
     end
 
     def revise?
-      return false if @record.last_curation_activity&.status == 'awaiting_payment' && @record.payment.pay_with_invoice?
+      return false if @record.last_curation_activity&.status == 'awaiting_payment' && @record.payment&.pay_with_invoice?
 
       @record.users.include?(@user)
     end
