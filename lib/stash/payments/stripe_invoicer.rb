@@ -28,11 +28,10 @@ module Stash
         @fees = ResourceFeeCalculatorService.new(resource).calculate({ generate_invoice: true })
         return false if @fees[:total].zero? && !stripe_user_waiver?
 
+        # dataset is going to awaiting payment until the invoice is paid
         invoice = build_invoice
         create_invoice_items(invoice.id)
-        res = invoice.send_invoice
-        resource.identifier.update(last_invoiced_file_size: ds_size) if resource.identifier.last_invoiced_file_size.to_i < ds_size
-        res
+        invoice.send_invoice
       end
 
       def invoice_paid?
