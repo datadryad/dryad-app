@@ -18,7 +18,10 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
   let(:user) { create(:user) }
   let(:paid_ldf) { 0 }
   let(:resource_file_size) { 10 }
-  let!(:sponsored_payment_log) { create(:sponsored_payment_log, payer: journal, sponsor_id: top_level_sponsor.id, ldf: paid_ldf) }
+  let(:prev_resource) { create(:resource, :paid) }
+  let!(:sponsored_payment_log) do
+    create(:sponsored_payment_log, payer: journal, sponsor_id: top_level_sponsor.id, ldf: paid_ldf, resource: prev_resource)
+  end
   let(:payer_name) { journal.title }
 
   before do
@@ -28,6 +31,7 @@ RSpec.feature 'Publisher sponsored PaymentFlows', type: :feature, js: true do
     mock_stripe!
     mock_salesforce!
 
+    prev_resource.identifier.dpc_payment.update(payment: journal)
     journal.reload
     limits_payment.reload
     sign_in(user)

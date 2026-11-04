@@ -75,4 +75,11 @@ module ApplicationHelper
       ["#{filesize(tier[:range].max)} ($#{tier[:price]})", tier[:tier]]
     end
   end
+
+  def partner_nav_path
+    object = current_user.roles.admin_roles.first.role_object
+    type = make_type(object)
+
+    partner_dashboard_path(type: type, id: object.id)
+  end
 end

@@ -27,6 +27,37 @@ RSpec.feature 'AdminPaths', type: :feature do
     end
   end
 
+  context :partner_dashboard_path do
+    before(:each) { @tenant = create(:tenant_ucop) }
+
+    it 'is not accessible by regular users' do
+      sign_in
+      visit partner_dashboard_path(type: 'institution', id: 'ucop')
+      # User should be redirected to the My datasets page
+      expect(page).to have_text('My datasets')
+    end
+
+    it 'is not accessible by unrelated admins' do
+      org = create(:journal_organization)
+      sign_in(create(:user, role: 'admin', role_object: org))
+      visit partner_dashboard_path(type: 'institution', id: 'ucop')
+      expect(page).to have_text('Admin dashboard')
+    end
+
+    it 'is accessible by tenant admins' do
+      sign_in(create(:user, role: 'admin', role_object: @tenant, tenant_id: 'ucop'))
+      visit partner_dashboard_path(type: 'institution', id: 'ucop')
+      expect(page).to have_text('Partner dashboard')
+    end
+
+    it 'is accessible by dryad admins' do
+      sign_in(create(:user, role: 'admin'))
+      visit partner_dashboard_path(type: 'institution', id: 'ucop')
+      expect(page).to have_text('Partner dashboard')
+    end
+
+  end
+
   context :curation_activity_path do
     before(:each) do
       mock_salesforce!

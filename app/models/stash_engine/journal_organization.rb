@@ -69,12 +69,28 @@ module StashEngine
       o
     end
 
-    def sponsored_identifiers
-      StashEngine::Identifier.where(id: PaymentRecord.where(payment: journals_sponsored_deep).dpc.active.pluck(:identifier_id))
+    def payment_sponsor
+      top_level_org
+    end
+
+    def limits_sponsor
+      self
+    end
+
+    def dpcs_sponsored
+      PaymentRecord.where(payment: journals_sponsored_deep).dpc.active
     end
 
     def payers_sponsored
       journals_sponsored
+    end
+
+    def payment_logs
+      # lowest level LDF limits should be used
+      # limit to logs where this org is the limits_sponsor (journal sponsor)
+      SponsoredPaymentLog.joins("inner join stash_engine_journals journal on journal.id = payer_id and payer_type = 'StashEngine::Journal'").where(
+        sponsor_id: top_level_org.id, journal: { sponsor_id: id }
+      )
     end
   end
 end
