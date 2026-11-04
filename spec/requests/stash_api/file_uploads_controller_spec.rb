@@ -10,7 +10,7 @@ RSpec.describe 'StashApi::FileUploadsController', type: :request do
   let(:token) { setup_access_token(doorkeeper_application: application) }
   let(:headers) { { 'Authorization' => "Bearer #{token}", 'Accept' => 'application/json' } }
 
-  let(:file_path) { "819621e7-#{resource.id}/data/b16368dc-53b1-4232-a048-bf24fc7ae973.pdf" }
+  let(:file_path) { "-#{resource.id}/data/b16368dc-53b1-4232-a048-bf24fc7ae973.pdf" }
   let(:doi) { '10.5072/FK2TEST' }
   let!(:identifier) { create(:identifier, identifier: doi) }
   let!(:resource) { create(:resource, identifier: identifier) }
@@ -50,12 +50,12 @@ RSpec.describe 'StashApi::FileUploadsController', type: :request do
       expect(JSON.parse(response.body)).to eq('id' => upload.id)
       expect(upload).to have_attributes(
         user_id: user.id,
-        key: file_path,
         upload_id: 'multipart_upload_id',
         status: 'pending',
         resource_id: resource.id,
         file_id: file.id
       )
+      expect(upload.key).to include(file_path)
     end
 
     it 'rejects requests without a token' do
