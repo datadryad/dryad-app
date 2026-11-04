@@ -185,8 +185,8 @@ module StashEngine
       pub.update(publication_name: new_title, publication_issn: new_issn)
     end
 
-    def sponsored_identifiers
-      StashEngine::Identifier.where(id: payment_records.dpc.active.pluck(:identifier_id))
+    def dpcs_sponsored
+      payment_records.dpc.active
     end
 
     def payment_sponsor

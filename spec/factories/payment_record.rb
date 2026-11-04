@@ -26,6 +26,7 @@ FactoryBot.define do
     resource
 
     payment { create(:resource_payment) }
+    payment_plan { '2025' }
     fee_type { 'dpc' }
     active { true }
   end

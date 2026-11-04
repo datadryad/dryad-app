@@ -4,7 +4,8 @@ RSpec.describe Stripe::Handlers::InvoicePaid do
   subject(:subject) { described_class.new(event: event) }
 
   let(:invoice_id) { 'in_123' }
-  let(:resource) { create(:resource) }
+  let(:identifier) { create(:identifier, last_invoiced_file_size: 0) }
+  let(:resource) { create(:resource, identifier: identifier, total_file_size: 100) }
   let!(:payment) { create(:resource_payment, pay_with_invoice: true, invoice_id: invoice_id, status: 'created', resource: resource) }
   let(:event) do
     instance_double(
@@ -53,6 +54,12 @@ RSpec.describe Stripe::Handlers::InvoicePaid do
         expect(payment.status_time).to eq(Time.at(1_700_000_000))
       end
 
+      it 'updates last_invoiced_file_size' do
+        subject.call
+
+        expect(identifier.reload.last_invoiced_file_size.to_i).to eq(resource.total_file_size)
+      end
+
       context 'when the resource is in awaiting_payment' do
         before do
           create(:curation_activity, :awaiting_payment, resource: resource)
@@ -64,6 +71,12 @@ RSpec.describe Stripe::Handlers::InvoicePaid do
 
           expect(resource.curation_activities.where(note: 'Invoice has been paid')).to exist
           expect(resource.current_curation_status).to eq 'queued'
+        end
+
+        it 'updates last_invoiced_file_size' do
+          subject.call
+
+          expect(identifier.reload.last_invoiced_file_size.to_i).to eq(resource.total_file_size)
         end
       end
 
@@ -78,6 +91,12 @@ RSpec.describe Stripe::Handlers::InvoicePaid do
 
           expect(resource.curation_activities.where(note: 'Invoice has been paid')).to exist
           expect(resource.current_curation_status).to eq 'published'
+        end
+
+        it 'updates last_invoiced_file_size' do
+          subject.call
+
+          expect(identifier.reload.last_invoiced_file_size.to_i).to eq(resource.total_file_size)
         end
       end
     end
@@ -100,6 +119,12 @@ RSpec.describe Stripe::Handlers::InvoicePaid do
       it 'returns nil' do
         expect(subject.call).to be_nil
       end
+
+      it 'does not update last_invoiced_file_size' do
+        subject.call
+
+        expect(identifier.reload.last_invoiced_file_size.to_i).to be_zero
+      end
     end
 
     context 'when payment is already paid' do
@@ -119,6 +144,12 @@ RSpec.describe Stripe::Handlers::InvoicePaid do
 
       it 'returns nil' do
         expect(subject.call).to be_nil
+      end
+
+      it 'does not update last_invoiced_file_size' do
+        subject.call
+
+        expect(identifier.reload.last_invoiced_file_size.to_i).to be_zero
       end
     end
   end

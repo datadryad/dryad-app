@@ -201,6 +201,11 @@ module Stash
             invoicer.create_invoice
             expect(author.reload.stripe_customer_id).to eq('stripe_customer_id')
           end
+
+          it 'does not update last_invoice_file_size' do
+            invoicer.create_invoice
+            expect(identifier.reload.last_invoiced_file_size.to_i).to be_zero
+          end
         end
 
         describe '#handle_customer' do

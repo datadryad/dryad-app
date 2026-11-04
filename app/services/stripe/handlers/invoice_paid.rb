@@ -16,6 +16,7 @@ module Stripe
           paid_at: paid_at(invoice),
           status_time: paid_at(invoice)
         )
+        update_last_invoice_size
         CurationService.new(resource: payment.resource, user_id: 0, status: new_status, note: 'Invoice has been paid').process
       end
 
@@ -26,6 +27,13 @@ module Stripe
         return 'queued' if resource.current_curation_status == 'awaiting_payment'
 
         resource.current_curation_status
+      end
+
+      def update_last_invoice_size
+        ds_size = payment.resource.total_file_size || 0
+        ident = payment.resource.identifier
+
+        ident.update(last_invoiced_file_size: ds_size) if ident.last_invoiced_file_size.to_i < ds_size
       end
     end
   end

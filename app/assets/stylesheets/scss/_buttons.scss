@@ -137,8 +137,8 @@ button[class*="-toggle"], input[type="button"][class*="-toggle"] {
     color: $link-body-active-color;
   }
 
-  &[disabled] {
-    color: $dark-gray;
+  &[disabled], &[aria-disabled] {
+    color: black;
     text-decoration: none;
   }
   &:focus-visible {
