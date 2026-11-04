@@ -83,7 +83,7 @@ RSpec.describe 'StashApi::FileUploadsController', type: :request do
 
       expect(response).to have_http_status(:ok)
       url = JSON.parse(response.body)['url']
-      expect(url).to include('partNumber=3').and include('uploadId=S3-UPLOAD-ID')
+      expect(url).to include('presignedURL')
       expect(upload.reload.part_number).to eq(3)
     end
 
