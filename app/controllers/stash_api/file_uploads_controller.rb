@@ -17,8 +17,15 @@ module StashApi
 
     def start
       pre_upload_checks { true }
-      @file = save_file_to_db(file_state: 'uploading', upload_file_size: 0)
-      check_total_size_violations(size: request.headers['CONTENT-LENGTH'].to_i) { yield }
+      @file = save_file_to_db(file_state: 'uploading', upload_file_size: request.headers['CONTENT-LENGTH'].to_i)
+
+      size_limit = @resource.identifier.size_limit
+      if request.headers['CONTENT-LENGTH'].to_i > size_limit || @resource.new_size > size_limit
+        @file.destroy
+        api_logger.error('file too large')
+        render json: { error: 'The files for this dataset are larger than the allowed version or total object size' }.to_json, status: 403
+        return
+      end
 
       s3_upload_id = s3.create_multipart_upload(
         bucket: BUCKET, key: @file_path, content_type: 'application/octet-stream'

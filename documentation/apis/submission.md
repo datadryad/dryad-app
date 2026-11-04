@@ -105,13 +105,19 @@ Find a file on your file system to upload, get its path and determine its Conten
 
 For direct file uploads, do a PUT to {{url-domain-name}}/api/v2/datasets/{{doi_encoded}}/files/{{filename-encoded}} and the body being sent would be the binary file. Set the HTTP "Content-Description" header to add a short description. Set the HTTP Content-Type appropriately for the file type (for example image/jpeg).
 
+For smaller files, this command still works, but it loads the file in local memory and if the file is too big, you can get errors like `curl: option --data-binary: out of memory`
 ```bash
-curl -T </path/to/my/file> -i -X PUT "https://<domain-name>/api/v2/datasets/<encoded-doi>/files/<encoded-file-name>" -H "Authorization: Bearer <token>"
+curl --data-binary "@</path/to/my/file>" -i -X PUT "https://<domain-name>/api/v2/datasets/<encoded-doi>/files/<encoded-file-name>" -H "Authorization: Bearer <token>" -H "Content-Type: <mime-type>" -H "Accept: application/json"
 ```
-In case you want to see a progress on your upload you can just add `--progress-bar | jq` at the end of this command
+
+For files larger than 5 GB, please use the following:
+```bash
+curl -T </path/to/my/file> -X PUT "https://<domain-name>/api/v2/datasets/<encoded-doi>/files/<encoded-file-name>" -H "Authorization: Bearer <token>" -H "Content-Type: <mime-type>"
+```
+Or, in case you want to see the progress on your upload you can just add `--progress-bar | jq` at the end of this command
 
 ```bash
-curl -T </path/to/my/file> -i -X PUT "https://<domain-name>/api/v2/datasets/<encoded-doi>/files/<encoded-file-name>" -H "Authorization: Bearer <token>" --progress-bar | jq
+curl -T </path/to/my/file> -X PUT "https://<domain-name>/api/v2/datasets/<encoded-doi>/files/<encoded-file-name>" -H "Authorization: Bearer <token>" -H "Content-Type: <mime-type>" --progress-bar -o >(jq .)
 ```
 
 Or

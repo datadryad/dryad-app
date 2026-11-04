@@ -56,7 +56,7 @@ module StashEngine
 
     scope :deleted_from_version, -> { where(file_state: :deleted) }
     scope :without_deleted_files, -> { where(file_deleted_at: nil) }
-    scope :newly_created, -> { where("file_state = 'created' OR file_state IS NULL") }
+    scope :newly_created, -> { where("file_state IN ('created', 'uploading') OR file_state IS NULL") }
     scope :present_files, -> { where("file_state = 'created' OR file_state IS NULL OR file_state = 'copied'") }
     scope :url_submission, -> { where('url IS NOT NULL') }
     scope :file_submission, -> { where('url IS NULL') }

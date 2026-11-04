@@ -88,14 +88,14 @@ const handle = async(req, res, isContinue = false) => {
     return reply(200, { status: "ok", uptime: Math.round(process.uptime()) });
   }
 
-  const forward = (status, text) => {
+  const forward = async (status, text) => {
     let body;
     try {
       body = JSON.parse(text);
     } catch {
       body = { error: text.slice(0, 200) || "request failed" };
     }
-    reply(status, body);
+    reply(status, await body);
   };
 
   const {doi, fileName} = getBody(req, reply);
@@ -121,7 +121,7 @@ const handle = async(req, res, isContinue = false) => {
     if (!r.ok) {
       const text = await r.text();
       console.warn("start rejected:", r.status, text);
-      const status = [401, 403, 404, 409, 413, 422].includes(r.status) ? r.status : 502;
+      const status = [401, 403, 404, 409, 413, 422, 500].includes(r.status) ? r.status : 502;
       return forward(status, text);
     }
     ({id} = await r.json());
