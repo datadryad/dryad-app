@@ -26,6 +26,8 @@ import axios from 'axios';
 import errorFiles from './errorFiles.json';
 import UploadFiles from '../../../../../app/javascript/react/components/UploadFiles';
 
+global.awaitSelector = (s) => Promise.resolve(s)
+
 jest.mock('axios');
 jest.mock('evaporate', () => ({
   create: jest.fn(() => Promise.resolve({
