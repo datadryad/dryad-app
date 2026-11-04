@@ -60,8 +60,10 @@ const addCsrfToken = () => {
   }
 };
 
-const changeStatusToProgressBar = (chosenFileId) => {
-  const statusCel = document.getElementById(`status_${chosenFileId}`);
+const changeStatusToProgressBar = async(chosenFileId) => {
+  /* eslint-disable-next-line no-undef */
+  await awaitSelector(`#status_${chosenFileId}`);
+  const statusCel = document.getElementById(`status_${chosenFileId}`);  
   statusCel.innerText = '';
   const node = document.createElement('progress');
   const progressBar = statusCel.appendChild(node);
@@ -370,10 +372,10 @@ export default function UploadFiles({
     });
   };
 
-  const addFilesHandler = (event, uploadType) => {
+  const addFilesHandler = (uploads, uploadType) => {
     const timestamp = Date.now();
     setWarning([]);
-    const files = discardFiles([...event.target.files], uploadType);
+    const files = discardFiles([...uploads], uploadType);
     const fileCount = chosenFiles.filter((f) => f.uploadType === uploadType).length + files.length;
     if (chosenFiles.reduce((a, c) => a + c.upload_file_size, 0) + files.reduce((a, c) => a + c.size, 0) > maxSize) {
       setWarning([...warning, Messages.filesTooBig]);
@@ -559,7 +561,7 @@ export default function UploadFiles({
 
   return (
     <div ref={uploadRef}>
-      <UploadData changed={addFilesHandler} clickedModal={showModalHandler} />
+      <UploadData changed={addFilesHandler} clickedModal={showModalHandler} setWarning={setWarning}/>
       <p style={{fontSize: '.98rem'}}>
         By uploading files to Dryad, you agree they will be licensed as{' '}
         <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noreferrer">
@@ -608,7 +610,8 @@ export default function UploadFiles({
           ><i className="fas fa-caret-up" aria-hidden="true" style={{marginRight: '.5ch'}} />Close
           </span>
         </p>
-        <UploadSelect current={current} resource={resource} setResource={setResource} changed={addFilesHandler} clickedModal={showModalHandler} />
+        <UploadSelect current={current} resource={resource} setResource={setResource} 
+          changed={addFilesHandler} setWarning={setWarning} clickedModal={showModalHandler} />
       </div>
       {failedUrls.length > 0 && <FailedUrlList failedUrls={failedUrls} clicked={removeFailedUrlHandler} />}
       <div role="alert">
