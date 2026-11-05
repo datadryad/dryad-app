@@ -11,7 +11,7 @@
   <div>
     <div class="admin-dashboard-results">
       <h3>Payment sponsor</h3>
-      <%= link_to "#{@payment_sponsor_details.name} ( #{@payment_sponsor.id} )", payment_details_sponsor_path(id: @payment_sponsor.id, type: @payment_sponsor.class.name) %>
+      <%= link_to "#{@payment_sponsor_details.name} ( #{@payment_sponsor.id} )", payer_payment_details_debug_path(@payment_sponsor) %>
     </div>
     <pre><code><%= JSON.pretty_generate(@payment_sponsor.payment_configuration&.attributes) %></code></pre>
   </div>
@@ -20,7 +20,7 @@
   <div>
     <div class="admin-dashboard-results">
       <h3>Payment limits</h3>    
-      <%= link_to "#{@limits_sponsor_details.name} ( #{@limits_sponsor.id} )", payment_details_sponsor_path(id: @limits_sponsor.id, type: @limits_sponsor.class.name) %>
+      <%= link_to "#{@limits_sponsor_details.name} ( #{@limits_sponsor.id} )", payer_payment_details_debug_path(@limits_sponsor) %>
     </div>
     <pre><code><%= JSON.pretty_generate(@limits_sponsor.payment_configuration&.attributes) %></code></pre>
   </div>
