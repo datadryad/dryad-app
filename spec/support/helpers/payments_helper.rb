@@ -69,12 +69,14 @@ module PaymentsHelper
     expect(page).to have_button('Pay & submit')
   end
 
+  # rubocop:disable Layout/LineLength
   def unsponsored_ppr_paid(size, amount)
     total = "#{amount.to_i + 50}.00"
     expect(page).to have_content(
-      "This #{size} dataset has a Data Publishing Charge of $#{total}, requiring payment of $#{amount} minus the Private for Peer Review Fee"
+      "This #{size} dataset has a Data Publishing Charge of $#{total} minus the previously paid Private for Peer Review Fee, requiring payment of $#{amount}."
     )
     expect(page).not_to have_button('Submit for')
     expect(page).to have_button('Pay & submit')
   end
+  # rubocop:enable Layout/LineLength
 end
