@@ -1,7 +1,27 @@
 module StashDatacite
   module ResourcesHelper
-
     # rubocop:disable Layout/LineLength, Metrics/AbcSize
+    def awards_display(awards, ror_funder)
+      return unless awards.any? { |a| a.award_number.present? || a.award_title.present? }
+
+      str = ': '
+      list = awards.map.with_index do |award, _i|
+        item = '<span>'
+        item += if award.award_number.present? && ror_funder
+                  "<a href=\"#{new_search_path(funder: award.name_identifier_id, award: award.award_number)}\">#{award.award_number}</a>"
+                else
+                  (award.award_number.presence || award.award_title).to_s
+                end
+        item += '</span>'
+        if current_user&.min_app_admin? && award.api_integration_key.present? && award.award_number.blank?
+          item += "<i class=\"fas fa-circle-exclamation unmatched-icon\" role=\"note\" aria-label=\"Missing award number\" title=\"Award number missing for #{award.api_integration_key} funder\"></i>"
+        end
+        item += "(<span>#{award.award_description}</span>)" if award.award_description.present?
+        item
+      end.join(', ')
+      str + list
+    end
+
     def author_display(authors, affs)
       authors.map.with_index do |author, ind|
         next unless author.author_full_name

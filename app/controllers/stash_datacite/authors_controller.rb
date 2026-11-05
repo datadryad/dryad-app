@@ -174,23 +174,20 @@ module StashDatacite
       return unless @author.present?
 
       # find a matching pre-existing affiliation
-      if ror_val.present?
-        # - find by ror_id if avaialable
-        affil = StashDatacite::Affiliation.where(ror_id: ror_val).first
-      else
-        # - find by name otherwise
-        affil = StashDatacite::Affiliation.where(long_name: name).first
-        affil = StashDatacite::Affiliation.where(long_name: name.to_s).first unless affil.present?
-      end
+      # - find by ror_id if avaialable
+      affil = StashDatacite::Affiliation.where(ror_id: ror_val).first if ror_val.present?
+
+      # - find by name otherwise
+      affil ||= StashDatacite::Affiliation.where(long_name: name).first
+      affil ||= StashDatacite::Affiliation.where(long_name: name.to_s).first
 
       # if no matching affils found, make a new affil
       if affil.blank?
-        affil = if ror_val.present?
-                  StashDatacite::Affiliation.create(long_name: name, ror_id: ror_val)
-                else
-                  StashDatacite::Affiliation.create(long_name: name.to_s, ror_id: nil)
-                end
+        affil = StashDatacite::Affiliation.create(long_name: name.to_s, ror_id: ror_val.presence)
+      elsif ror_val.present? && affil.ror_id.nil?
+        affil.update(ror_id: ror_val)
       end
+      affil.reload
 
       return if affil.ror_id && @author.affiliations.pluck(:ror_id).include?(affil.ror_id)
       return if affil.ror_id.nil? && @author.affiliations.where(ror_id: nil).pluck(:long_name).include?(affil.long_name)

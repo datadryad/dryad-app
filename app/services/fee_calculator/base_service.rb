@@ -42,7 +42,8 @@ module FeeCalculator
           elsif @limits_service.amount_limits_exceeded?
             # if the yearly amount limit is hit,
             # the user needs to pay the full storage difference
-            add_sponsored_amount
+            # the storage_sponsored is 0
+            add_sponsored_amount(nil, sponsored_amount: 0)
           else
             # if the amount by adding sponsored storage fee is not exceeded
             # user mult pay the difference between sponsored size and resource size
@@ -76,9 +77,13 @@ module FeeCalculator
       add_sponsored_amount(paid_for)
     end
 
-    def add_sponsored_amount(amount = nil)
+    def add_sponsored_amount(amount = nil, sponsored_amount: nil)
       add_storage_fee_difference(amount)
-      @sum_options[:storage_sponsored] = sponsored_limits&.covers_ldf ? [ldf_sponsored_amount, 0].max : 0
+      @sum_options[:storage_sponsored] = if sponsored_amount.nil?
+                                           sponsored_limits&.covers_ldf ? [ldf_sponsored_amount, 0].max : 0
+                                         else
+                                           sponsored_amount
+                                         end
       add_invoice_fee
     end
 
