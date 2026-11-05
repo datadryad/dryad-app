@@ -2,10 +2,10 @@ module StashEngine
   class FileUploadService
     attr_reader :resource, :file
 
-    def initialize(resource:, file_params:, file_model: StashEngine::DataFile)
+    def initialize(resource:, file_params:, file_model: StashEngine::DataFile, file_state: 'created')
       @resource = resource
       @file_model = file_model
-      file_params[:file_state] = 'created'
+      file_params[:file_state] = file_state
       file_params[:upload_updated_at] = Time.new
       file_params[:resource_id] = @resource.id
       @file = @file_model.new(file_params)

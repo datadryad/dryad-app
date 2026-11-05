@@ -231,7 +231,22 @@ sudo systemctl status puma
 curl http://localhost:3000/
 ```
 
-Set up Apache, which will redirect to Puma and Shibboleth
+Set up Node server in systemd and get it running
+```
+# if you have already run deploy_dryad.sh, it can be skipped here
+deploy_dryad.sh main
+sudo cp ~/dryad-app/documentation/external_services/node_server.service /etc/systemd/system/node_server.service
+sudo nano /etc/systemd/system/node_server.service #if needed, edit the file to include the correct paths
+sudo systemctl daemon-reload
+sudo systemctl start node_server
+sudo systemctl enable node_server
+# check that it is running
+sudo systemctl status node_server
+# check that the service is started
+curl http://localhost:3001/health
+```
+
+Set up Apache, which will redirect to Puma, Node and Shibboleth
 ```
 sudo dnf update -y
 sudo dnf install -y httpd wget

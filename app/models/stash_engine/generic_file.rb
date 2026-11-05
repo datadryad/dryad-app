@@ -10,7 +10,7 @@
 #  digest_type         :string(8)
 #  download_filename   :text(65535)
 #  file_deleted_at     :datetime
-#  file_state          :string(7)
+#  file_state          :string
 #  original_filename   :text(65535)
 #  original_url        :text(65535)
 #  status_code         :integer
@@ -56,7 +56,7 @@ module StashEngine
 
     scope :deleted_from_version, -> { where(file_state: :deleted) }
     scope :without_deleted_files, -> { where(file_deleted_at: nil) }
-    scope :newly_created, -> { where("file_state = 'created' OR file_state IS NULL") }
+    scope :newly_created, -> { where("file_state IN ('created', 'uploading') OR file_state IS NULL") }
     scope :present_files, -> { where("file_state = 'created' OR file_state IS NULL OR file_state = 'copied'") }
     scope :url_submission, -> { where('url IS NOT NULL') }
     scope :file_submission, -> { where('url IS NULL') }
@@ -80,7 +80,7 @@ module StashEngine
     }
     scope :created_without_deleted, -> { created.without_deleted_files }
 
-    enum(:file_state, %w[created copied deleted].to_h { |i| [i.to_sym, i] })
+    enum(:file_state, %w[uploading created copied deleted].to_h { |i| [i.to_sym, i] })
     enum(:digest_type, %w[md5 sha-1 sha-256 sha-384 sha-512].to_h { |i| [i.to_sym, i] })
 
     def frictionless_report

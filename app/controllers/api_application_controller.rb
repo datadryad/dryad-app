@@ -225,4 +225,14 @@ class ApiApplicationController < StashEngine::ApplicationController
   def set_download_service
     Current.download_service = DownloadService.new(request, @user&.id)
   end
+
+  # only allow to proceed if no other current uploads or only other url-type uploads
+  def require_file_current_uploads
+    the_type = @resource.upload_type
+    return if %i[files unknown].include?(the_type)
+
+    api_logger.error('duplicating files via URL and direct upload')
+    render json: { error:
+                     'You may not submit a file by direct upload in the same version when you have submitted files by URL' }.to_json, status: 409
+  end
 end
