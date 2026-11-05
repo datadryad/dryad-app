@@ -42,7 +42,9 @@ module StashEngine
     has_many :email_tokens, class_name: 'StashEngine::EmailToken', dependent: :destroy
     has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
     has_one :payment_configuration, as: :partner, dependent: :destroy
-    has_many :payment_logs, class_name: 'SponsoredPaymentLog', as: :payer
+    has_many :payer_logs, class_name: 'SponsoredPaymentLog', as: :payer
+    has_many :sponsor_logs, class_name: 'SponsoredPaymentLog', foreign_key: :sponsor_id
+    has_many :payment_records, class_name: 'PaymentRecord', as: :payment
 
     accepts_nested_attributes_for :flag, allow_destroy: true
     accepts_nested_attributes_for :payment_configuration
@@ -53,7 +55,7 @@ module StashEngine
     scope :connect_list, -> {
       partner_list.with_recursive(
         tenant_tree: [
-          StashEngine::Tenant.partner_list.joins(:payment_configuration).where(sponsor_id: nil, payment_configuration: { covers_dpc: true }),
+          StashEngine::Tenant.partner_list.joins(:payment_configuration).where(sponsor_id: nil).merge(PaymentConfiguration.covering_dpc),
           StashEngine::Tenant.joins('JOIN tenant_tree ON stash_engine_tenants.sponsor_id = tenant_tree.id')
         ]
       )
@@ -133,8 +135,8 @@ module StashEngine
       [self] + sponsored_deep
     end
 
-    def sponsored_identifiers
-      StashEngine::Identifier.where("payment_type like 'institution%'").where(payment_id: id).distinct
+    def dpcs_sponsored
+      PaymentRecord.where(payment: payers_sponsored).dpc.active
     end
 
     def payment_sponsor
@@ -145,6 +147,12 @@ module StashEngine
 
     def limits_sponsor
       payment_sponsor
+    end
+
+    def payment_logs
+      return payer_logs if payment_sponsor != self
+
+      sponsor_logs
     end
   end
 end

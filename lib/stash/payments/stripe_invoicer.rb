@@ -28,14 +28,10 @@ module Stash
         @fees = ResourceFeeCalculatorService.new(resource).calculate({ generate_invoice: true })
         return false if @fees[:total].zero? && !stripe_user_waiver?
 
+        # dataset is going to awaiting payment until the invoice is paid
         invoice = build_invoice
         create_invoice_items(invoice.id)
-        resource.identifier.payment_id = invoice.id
-        resource.identifier.payment_type = stripe_user_waiver? ? 'waiver' : 'stripe'
-        resource.identifier.save
-        res = invoice.send_invoice
-        resource.identifier.update(last_invoiced_file_size: ds_size) if resource.identifier.last_invoiced_file_size.to_i < ds_size
-        res
+        invoice.send_invoice
       end
 
       def invoice_paid?
@@ -98,7 +94,7 @@ module Stash
       end
 
       def create_invoice_items(invoice_id)
-        @fees.except(:storage_fee_label, :total, :coupon_id).map do |fee_key, amount|
+        @fees.except(:storage_fee_label, :dpc_sponsored, :storage_sponsored, :total, :coupon_id, :ppr_warning).map do |fee_key, amount|
           next if amount.zero? && !stripe_user_waiver?
 
           Stripe::InvoiceItem.create(
@@ -128,7 +124,7 @@ module Stash
       end
 
       def stripe_user_waiver?
-        resource.identifier.payment_type == 'waiver'
+        resource.identifier.waiver?
       end
 
       def stripe_user_customer_id

@@ -84,6 +84,16 @@ Rails.application.routes.draw do
     # supporting both POST and PUT for updating the file to ensure as many clients as possible can use this end point
     match '/datasets/:id/files/:filename', to: 'files#update', as: 'dataset_file', constraints: { id: %r{[^\s/]+?}, filename: %r{[^\s/]+?} }, format: false, via: %i[post put]
 
+    get  "upload_auth", to: "uploads#auth"      # kept for compatibility, optional
+    resources :file_uploads, only: [] do
+      collection { post :start }
+      member do
+        post :part_url
+        post :complete
+        post :abort
+      end
+    end
+
     get '/files/digest/:digest', to: 'files#digest'
 
     get '/queue_length', to: 'submission_queue#length'
@@ -369,6 +379,7 @@ Rails.application.routes.draw do
   get 'payment_details/identifier', to: 'payment_details#identifier'
   get 'payment_details/edit', to: 'payment_details#edit'
   post 'payment_details/update', to: 'payment_details#update'
+  get 'partner_dashboard/:type/:id', to: 'payment_details#dashboard', as: 'partner_dashboard'
 
   get 'research_integrity', to: 'research_integrity_case#index'
   get 'research_integrity/history', to: 'research_integrity_case#history'

@@ -1,13 +1,13 @@
 module PaymentsHelper
   # For journal sponsorship
   def sponsored_no_fee
-    expect(page).to have_text("Payment for this submission is sponsored by #{payer_name}")
+    expect(page).to have_text("Payment for this submission is currently sponsored by #{payer_name}")
     expect(page).to have_button('submit_button')
     expect(page).not_to have_button('Pay')
   end
 
   def sponsored_with_fee(size, amount)
-    expect(page).to have_text("Payment for this submission is sponsored by #{payer_name}")
+    expect(page).to have_text("Payment for this submission is currently sponsored by #{payer_name}")
     expect(page).to have_content('This dataset has been previously submitted')
     expect(page).to have_content(
       "Since the dataset size has increased to #{size}, submitting this new version will come with an additional charge of $#{amount}.",
@@ -69,12 +69,14 @@ module PaymentsHelper
     expect(page).to have_button('Pay & submit')
   end
 
+  # rubocop:disable Layout/LineLength
   def unsponsored_ppr_paid(size, amount)
     total = "#{amount.to_i + 50}.00"
     expect(page).to have_content(
-      "This #{size} dataset has a Data Publishing Charge of $#{total}, requiring payment of $#{amount} minus the Private for Peer Review Fee"
+      "This #{size} dataset has a Data Publishing Charge of $#{total} minus the previously paid Private for Peer Review Fee, requiring payment of $#{amount}."
     )
     expect(page).not_to have_button('Submit for')
     expect(page).to have_button('Pay & submit')
   end
+  # rubocop:enable Layout/LineLength
 end

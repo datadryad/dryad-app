@@ -95,6 +95,23 @@ module Stash
       end
 
       describe '#create_invoice' do
+        it 'creates correct number of line items' do
+          expect(Stripe::InvoiceItem).to receive(:create).twice
+          invoicer.create_invoice
+        end
+
+        context 'sponsored but over LDF' do
+          let(:tenant) { create(:tenant) }
+          let!(:payment_config) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: true, ldf_limit: 2) }
+          let!(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: 123_200_000_000) }
+
+          it 'creates correct number of line items' do
+            # no invoice fee
+            expect(Stripe::InvoiceItem).to receive(:create).once
+            invoicer.create_invoice
+          end
+        end
+
         context 'if total fee is zero' do
           before do
             allow_any_instance_of(ResourceFeeCalculatorService).to receive(:calculate).and_return(
@@ -108,7 +125,8 @@ module Stash
           end
 
           context 'if this is a fee waiver user' do
-            let(:identifier) { create(:identifier, old_payment_system: false, payment_type: 'waiver') }
+            let(:identifier) { create(:identifier, old_payment_system: false) }
+            let!(:record) { create(:payment_record, identifier: identifier, payment_type: 'StashEngine::Waiver', payment_id: 'other') }
 
             it 'generates an invoice' do
               invoice = OpenStruct.new(id: 1, send_invoice: OpenStruct.new(id: 1))
@@ -137,7 +155,7 @@ module Stash
           end
         end
 
-        context 'with total grater than 0' do
+        context 'with total greater than 0' do
           before do
             allow_any_instance_of(ResourceFeeCalculatorService).to receive(:calculate).and_return(
               { storage_fee: 150, storage_fee_label: 'Some line item name', invoice_fee: 199, total: 150 }
@@ -184,13 +202,9 @@ module Stash
             expect(author.reload.stripe_customer_id).to eq('stripe_customer_id')
           end
 
-          it 'updates payment information on identifier' do
-            expect(identifier.reload.payment_id).to be_nil
+          it 'does not update last_invoice_file_size' do
             invoicer.create_invoice
-            identifier.reload
-            expect(identifier.payment_id).not_to be_nil
-            expect(identifier.payment_type).to eq('stripe')
-            expect(identifier.last_invoiced_file_size).to eq(100)
+            expect(identifier.reload.last_invoiced_file_size.to_i).to be_zero
           end
         end
 

@@ -53,7 +53,8 @@ module StashEngine
       mock_salesforce!
       mock_stripe!
       neuter_emails!
-      create(:tenant_ucop)
+      tenant = create(:tenant_ucop)
+      create(:payment_configuration, partner: tenant, payment_plan: '2025')
       @user = create(:user, tenant_id: 'dryad')
       Timecop.travel(Time.now.utc - 3.minutes)
       @identifier = create(:identifier, identifier_type: 'DOI', identifier: '10.123/456')
@@ -445,20 +446,21 @@ module StashEngine
       end
 
       context 'when individual payment has a waiver but is over 10 GB' do
-        let(:identifier) { create(:identifier, payment_type: 'waiver') }
+        let!(:payment_record) { create(:payment_record, identifier: identifier, resource: resource, payment_type: 'StashEngine::Waiver') }
 
         it { is_expected.to be_truthy }
       end
 
       context 'when individual payment has a waiver and dataset size under 10 GB' do
-        let(:identifier) { create(:identifier, payment_type: 'waiver') }
+        let!(:payment_record) { create(:payment_record, identifier: identifier, resource: resource, payment_type: 'StashEngine::Waiver') }
         let(:new_size_limit) { 9_000_000_000 }
 
         it { is_expected.to be_falsey }
       end
 
       context 'when individual payment has a waiver on an old_payment_system dataset' do
-        let(:identifier) { create(:identifier, payment_type: 'waiver', old_payment_system: true) }
+        let(:identifier) { create(:identifier, old_payment_system: true) }
+        let!(:payment_record) { create(:payment_record, identifier: identifier, resource: resource, payment_type: 'StashEngine::Waiver') }
 
         it { is_expected.to be_falsey }
       end
@@ -466,7 +468,7 @@ module StashEngine
       context 'when journal will pay' do
         let(:org) { create(:journal_organization) }
         let!(:journal) { create(:journal, issn: @fake_issn, sponsor: org) }
-        let!(:payment_configuration) { create(:payment_configuration, partner: org, payment_plan: '2025', covers_dpc: true, covers_ldf: true) }
+        let!(:payment_configuration) { create(:payment_configuration, partner: org, payment_plan: '2025', covers_ldf: true) }
         let!(:resource_publication) { create(:resource_publication, publication_issn: @fake_issn, resource: resource) }
 
         it { is_expected.to be_falsey }
@@ -480,7 +482,6 @@ module StashEngine
             :payment_configuration,
             partner: tenant,
             payment_plan: '2025',
-            covers_dpc: true,
             covers_ldf: true,
             ldf_limit: size_limit,
             yearly_ldf_limit: amount_limit
@@ -490,7 +491,7 @@ module StashEngine
         it { is_expected.to be_falsey }
 
         context 'when ldf size limit is not covered' do
-          let!(:payment_configuration) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: false) }
+          let!(:payment_configuration) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: false) }
 
           it { is_expected.to be_truthy }
         end
@@ -526,49 +527,49 @@ module StashEngine
 
     describe '#record_payment' do
       it 'does nothing when a payment has already been recorded' do
-        @identifier.payment_type = 'bogus_payment_type'
+        create(:payment_record, identifier: @identifier, resource: @res1, payment_type: 'StashEngine::Waiver', payment_id: 'other')
         expect(@identifier.record_payment).to eq(nil)
-        expect(@identifier.payment_type).to eq('bogus_payment_type')
+        expect(@identifier.waiver?).to eq(true)
       end
 
       it 'records a journal payment' do
         org = create(:journal_organization)
-        create(:journal, issn: @fake_issn, sponsor: org)
+        journal = create(:journal, issn: @fake_issn, sponsor: org)
         create(:payment_configuration, partner: org, payment_plan: 'SUBSCRIPTION')
         @identifier.record_payment
-        expect(@identifier.payment_type).to match(/journal/)
+        expect(@identifier.dpc_payment.payment).to eq(journal)
       end
 
       it 'replaces a journal payment when the associated journal has changed' do
         org = create(:journal_organization)
-        create(:journal, issn: @fake_issn, sponsor: org)
+        journal = create(:journal, issn: @fake_issn, sponsor: org)
         create(:payment_configuration, partner: org, payment_plan: 'SUBSCRIPTION')
         @identifier.record_payment
-        expect(@identifier.payment_type).to match(/journal/)
+        expect(@identifier.dpc_payment.payment).to eq(journal)
         @pub.update(publication_issn: '0000-0000')
         @identifier.reload
         @identifier.record_payment
-        expect(@identifier.payment_type).to match(/unknown/)
+        expect(@identifier.dpc_payment).to eq(nil)
       end
 
       it 'records an institution payment' do
         allow(@identifier).to receive(:institution_will_pay?).and_return(true)
         @identifier.record_payment
-        expect(@identifier.payment_type).to eq('institution')
+        expect(@identifier.dpc_payment.payment).to eq(@res1.tenant)
       end
 
       it 'records a funder-based payment' do
+        org = create(:funder, name: 'Zorgast Industries')
+        create(:payment_configuration, partner: org, payment_plan: '2025', covers_ldf: false)
         allow_any_instance_of(StashEngine::Resource).to receive(:contributors).and_return(
           [
-            OpenStruct.new(payment_exempted?: false, contributor_name: 'Johann Strauss University', award_number: 'Latke153'),
-            OpenStruct.new(payment_exempted?: true, contributor_name: 'Zorgast Industries', award_number: 'ZI0027')
+            StashDatacite::Contributor.new(contributor_name: 'Johann Strauss University', name_identifier_id: org.ror_id, contributor_type: 'funder',
+                                           award_number: 'Latke153'),
+            StashDatacite::Contributor.new(contributor_name: 'Zorgast Industries', contributor_type: 'funder', award_number: 'ZI0027')
           ]
         )
         @identifier.record_payment
-        expect(@identifier.payment_type).to eql('funder')
-        expect(@identifier.payment_id).to include('Zorgast Industries')
-        expect(@identifier.payment_id).to include('award:')
-        expect(@identifier.payment_id).to include('ZI0027')
+        expect(@identifier.dpc_payment.payment).to eq(org)
       end
 
       it 'removes old_payment_system flag when payment type is changed' do
@@ -669,6 +670,7 @@ module StashEngine
       describe '"author_match" strategy' do
         before(:each) do
           @tenant = create(:tenant_match)
+          create(:payment_configuration, partner: @tenant, payment_plan: '2025')
           @user.update(tenant_id: 'match_tenant')
           @resource = create(:resource, user: @user)
         end

@@ -25,6 +25,7 @@ class SponsoredPaymentLog < ApplicationRecord
 
   belongs_to :payer, polymorphic: true
   belongs_to :resource, class_name: StashEngine::Resource.to_s
+  has_one :payment_record, class_name: 'PaymentRecord', as: :payment, dependent: :destroy
 
   validates :resource_id, presence: true
   validates :payer_id, presence: true

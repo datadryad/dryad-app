@@ -11,7 +11,7 @@
   <div>
     <div class="admin-dashboard-results">
       <h3>Payment sponsor</h3>
-      <%= link_to "#{@payment_sponsor_details.name} ( #{@payment_sponsor.id} )", payment_details_sponsor_path(id: @payment_sponsor.id, type: @payment_sponsor.class.name) %>
+      <%= link_to "#{@payment_sponsor_details.name} ( #{@payment_sponsor.id} )", payer_payment_details_debug_path(@payment_sponsor) %>
     </div>
     <pre><code><%= JSON.pretty_generate(@payment_sponsor.payment_configuration&.attributes) %></code></pre>
   </div>
@@ -20,7 +20,7 @@
   <div>
     <div class="admin-dashboard-results">
       <h3>Payment limits</h3>    
-      <%= link_to "#{@limits_sponsor_details.name} ( #{@limits_sponsor.id} )", payment_details_sponsor_path(id: @limits_sponsor.id, type: @limits_sponsor.class.name) %>
+      <%= link_to "#{@limits_sponsor_details.name} ( #{@limits_sponsor.id} )", payer_payment_details_debug_path(@limits_sponsor) %>
     </div>
     <pre><code><%= JSON.pretty_generate(@limits_sponsor.payment_configuration&.attributes) %></code></pre>
   </div>
@@ -29,7 +29,7 @@
     <h3>Identifier</h3>
     <pre><code><%=
       JSON.pretty_generate(
-        @identifier.attributes.slice('payment_type', 'payment_id', 'waiver_basis', 'pub_state', 'publication_date', 'old_payment_system')
+        @identifier.attributes.slice('pub_state', 'publication_date', 'old_payment_system')
           .merge({
                    last_invoiced_file_size: "#{@identifier.last_invoiced_file_size} (#{filesize(@identifier.last_invoiced_file_size)})",
                  })

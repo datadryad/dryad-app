@@ -138,8 +138,8 @@ RSpec.describe Submission::ResourcesService do
           it 'updates identifier payment details' do
             subject
             identifier.reload
-            expect(identifier.payment_type).to eq('stripe')
-            expect(identifier.payment_id).not_to be_nil
+            expect(identifier.user_paid_dpc?).to eq(true)
+            expect(identifier.dpc_payment.payment.payment_id).not_to be_nil
           end
         end
 

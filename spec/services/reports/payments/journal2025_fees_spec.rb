@@ -4,15 +4,15 @@ describe Reports::Payments::Journal2025Fees do
   let(:journal_org) { create(:journal_organization) }
   let!(:journal1) { create(:journal, sponsor: journal_org) }
   let!(:journal_issn1) { create(:journal_issn, journal: journal1, id: '1111-2222') }
-  let!(:payment_configuration1) { create(:payment_configuration, partner: journal1, payment_plan: '2025', covers_dpc: true) }
+  let!(:payment_configuration1) { create(:payment_configuration, partner: journal1, payment_plan: '2025') }
 
   let!(:journal2) { create(:journal, sponsor: journal_org) }
   let!(:journal_issn2) { create(:journal_issn, journal: journal2, id: '1111-3333') }
-  let!(:payment_configuration2) { create(:payment_configuration, partner: journal2, payment_plan: '2025', covers_dpc: true) }
+  let!(:payment_configuration2) { create(:payment_configuration, partner: journal2, payment_plan: '2025') }
 
   let!(:journal3) { create(:journal, sponsor: journal_org) }
   let!(:journal_issn3) { create(:journal_issn, journal: journal3, id: '1111-4444') }
-  let!(:payment_configuration3) { create(:payment_configuration, partner: journal3, payment_plan: 'TIERED', covers_dpc: true) }
+  let!(:payment_configuration3) { create(:payment_configuration, partner: journal3, payment_plan: 'TIERED') }
 
   let(:fake_pdf) { '%PDF-1.4 FAKE PDF CONTENT' }
 

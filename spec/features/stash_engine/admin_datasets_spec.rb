@@ -94,7 +94,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       expect(page).to have_button('Edit pub dates')
       expect(page).to have_button('Edit related works')
       expect(page).to have_button('Edit funders')
-      expect(page).to have_button('View payment history')
+      expect(page).to have_button('View payment log')
       expect(page).not_to have_button('Edit submitter')
       expect(page).not_to have_button('Apply fee discount')
     end
@@ -143,7 +143,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
         expect(page).not_to have_button('Edit funders')
         expect(page).not_to have_button('Edit submitter')
         expect(page).not_to have_button('Apply fee discount')
-        expect(page).not_to have_button('View payment history')
+        expect(page).not_to have_button('View payment log')
       end
     end
 
@@ -167,7 +167,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
         expect(page).to have_button('Edit related works')
         expect(page).to have_button('Edit funders')
         expect(page).to have_button('Edit submitter')
-        expect(page).to have_button('View payment history')
+        expect(page).to have_button('View payment log')
         expect(page).to have_button('Apply fee discount')
       end
 
@@ -274,9 +274,9 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
         find("#select_div option[value='no_funds']").select_option
         click_button('Submit')
         expect(page).not_to have_text('Add fee discount')
-        click_button('View payment history')
-        expect(page).to have_text('Payment history')
-        expect(page).to have_text('Added waiver')
+        click_button('View payment log')
+        expect(page).to have_text('Payment log')
+        expect(page).to have_text('Waiver for DPC')
       end
 
       it 'adds a github issue' do
@@ -346,7 +346,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
         expect(page).not_to have_button('Edit related works')
         expect(page).not_to have_button('Edit funders')
         expect(page).not_to have_button('Edit submitter')
-        expect(page).not_to have_button('View payment history')
+        expect(page).not_to have_button('View payment log')
         expect(page).not_to have_button('Apply fee discount')
       end
     end
@@ -382,7 +382,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
         expect(page).not_to have_button('Edit related works')
         expect(page).not_to have_button('Edit funders')
         expect(page).not_to have_button('Edit submitter')
-        expect(page).not_to have_button('View payment history')
+        expect(page).not_to have_button('View payment log')
         expect(page).not_to have_button('Apply fee discount')
       end
     end
@@ -409,7 +409,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
         expect(page).to have_button('Edit pub dates')
         expect(page).to have_button('Edit related works')
         expect(page).to have_button('Edit funders')
-        expect(page).to have_button('View payment history')
+        expect(page).to have_button('View payment log')
         expect(page).not_to have_button('Edit Flag')
         expect(page).not_to have_button('Edit submitter')
         expect(page).not_to have_button('Apply fee discount')

@@ -4,7 +4,7 @@ describe ResourceFeeCalculatorService do
 
   context 'with institution type' do
     let!(:tenant) { create(:tenant) }
-    let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true) }
+    let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025') }
     let(:resource) { create(:resource, identifier: identifier, tenant: tenant) }
 
     it_should_behave_like 'calling FeeCalculatorService', 'institution'
@@ -25,7 +25,7 @@ describe ResourceFeeCalculatorService do
                            contributor_type: 'funder', resource_id: resource.id)
     end
     let!(:funder) { create(:funder, name: contributor.contributor_name, enabled: true) }
-    let!(:payment_conf) { create(:payment_configuration, partner: funder, payment_plan: '2025', covers_dpc: true) }
+    let!(:payment_conf) { create(:payment_configuration, partner: funder, payment_plan: '2025') }
 
     it_should_behave_like 'calling FeeCalculatorService', 'publisher'
   end
@@ -37,8 +37,9 @@ describe ResourceFeeCalculatorService do
   end
 
   context 'with waiver type' do
-    let(:identifier) { create(:identifier, payment_type: 'waiver') }
+    let(:identifier) { create(:identifier) }
     let(:resource) { create(:resource, identifier: identifier) }
+    let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment_type: 'StashEngine::Waiver', payment_id: 'other') }
 
     it_should_behave_like 'calling FeeCalculatorService', 'waiver'
   end
@@ -47,7 +48,7 @@ describe ResourceFeeCalculatorService do
     context 'on new submission' do
       let(:journal_organization) { create(:journal_organization, name: 'Journal ORG') }
       let!(:journal) { create(:journal, sponsor: journal_organization) }
-      let!(:payment_conf) { create(:payment_configuration, partner: journal_organization, payment_plan: 'TIERED', covers_dpc: true) }
+      let!(:payment_conf) { create(:payment_configuration, partner: journal_organization, payment_plan: 'TIERED') }
       let(:resource) { create(:resource, identifier: identifier, journal_issns: [journal.issns.first]) }
 
       it_should_behave_like 'calling FeeCalculatorService', 'individual'
@@ -57,11 +58,12 @@ describe ResourceFeeCalculatorService do
     end
 
     context 'on second version' do
-      let(:identifier) { create(:identifier, payment_type: 'journal_TIERED') }
+      let(:identifier) { create(:identifier) }
       let(:journal_organization) { create(:journal_organization, name: 'Journal ORG') }
       let(:journal) { create(:journal, sponsor: journal_organization) }
-      let!(:payment_conf) { create(:payment_configuration, partner: journal_organization, payment_plan: 'TIERED', covers_dpc: true) }
+      let!(:payment_conf) { create(:payment_configuration, partner: journal_organization, payment_plan: 'TIERED') }
       let(:resource) { create(:resource, identifier: identifier, journal_issns: [journal.issns.first]) }
+      let!(:record) { create(:payment_record, identifier: identifier, resource: resource, payment: journal) }
 
       it_should_behave_like 'calling FeeCalculatorService', 'publisher'
 

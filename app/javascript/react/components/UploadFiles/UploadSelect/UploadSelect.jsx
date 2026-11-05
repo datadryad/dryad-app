@@ -2,7 +2,7 @@ import React from 'react';
 import UploadType from './UploadType';
 
 function UploadSelect({
-  current, changed, clickedModal, resource, setResource,
+  current, changed, clickedModal, resource, setResource, setWarning
 }) {
   const upload_types = [
     {
@@ -32,6 +32,7 @@ function UploadSelect({
           licenses={upload_type.licenses}
           resource={resource}
           setResource={setResource}
+          setWarning={setWarning}
         />
       ))}
     </div>

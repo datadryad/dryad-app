@@ -217,7 +217,7 @@ module FeeCalculator
       let(:covers_ldf) { false }
       let!(:tenant) { create(:tenant) }
       let!(:payment_conf) do
-        create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: covers_ldf, ldf_limit: ldf_limit)
+        create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: covers_ldf, ldf_limit: ldf_limit)
       end
       let(:identifier) { create(:identifier, last_invoiced_file_size: prev_files_size) }
 
@@ -461,14 +461,14 @@ module FeeCalculator
       end
 
       context 'when tenant is a payer but not on 2025 fee model' do
-        let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: 'TIERED', covers_dpc: true, covers_ldf: covers_ldf) }
+        let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: 'TIERED', covers_ldf: covers_ldf) }
         let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: new_files_size) }
 
         it { is_expected.to include({ dpc_fee: 0, storage_fee: 0, service_fee: 0, total: 0, storage_fee_label: 'Large Data Fee' }) }
       end
 
       context 'when tenant is not a payer' do
-        let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: 'TIERED', covers_dpc: false, covers_ldf: covers_ldf) }
+        let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: nil, covers_ldf: covers_ldf) }
         let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: new_files_size) }
 
         it 'raises an error' do
@@ -477,7 +477,7 @@ module FeeCalculator
       end
 
       context 'when identifier is flagged as old_payment_system' do
-        let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: covers_ldf) }
+        let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_ldf: covers_ldf) }
         let(:identifier) { create(:identifier, last_invoiced_file_size: prev_files_size, old_payment_system: true) }
         let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: new_files_size) }
 

@@ -44,6 +44,7 @@ module StashEngine
     has_one :payment_configuration, as: :partner, dependent: :destroy
     has_many :payment_logs, class_name: 'SponsoredPaymentLog', as: :payer
     has_many :external_integrations, as: :integrator, dependent: :destroy
+    has_many :payment_records, class_name: 'PaymentRecord', as: :payment
 
     validates_associated :issns
     accepts_nested_attributes_for :flag, allow_destroy: true
@@ -184,8 +185,8 @@ module StashEngine
       pub.update(publication_name: new_title, publication_issn: new_issn)
     end
 
-    def sponsored_identifiers
-      StashEngine::Identifier.where("payment_type like 'journal-%'").where(payment_id: issn_array).distinct
+    def dpcs_sponsored
+      payment_records.dpc.active
     end
 
     def payment_sponsor

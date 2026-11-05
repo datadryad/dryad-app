@@ -14,12 +14,17 @@ module StashEngine
     end
 
     def revise?
+      return false if @record.last_curation_activity&.status == 'awaiting_payment' && @record.payment&.pay_with_invoice?
+
       @record.users.include?(@user)
     end
 
+    def withdraw?
+      @record.creator == @user || @record.submitter == @user || (@user.min_app_admin? && @record.editor == @user) || @user.min_manager?
+    end
+
     def destroy?
-      @record.current_resource_state&.resource_state == 'in_progress' &&
-      (@record.creator == @user || @record.submitter == @user || (@user.min_app_admin? && @record.editor == @user) || @user.min_manager?)
+      withdraw? && @record.current_resource_state&.resource_state == 'in_progress'
     end
 
     def curate?

@@ -14,7 +14,7 @@ export default function CalculateFees({resource}) {
   if (paid && fees.storage_fee_label) {
     return (
       <>
-        <p>This dataset has been previously submitted and the <a href="/costs" target="blank">{fees.storage_fee_label}<ExitIcon /></a> has been {resource.identifier.payment_id?.startsWith('in_') ? 'invoiced' : 'paid'} for {formatSizeUnits(resource.identifier.last_invoiced_file_size)}.</p>
+        <p>This dataset has been previously submitted and the <a href="/costs" target="blank">{fees.storage_fee_label}<ExitIcon /></a> has been paid for {formatSizeUnits(resource.identifier.last_invoiced_file_size)}.</p>
         {fees.total ? (
           <p>Since the dataset size has increased to {formatSizeUnits(resource.total_file_size)}, submitting this new version will come with an additional charge of <b>{fees.storage_fee.toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</b>.</p>
         ) : null}
@@ -31,7 +31,7 @@ export default function CalculateFees({resource}) {
   if (fees.total && fees.storage_fee) {
     return (
       <>
-        <p>This {formatSizeUnits(resource.total_file_size)} dataset has a <a href="/costs" target="blank">{fees.storage_fee_label}<ExitIcon /></a> of <b>{formatCost(fees.storage_fee)}</b>{fees.ppr_discount && <>, requiring payment of <b>{formatCost(fees.invoice_fee ? fees.total - fees.invoice_fee : fees.total)}</b> minus the Private for Peer Review Fee</>}.</p>
+        <p>This {formatSizeUnits(resource.total_file_size)} dataset has a <a href="/costs" target="blank">{fees.storage_fee_label}<ExitIcon /></a> of <b>{formatCost(fees.storage_fee)}</b>{fees.ppr_discount && <> minus the previously paid Private for Peer Review Fee, requiring payment of <b>{formatCost(fees.invoice_fee ? fees.total - fees.invoice_fee : fees.total)}</b></>}.</p>
         {dpc.can_pay_ppr_fee && <p>You may choose to pay only <b>{formatCost(50)}</b>, with the remainder due at the end of the peer review period. The Private for Peer Review Fee is nonrefundable.</p>}
       </>
     );
