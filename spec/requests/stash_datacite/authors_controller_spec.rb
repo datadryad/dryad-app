@@ -120,7 +120,7 @@ module StashDatacite
         let(:ror_id) { nil }
         let(:aff_name) { ror.name }
 
-        def params(rorId = ror_id)
+        def params(ror_id_param = ror_id)
           {
             author: {
               id: author.id,
@@ -130,7 +130,7 @@ module StashDatacite
               author_email: 'test@email.org',
               resource_id: resource.id,
               affiliations: [
-                { long_name: aff_name, ror_id: rorId }
+                { long_name: aff_name, ror_id: ror_id_param }
               ]
             }
           }
