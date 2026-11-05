@@ -40,7 +40,9 @@ class ApplicationController < ActionController::Base
   end
 
   def protect_from_host_header_attack
-    return if controller_name == 'help'
+    # help - used for caching help pages
+    # file_uploads - used for file uploads via node_server
+    return if controller_name.in?(%w[help file_uploads])
     return if request.host == Rails.application.default_url_options[:host]
 
     log_auth_failure

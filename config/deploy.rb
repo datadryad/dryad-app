@@ -54,6 +54,7 @@ end
 
 after :deploy, 'puma:restart_if_exists'
 after :deploy, 'sidekiq:restart_if_exists'
+after :deploy, 'node:restart_if_exists'
 
 namespace :git do
   desc "Add the version file so that we can display the git version in the footer"
@@ -106,6 +107,25 @@ namespace :sidekiq do
         execute :sudo, :systemctl, :restart, "#{service}.service"
       else
         info "Sidekiq service #{service} not found, skipping restart"
+      end
+    end
+  end
+end
+
+namespace :node do
+  task :restart_if_exists do
+    on roles(:app) do
+      service = fetch(:node_service_unit_name, "node_server")
+
+      if test("[ -f /etc/systemd/system/#{service}.service ]") ||
+        test("systemctl list-unit-files | grep -q #{service}.service")
+        within "#{current_path}/node_server" do
+          execute :yarn, "install", "--frozen-lockfile"
+        end
+
+        execute :sudo, :systemctl, :restart, "#{service}.service"
+      else
+        info "Node server service #{service} not found, skipping restart"
       end
     end
   end

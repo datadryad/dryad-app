@@ -567,7 +567,10 @@ paths:
         - $ref: '#/components/parameters/doi'
         - $ref: '#/components/parameters/filename'
       requestBody:
-        description: A binary file with `Content-Type` set.
+        description: |
+          A binary file with `Content-Type` set.
+          
+          More details for uploading big files can be found [here](https://github.com/datadryad/dryad-app/blob/main/documentation/apis/submission.md#submit-your-dataset).
         required: true
         content:
           "*/*":

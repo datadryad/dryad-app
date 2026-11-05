@@ -87,6 +87,12 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
+  config.before(:suite) do
+    ENV['AWS_ACCESS_KEY_ID'] ||= 'mock-key-id'
+    ENV['AWS_SECRET_ACCESS_KEY'] ||= 'mock-secret-key'
+    ENV['AWS_REGION'] ||= 'us-east-1'
+  end
+
   # force a rake run before test suite
   config.before(:suite) do
     output = `rake db:migrate`
