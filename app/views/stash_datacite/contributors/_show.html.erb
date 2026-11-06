@@ -10,7 +10,7 @@
           else 
             %><span><%= contributor.contributor_name_friendly%><%if current_user&.min_app_admin? && contributor.name_identifier_id.blank? %><i class="fas fa-triangle-exclamation unmatched-icon" role="note" aria-label="Unmatched funder" title="Unmatched funder"></i><%end%></span><% 
           end 
-          %><%= awards_display(group.last, ror_funder).html_safe %>
+          %><%= awards_display(group.last, ror_funder)&.html_safe %>
         </li>
       <% end %>
     </ul>
