@@ -42,6 +42,9 @@ bin/webpack
 ```
 
 ## Upgrading Node
+
+**Before performing an upgrade on production, test on other servers to ensure the new Node version is compatible!**
+
 1. Install the version you desire
 ```
 nvm install <version_number>
