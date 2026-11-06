@@ -1,15 +1,8 @@
 # Installing Node/NPM on servers
-Since we're updating our servers to use React for file uploads it requires Node and NPM to be installed on the server
-for deployment with Capistrano. Capistrano now uses Shakapacker (Ruby) which calls Webpack, which is a
-Javascript way to bundle assets.
-
-Right now we are using both Sprockets (asset pipeline) and Shakapacker. It appears that it's recommended to go through all Javascript
-files to modernize them an make them more encapsulated rather than using Global scope for Javascript.
-See for example https://rossta.net/blog/from-sprockets-to-webpack.html which walks through
-decisions they made while upgrading.
-
-It appears to me that we may run into significant challenges and may take significant time to
-update our Javascript.
+Using React for file uploads requires Node and NPM to
+be installed on the server for deployment with Capistrano. Capistrano now uses
+Shakapacker (Ruby) which calls Webpack, which is a Javascript way to bundle
+assets.
 
 ## Steps to manual install (solution for now)
 
@@ -46,4 +39,15 @@ ln -s ~/local/node-v14.16.1-linux-x64/bin/yarnpkg yarnpkg
 cd ~/dryad-app
 yarn install
 bin/webpack
+```
+
+## Upgrading Node
+1. Install the version you desire
+```
+nvm install <version_number>
+```
+2. Ensure the version is used by the default account on the machine. Edit the `.bashrc` file, which has node configuration near the end
+3. Restart Puma to connect it to the new Node version (on production machines, do this while the machine is out of the load balancer)
+```
+puma_restart.sh
 ```
