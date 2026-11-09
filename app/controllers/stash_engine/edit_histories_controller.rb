@@ -5,6 +5,7 @@ module StashEngine
 
     # we are really only showing a list of edit history for a resource and are not showing much else
     def index
+      aaaa
       @resource = Resource.find(params[:resource_id])
       @presenters = resources_in_dataset.map { |i| StashDatacite::ResourcesController::DatasetPresenter.new(i) }
     end

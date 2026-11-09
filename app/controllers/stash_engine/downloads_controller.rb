@@ -90,7 +90,8 @@ module StashEngine
     def file_stream
       check_for_sharing
       data_file = DataFile.where(id: params[:file_id]).present_files.first
-      if data_file&.resource&.may_download?(ui_user: current_user) || @sharing_link
+      # for share, allow downloading files only from the shared resource
+      if data_file&.resource&.may_download?(ui_user: current_user) || (@sharing_link && data_file&.resource&.id == @resource.id)
         response.set_header(
           'Link',
           "<#{file_linkset_url(file_id: data_file.id)}>; rel=\"linkset\"; type=\"application/linkset\",
@@ -158,6 +159,7 @@ module StashEngine
 
     def preview_check
       @file = DataFile.find(params[:file_id])
+      render :no_preview unless @file&.resource&.may_download?(ui_user: current_user) || @sharing_link
     end
 
     def preview_file
