@@ -43,5 +43,22 @@ module FeeCalculator
       add_fee_to_total(:ppr_discount, -PPR_FEE)
       add_coupon(PPR_COUPON_ID)
     end
+
+    def add_ppr_fee(ppr_fee)
+      return unless options[:pay_ppr_fee]
+      return if @sum.zero?
+
+      if resource.present?
+        return if resource.identifier.sponsored?
+        # return if the user has a paid payment already
+        # this can be either the PPR fee or the full DPC
+        return if resource.identifier.payments.paid.any?
+      end
+
+      # replace existing sum
+      @sum = ppr_fee
+      @sum_options.delete(:storage_fee)
+      @sum_options[:ppr_fee] = ppr_fee
+    end
   end
 end
