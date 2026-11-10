@@ -3,7 +3,7 @@
 # Define an application-wide content security policy
 # For further information see the following documentation
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
-env_domain_mapping= {
+env_domain_mapping = {
   development: 'http://localhost:3000',
   test: 'http://localhost:33000',
   dev: 'https://*.datadryad.org',
@@ -31,7 +31,7 @@ Rails.application.config.content_security_policy do |policy|
                      'https://doubleclick.net',
                      'http://localhost:3000',
                      'http://127.0.0.1:3000',
-                     'https://analytics.google.com',
+                     'https://*.google.com',
                      main_domain
 
   # --------------------
@@ -145,7 +145,7 @@ Rails.application.config.content_security_policy do |policy|
   # --------------------
   # REPORTING
   # --------------------
-  policy.report_uri "/csp-violation-report-endpoint"
+  policy.report_uri '/csp-violation-report-endpoint'
 end
 
 # If you are using UJS then enable automatic nonce generation
