@@ -44,6 +44,8 @@ Rack::Attack.blocklist('malicious_clients') do |req|
       req.path.include?('/etc/passwd') ||
       req.path.include?('wp-admin') ||
       req.path.include?('wp-login') ||
+      req.path.include?('wp-json') ||
+      req.path.include?('wordpress') ||
       req.path.include?('api/v2/cmdb/') ||
       (req.ip.start_with?('172.31') && start_w_wo_stash?(req.path, '/downloads')) ||
       (req.ip.start_with?('64.233') && start_w_wo_stash?(req.path, '/downloads')) ||
@@ -52,6 +54,7 @@ Rack::Attack.blocklist('malicious_clients') do |req|
       (req.ip.start_with?('207.241') && start_w_wo_stash?(req.path, '/downloads')) ||
       (req.ip.start_with?('57.141.16') && start_w_wo_stash?(req.path, '/downloads')) ||
       (req.ip.start_with?('43.1') && req.path.start_with?('/search')) ||
+      (req.ip.start_with?('74.7')) ||
       /\S+\.php/.match?(req.path)
   end
 end
