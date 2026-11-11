@@ -11,6 +11,18 @@
     <% end %>        
   </div>
 
+  <% if policy(@identifier).regenerate_link? %>
+    <div>
+      <%= form_with(url: regenerate_link_path(id: @identifier.id), method: :post) do -%>
+        <p>
+          <button class="o-button__plain-text7" data-confirm="Are you sure you want to invalidate the reviewer link?"><i class="far fa-eye" aria-hidden="true"></i> 
+          </i> Regenerate the reviewer link</button>
+          &nbsp;Invalidate the existing reviewer link and create a new one. The link being replaced will redirect to the DOI in the case of publication, but will no longer be used to access the reviewer view. Link: <code><%= @identifier.shares&.last&.sharing_link %></code>
+        </p>
+      <% end %>
+    </div>
+  <% end %>
+
   <% if policy([:stash_engine, :admin_datasets]).add_concern? %>
     <div>
       <%= form_with(url: add_concern_path(id: @identifier.id), method: :get, local: false) do -%>
@@ -30,9 +42,9 @@
 
   <% if policy(@identifier).reset_payments? %>
     <div>
-      <%= form_with(url: stash_url_helpers.reset_payment_payments_path(identifier_id: @identifier&.id), method: :delete) do -%>
+      <%= form_with(url: reset_payment_payments_path(identifier_id: @identifier&.id), method: :delete) do -%>
         <p>
-          <button class="o-button__plain-text7 prevent-click"><i class="fas fa-cancel" aria-hidden="true"></i> Reset dataset payment</button>
+          <button class="o-button__plain-text7 prevent-click" data-confirm="Are you sure you want to delete the last payment?"><i class="fas fa-cancel" aria-hidden="true"></i> Reset dataset payment</button>
           &nbsp;Note: This will delete last payment(invoice) related records and the user will need to create a new version in order to pay. The Stripe invoice will also be voided.
         </p>
         <%= hidden_field_tag :resource_id, r&.id, id: "resource_id_#{r&.id}" %>
@@ -41,7 +53,7 @@
   <% end %>
 
   <% if policy(@identifier).destroy? %>
-    <%= form_with(url: stash_url_helpers.ds_admin_destroy_path(id: @identifier&.id), method: :delete) do -%>
+    <%= form_with(url: ds_admin_destroy_path(id: @identifier&.id), method: :delete) do -%>
       <p>
         <button class="o-button__plain-text7 prevent-click" data-confirm="Are you sure you want to permanently delete this dataset? This action cannot be undone."><i class="fas fa-trash" aria-hidden="true"></i> Remove dataset</button>
         &nbsp;Note: Deleting a dataset will delete all its data and files.
@@ -49,7 +61,7 @@
       <%= hidden_field_tag :id, @identifier.id, id: "identifier_id_#{@identifier.id}" %>
     <% end %>
   <% elsif policy(r).destroy? %>
-    <%= form_with(url: stash_url_helpers.resource_path(r), method: :delete) do -%>
+    <%= form_with(url: resource_path(r), method: :delete) do -%>
       <p>
         <button class="o-button__plain-text7 prevent-click" data-confirm="Are you sure you want to delete the latest version of this dataset? This action cannot be undone."><i class="fas fa-trash" aria-hidden="true"></i> Revert dataset to previous version</button>
         &nbsp;Note: This action will destroy the latest, in progress version of the dataset.

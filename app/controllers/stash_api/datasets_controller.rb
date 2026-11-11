@@ -167,7 +167,7 @@ module StashApi
         end
       end
 
-      sharing_link = @stash_identifier&.shares&.first&.sharing_link ||
+      sharing_link = @stash_identifier&.shares&.last&.sharing_link ||
         "/api/v2/datasets/#{CGI.escape(@stash_identifier.to_s)}"
       {
         deposit_id: @stash_identifier.identifier,
@@ -254,7 +254,7 @@ module StashApi
 
     # Reformat a `metadata` response object, putting it in the format that Editorial Manager prefers
     def em_reformat_response(metadata:, deposit_request:)
-      sharing_link = @stash_identifier.shares&.first&.sharing_link
+      sharing_link = @stash_identifier.shares&.last&.sharing_link
       return_link = "?returnURL=#{Rails.application.routes.url_helpers.close_page_path}"
       edit_url = (request.protocol + request.host_with_port + metadata[:editLink] + return_link if metadata[:editLink])
       {
