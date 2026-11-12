@@ -54,6 +54,16 @@ module StashEngine
         expect(response_code).to eq(404)
         expect(response.body).to include('Download for this dataset is unavailable')
       end
+
+      it 'will not let people get item who have expired secret sharing link' do
+        # couldn't get 'unstub' to work here for deprecation warnings and other problems, so just redefining it
+        allow_any_instance_of(DownloadsController).to receive(:session).and_return({ user_id: nil }.to_ostruct)
+        share_id = @resource.identifier.shares.first.secret_id
+        # stub_404_status
+        response_code = get "/downloads/download_resource/0?share=#{share_id}"
+        expect(response_code).to eq(404)
+        expect(response.body).to include('Download for this dataset is unavailable')
+      end
     end
 
     describe :share do
@@ -71,6 +81,24 @@ module StashEngine
         response_code = get "/share/#{share_id}"
         expect(response_code).to eq(302) # since this redirects to a generic 404 page
         expect(response.headers['Location']).to eq("http://#{request.host}/404")
+      end
+
+      it 'redirects to landing page for published item' do
+        allow_any_instance_of(DownloadsController).to receive(:session).and_return({ user_id: nil }.to_ostruct)
+        share_id = @resource.identifier.shares.last.secret_id
+        @resource.identifier.update(pub_state: 'retracted')
+        response_code = get "/share/#{share_id}"
+        expect(response_code).to eq(302)
+        expect(response.headers['Location']).to eq("http://#{request.host}/landing/show?id=doi%3A#{CGI.escape(@resource.identifier.identifier)}")
+      end
+
+      it 'redirects to landing page for published item when share link is expired' do
+        allow_any_instance_of(DownloadsController).to receive(:session).and_return({ user_id: nil }.to_ostruct)
+        share_id = @resource.identifier.shares.first.secret_id
+        @resource.identifier.update(pub_state: 'retracted')
+        response_code = get "/share/#{share_id}"
+        expect(response_code).to eq(302)
+        expect(response.headers['Location']).to eq("http://#{request.host}/landing/show?id=doi%3A#{CGI.escape(@resource.identifier.identifier)}")
       end
     end
   end
