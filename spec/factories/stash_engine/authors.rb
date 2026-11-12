@@ -18,6 +18,7 @@
 #
 # Indexes
 #
+#  index_stash_engine_authors_on_author_email  (author_email)
 #  index_stash_engine_authors_on_author_orcid  (author_orcid)
 #  index_stash_engine_authors_on_resource_id   (resource_id)
 #
