@@ -3,7 +3,7 @@
   	<h2>Funding</h2>
     <ul class="o-list">
       <% contributors.to_a.group_by{|c| [c.identifier_type, c.name_identifier_id, c.contributor_name]}.each do |group| %>
-        <% ror_funder = group.first.last.present? && group.first.first == 'ror' %>
+        <% ror_funder = group.first.second.present? && group.first.first == 'ror' %>
         <% contributor = group.last.first %>
         <li>
           <% if ror_funder%><a href="<%= new_search_path(org: contributor.name_identifier_id) %>"><%= contributor.contributor_name_friendly%></a><%
