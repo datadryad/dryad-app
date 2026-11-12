@@ -3,7 +3,7 @@ module FeeCalculator
     def call
       verify_new_payment_system
       verify_max_storage_size if resource
-      return no_payment_required if resource&.hold_for_peer_review? && resource.identifier.payments.paid.where(ppr_fee_paid: false).any?
+      return no_payment_required if ppr_paid_in_full
 
       add_individual_storage_fee
       add_storage_fee_label
@@ -60,6 +60,13 @@ module FeeCalculator
       add_individual_storage_fee
       @sum_options[:storage_fee_label] = storage_fee_label
       @sum_options.merge(total: 0)
+    end
+
+    def ppr_paid_in_full
+      return false if resource.blank?
+      return false unless resource.is_a?(StashEngine::Resource)
+
+      resource.hold_for_peer_review? && resource.identifier.payments.paid.where(ppr_fee_paid: false).exists?
     end
   end
 end
