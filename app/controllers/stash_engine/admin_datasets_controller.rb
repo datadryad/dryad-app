@@ -216,6 +216,14 @@ module StashEngine
       respond_to(&:js)
     end
 
+    def regenerate_link
+      identifier = Identifier.find(params[:id])
+      authorize identifier
+
+      StashEngine::Share.create(identifier_id: params[:id])
+      redirect_to activity_log_path(identifier.id), notice: 'Reviewer link has been regenerated'
+    end
+
     def destroy
       identifier = Identifier.find(params[:id])
       authorize identifier
