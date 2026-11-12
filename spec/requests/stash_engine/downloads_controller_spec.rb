@@ -40,7 +40,7 @@ module StashEngine
       it 'lets people pass who have the secret sharing link' do
         # couldn't get 'unstub' to work here for deprecation warnings and other problems, so just redefining it
         allow_any_instance_of(DownloadsController).to receive(:session).and_return({ user_id: nil }.to_ostruct)
-        share_id = @resource.identifier.shares.first.secret_id
+        share_id = @resource.identifier.shares.last.secret_id
         response_code = get "/downloads/download_resource/0?share=#{share_id}"
         expect(response_code).to eq(302)
       end
@@ -48,7 +48,7 @@ module StashEngine
       it 'will not let people get item who have incorrect secret sharing link' do
         # couldn't get 'unstub' to work here for deprecation warnings and other problems, so just redefining it
         allow_any_instance_of(DownloadsController).to receive(:session).and_return({ user_id: nil }.to_ostruct)
-        share_id = @resource.identifier.shares.first.secret_id
+        share_id = @resource.identifier.shares.last.secret_id
         # stub_404_status
         response_code = get "/downloads/download_resource/0?share=#{share_id}lol"
         expect(response_code).to eq(404)
@@ -59,14 +59,14 @@ module StashEngine
     describe :share do
       it 'gives 200 in response to valid share item' do
         allow_any_instance_of(DownloadsController).to receive(:session).and_return({ user_id: nil }.to_ostruct)
-        share_id = @resource.identifier.shares.first.secret_id
+        share_id = @resource.identifier.shares.last.secret_id
         response_code = get "/share/#{share_id}"
         expect(response_code).to eq(200)
       end
 
       it 'gives 404 in response to sharing for withdrawn item' do
         allow_any_instance_of(DownloadsController).to receive(:session).and_return({ user_id: nil }.to_ostruct)
-        share_id = @resource.identifier.shares.first.secret_id
+        share_id = @resource.identifier.shares.last.secret_id
         @resource.identifier.update(pub_state: 'withdrawn')
         response_code = get "/share/#{share_id}"
         expect(response_code).to eq(302) # since this redirects to a generic 404 page
