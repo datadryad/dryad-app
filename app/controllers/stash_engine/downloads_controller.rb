@@ -8,6 +8,7 @@ module StashEngine
     include StashEngine::DownloadsHelper
 
     before_action :check_user_agent, :check_ip, :setup_streaming
+    before_action :set_file_and_resource, only: %i[preview_file preview_check]
 
     def check_user_agent
       # This reads a text file with one line and a regular expression in it and blocks if the user-agent matches the regexp
@@ -90,7 +91,15 @@ module StashEngine
     def file_stream
       check_for_sharing
       data_file = DataFile.where(id: params[:file_id]).present_files.first
-      if data_file&.resource&.may_download?(ui_user: current_user) || @sharing_link
+      @resource = data_file.resource unless params[:share]
+
+      if @resource&.id != params[:resource_id].to_i && params[:share] && @resource&.id != data_file&.resource_id
+        render status: 403, plain: 'You may not download this file.'
+        return
+      end
+
+      # for share, allow downloading files only from the shared resource
+      if data_file&.resource&.may_download?(ui_user: current_user) || (@sharing_link && data_file&.resource&.id == @resource.id)
         response.set_header(
           'Link',
           "<#{file_linkset_url(file_id: data_file.id)}>; rel=\"linkset\"; type=\"application/linkset\",
@@ -157,11 +166,14 @@ module StashEngine
     end
 
     def preview_check
-      @file = DataFile.find(params[:file_id])
+      render :no_preview if params[:resource_id].to_i != @resource.id || !can_download?
     end
 
     def preview_file
-      @file = DataFile.find(params[:file_id])
+      if params[:resource_id].to_i != @resource.id || !can_download?
+        render status: 403, plain: 'You are not authorized to preview this file.'
+        return
+      end
 
       if %w[csv txt].include?(@file.preview_type)
         @preview = @file.text_preview
@@ -174,6 +186,11 @@ module StashEngine
     end
 
     private
+
+    def set_file_and_resource
+      @file = DataFile.find(params[:file_id])
+      @resource = @file.resource
+    end
 
     def lset_linkset
       "<#{show_url(id: @file.resource.identifier_str)}>; rel=\"collection\" type=\"text/html\" anchor=\"#{download_stream_url(file_id: @file.id)}\",
@@ -229,7 +246,7 @@ module StashEngine
 
       return unless @resource.blank? && params[:share]
 
-      @resource = resource_from_share
+      pp @resource = resource_from_share
       @sharing_link = true if @resource
     end
 

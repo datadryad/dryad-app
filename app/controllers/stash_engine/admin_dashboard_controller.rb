@@ -308,11 +308,11 @@ module StashEngine
 
     def size_filter
       from = @filters.dig(:size, :least).to_i
-      to = @filters.dig(:size, :most)
+      to = @filters.dig(:size, :most) || 2_000_000_000_000
 
       @datasets = @datasets.where("#{
         'stash_engine_resources.total_file_size IS NULL OR ' if from.zero?
-      }stash_engine_resources.total_file_size #{"BETWEEN #{from} AND #{to.presence || 2_000_000_000_000}"}")
+      }stash_engine_resources.total_file_size BETWEEN ? AND ?", from, to)
     end
 
     def tenant_filter
@@ -412,12 +412,21 @@ module StashEngine
     end
 
     def date_string(date_hash)
-      from = date_hash[:start_date]
-      to = date_hash[:end_date]
+      from = parse_date(date_hash[:start_date])
+      to   = parse_date(date_hash[:end_date])
+
       return "<= '#{to}'" if from.blank?
       return ">= '#{from}'" if to.blank?
 
       "BETWEEN '#{from}' AND '#{to}'"
+    end
+
+    def parse_date(value)
+      return nil if value.blank?
+
+      Date.iso8601(value.to_s)
+    rescue ArgumentError
+      nil # or raise / add a validation error
     end
 
     def add_subqueries

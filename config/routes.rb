@@ -141,8 +141,6 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :edit_histories, only: [:index]
-
     # these are weird and different and want to get rid of these with file redesign
     match 'data_file/validate_urls/:resource_id', to: 'data_files#validate_urls', as: 'data_file_validate_urls', via: %i[get post put]
     match 'software_file/validate_urls/:resource_id', to: 'software_files#validate_urls', as: 'software_file_validate_urls', via: %i[get post put]
