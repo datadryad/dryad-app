@@ -296,12 +296,13 @@ module FeeCalculator
 
         context 'with ppr fee paid' do
           let(:prev_files_size) { nil }
-          let(:coupon_id) { 'PPR_DISCOUNT_2025' }
+          let(:coupon_id) { PPR_COUPON_ID }
           let(:first_resource) { create(:resource, total_file_size: new_files_size, identifier: identifier, created_at: 2.minutes.ago) }
-          let!(:payment) { create(:resource_payment, resource: first_resource, ppr_fee_paid: true, amount: 50, status: :paid) }
-          let(:resource) { create(:resource, total_file_size: new_files_size, identifier: identifier) }
+          let!(:payment) { create(:resource_payment, resource: first_resource, ppr_fee_paid: true, amount: PPR_FEE, status: :paid) }
+          let(:resource) { create(:resource, total_file_size: new_files_size, identifier: identifier, hold_for_peer_review: false) }
 
           context 'when ppr continues' do
+            let(:resource) { create(:resource, total_file_size: new_files_size, identifier: identifier, hold_for_peer_review: true) }
             let(:options) { { pay_ppr_fee: true } }
 
             it { is_expected.to eq({ coupon_id: coupon_id, ppr_fee: 50, ppr_discount: -50, total: 0 }) }
@@ -319,6 +320,36 @@ module FeeCalculator
           end
 
           it_behaves_like 'it has 2 TB max limit'
+        end
+
+        context 'when it remains in PPR' do
+          context 'when a payment already exists' do
+            let(:identifier) { create(:identifier, last_invoiced_file_size: nil) }
+            let!(:resource_1) { create(:resource, identifier: identifier, hold_for_peer_review: true, created_at: 2.seconds.ago) }
+            let!(:payment) { create(:resource_payment, resource: resource_1, amount: PPR_FEE, ppr_fee_paid: true, status: :created) }
+            let!(:resource) { create(:resource, identifier: identifier, hold_for_peer_review: true, total_file_size: 100_000_000_001) }
+            let(:options) { { pay_ppr_fee: true, storage_size: 100_000_000_001 } }
+
+            context 'when nothing is paid' do
+              it { is_expected.to eq({ ppr_fee: 50, total: 50 }) }
+            end
+
+            context 'when ppr fee was paid' do
+              let!(:payment) do
+                create(:resource_payment, resource: resource_1, amount: PPR_FEE, ppr_fee_paid: true, has_discount: false, status: :paid)
+              end
+              let(:options) { { storage_size: 100_000_000_001 } }
+
+              it { is_expected.to eq({ storage_fee: 1_750, ppr_discount: -50, total: 1_700, coupon_id: PPR_COUPON_ID }) }
+            end
+
+            context 'when full fee was paid' do
+              let(:identifier) { create(:identifier, last_invoiced_file_size: 10) }
+              let!(:payment) { create(:resource_payment, resource: resource_1, amount: 150, ppr_fee_paid: false, status: :paid) }
+
+              it { is_expected.to eq({ storage_fee: 1_600, total: 0 }) }
+            end
+          end
         end
       end
     end
