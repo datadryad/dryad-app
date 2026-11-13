@@ -10,7 +10,7 @@
 <div class="admin-dashboard-results">
   <h2>Configuration</h2>
   <% if @sponsor_details.type != 'StashEngine::Journal' && policy(@sponsor).edit? %>
-    <%= form_with(url: payment_details_edit_path(id: @sponsor.id, type: @sponsor_details.type), method: :get, local: false) do %>
+    <%= form_with(url: payment_details_edit_path(id: @sponsor.id, type: make_type(@sponsor)), method: :get, local: false) do %>
       <button class="c-admin-edit-icon" aria-label="Edit payment details" aria-haspopup="dialog" id="edit_button_<%= @sponsor.id %>">
         <i class="fa fa-pencil" aria-hidden="true"></i>
       </button>
