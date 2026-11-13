@@ -111,7 +111,11 @@ module StashApi
     end
 
     def s3
-      @s3 ||= Aws::S3::Client.new
+      @s3 ||= Aws::S3::Client.new(region: APP_CONFIG.s3.region, credentials: credentials)
+    end
+
+    def credentials
+      Aws::Credentials.new(APP_CONFIG.s3.key, APP_CONFIG.s3.secret)
     end
 
     def presigner

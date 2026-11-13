@@ -8,6 +8,8 @@ After=remote-fs.target network.target
 User=ec2-user
 WorkingDirectory=/home/ec2-user/deploy/current
 Environment=RAILS_ENV=some_environment
+Environment=RAILS_MAX_THREADS=5
+Environment=WEB_CONCURRENCY=4
 
 ExecStart=/home/ec2-user/.rbenv/shims/bundle exec pumactl -F config/puma.rb start
 ExecReload=/home/ec2-user/.rbenv/shims/bundle exec pumactl -F config/puma.rb phased-restart

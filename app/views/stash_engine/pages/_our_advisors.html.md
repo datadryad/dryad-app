@@ -1,4 +1,4 @@
-<small>Updated November 5, 2026</small>
+<small>Updated November 18, 2026</small>
 
 Dryad committees, advisory groups and task forces are appointed by the Board to support the healthy, transparent operation of the organization and the powerful realization of Dryad strategy. Community participation is warmly invited through semi-annual, open calls for application ([For example](https://blog.datadryad.org/2023/12/18/join-us-invitation-to-participate-in-dryad-committees/)). Follow us to get the latest.
 
@@ -14,22 +14,6 @@ Dryad committees, advisory groups and task forces are appointed by the Board to 
 * **Karl Benedict**, Retired, University of New Mexico Libraries  
 * **Jake Carlson**, University at Buffalo  
 * **Matt Wascavage**, Alliance of Crop, Soil, and Environmental Science Societies (ACSESS)
-
-        
-#### Strategic Advisory Taskforce
-
-* **Andrea Chiarelli**, Research Consulting  
-* **Monica Granados**, Creative Commons  
-* **Ted Habermann**, Metadata Game Changers  
-* **Hilmar Lapp**, Duke  
-* **Adam Leary**, Oxford University Press  
-* **Helena Ledmyr**, INCF  
-* **Rory Macneil**, Research Space  
-* **Katherine (Katy) McNeill**, Independent  
-* **Ian Mulvany**, BMJ  
-* **John Wilbanks**, Astera Institute  
-* **Ryan Scherle**, Dryad  
-* **Jen Gibson**, Dryad
 
         
 #### Nominations and Elections Advisory Group
