@@ -30,6 +30,7 @@
           <% res.current_file_uploads.each do |fu| %>
           <% params = {file_id: fu.id} %>
           <% params[:share] = share[:code] if share.present? %>
+          <% params[:resource_id] = fu.resource_id unless share.present? %>
             <li>
               <span>
                 <%= download_file_name_link(fu, params) %>
@@ -41,7 +42,7 @@
                   <%= button_to '<i class="far fa-eye c-file-group__preview" aria-hidden="true"></i>Open metadata viewer'.html_safe, cedar_preview_path(res.id), remote: true, class: 'o-button__plain-text7', method: 'get' %>
                   <% end %>
                   <% unless fu.preview_type.nil? %>
-                    <div id="file_preview_check<%= fu.id %>" data-load="<%= preview_check_path(file_id: fu.id, format: :js) %>" aria-live="polite" aria-busy="true">
+                    <div id="file_preview_check<%= fu.id %>" data-load="<%= preview_check_path(file_id: fu.id, resource_id: res.id, format: :js) %>" aria-live="polite" aria-busy="true">
                       <i class="fas fa-spin fa-spinner" aria-hidden="true"></i>
                     </div>
                   <% end %>
