@@ -11,7 +11,7 @@ export default function CalculateFees({resource}) {
   const paid = !!resource.identifier.last_invoiced_file_size;
 
   /* eslint-disable max-len */
-  if (paid && fees.storage_fee_label) {
+  if (paid && fees.total && fees.storage_fee_label) {
     return (
       <>
         <p>This dataset has been previously submitted and the <a href="/costs" target="blank">{fees.storage_fee_label}<ExitIcon /></a> has been paid for {formatSizeUnits(resource.identifier.last_invoiced_file_size)}.</p>
@@ -22,10 +22,22 @@ export default function CalculateFees({resource}) {
     );
   }
 
-  if (ppr && fees.ppr_discount) {
-    return (
-      <p>The <b>{(50).toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</b> Private for Peer Review Fee has been paid. The remainder of the <a href="/costs" target="blank">{fees.storage_fee_label}<ExitIcon /></a> is due at submission for curation and publication.</p>
-    );
+  if (ppr) {
+    if (fees.ppr_discount) {
+      return (
+        <p>The <b>{(50).toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</b> Private for Peer Review Fee
+          has been paid. The remainder of the <a href="/costs" target="blank">{fees.storage_fee_label}<ExitIcon /></a> is due at
+          submission for curation and publication.</p>
+      );
+    }
+    else if(fees.total === 0 && fees.storage_fee) {
+      return (
+        <>
+          <p>This dataset has been previously submitted and the <a href="/costs" target="blank">{fees.storage_fee_label}<ExitIcon /></a> has been paid for {formatSizeUnits(resource.identifier.last_invoiced_file_size)}.</p>
+          <p>Since the dataset size has increased to {formatSizeUnits(resource.total_file_size)}, an additional charge of <b>{fees.storage_fee.toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</b> is due at submission for curation and publication.</p>
+        </>
+      );
+    }
   }
 
   if (fees.total && fees.storage_fee) {

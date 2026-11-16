@@ -16,7 +16,7 @@ module StashDatacite
         if current_user&.min_app_admin? && award.api_integration_key.present? && award.award_number.blank?
           item += "<i class=\"fas fa-circle-exclamation unmatched-icon\" role=\"note\" aria-label=\"Missing award number\" title=\"Award number missing for #{award.api_integration_key} funder\"></i>"
         end
-        item += "(<span>#{award.award_description}</span>)" if award.award_description.present?
+        item += " (<span>#{award.award_description}</span>)" if award.award_description.present?
         item
       end.join(', ')
       str + list

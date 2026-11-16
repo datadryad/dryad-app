@@ -147,28 +147,21 @@ RSpec.feature 'PPR PaymentFlows for individual users', type: :feature, js: true 
             let(:resource_file_size) { 20_000_000_000 }
 
             context 'when DPC was paid in full (not the PPR fee)' do
+              it 'user is not prompted to pay anything' do
+                unsponsored_no_fee
+                no_ldf
+              end
 
-              it 'user is not prompted to pay the PPR fee' do
-                unsponsored_with_fee('20 GB', '370.00')
-
+              it 'user sees correct text' do
                 expect(page).not_to have_content(
                   'You may choose to pay only $50.00, with the remainder due at the ' \
                   'end of the peer review period. The Private for Peer Review Fee is nonrefundable.'
                 )
 
-                click_button 'Pay & submit for peer review'
-
+                expect(page).to have_content('This dataset has been previously submitted and the Data Publishing Charge has been paid for 34 B.')
                 expect(page).to have_content(
-                  'Since the dataset size has increased to 20 GB, submitting this new ' \
-                  'version will come with an additional charge of $370.00.'
+                  'Since the dataset size has increased to 20 GB, an additional charge of $370.00 is due at submission for curation and publication.'
                 )
-                expect(page).not_to have_content(
-                  'You may choose to pay only $50.00, with the remainder due at ' \
-                  'the end of the peer review period. The Private for Peer Review Fee is nonrefundable.'
-                )
-
-                expect(page).not_to have_css('button', exact_text: 'Pay full $370.00 now')
-                expect(page).not_to have_css('button', exact_text: 'Pay $50.00 Peer Review Fee')
               end
             end
 
