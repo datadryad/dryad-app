@@ -34,7 +34,7 @@ A few times a year, we ask volunteer user testers to provide feedback on sneak p
 ## General enquiries
 
 <p><strong>Email:</strong> <a class="emailr" href="mailto:dev@null"  aria-label="Email Dryad">gro.dayrdatad@olleh</a></p>
-<p><strong>Phone:</strong> <a href="tel:+18024731161">+1  802-473-1161</a></p>
+<p><strong>Phone:</strong> <a href="tel:+18024731161">+1 802-473-1161</a></p>
 <p><a href="https://bsky.app/profile/datadryad.bsky.social">BlueSky</a> | <a href="https://mstdn.science/@datadryad">Mastodon</a> | <a href="https://www.linkedin.com/company/datadryad/">LinkedIn</a></p>
 
 ## Head office
