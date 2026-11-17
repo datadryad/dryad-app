@@ -23,9 +23,14 @@ In order to import metadata from one of these works, follow the steps on the **C
 
 Related publications of many types can be connected to your data from the **Related works** screen of the submission checklist. For each publication, you will need a DOI or other URL. Connections can be made to works of the following types:
 
-* Article
-* Dataset
-* Preprint
-* Software
-* Supplemental information
-* Data management plan
+<dl class="def-list">
+  <div><dt>Article</dt><dd>A written composition, which forms a distinct part of a journal.</dd></div>
+  <div><dt>Dataset</dt><dd>Data encoded in a defined structure.</dd></div>
+  <div><dt>Preprint</dt><dd>A version of a scholarly or scientific paper that precedes formal peer review and publication in a peer-reviewed scholarly or scientific journal.</dd></div>
+  <div><dt>Software</dt><dd>A computer program, other than a computational notebook, in either source code (text) or compiled form, supporting scholarly research.</dd></div>
+  <div><dt>Data management plan</dt><dd>A formal document that outlines how research outputs are to be handled both during a research project and after the project is completed.</dd></div>
+  <div><dt>Instrument</dt><dd>A device, tool or apparatus used to obtain, measure and/or analyze data.</dd></div>
+  <div><dt>Supplemental information</dt><dd>Files supplemental to a research output that do not fall into any of the other related work types.</dd></div>
+</dl>
+
+Related work type definitions come primarily from [DataCite resourceTypeGeneral](https://datacite-metadata-schema.readthedocs.io/en/4.7/appendices/appendix-1/resourceTypeGeneral).
