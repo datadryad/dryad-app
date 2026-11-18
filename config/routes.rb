@@ -327,6 +327,7 @@ Rails.application.routes.draw do
     post 'ds_admin/:id/pub_dates', to: 'admin_datasets#pub_dates', as: 'ds_admin_pub_dates'
     post 'ds_admin/:id/make_report', to: 'admin_datasets#make_report', as: 'make_report'
     post 'ds_admin/:id/issue', to: 'admin_datasets#create_issue', as: 'ds_admin_issue'
+    post 'ds_admin/:id/regenerate_link', to: 'admin_datasets#regenerate_link', as: 'regenerate_link'
     delete 'ds_admin/:id', to: 'admin_datasets#destroy', as: 'ds_admin_destroy'
 
     # curation notes

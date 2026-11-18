@@ -13,6 +13,11 @@ module StashEngine
         @record.payments.first.pay_with_invoice
     end
 
+    def regenerate_link?
+      @user.min_manager? &&
+      !@record.published? && !record.withdrawn?
+    end
+
     class Scope
       def initialize(user, scope)
         @user = user
