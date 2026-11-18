@@ -84,6 +84,7 @@ module StashEngine
       redirect_to(app_404_path) and return if @resource.identifier.pub_state == 'withdrawn'
       redirect_to_public and return if @resource.identifier.pub_state == 'retracted'
       redirect_to_public and return if @resource.identifier.published? && @resource.identifier.accepted_for_publication?
+      redirect_to(app_404_path) and return if invalid_share?
     end
 
     # uses presigned
@@ -214,6 +215,17 @@ module StashEngine
       end
     end
 
+    # check if sharing code has been replaced and should redirect to DOI
+    def invalid_share?
+      my_id = params[:share] || params[:id]
+      return true if my_id.blank?
+
+      @share = Share.where(secret_id: my_id).first
+      return true if @share.blank?
+
+      @share != @share.identifier&.shares&.last
+    end
+
     def resource_from_share
       my_id = params[:share] || params[:id]
       return nil if my_id.blank?
@@ -228,6 +240,7 @@ module StashEngine
       @sharing_link = false
 
       return unless @resource.blank? && params[:share]
+      return if invalid_share?
 
       @resource = resource_from_share
       @sharing_link = true if @resource
@@ -240,7 +253,7 @@ module StashEngine
 
     def can_download?
       @resource.may_download?(ui_user: current_user) ||
-          (!params[:secret_id].blank? && @resource&.identifier&.shares&.where(secret_id: params[:secret_id])&.count&.positive?)
+          (!params[:secret_id].blank? && @resource&.identifier&.shares&.last&.secret_id == params[:secret_id])
     end
 
     def redirect_to_public
