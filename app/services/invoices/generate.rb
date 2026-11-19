@@ -5,6 +5,7 @@ require 'csv'
 module Invoices
   class Generate
     include ActionView::Helpers::NumberHelper
+    include Reports::BaseS3Report
 
     attr_reader :commitment, :sponsor, :year, :csv
 
@@ -13,14 +14,20 @@ module Invoices
       @year = year
       @commitment = year_commitment
       @csv = []
+      filename = "#{StashEngine::GenericFile.sanitize_file_name(PayerDetailsService.new(sponsor).name)}_#{year}_invoice.pdf"
+      @file_path = "#{Rails.env}/#{year}/#{filename}"
     end
 
     def as_pdf
       raise 'Invalid sponsor' unless sponsor.present?
 
       summary = Invoices::Summary.new(commitment, sponsor, year).generate_pdf
-      generate_identifiers_list(summary)
-      true
+      pdf = generate_identifiers_list(summary)
+      if upload_to_s3(pdf, @file_path, s3_bucket_name: APP_CONFIG.s3.invoices_bucket)
+        inv = SponsorInvoice.find_or_initialize_by(sponsor: sponsor, year: year)
+        return inv.update(s3_key: @file_path)
+      end
+      false
     end
 
     private
@@ -31,10 +38,6 @@ module Invoices
 
     def generate_identifiers_list(summary)
       return if sponsor.blank?
-
-      filename = "datasets_list_#{year}_submissions_#{StashEngine::GenericFile.sanitize_file_name(PayerDetailsService.new(sponsor).name)}_#{year}.pdf"
-      file_path = File.join(REPORTS_DIR, filename)
-      Rails.logger.info "Writing sponsor summary to #{filename}"
 
       template_path = Rails.root.join('app', 'views', 'payment_details', 'pdf_identifiers.html.erb')
       html_template = File.read(template_path)
@@ -48,10 +51,7 @@ module Invoices
       context.instance_variable_set(:@calculations, summary)
       rendered_html = erb_template.result(context.instance_eval { binding })
 
-      pdf = Grover.new(rendered_html).to_pdf
-      File.open(file_path, 'wb') do |file|
-        file << pdf
-      end
+      Grover.new(rendered_html).to_pdf
     end
   end
 end
