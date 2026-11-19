@@ -15,8 +15,10 @@ module Invoices
     end
 
     def generate
+      raise 'Invalid sponsor' unless sponsor.present?
+      raise 'Sponsor contract is not configured' unless commitment.present?
+
       add_contract_details
-      add_separator
       add_separator
       add_separator
       add_invoice_summary

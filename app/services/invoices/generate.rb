@@ -16,14 +16,14 @@ module Invoices
     end
 
     def as_pdf
+      raise 'Invalid sponsor' unless sponsor.present?
+
       summary = Invoices::Summary.new(commitment, sponsor, year).generate_pdf
       generate_identifiers_list(summary)
       true
     end
 
-    def as_csv
-      Invoices::Summary.new(commitment, sponsor, year).generate_csv
-    end
+    private
 
     def year_commitment
       PaymentCommitment.where(year: year, payment_configuration_id: sponsor.payment_configuration.id).first
@@ -32,7 +32,7 @@ module Invoices
     def generate_identifiers_list(summary)
       return if sponsor.blank?
 
-      filename = "datasets_list_#{year}_submissions_#{StashEngine::GenericFile.sanitize_file_name(sponsor.long_name)}_#{year}.pdf"
+      filename = "datasets_list_#{year}_submissions_#{StashEngine::GenericFile.sanitize_file_name(PayerDetailsService.new(sponsor).name)}_#{year}.pdf"
       file_path = File.join(REPORTS_DIR, filename)
       Rails.logger.info "Writing sponsor summary to #{filename}"
 

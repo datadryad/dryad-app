@@ -10,7 +10,7 @@ class PaymentCommitmentService
     ldf_size_limit: 0,
     include_year_0: nil
   )
-    # make dpc and dpc carriover as number of datasets based on tier input
+    # make dpc and dpc carryover as number of datasets based on tier input
     start_year = start_date.year
     discounts = COMMITMENT_DISCOUNTS[commitment_years.to_s]
     # if include_year_0 is not specified

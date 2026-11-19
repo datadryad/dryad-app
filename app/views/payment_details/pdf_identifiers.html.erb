@@ -1,6 +1,6 @@
 <% higher_level = @sponsor.class.method_defined?(:payers_sponsored) && @sponsor.payers_sponsored.reject{|y| y == @sponsor}.present? %>
 <div class="table-wrapper c-lined-table-wrapper" style="margin-top: .5rem; margin-bottom: 3rem">
-  <%= @sponsor.long_name %>
+  <%= PayerDetailsService.new(@sponsor).name %>
 </div>
 
 <div class="table-wrapper c-lined-table-wrapper" style="margin-top: .5rem; margin-bottom: 3rem">
