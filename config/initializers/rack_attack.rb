@@ -108,7 +108,8 @@ Rack::Attack.throttle('all_requests_by_IP', limit: APP_CONFIG[:rate_limit][:all_
     req.path.match(%r{^/resources/\d+/aff_check}) ||
     req.path.match(%r{^/resources/\d+/dupe_check}) ||
     req.path.match(%r{^/payments/check/\d+}) ||
-    req.path.match(%r{^/resource_fee_calculator/\d+})
+    req.path.match(%r{.*/autocomplete.*})
+    req.path.match(%r{.*/update})
 end
 
 # File download throttling
