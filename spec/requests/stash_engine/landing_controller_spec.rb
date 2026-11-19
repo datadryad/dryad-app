@@ -113,7 +113,7 @@ module StashEngine
       get linkset_path(id: @identifier.to_s, format: :json)
       expect(response.content_type).to eq('application/linkset+json')
       expect(response.body).to include(res.authors.first.author_orcid)
-      expect(response.body).to include(download_stream_url(file_id: res.data_files.present_files.first.id))
+      expect(response.body).to include(download_stream_url(file_id: res.data_files.present_files.first.id, resource_id: res.id))
     end
 
     it 'allows loading in iFrames only for show method' do
