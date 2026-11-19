@@ -237,7 +237,6 @@ Rails.application.routes.draw do
     get 'publication_policy', to: 'pages#publication_policy'
     get 'privacy', to: 'pages#privacy'
     get 'accessibility', to: 'pages#accessibility'
-    get 'membership', to: 'pages#membership'
     get 'publishers', to: 'pages#fees_publisher'
     get 'institutions', to: 'pages#fees_institution'
     get 'fee_waiver', to: 'pages#fee_waiver'
@@ -630,6 +629,7 @@ Rails.application.routes.draw do
   get '/stash/interested', to: redirect('/contact#get-involved')
   get '/stash/ds_admin', to: redirect('/admin_dashboard')
   get '/ds_admin_funders', to: redirect('/admin_dashboard')
+  get '/membership', to: redirect('/partner_terms')
 
   get '/stash', to: redirect('/')
   get '/stash/*path', to: redirect { |params, req|
