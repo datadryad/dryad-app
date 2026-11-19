@@ -7,10 +7,12 @@ class CreatePaymentCommitments < ActiveRecord::Migration[8.0]
       t.integer :year_index
       t.integer :year
       t.string :payment_plan
-      t.float :dpc_commitment
-      t.float :dpc_carryover
+      t.float :dpc_commitment_price
+      t.integer :dpc_commitment
+      t.integer :dpc_carryover
       t.float :ldf_commitment
       t.float :ldf_carryover
+      t.integer :ldf_size_limit
       t.float :asf
       t.float :period_discount
       t.float :consortium_discount

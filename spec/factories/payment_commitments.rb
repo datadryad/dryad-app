@@ -10,10 +10,12 @@
 #  commitment_years         :integer
 #  consortium_discount      :float(24)
 #  deleted_at               :datetime
-#  dpc_carryover            :float(24)
-#  dpc_commitment           :float(24)
+#  dpc_carryover            :integer
+#  dpc_commitment           :integer
+#  dpc_commitment_price     :float(24)
 #  ldf_carryover            :float(24)
 #  ldf_commitment           :float(24)
+#  ldf_size_limit           :integer
 #  payment_plan             :string(191)
 #  period_discount          :float(24)
 #  start_date               :date

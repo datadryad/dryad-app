@@ -10,10 +10,12 @@
 #  commitment_years         :integer
 #  consortium_discount      :float(24)
 #  deleted_at               :datetime
-#  dpc_carryover            :float(24)
-#  dpc_commitment           :float(24)
+#  dpc_carryover            :integer
+#  dpc_commitment           :integer
+#  dpc_commitment_price     :float(24)
 #  ldf_carryover            :float(24)
 #  ldf_commitment           :float(24)
+#  ldf_size_limit           :integer
 #  payment_plan             :string(191)
 #  period_discount          :float(24)
 #  start_date               :date
@@ -24,26 +26,6 @@
 #  updated_at               :datetime         not null
 #  payment_configuration_id :integer
 #
-#  id                       :bigint           not null, primary key
-#  asf                      :float(24)
-#  asf_due                  :float(24)
-#  asf_prepaid              :float(24)
-#  commitment_years         :integer
-#  consortium_discount      :float(24)
-#  deleted_at               :datetime
-#  dpc_carryover            :float(24)
-#  dpc_commitment           :float(24)
-#  fdl_carryover            :float(24)
-#  ldf_commitment           :float(24)
-#  payment_plan             :string(191)
-#  period_discount          :float(24)
-#  update_notes             :json
-#  year                     :integer
-#  year_index               :integer
-#  created_at               :datetime         not null
-#  updated_at               :datetime         not null
-#  payment_configuration_id :integer
-
 class PaymentCommitment < ApplicationRecord
   attr_accessor :note
   acts_as_paranoid
