@@ -16,6 +16,10 @@ class PayerDetailsService
     OpenStruct.new(info)
   end
 
+  def name
+    adapter.name
+  end
+
   private
 
   def adapter
