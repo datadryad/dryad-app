@@ -12,8 +12,7 @@ class PaymentCommitmentsController < StashEngine::ApplicationController
   def create
     authorize PaymentCommitment
 
-    pp @sponsor
-    pp generated = PaymentCommitmentService.new(@sponsor).generate(
+    error_message = PaymentCommitmentService.new(@sponsor).generate(
       create_params[:commitment_years].to_i,
       asf: create_params[:asf].to_f,
       asf_prepaid: create_params[:asf_prepaid].to_f,
@@ -22,13 +21,13 @@ class PaymentCommitmentsController < StashEngine::ApplicationController
       consortium_discount: create_params[:consortium_discount].to_i,
       ldf_size_limit: create_params[:ldf_size_limit].to_i,
       ldf: create_params[:ldf_commitment].to_i,
-      include_year_0: create_params[:include_year_0].presence
+      include_year_0: ActiveModel::Type::Boolean.new.cast(create_params[:include_year_0])
     )
 
-    if generated == true
-      flash[:notice] = 'Payment commitments generated successfully'
+    if error_message.is_a?(String)
+      flash.now[:alert] = error_message
     else
-      flash.now[:alert] = generated
+      @reload = true
     end
     respond_to(&:js)
   end

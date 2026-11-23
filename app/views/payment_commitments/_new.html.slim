@@ -10,19 +10,17 @@ h1 id="dialog-title" Add new contract
 
   .c-input
     label.c-input__label [for=:commitment_years] Commitment years:
-    = f.number_field :commitment_years, value: params[:commitment_years] ,class: 'c-input__text'
+    = f.number_field :commitment_years, value: params[:commitment_years], class: 'c-input__text'
   .c-input
     label.c-input__label [for=:start_date] Start date:
     = f.date_field :start_date, value: params[:start_date], class: 'c-input__text'
   .c-input
-    label.c-input__label [for=:include_year_0] Include year 0:
-    = f.checkbox :include_year_0
+    label.c-input__label [for=:include_year_0]
+      | Include year 0:
+      = f.checkbox :include_year_0, style: "margin-left: 10px"
   .c-input
     label.c-input__label [for=:asf] Annual Service Fee:
     = f.number_field :asf, value: params[:asf], class: 'c-input__text'
-  / .c-input
-  /   label.c-input__label [for=:period_discount] Discount:
-  /   = f.number_field :period_discount, class: 'c-input__text'
   .c-input
     label.c-input__label [for=:consortium_discount] Consortium discount:
     = f.number_field :consortium_discount, value: params[:consortium_discount], class: 'c-input__text'

@@ -1,7 +1,7 @@
 class PaymentCommitmentService
   attr_reader :sponsor, :error
 
-  # rubocop:disable Metrics/MethodLength, Metrics/ParameterLists, Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength, Metrics/ParameterLists
   def initialize(sponsor)
     @sponsor = sponsor
     @error = nil
@@ -9,10 +9,10 @@ class PaymentCommitmentService
 
   def generate(
     commitment_years,
-    asf:, dpc_tier:, ldf:, asf_prepaid:, start_date: Time.current,
+    asf:, dpc_tier:, ldf:, asf_prepaid: 0, start_date: Time.current,
     consortium_discount: 0,
     ldf_size_limit: 0,
-    include_year_0: nil
+    include_year_0: false
   )
     return 'Invalid commitment years, must be 1 or 3' unless commitment_years.to_i.in?([1, 3])
     return 'Start date must be a valid date' unless start_date.is_a?(Date)
@@ -23,9 +23,6 @@ class PaymentCommitmentService
     # make dpc and dpc carryover as number of datasets based on tier input
     start_year = start_date.year
     discounts = COMMITMENT_DISCOUNTS[commitment_years.to_s]
-    # if include_year_0 is not specified
-    # set it to true if start_date is after July 1st of the current year
-    include_year_0 = start_date > Date.new(start_date.year, 7, 1) if include_year_0.nil?
     years_to_add, aux = if include_year_0
                           [0..commitment_years.to_i, 0]
                         else
@@ -93,5 +90,5 @@ class PaymentCommitmentService
     dpc_tier_info(dpc_tier).present?
   end
 
-  # rubocop:enable Metrics/MethodLength, Metrics/ParameterLists, Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength, Metrics/ParameterLists
 end

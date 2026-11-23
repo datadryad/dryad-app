@@ -22,7 +22,6 @@ module Invoices
       raise 'Invalid sponsor' unless sponsor.present?
 
       invoice_data, invoice_total = Invoices::Calculations.new(commitment, sponsor, year).generate
-      pp invoice_data
       summary = Invoices::Summary.new(invoice_data).generate_pdf
       pdf = generate_identifiers_list(summary)
 
@@ -36,7 +35,7 @@ module Invoices
     private
 
     def year_commitment
-      PaymentCommitment.where(year: year, sponsor: sponsor).first
+      sponsor.commitments.find_by(year: year)
     end
 
     def generate_identifiers_list(summary)

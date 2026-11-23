@@ -32,14 +32,15 @@
 #  index_payment_commitments_on_sponsor_id_and_sponsor_type  (sponsor_id,sponsor_type)
 #
 class PaymentCommitment < ApplicationRecord
-  attr_accessor :note
   acts_as_paranoid
   has_paper_trail
+
+  attr_accessor :note
 
   belongs_to :sponsor, polymorphic: true, optional: true
 
   validates_presence_of :note
-  validates_uniqueness_of :year, scope: :sponsor
+  validates_uniqueness_of :year, scope: :sponsor, conditions: -> { where(deleted_at: nil) }
 
   before_save :set_note
 
