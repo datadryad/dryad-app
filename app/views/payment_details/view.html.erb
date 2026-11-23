@@ -1,0 +1,21 @@
+<% @page_title = 'Dryad | Partner dashboard' %>
+<div class="admin-dashboard-header">
+  <h1 class="admin-dashboard-results" style="row-gap: 0; column-gap: 1ch">
+    <%= @sponsor_details.name %>
+    <span style="color: black; font-size: 1.25rem;">Partner payment details</span>
+  </h1>
+  <%= render partial: 'quick_links' %>
+</div>
+<div class="payment-details">
+  <%= render partial: 'payment_info' %>
+  <%= render partial: 'commitments' %>
+  <%= render partial: 'invoices' %>
+</div>
+<% if @sponsor != @sponsor.limits_sponsor %>
+  <p style="margin: 0.5ch 0; font-style: italic; font-size: .98rem">Settings are inherited from <%= @limits_details.name %>
+    <% if @sponsor.limits_sponsor.payment_configuration.yearly_ldf_limit.present? %>
+      and commitment is shared between members
+    <% end %>
+  </p>
+<% end %>
+

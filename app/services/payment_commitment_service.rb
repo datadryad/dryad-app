@@ -31,7 +31,7 @@ class PaymentCommitmentService
         tier = dpc_tier_info(dpc_tier)
 
         attrs = {
-          payment_configuration_id: payment_config.id,
+          sponsor: sponsor,
           commitment_years: commitment_years,
           note: "Create year #{year} - #{for_year} of #{commitment_years} years commitment",
           year_index: year,

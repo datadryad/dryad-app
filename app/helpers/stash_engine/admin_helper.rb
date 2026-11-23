@@ -26,6 +26,10 @@ module StashEngine
       payment_details_sponsor_path(id: payer.id, type: make_type(payer))
     end
 
+    def payer_payment_details_path(payer)
+      payment_details_view_path(id: payer.id, type: make_type(payer))
+    end
+
     def partner_nav_list
       return if current_user.system_user?
       return if current_user.roles.admin_roles.length == 1

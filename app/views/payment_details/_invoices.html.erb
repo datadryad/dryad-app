@@ -1,0 +1,36 @@
+<%= stylesheet_link_tag 'payment_details' %>
+
+<div>
+  <div class="admin-dashboard-results">
+    <h2>Invoices</h2>
+    <%= form_with(url: payment_details_edit_path(id: @sponsor.id, type: make_type(@sponsor)), method: :get, local: false) do %>
+      <button class="c-admin-edit-icon" title="Preview for current year"  aria-label="Preview for current year" aria-haspopup="dialog" id="edit_button_<%= @sponsor.id %>">
+        <i class="fa fa-eye" aria-hidden="true"></i>
+      </button>
+    <% end %>
+  </div>
+
+  <% if @sponsor.invoices.any? %>
+    <div class="table-wrapper c-lined-table-wrapper">
+      <table class="c-lined-table">
+        <tr>
+          <th>Year</th>
+          <th>Invoice amount</th>
+          <th></th>
+        </tr>
+        <% @sponsor.invoices.each do |invoice| %>
+          <tr>
+            <td><%= invoice.year %></td>
+            <td class="align-end"><%= formatted_amount invoice.amount %></td>
+            <td>
+              <a href="<%= invoice.download_url %>">Download</a>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+
+  <% else %>
+    <h2>No invoices</h2>
+  <% end %>
+</div>

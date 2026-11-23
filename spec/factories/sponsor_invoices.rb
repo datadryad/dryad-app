@@ -3,12 +3,13 @@
 # Table name: sponsor_invoices
 #
 #  id           :bigint           not null, primary key
+#  amount       :float(24)
 #  s3_key       :string(191)
 #  sponsor_type :string(191)
 #  year         :integer
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
-#  sponsor_id   :integer
+#  sponsor_id   :string(191)
 #
 # Indexes
 #

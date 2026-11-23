@@ -1,13 +1,18 @@
 class PaymentDetailsController < StashEngine::ApplicationController
   before_action :require_user_login
   before_action :set_sponsor, except: :identifier
-  before_action :setup_paging, only: %i[sponsor dashboard]
+  before_action :setup_paging, only: %i[sponsor dashboard show]
 
   helper StashEngine::SortableTableHelper
 
   def sponsor
     authorize current_user, policy_class: PaymentDetailsPolicy
     @identifiers = @service.identifiers.page(@page).per(@page_size)
+  end
+
+  def show
+    authorize current_user, policy_class: PaymentDetailsPolicy
+    @sponsor_details = PayerDetailsService.new(@sponsor).details
   end
 
   def edit

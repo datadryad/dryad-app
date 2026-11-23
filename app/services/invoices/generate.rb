@@ -21,11 +21,14 @@ module Invoices
     def as_pdf
       raise 'Invalid sponsor' unless sponsor.present?
 
-      summary = Invoices::Summary.new(commitment, sponsor, year).generate_pdf
+      invoice_data, invoice_total = Invoices::Calculations.new(commitment, sponsor, year).generate
+      pp invoice_data
+      summary = Invoices::Summary.new(invoice_data).generate_pdf
       pdf = generate_identifiers_list(summary)
+
       if upload_to_s3(pdf, @file_path, s3_bucket_name: APP_CONFIG.s3.invoices_bucket)
         inv = SponsorInvoice.find_or_initialize_by(sponsor: sponsor, year: year)
-        return inv.update(s3_key: @file_path)
+        return inv.update(s3_key: @file_path, amount: invoice_total)
       end
       false
     end
@@ -33,7 +36,7 @@ module Invoices
     private
 
     def year_commitment
-      PaymentCommitment.where(year: year, payment_configuration_id: sponsor.payment_configuration.id).first
+      PaymentCommitment.where(year: year, sponsor: sponsor).first
     end
 
     def generate_identifiers_list(summary)

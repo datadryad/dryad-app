@@ -1,0 +1,13 @@
+<div class="admin-dashboard-results">
+  <h2>Payment information</h2>
+  <% if @sponsor_details.type != 'StashEngine::Journal' && policy(@sponsor).edit? %>
+    <%= form_with(url: payment_details_edit_path(id: @sponsor.id, type: make_type(@sponsor)), method: :get, local: false) do %>
+      <button class="c-admin-edit-icon" title="Edit payment information" aria-label="Edit payment information" aria-haspopup="dialog" id="edit_button_<%= @sponsor.id %>">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+      </button>
+    <% end %>
+  <% end %>
+</div>
+<div><strong>Payment plan:</strong> <%= @sponsor.payment_configuration.payment_plan %></div>
+<div><strong>Covers DPC:</strong> <%= @sponsor.payment_configuration.covers_dpc ? 'Yes' : 'No' %></div>
+<div><strong>Covers LDF:</strong> <%= @sponsor.payment_configuration.covers_ldf ? 'Yes' : 'No' %></div>

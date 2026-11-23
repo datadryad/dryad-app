@@ -1,0 +1,50 @@
+<%= stylesheet_link_tag 'payment_details' %>
+
+<div>
+  <div class="admin-dashboard-results">
+    <h2>Contracts information</h2>
+    <%= form_with(url: payment_details_edit_path(id: @sponsor.id, type: make_type(@sponsor)), method: :get, local: false) do %>
+      <button class="c-admin-edit-icon" title="Add new contract details" aria-label="Add new contract details" aria-haspopup="dialog" id="edit_button_<%= @sponsor.id %>">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+      </button>
+    <% end %>
+  </div>
+  <div class="table-wrapper c-lined-table-wrapper">
+    <table class="c-lined-table">
+      <tr>
+        <th>Year</th>
+        <th>Commitment Year</th>
+        <th>Annual Service Fee</th>
+        <th>Discount</th>
+        <th>Consortium Discount</th>
+        <th>DPC tier</th>
+        <th>LDF size</th>
+        <th>LDF amount</th>
+        <th>Annual Service Fee Due</th>
+        <th>Prepayment</th>
+        <th></th>
+      </tr>
+      <% @sponsor.commitments.each do |commitment| %>
+        <tr>
+          <td><%= commitment.year %></td>
+          <td><%= commitment.year_index %></td>
+          <td class="align-end"><%= formatted_amount commitment.asf %></td>
+          <td class="align-end"><%= commitment.period_discount %>%</td>
+          <td class="align-end"><%= commitment.consortium_discount %>%</td>
+          <td class="align-end"><%= commitment.dpc_commitment %></td>
+          <td class="align-end"><%= commitment.ldf_size_limit %></td>
+          <td class="align-end"><%= formatted_amount commitment.ldf_commitment %></td>
+          <td class="align-end"><%= formatted_amount commitment.asf_due %></td>
+          <td class="align-end"><%= formatted_amount commitment.asf_prepaid %></td>
+          <td>
+            <%= form_with(url: payment_details_edit_path(id: @sponsor.id, type: make_type(@sponsor)), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" aria-label="Edit payment details" aria-haspopup="dialog" id="edit_button_<%= @sponsor.id %>">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+</div>

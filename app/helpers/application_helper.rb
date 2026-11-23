@@ -82,4 +82,9 @@ module ApplicationHelper
 
     partner_dashboard_path(type: type, id: object.id)
   end
+
+  def formatted_amount(amount, precision: 0)
+    new_precision = amount == amount.to_i ? precision : 2
+    number_to_currency amount, precision: new_precision
+  end
 end

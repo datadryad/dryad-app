@@ -1,7 +1,8 @@
 class CreatePaymentCommitments < ActiveRecord::Migration[8.0]
   def change
     create_table :payment_commitments do |t|
-      t.integer :payment_configuration_id
+      t.string :sponsor_id
+      t.string :sponsor_type
       t.date :start_date
       t.integer :commitment_years
       t.integer :year_index
@@ -24,5 +25,7 @@ class CreatePaymentCommitments < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
+
+    add_index :payment_commitments, %i[sponsor_id sponsor_type]
   end
 end

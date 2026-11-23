@@ -27,6 +27,7 @@ module StashEngine
     has_many :roles, class_name: 'StashEngine::Role', as: :role_object, dependent: :destroy
     has_many :users, through: :roles
     has_one :payment_configuration, as: :partner, dependent: :destroy
+    has_many :commitments, class_name: 'PaymentCommitment', as: :sponsor
     has_many :invoices, class_name: 'SponsorInvoice', as: :sponsor
     accepts_nested_attributes_for :payment_configuration, allow_destroy: true, reject_if: :all_blank
 

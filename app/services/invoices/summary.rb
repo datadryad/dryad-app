@@ -6,8 +6,8 @@ module Invoices
 
     attr_reader :data, :csv, :html
 
-    def initialize(payment_commitment, sponsor, year)
-      @data = Calculations.new(payment_commitment, sponsor, year).generate
+    def initialize(invoice_data)
+      @data = invoice_data
       @csv = []
       @html = ''
     end
