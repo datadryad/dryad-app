@@ -1,0 +1,4 @@
+// edit the modal dialog
+document.getElementById('genericModalContent').innerHTML = "<%= escape_javascript(render partial: 'new') %>";
+document.getElementById('cancel_dialog').addEventListener('click', () => document.getElementById('genericModalDialog').close());
+document.getElementById('genericModalClose').focus();

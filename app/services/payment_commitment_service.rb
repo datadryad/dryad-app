@@ -1,15 +1,25 @@
 class PaymentCommitmentService
+  attr_reader :sponsor, :error
 
-  # rubocop:disable Metrics/MethodLength, Metrics/ParameterLists
+  # rubocop:disable Metrics/MethodLength, Metrics/ParameterLists, Metrics/AbcSize
+  def initialize(sponsor)
+    @sponsor = sponsor
+    @error = nil
+  end
 
   def generate(
-    sponsor,
     commitment_years,
     asf:, dpc_tier:, ldf:, asf_prepaid:, start_date: Time.current,
     consortium_discount: 0,
     ldf_size_limit: 0,
     include_year_0: nil
   )
+    return 'Invalid commitment years, must be 1 or 3' unless commitment_years.to_i.in?([1, 3])
+    return 'Start date must be a valid date' unless start_date.is_a?(Date)
+    return 'ASF must be a valid number' if asf.blank?
+    return 'Data Publishing Charge tier is invalid' unless valid_dpc_tier?(dpc_tier)
+    return 'Large Data Fee size limit is incorrect' unless ldf_size_limit.present?
+
     # make dpc and dpc carryover as number of datasets based on tier input
     start_year = start_date.year
     discounts = COMMITMENT_DISCOUNTS[commitment_years.to_s]
@@ -17,9 +27,9 @@ class PaymentCommitmentService
     # set it to true if start_date is after July 1st of the current year
     include_year_0 = start_date > Date.new(start_date.year, 7, 1) if include_year_0.nil?
     years_to_add, aux = if include_year_0
-                          [0..commitment_years, 0]
+                          [0..commitment_years.to_i, 0]
                         else
-                          [1..commitment_years, 1]
+                          [1..commitment_years.to_i, 1]
                         end
     batch = SecureRandom.hex
 
@@ -56,6 +66,9 @@ class PaymentCommitmentService
       end
     end
     true
+  rescue StandardError => e
+    pp e.backtrace
+    e.message
   end
 
   def prepaid_asf(asf_prepaid, year, include_year_0)
@@ -76,5 +89,9 @@ class PaymentCommitmentService
     ESTIMATED_DATASETS.find { |t| t[:tier] == tier.to_i }
   end
 
-  # rubocop:enable Metrics/MethodLength, Metrics/ParameterLists
+  def valid_dpc_tier?(dpc_tier)
+    dpc_tier_info(dpc_tier).present?
+  end
+
+  # rubocop:enable Metrics/MethodLength, Metrics/ParameterLists, Metrics/AbcSize
 end

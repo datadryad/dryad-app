@@ -10,11 +10,6 @@ class PaymentDetailsController < StashEngine::ApplicationController
     @identifiers = @service.identifiers.page(@page).per(@page_size)
   end
 
-  def show
-    authorize current_user, policy_class: PaymentDetailsPolicy
-    @sponsor_details = PayerDetailsService.new(@sponsor).details
-  end
-
   def edit
     respond_to(&:js)
   end

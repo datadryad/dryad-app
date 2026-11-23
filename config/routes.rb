@@ -379,7 +379,6 @@ Rails.application.routes.draw do
   get 'payment_details/identifier', to: 'payment_details#identifier'
   get 'payment_details/edit', to: 'payment_details#edit'
   post 'payment_details/update', to: 'payment_details#update'
-  get 'payment_details/view', to: 'payment_details#view'
   get 'partner_dashboard/:type/:id', to: 'payment_details#dashboard', as: 'partner_dashboard'
 
   get 'research_integrity', to: 'research_integrity_case#index'
@@ -392,6 +391,10 @@ Rails.application.routes.draw do
     collection do
       get :form
     end
+  end
+
+  resources :payment_commitments, except: [:destroy] do
+    get :dashboard, on: :collection
   end
 
   ########################## StashDatacite support ######################################

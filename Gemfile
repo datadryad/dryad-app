@@ -181,3 +181,5 @@ group :development do
   gem 'annotaterb', '~> 4.13.0'
   gem 'bullet'
 end
+
+gem 'slim-rails', '~> 4.0'
