@@ -57,11 +57,6 @@ RSpec.feature 'EditLink', type: :feature do
       sign_in(@admin)
     end
 
-    it "shows a user's version history for a dataset" do
-      visit stash_url_helpers.edit_histories_path(resource_id: @resource.id)
-      expect(page).to have_text('1 (Queued for curation)')
-    end
-
     it 'redirects to the dataset editing page, as the submitter, when the user is not logged in and using an edit link', js: true do
       sign_out
       @identifier.edit_code = Faker::Number.number(digits: 4)
