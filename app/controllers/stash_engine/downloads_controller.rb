@@ -246,7 +246,7 @@ module StashEngine
 
       return unless @resource.blank? && params[:share]
 
-      pp @resource = resource_from_share
+      @resource = resource_from_share
       @sharing_link = true if @resource
     end
 
