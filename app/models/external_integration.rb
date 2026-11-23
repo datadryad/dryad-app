@@ -12,6 +12,10 @@
 #  updated_at      :datetime         not null
 #  integrator_id   :integer
 #
+# Indexes
+#
+#  idx_on_integrator_id_integrator_type_0f5a01e1d7  (integrator_id,integrator_type)
+#
 class ExternalIntegration < ApplicationRecord
   encrypts :username
   encrypts :password

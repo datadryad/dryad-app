@@ -11,7 +11,7 @@ test:
 <% else %>
 
 default: &default
-  pool: 40
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS", 15) + 2 %>
   timeout: 10000
   adapter: mysql2
   database: dryad

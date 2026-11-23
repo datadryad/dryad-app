@@ -6,6 +6,7 @@
 
 # JetBrains noise
 .idea
+.aiassistant
 .raketasks
 *.iml
 
