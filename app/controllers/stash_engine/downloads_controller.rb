@@ -91,12 +91,6 @@ module StashEngine
     def file_stream
       check_for_sharing
       data_file = DataFile.where(id: params[:file_id]).present_files.first
-      @resource = data_file.resource unless params[:share]
-
-      if (params[:share] && @resource&.id != data_file&.resource_id) || (params[:share].blank? && @resource&.id != params[:resource_id].to_i)
-        render status: 403, plain: 'You may not download this file.'
-        return
-      end
 
       # for share, allow downloading files only from the shared resource
       if data_file&.resource&.may_download?(ui_user: current_user) || (@sharing_link && data_file&.resource&.id == @resource.id)
@@ -193,9 +187,8 @@ module StashEngine
     end
 
     def lset_linkset
-      "<#{show_url(id: @file.resource.identifier_str)}>; rel=\"collection\" type=\"text/html\" " \
-        "anchor=\"#{download_stream_url(file_id: @file.id, resource_id: @file.resource_id)}\",
-      <https://schema.org/DataDownload>; rel=\"type\" anchor=\"#{download_stream_url(file_id: @file.id, resource_id: @file.resource_id)}\""
+      "<#{show_url(id: @file.resource.identifier_str)}>; rel=\"collection\" type=\"text/html\" anchor=\"#{download_stream_url(file_id: @file.id)}\",
+      <https://schema.org/DataDownload>; rel=\"type\" anchor=\"#{download_stream_url(file_id: @file.id)}\""
     end
 
     def json_linkset

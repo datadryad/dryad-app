@@ -133,7 +133,7 @@ module StashEngine
                   })
       end
       resource.data_files.each do |f|
-        download_url = download_stream_url(file_id: f.id, resource_id: resource.id)
+        download_url = download_stream_url(file_id: f.id)
         list.push({
                     link: download_url,
                     rel: 'item',
@@ -184,13 +184,13 @@ module StashEngine
       end
       description[:item] = resource.data_files.map do |f|
         {
-          href: download_stream_url(file_id: f.id, resource_id: resource.id),
+          href: download_stream_url(file_id: f.id),
           type: f.upload_content_type
         }
       end
       collection = resource.data_files.map do |f|
         {
-          anchor: download_stream_url(file_id: f.id, resource_id: resource.id),
+          anchor: download_stream_url(file_id: f.id),
           type: [{ href: 'https://schema.org/DataDownload' }],
           collection: [
             {

@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe FilesHelper, type: :helper do
   describe '#download_file_name_link' do
     let(:file) { create(:generic_file, id: 123, upload_file_name: 'Test Document.pdf', file_deleted_at: nil) }
-    let(:params) { { file_id: 123, resource_id: 456 } }
+    let(:params) { { file_id: 123 } }
     let(:shortened_name) { 'Test Document.pdf' }
 
     before do
@@ -14,7 +14,7 @@ RSpec.describe FilesHelper, type: :helper do
       it 'returns a download link with the file name' do
         result = helper.download_file_name_link(file, params)
 
-        expect(result).to include('href="/downloads/file_stream/123?resource_id=456"')
+        expect(result).to include('href="/downloads/file_stream/123"')
         expect(result).to include('Test Document.pdf')
         expect(result).to include('fas fa-download')
       end
@@ -24,7 +24,7 @@ RSpec.describe FilesHelper, type: :helper do
       it 'returns a download link with the file name' do
         result = helper.download_file_name_link(file, params)
 
-        expect(result).to include('href="/downloads/file_stream/123?resource_id=456"')
+        expect(result).to include('href="/downloads/file_stream/123"')
         expect(result).to include('Test Document.pdf')
         expect(result).to include('fas fa-download')
       end

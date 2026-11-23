@@ -30,7 +30,6 @@
           <% res.current_file_uploads.each do |fu| %>
           <% params = {file_id: fu.id} %>
           <% params[:share] = share[:code] if share.present? %>
-          <% params[:resource_id] = fu.resource_id unless share.present? %>
             <li>
               <span>
                 <%= download_file_name_link(fu, params) %>
