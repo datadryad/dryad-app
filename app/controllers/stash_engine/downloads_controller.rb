@@ -8,6 +8,7 @@ module StashEngine
     include StashEngine::DownloadsHelper
 
     before_action :check_user_agent, :check_ip, :setup_streaming
+    before_action :set_file_and_resource, only: %i[preview_file preview_check]
 
     def check_user_agent
       # This reads a text file with one line and a regular expression in it and blocks if the user-agent matches the regexp
@@ -84,13 +85,16 @@ module StashEngine
       redirect_to(app_404_path) and return if @resource.identifier.pub_state == 'withdrawn'
       redirect_to_public and return if @resource.identifier.pub_state == 'retracted'
       redirect_to_public and return if @resource.identifier.published? && @resource.identifier.accepted_for_publication?
+      redirect_to(app_404_path) and return if invalid_share?
     end
 
     # uses presigned
     def file_stream
       check_for_sharing
       data_file = DataFile.where(id: params[:file_id]).present_files.first
-      if data_file&.resource&.may_download?(ui_user: current_user) || @sharing_link
+
+      # for share, allow downloading files only from the shared resource
+      if data_file&.resource&.may_download?(ui_user: current_user) || (@sharing_link && data_file&.resource&.id == @resource.id)
         response.set_header(
           'Link',
           "<#{file_linkset_url(file_id: data_file.id)}>; rel=\"linkset\"; type=\"application/linkset\",
@@ -157,11 +161,14 @@ module StashEngine
     end
 
     def preview_check
-      @file = DataFile.find(params[:file_id])
+      render :no_preview if params[:resource_id].to_i != @resource.id || !can_download?
     end
 
     def preview_file
-      @file = DataFile.find(params[:file_id])
+      if params[:resource_id].to_i != @resource.id || !can_download?
+        render status: 403, plain: 'You are not authorized to preview this file.'
+        return
+      end
 
       if %w[csv txt].include?(@file.preview_type)
         @preview = @file.text_preview
@@ -174,6 +181,11 @@ module StashEngine
     end
 
     private
+
+    def set_file_and_resource
+      @file = DataFile.find(params[:file_id])
+      @resource = @file.resource
+    end
 
     def lset_linkset
       "<#{show_url(id: @file.resource.identifier_str)}>; rel=\"collection\" type=\"text/html\" anchor=\"#{download_stream_url(file_id: @file.id)}\",
@@ -214,6 +226,17 @@ module StashEngine
       end
     end
 
+    # check if sharing code has been replaced and should redirect to DOI
+    def invalid_share?
+      my_id = params[:share] || params[:id]
+      return true if my_id.blank?
+
+      @share = Share.where(secret_id: my_id).first
+      return true if @share.blank?
+
+      @share != @share.identifier&.shares&.last
+    end
+
     def resource_from_share
       my_id = params[:share] || params[:id]
       return nil if my_id.blank?
@@ -228,6 +251,7 @@ module StashEngine
       @sharing_link = false
 
       return unless @resource.blank? && params[:share]
+      return if invalid_share?
 
       @resource = resource_from_share
       @sharing_link = true if @resource
@@ -240,7 +264,7 @@ module StashEngine
 
     def can_download?
       @resource.may_download?(ui_user: current_user) ||
-          (!params[:secret_id].blank? && @resource&.identifier&.shares&.where(secret_id: params[:secret_id])&.count&.positive?)
+          (!params[:secret_id].blank? && @resource&.identifier&.shares&.last&.secret_id == params[:secret_id])
     end
 
     def redirect_to_public

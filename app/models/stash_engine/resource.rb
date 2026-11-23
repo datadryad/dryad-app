@@ -293,7 +293,7 @@ module StashEngine
       arr = [my_states]
       if user_id
         str += ' OR stash_engine_roles.user_id = ?'
-        arr.push(user_id)
+        arr.push(user_id.to_i)
       end
       if tenant_id
         str += ' OR stash_engine_resources.tenant_id = ?'
@@ -307,8 +307,12 @@ module StashEngine
         str += " OR (dcs_contributors.contributor_type = 'funder' AND dcs_contributors.name_identifier_id IN (?))"
         arr.push(funder_ids)
       end
-      joins(:last_curation_activity).left_outer_joins(:resource_publication).left_outer_joins(:roles)
-        .joins(JOIN_FOR_CONTRIBUTORS).distinct.where(str, *arr)
+
+      q = joins(:last_curation_activity)
+      q = q.left_outer_joins(:resource_publication) if journal_issns.present?
+      q = q.left_outer_joins(:roles) if user_id.present?
+      q = q.joins(JOIN_FOR_CONTRIBUTORS) if funder_ids.present?
+      q.distinct.where(str, *arr)
     end
 
     # limits to the latest resource for each dataset if added to resources

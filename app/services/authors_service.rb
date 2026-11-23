@@ -14,12 +14,12 @@ class AuthorsService
 
     orcid = nil
     # check User model first
-    record = StashEngine::User.where('LOWER(email) = LOWER(?)', author.author_email).where.not(orcid: [nil, '']).first
+    record = StashEngine::User.where(email: author.author_email.downcase).where.not(orcid: [nil, '']).first
     orcid = record.orcid if record
 
     if orcid.blank?
       # check Author model
-      record = StashEngine::Author.where('LOWER(author_email) = LOWER(?)', author.author_email).where.not(author_orcid: [nil, '']).first
+      record = StashEngine::Author.where(author_email: author.author_email.downcase).where.not(author_orcid: [nil, '']).first
       orcid = record.author_orcid if record
     end
 

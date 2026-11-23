@@ -1,6 +1,6 @@
 <h1 id="dialog-title"><%= @sponsor_details.name %></h1>
-<%= form_with(url: payment_details_update_path(id: @sponsor.id, type: @sponsor_details.type), method: :post, local: false) do |form| -%>
-
+<%= form_with(url: payment_details_update_path(id: @sponsor.id, type: make_type(@sponsor)), method: :post, local: false) do |form| -%>
+  <%= render partial: "stash_engine/shared/flash_messages" %>
   <% if @sponsor.has_attribute?(:sponsor_id) && @sponsor.sponsor_id.present? %>
     <div id="payment_notice" role="status" class="callout warn">
       <p>Payment information must be set at the sponsor level.</p>

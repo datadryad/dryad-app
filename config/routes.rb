@@ -141,8 +141,6 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :edit_histories, only: [:index]
-
     # these are weird and different and want to get rid of these with file redesign
     match 'data_file/validate_urls/:resource_id', to: 'data_files#validate_urls', as: 'data_file_validate_urls', via: %i[get post put]
     match 'software_file/validate_urls/:resource_id', to: 'software_files#validate_urls', as: 'software_file_validate_urls', via: %i[get post put]
@@ -237,7 +235,6 @@ Rails.application.routes.draw do
     get 'publication_policy', to: 'pages#publication_policy'
     get 'privacy', to: 'pages#privacy'
     get 'accessibility', to: 'pages#accessibility'
-    get 'membership', to: 'pages#membership'
     get 'publishers', to: 'pages#fees_publisher'
     get 'institutions', to: 'pages#fees_institution'
     get 'fee_waiver', to: 'pages#fee_waiver'
@@ -327,6 +324,7 @@ Rails.application.routes.draw do
     post 'ds_admin/:id/pub_dates', to: 'admin_datasets#pub_dates', as: 'ds_admin_pub_dates'
     post 'ds_admin/:id/make_report', to: 'admin_datasets#make_report', as: 'make_report'
     post 'ds_admin/:id/issue', to: 'admin_datasets#create_issue', as: 'ds_admin_issue'
+    post 'ds_admin/:id/regenerate_link', to: 'admin_datasets#regenerate_link', as: 'regenerate_link'
     delete 'ds_admin/:id', to: 'admin_datasets#destroy', as: 'ds_admin_destroy'
 
     # curation notes
@@ -629,6 +627,7 @@ Rails.application.routes.draw do
   get '/stash/interested', to: redirect('/contact#get-involved')
   get '/stash/ds_admin', to: redirect('/admin_dashboard')
   get '/ds_admin_funders', to: redirect('/admin_dashboard')
+  get '/membership', to: redirect('/partner_terms')
 
   get '/stash', to: redirect('/')
   get '/stash/*path', to: redirect { |params, req|

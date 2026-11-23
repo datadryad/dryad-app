@@ -47,19 +47,22 @@ class PaymentsController < ApplicationController
   end
 
   def callback
-    payment = @resource.payment || @resource.build_payment
+    helpdesk_email = APP_CONFIG['helpdesk_email']
+    redirect_url = metadata_entry_pages_find_or_create_path(@resource.id)
 
-    if payment.checkout_session_id != params[:session_id]
-      message = "Resource #{params[:resource_id]} received a payment for wrong checkout session #{params[:session_id]}"
-      Rails.logger.warn(message)
-      CurationService.new(status: @resource.last_curation_activity&.status, resource: @resource, user: current_user, note: message).process
+    # Verify the Stripe session
+    session = Stripe::Checkout::Session.retrieve(params[:session_id])
+    unless session[:return_url].include?("/payments/callback?resource_id=#{@resource.id}&session_id=")
+      log_message "Resource #{params[:resource_id]} received a payment with incorrect information callback checkout session #{params[:session_id]}"
+      link = "<a href=\"mailto:#{helpdesk_email}?subject=DOI: #{@resource.identifier_value}\" style=\"color: #fff;\">#{helpdesk_email}</a>."
+      redirect_to redirect_url,
+                  alert: "Payment has incorrect information, Please contact us at #{link}" and return
     end
 
-    # do not update if a resource is already paid
-    #  - success page refresh
-    return if payment.paid?
-
-    Stripe::HandlePaymentsService.new(payment).mark_session_paid(params[:session_id])
+    handle_stripe_payment(session, redirect_url)
+  rescue Stripe::StripeError => e
+    log_message "Stripe session retrieval error for resource #{params[:resource_id]} and session #{params[:session_id]}: #{e.message}"
+    redirect_to redirect_url, alert: 'Failed to verify Stripe session.' and return
   end
 
   # rubocop:disable Lint/NoReturnInBeginEndBlocks
@@ -121,5 +124,26 @@ class PaymentsController < ApplicationController
     attrs[:generate_invoice] = ActiveModel::Type::Boolean.new.cast(attrs[:generate_invoice]) if attrs.key?(:generate_invoice)
     attrs[:pay_ppr_fee] = ActiveModel::Type::Boolean.new.cast(attrs[:pay_ppr_fee]) if attrs.key?(:pay_ppr_fee)
     attrs.to_hash.with_indifferent_access
+  end
+
+  def handle_stripe_payment(session, redirect_url)
+    payment = @resource.payment || @resource.build_payment
+
+    if payment.checkout_session_id != params[:session_id]
+      log_message "Resource #{params[:resource_id]} received a payment for wrong checkout session #{params[:session_id]}"
+    end
+
+    if session.payment_status == 'paid'
+      #  - success page refresh
+      Stripe::HandlePaymentsService.new(payment).mark_session_paid(params[:session_id])
+    else
+      log_message "Resource #{params[:resource_id]} received a payment with status #{session.payment_status} for session #{params[:session_id]}"
+      redirect_to redirect_url, alert: 'Payment was not completed.'
+    end
+  end
+
+  def log_message(message)
+    Rails.logger.warn(message)
+    CurationService.new(status: @resource.last_curation_activity&.status, resource: @resource, user: current_user, note: message).process
   end
 end

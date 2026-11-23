@@ -14,6 +14,10 @@
 #  updated_at             :datetime         not null
 #  partner_id             :string(191)
 #
+# Indexes
+#
+#  index_payment_configurations_on_partner_id_and_partner_type  (partner_id,partner_type)
+#
 FactoryBot.define do
 
   factory :payment_configuration do
