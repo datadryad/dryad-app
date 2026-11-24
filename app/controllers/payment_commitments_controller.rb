@@ -34,17 +34,25 @@ class PaymentCommitmentsController < StashEngine::ApplicationController
 
   def edit
     authorize PaymentCommitment
+
+    @commitment = @sponsor.commitments.find(params[:id])
     respond_to(&:js)
   end
 
   def update
     authorize PaymentCommitment
 
-    @sponsor.update(edit_params)
+    @commitment = @sponsor.commitments.find(params[:id])
+    @commitment = PaymentCommitmentService.new(@sponsor).update(@commitment, edit_params)
+    if @commitment.errors.any?
+      flash.now[:alert] = @commitment.errors.full_messages.to_sentence
+    else
+      @reload = true
+    end
     respond_to(&:js)
   end
 
-  def dashboard
+  def index
     authorize PaymentCommitment
 
     @sponsor_details = PayerDetailsService.new(@sponsor).details
@@ -68,12 +76,15 @@ class PaymentCommitmentsController < StashEngine::ApplicationController
   end
 
   def create_params
-    params.permit(%i[commitment_years start_date include_year_0 asf period_discount consortium_discount dpc_tier
+    params.permit(%i[commitment_years start_date include_year_0 asf consortium_discount dpc_tier
                      ldf_size_limit ldf_commitment asf_prepaid])
   end
 
   def edit_params
-    params.permit(%i[commitment_years start_date include_year_0 asf period_discount consortium_discount dpc_tier
-                     ldf_size_limit ldf_commitment asf_prepaid])
+    params.require(:payment_commitment).permit(%i[start_date
+                                                  period_discount consortium_discount
+                                                  dpc_commitment dpc_carryover dpc_commitment_price
+                                                  ldf_size_limit ldf_commitment ldf_carryover
+                                                  asf asf_prepaid note])
   end
 end

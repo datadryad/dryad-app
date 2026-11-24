@@ -1,13 +1,10 @@
 h1 id="dialog-title" Add new contract
-= form_with url: payment_commitments_path, method: :post, local: false do |f|
-  = f.hidden_field :sponsor_id, value: @sponsor.id
-  = f.hidden_field :type, value: make_type(@sponsor)
-
-  - if flash[:alert]
+ - if flash[:alert]
     .js-alert.c-alert--error role="alert"
       .c-alert__text
         = flash[:alert]
 
+= form_with url: payment_commitments_path, method: :post, local: false do |f|
   .c-input
     label.c-input__label [for=:commitment_years] Commitment years:
     = f.number_field :commitment_years, value: params[:commitment_years], class: 'c-input__text'

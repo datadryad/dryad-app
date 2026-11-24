@@ -27,7 +27,7 @@ module StashEngine
     end
 
     def payer_payment_details_path(sponsor)
-      dashboard_payment_commitments_path(sponsor_id: sponsor.id, type: make_type(sponsor))
+      payment_commitments_path(sponsor_id: sponsor.id, type: make_type(sponsor))
     end
 
     def sponsor_paths(dynamic_path, sponsor)

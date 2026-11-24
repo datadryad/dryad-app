@@ -64,9 +64,20 @@ class PaymentCommitmentService
     end
     true
   rescue StandardError => e
-    pp e.backtrace
     e.message
   end
+
+  def update(payment_commitment, attrs)
+    payment_commitment.assign_attributes(attrs)
+    if payment_commitment.valid?
+      asf_due = calculate_asf_due(attrs[:asf].to_f, attrs[:period_discount].to_f, attrs[:consortium_discount].to_f)
+      payment_commitment.asf_due = asf_due
+      payment_commitment.save
+    end
+    payment_commitment
+  end
+
+  private
 
   def prepaid_asf(asf_prepaid, year, include_year_0)
     return asf_prepaid if year == 0 || (year == 1 && !include_year_0)

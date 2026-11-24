@@ -38,6 +38,6 @@ div
           td.align-end= formatted_amount commitment.asf_prepaid
           - if policy(:payment_commitment).edit?
             td
-              = form_with(url: edit_payment_commitment_path(id: commitment.id, sponsor_id: @sponsor.id, type: make_type(@sponsor)), local: false) do
+              = form_with(url: edit_payment_commitment_path(id: commitment.id, sponsor_id: @sponsor.id, type: make_type(@sponsor)), method: :get, local: false) do
                 button.c-admin-edit-icon aria-label="Edit payment details" aria-haspopup="dialog" id="edit_button_#{@sponsor.id}"
                   i.fa.fa-pencil aria-hidden="true"

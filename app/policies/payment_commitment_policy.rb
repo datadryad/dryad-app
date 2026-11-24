@@ -16,7 +16,7 @@ class PaymentCommitmentPolicy < ApplicationPolicy
     create?
   end
 
-  def dashboard?
+  def index?
     create?
   end
 end

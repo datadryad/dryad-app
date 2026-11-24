@@ -393,8 +393,9 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :payment_commitments, except: [:destroy] do
-    get :dashboard, on: :collection
+  scope path: '/partner/:type/:sponsor_id' do
+    resources :payment_commitments, except: [:destroy] do
+    end
   end
 
   ########################## StashDatacite support ######################################
