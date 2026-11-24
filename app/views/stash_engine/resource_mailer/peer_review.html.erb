@@ -8,7 +8,7 @@
 
 <p>Your Dryad dataset titled, "<%= @resource.title.html_safe %>" (<%= @resource.identifier_str %>) has been assigned two important links:</p>
 
-<% shr = @resource.identifier.shares.first.sharing_link %>
+<% shr = @resource.identifier.shares.last.sharing_link %>
 <ul>
   <li>
     A unique, permanent digital object identifier: <%= @resource.identifier_uri %>

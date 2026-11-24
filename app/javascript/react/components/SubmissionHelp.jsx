@@ -205,21 +205,26 @@ export function ReadMeHelp() {
 
 export function WorksHelp({setConnectStep}) {
   return (
-    <p>
-      The primary publication associated with your submission can be entered on the{' '}
-      <span
-        role="button"
-        tabIndex="0"
-        className="o-link__primary"
-        onClick={setConnectStep}
-        onKeyDown={(e) => {
-          if (['Enter', 'Space'].includes(e.key)) {
-            setConnectStep();
-          }
-        }}
-      >Connect screen
-      </span>.
-    </p>
+    <>
+      <p>
+        The primary publication associated with your submission can be entered on the{' '}
+        <span
+          role="button"
+          tabIndex="0"
+          className="o-link__primary"
+          onClick={setConnectStep}
+          onKeyDown={(e) => {
+            if (['Enter', 'Space'].includes(e.key)) {
+              setConnectStep();
+            }
+          }}
+        >Connect screen
+        </span>.
+      </p>
+      <p>
+        For more information about the types of related works that can be associated with your submission, please <a href="/help/submission_steps/connect#related-works" target="_blank">visit our help center</a>.
+      </p>
+    </>
   );
 }
 

@@ -15,8 +15,14 @@ class PaymentDetailsController < StashEngine::ApplicationController
   end
 
   def update
-    @sponsor.update(edit_params)
-    respond_to(&:js)
+    if @sponsor.update(edit_params)
+      respond_to(&:js)
+    else
+      flash.now[:alert] = @sponsor.errors.full_messages.join(', ')
+      respond_to do |format|
+        format.js { render 'edit' }
+      end
+    end
   end
 
   def identifier

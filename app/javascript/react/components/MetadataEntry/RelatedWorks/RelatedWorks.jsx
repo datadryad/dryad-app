@@ -99,9 +99,9 @@ function RelatedWorks({
       <p>
         {resourceType === 'collection'
           ? `Please list all the datasets in the collection, as well as any identifiable related or resulting articles, 
-            preprints, software packages, or supplemental information.`
-          : `Are there any preprints, articles, datasets, software packages, or supplemental information that have 
-            resulted from or are related to this submission?`}
+            preprints, software packages, data management plans, or instruments used to collect the data.`
+          : `Are there any preprints, articles, datasets, software packages, or data management plans
+            that have resulted from or are related to this submission, or identified instruments used to collect the data?`}
       </p>
       <div className="related-works">
         {works.map((work) => (
