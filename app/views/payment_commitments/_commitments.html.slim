@@ -32,7 +32,7 @@ div
           td.align-end= "#{commitment.period_discount}%"
           td.align-end= "#{commitment.consortium_discount}%"
           td.align-end= commitment.dpc_commitment
-          td.align-end= commitment.ldf_size_limit
+          td.align-end= commitment.ldf_size_limit ? filesize(ESTIMATED_FILES_SIZE[commitment.ldf_size_limit][:range].max) : 0
           td.align-end= formatted_amount commitment.ldf_commitment
           td.align-end= formatted_amount commitment.asf_due
           td.align-end= formatted_amount commitment.asf_prepaid

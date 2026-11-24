@@ -11,6 +11,7 @@ class CreatePaymentCommitments < ActiveRecord::Migration[8.0]
       t.float :dpc_commitment_price
       t.integer :dpc_commitment
       t.integer :dpc_carryover
+      t.boolean :covers_ldf
       t.float :ldf_commitment
       t.float :ldf_carryover
       t.integer :ldf_size_limit

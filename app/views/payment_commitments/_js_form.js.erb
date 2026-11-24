@@ -1,0 +1,21 @@
+var ldf = document.getElementById('payment_commitment_covers_ldf')
+ldf.addEventListener('change', () => {
+  var limit = document.getElementById('payment_commitment_ldf_size_limit')
+  var amount_limit = document.getElementById('payment_commitment_ldf_commitment')
+  var carryover = document.getElementById('payment_commitment_ldf_carryover')
+  if (!ldf.checked) {
+    limit.setAttribute('readonly', true)
+    amount_limit.setAttribute('readonly', true)
+    limit.value = ''
+    amount_limit.value = ''
+    if(carryover) {
+      carryover.value = ''
+      carryover.setAttribute('readonly', true)
+    }
+  } else {
+    limit.removeAttribute('readonly')
+    amount_limit.removeAttribute('readonly')
+    if(carryover)
+      carryover.removeAttribute('readonly')
+  }
+})

@@ -9,7 +9,7 @@ class PaymentCommitmentService
 
   def generate(
     commitment_years,
-    asf:, dpc_tier:, ldf:, asf_prepaid: 0, start_date: Time.current,
+    asf:, dpc_tier:, covers_ldf:, ldf:, asf_prepaid: 0, start_date: Time.current,
     consortium_discount: 0,
     ldf_size_limit: 0,
     include_year_0: false
@@ -51,6 +51,7 @@ class PaymentCommitmentService
           dpc_commitment_price: tier[:price],
           dpc_commitment: tier[:range].max,
           dpc_carryover: 0,
+          covers_ldf: covers_ldf,
           ldf_commitment: ldf,
           ldf_carryover: 0,
           ldf_size_limit: ldf_size_limit,

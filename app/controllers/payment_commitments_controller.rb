@@ -19,6 +19,7 @@ class PaymentCommitmentsController < StashEngine::ApplicationController
       dpc_tier: create_params[:dpc_tier].to_i,
       start_date: create_params[:start_date] ? create_params[:start_date].to_date : Time.current,
       consortium_discount: create_params[:consortium_discount].to_i,
+      covers_ldf: ActiveModel::Type::Boolean.new.cast(create_params[:covers_ldf]),
       ldf_size_limit: create_params[:ldf_size_limit].to_i,
       ldf: create_params[:ldf_commitment].to_i,
       include_year_0: ActiveModel::Type::Boolean.new.cast(create_params[:include_year_0])
@@ -77,14 +78,14 @@ class PaymentCommitmentsController < StashEngine::ApplicationController
 
   def create_params
     params.permit(%i[commitment_years start_date include_year_0 asf consortium_discount dpc_tier
-                     ldf_size_limit ldf_commitment asf_prepaid])
+                     covers_ldf ldf_size_limit ldf_commitment asf_prepaid])
   end
 
   def edit_params
     params.require(:payment_commitment).permit(%i[start_date
                                                   period_discount consortium_discount
                                                   dpc_commitment dpc_carryover dpc_commitment_price
-                                                  ldf_size_limit ldf_commitment ldf_carryover
+                                                  covers_ldf ldf_size_limit ldf_commitment ldf_carryover
                                                   asf asf_prepaid note])
   end
 end

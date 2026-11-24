@@ -23,7 +23,7 @@ h1 id="dialog-title" Edit contract for #{@commitment.year}
     = f.number_field :period_discount, class: 'c-input__text'
   .c-input
     label.c-input__label [for=:consortium_discount] Consortium discount:
-    = f.number_field :consortium_discount, value: params[:consortium_discount], class: 'c-input__text'
+    = f.number_field :consortium_discount, class: 'c-input__text'
 
   .c-input
     label.c-input__label [for=:dpc_commitment] DPC sponsored datasets:
@@ -35,15 +35,20 @@ h1 id="dialog-title" Edit contract for #{@commitment.year}
     label.c-input__label [for=:dpc_commitment_price] DPC commitment price:
     = f.number_field :dpc_commitment_price, class: 'c-input__text'
 
+  h3 Large Data Fees
+  .c-input
+    label.c-input__label
+      | When checked, sponsor covers Large Data Fees
+      = f.check_box :covers_ldf, {style: "margin-left: 10px", checked: @commitment.covers_ldf}, 1, 0
   .c-input
     label.c-input__label [for=:ldf_size_limit] Limit file size for Large Data billed to partner
-    = f.number_field :ldf_size_limit, value: params[:ldf_size_limit], class: 'c-input__text'
+    = f.select :ldf_size_limit, ldf_pricing_tiers_options,  { selected: @commitment.ldf_size_limit }, class: 'c-input__text', readonly: !@commitment.covers_ldf
   .c-input
     label.c-input__label [for=:ldf_commitment] Large Data Fee:
-    = f.number_field :ldf_commitment, value: params[:ldf_commitment], class: 'c-input__text'
+    = f.number_field :ldf_commitment, class: 'c-input__text', readonly: !@commitment.covers_ldf
   .c-input
-    label.c-input__label [for=:ldf_commitment] Large Data Fee carryover from previous year:
-    = f.number_field :ldf_commitment, value: params[:ldf_commitment], class: 'c-input__text'
+    label.c-input__label [for=:ldf_carryover] Large Data Fee carryover from previous year:
+    = f.number_field :ldf_carryover, class: 'c-input__text', readonly: !@commitment.covers_ldf
 
   .c-input
     label.c-input__label [for=:note] Note:

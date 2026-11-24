@@ -9,6 +9,7 @@
 #  batch                :string(191)
 #  commitment_years     :integer
 #  consortium_discount  :float(24)
+#  covers_ldf           :boolean
 #  deleted_at           :datetime
 #  dpc_carryover        :integer
 #  dpc_commitment       :integer
