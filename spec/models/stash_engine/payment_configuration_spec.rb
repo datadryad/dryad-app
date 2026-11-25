@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: payment_configurations
+# Table name: configurations
 #
 #  id                     :bigint           not null, primary key
 #  covers_ldf             :boolean
@@ -77,6 +77,71 @@ RSpec.describe PaymentConfiguration, type: :model do
       configuration.payment_plan = nil
       expect(configuration.covers_dpc?).to be_falsey
       expect(configuration.covers_dpc).to be_falsey
+    end
+  end
+
+  describe '#payment_commitment' do
+    it 'should return the current year\'s payment commitment' do
+      commitment = create(:payment_commitment, year: Date.current.year, sponsor: configuration.partner)
+      expect(configuration.payment_commitment).to eq(commitment)
+    end
+  end
+
+  describe '#covers_ldf?' do
+    context 'with a commitment for this current year' do
+      let!(:commitment) { create(:payment_commitment, year: Date.current.year, covers_ldf: true, sponsor: configuration.partner) }
+
+      it 'should return the covers_ldf value from the commitment' do
+        configuration.covers_ldf = false
+        expect(configuration.covers_ldf?).to be true
+        expect(configuration.covers_ldf).to be true
+      end
+    end
+
+    context 'without a payment commitment' do
+      it 'should return the covers_ldf value from the configuration' do
+        configuration.covers_ldf = false
+        expect(configuration.covers_ldf?).to be false
+        expect(configuration.covers_ldf).to be false
+      end
+    end
+  end
+
+  describe '#ldf_limit' do
+    context 'with a commitment for this current year' do
+      let!(:commitment) { create(:payment_commitment, year: Date.current.year, ldf_size_limit: 100, sponsor: configuration.partner) }
+
+      it 'should return the ldf_size_limit from the commitment' do
+        configuration.ldf_limit = 200
+        expect(configuration.ldf_limit).to eq(100)
+      end
+    end
+
+    context 'without a payment commitment' do
+      it 'should return the ldf_limit value from the configuration' do
+        configuration.ldf_limit = 200
+        expect(configuration.ldf_limit).to eq(200)
+      end
+    end
+  end
+
+  describe '#yearly_ldf_limit' do
+    context 'with a commitment for this current year' do
+      let!(:commitment) do
+        create(:payment_commitment, year: Date.current.year, ldf_commitment: 200, ldf_carryover: 100, sponsor: configuration.partner)
+      end
+
+      it 'should return the sum of ldf_commitment and ldf_carryover from the commitment' do
+        configuration.yearly_ldf_limit = 500
+        expect(configuration.yearly_ldf_limit).to eq(300)
+      end
+    end
+
+    context 'without a payment commitment' do
+      it 'should return the yearly_ldf_limit value from the configuration' do
+        configuration.yearly_ldf_limit = 500
+        expect(configuration.yearly_ldf_limit).to eq(500)
+      end
     end
   end
 end

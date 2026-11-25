@@ -51,8 +51,7 @@ FactoryBot.define do
     start_date { Date.new(2026, 1, 1) }
     update_notes { { note: 'Initial commitment' } }
     year_index { 1 }
-    sponsor_id { 'SP123' }
-    sponsor_type { 'StashEngine::Tenant' }
+    association :sponsor, factory: :journal_organization
     note { 'Initial commitment' }
   end
 end

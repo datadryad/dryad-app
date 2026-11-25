@@ -38,7 +38,7 @@ class PaymentCommitment < ApplicationRecord
 
   attr_accessor :note
 
-  belongs_to :sponsor, polymorphic: true, optional: true
+  belongs_to :sponsor, polymorphic: true
 
   validates_presence_of :note
   validates_uniqueness_of :year, scope: :sponsor, conditions: -> { where(deleted_at: nil) }

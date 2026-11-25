@@ -2,7 +2,11 @@ class PaymentCommitmentsController < StashEngine::ApplicationController
   before_action :require_user_login
   before_action :set_sponsor
 
-  helper StashEngine::SortableTableHelper
+  def index
+    authorize PaymentCommitment
+
+    @sponsor_details = PayerDetailsService.new(@sponsor).details
+  end
 
   def new
     authorize PaymentCommitment
@@ -51,12 +55,6 @@ class PaymentCommitmentsController < StashEngine::ApplicationController
       @reload = true
     end
     respond_to(&:js)
-  end
-
-  def index
-    authorize PaymentCommitment
-
-    @sponsor_details = PayerDetailsService.new(@sponsor).details
   end
 
   private

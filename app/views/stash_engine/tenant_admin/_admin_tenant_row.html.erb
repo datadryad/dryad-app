@@ -59,8 +59,8 @@
     <% if policy(:payment_details).sponsor? %>
       <a href="<%= payer_payment_details_debug_path(t) %>" class="c-admin-edit-icon" title="Payment details" aria-label="Payment details"><i class="fas fa-code" aria-hidden="true"></i></a>
     <% end %>
-    <% if policy(:payment_details).sponsor? %>
-      <a href="<%= payer_payment_details_path(t) %>" class="c-admin-edit-icon" title="Payment details" aria-label="Payment details"><i class="fas fa-dollar" aria-hidden="true"></i></a>
+    <% if policy(:payment_commitment).index? %>
+      <a href="<%= payer_payment_details_path(t) %>" class="c-admin-edit-icon" title="Contracts details" aria-label="Contracts details"><i class="fas fa-dollar" aria-hidden="true"></i></a>
     <% end %>
   </div>
   <% else %>
