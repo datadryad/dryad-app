@@ -25,14 +25,10 @@ module Invoices
       summary = Invoices::Summary.new(invoice_data).generate_pdf
       pdf = generate_identifiers_list(summary)
 
-      File.open('reports/invoice.pdf', 'wb') do |file|
-        file << pdf
+      if upload_to_s3(pdf, @file_path, s3_bucket_name: APP_CONFIG.s3.invoices_bucket)
+        inv = SponsorInvoice.find_or_initialize_by(sponsor: sponsor, year: year)
+        return inv.update(s3_key: @file_path, amount: invoice_total)
       end
-
-      # if upload_to_s3(pdf, @file_path, s3_bucket_name: APP_CONFIG.s3.invoices_bucket)
-      #   inv = SponsorInvoice.find_or_initialize_by(sponsor: sponsor, year: year)
-      #   return inv.update(s3_key: @file_path, amount: invoice_total)
-      # end
       false
     end
 
