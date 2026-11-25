@@ -55,7 +55,7 @@ class PaymentConfiguration < ApplicationRecord
   alias covers_dpc covers_dpc?
 
   def payment_commitment
-    partner.commitments.find_by(year: Date.current.year)
+    partner&.commitments&.find_by(year: Date.current.year)
   end
 
   def covers_ldf?

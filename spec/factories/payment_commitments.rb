@@ -34,19 +34,25 @@
 #
 FactoryBot.define do
   factory :payment_commitment do
-    payment_configuration_id { 1 }
     commitment_years { 1 }
-    year { 'MyString' }
-    integer { 'MyString' }
-    payment_plan { 'MyString' }
-    dpc_commitment { 1.5 }
-    dpc_carriover { 1.5 }
-    ldf_commitment { 1.5 }
-    fdl_carryover { 1.5 }
-    asf { 1.5 }
-    period_discount { 1.5 }
-    consortium_discount { 1.5 }
-    asf_due { 1.5 }
-    asf_prepayd { 1.5 }
+    year { 2026 }
+    payment_plan { 'Annual' }
+    dpc_commitment { 100.0 }
+    dpc_carryover { 50.0 }
+    ldf_commitment { 200.0 }
+    ldf_carryover { 100.0 }
+    asf { 25.0 }
+    period_discount { 10.0 }
+    consortium_discount { 5.0 }
+    asf_due { 150.0 }
+    asf_prepaid { 75.0 }
+    covers_ldf { true }
+    batch { 'Batch1' }
+    start_date { Date.new(2026, 1, 1) }
+    update_notes { { note: 'Initial commitment' } }
+    year_index { 1 }
+    sponsor_id { 'SP123' }
+    sponsor_type { 'StashEngine::Tenant' }
+    note { 'Initial commitment' }
   end
 end

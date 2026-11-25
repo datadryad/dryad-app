@@ -45,6 +45,8 @@ module StashEngine
     has_many :payment_logs, class_name: 'SponsoredPaymentLog', as: :payer
     has_many :external_integrations, as: :integrator, dependent: :destroy
     has_many :payment_records, class_name: 'PaymentRecord', as: :payment
+    has_many :commitments, class_name: 'PaymentCommitment', as: :sponsor
+    has_many :invoices, class_name: 'SponsorInvoice', as: :sponsor
 
     validates_associated :issns
     accepts_nested_attributes_for :flag, allow_destroy: true
