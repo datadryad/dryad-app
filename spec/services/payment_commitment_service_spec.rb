@@ -104,7 +104,9 @@ describe PaymentCommitmentService, type: :service do
 
   describe '#update' do
     let(:service) { PaymentCommitmentService.new(sponsor) }
-    let!(:payment_commitment) { create(:payment_commitment, sponsor: sponsor, asf: 100, period_discount: 0, consortium_discount: 0) }
+    let!(:payment_commitment) do
+      create(:payment_commitment, sponsor: sponsor, asf: 100, period_discount: 0, consortium_discount: 0, dpc_commitment_price: 2700)
+    end
 
     context 'with valid parameters' do
       let(:update_params) do

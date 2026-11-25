@@ -6,9 +6,6 @@ h1 id="dialog-title" Edit contract for #{@commitment.year}
         = flash[:alert]
 
   .c-input
-    label.c-input__label [for=:commitment_years] Commitment years:
-    = f.number_field :commitment_years, class: 'c-input__text'
-  .c-input
     label.c-input__label [for=:start_date] Start date:
     = f.date_field :start_date, class: 'c-input__text'
   .c-input
@@ -26,14 +23,11 @@ h1 id="dialog-title" Edit contract for #{@commitment.year}
     = f.number_field :consortium_discount, class: 'c-input__text'
 
   .c-input
-    label.c-input__label [for=:dpc_commitment] DPC sponsored datasets:
-    = f.number_field :dpc_commitment, class: 'c-input__text'
+    label.c-input__label [for=:dpc_tier] Data Publishing Charge (DPC) tier:
+    = f.select :dpc_tier, dpc_pricing_tiers_options,  { selected: @commitment.dpc_tier }, class: 'c-input__text'
   .c-input
     label.c-input__label [for=:dpc_carryover] DPC carryover from previous year:
     = f.number_field :dpc_carryover, class: 'c-input__text'
-  .c-input
-    label.c-input__label [for=:dpc_commitment_price] DPC commitment price:
-    = f.number_field :dpc_commitment_price, class: 'c-input__text'
 
   h3 Large Data Fees
   .c-input

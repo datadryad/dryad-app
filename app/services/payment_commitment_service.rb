@@ -70,6 +70,9 @@ class PaymentCommitmentService
 
   def update(payment_commitment, attrs)
     payment_commitment.assign_attributes(attrs)
+    tier = dpc_tier_info(attrs[:dpc_tier])
+    payment_commitment.dpc_commitment_price = tier&.[](:price)
+    payment_commitment.dpc_commitment = tier&.dig(:range)&.max
     if payment_commitment.valid?
       asf_due = calculate_asf_due(attrs[:asf].to_f, attrs[:period_discount].to_f, attrs[:consortium_discount].to_f)
       payment_commitment.asf_due = asf_due

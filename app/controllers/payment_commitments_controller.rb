@@ -82,7 +82,7 @@ class PaymentCommitmentsController < StashEngine::ApplicationController
   def edit_params
     params.require(:payment_commitment).permit(%i[start_date
                                                   period_discount consortium_discount
-                                                  dpc_commitment dpc_carryover dpc_commitment_price
+                                                  dpc_tier dpc_carryover
                                                   covers_ldf ldf_size_limit ldf_commitment ldf_carryover
                                                   asf asf_prepaid note])
   end

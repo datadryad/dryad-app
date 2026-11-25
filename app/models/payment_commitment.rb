@@ -37,15 +37,30 @@ class PaymentCommitment < ApplicationRecord
   has_paper_trail
 
   attr_accessor :note
+  attr_writer :dpc_tier
 
   belongs_to :sponsor, polymorphic: true
 
   validates_presence_of :note
   validates_uniqueness_of :year, scope: :sponsor, conditions: -> { where(deleted_at: nil) }
+  after_validation :validate_dpc_tier
 
   before_save :set_note
 
+  def dpc_tier
+    return ESTIMATED_DATASETS.map { |a| a[:tier].to_i }.first if dpc_commitment_price.blank?
+
+    tier = ESTIMATED_DATASETS.find { |tier| tier[:price] == dpc_commitment_price }
+    tier[:tier]
+  end
+
   def set_note
     self.update_notes = (update_notes || {}).merge({ Time.current.to_s => note })
+  end
+
+  def validate_dpc_tier
+    return true if ESTIMATED_DATASETS.map { |a| a[:tier].to_i == dpc_tier.to_i }
+
+    errors.add(:dpc_tier, 'is invalid')
   end
 end

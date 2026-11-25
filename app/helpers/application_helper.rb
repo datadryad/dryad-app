@@ -76,6 +76,16 @@ module ApplicationHelper
     end
   end
 
+  def dpc_pricing_tiers_options
+    ESTIMATED_DATASETS.map do |tier|
+      ["Tier #{tier[:tier]}: #{tier[:range].min} - #{tier[:range].max} (#{formatted_amount(tier[:price])})", tier[:tier]]
+    end
+  end
+
+  def commitment_years_options
+    COMMITMENT_DISCOUNTS.keys.sort_by(&:to_i).map { |k| [k, k.to_i] }
+  end
+
   def partner_nav_path
     object = current_user.roles.admin_roles.first.role_object
     type = make_type(object)

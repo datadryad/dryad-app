@@ -107,9 +107,8 @@ describe PaymentCommitmentsController, type: :request do
             start_date: '2026-01-01',
             period_discount: 50.0,
             consortium_discount: 10.0,
-            dpc_commitment: 150.0,
+            dpc_tier: 2,
             dpc_carryover: 75.0,
-            dpc_commitment_price: 10.0,
             covers_ldf: 'false',
             ldf_size_limit: 150,
             ldf_commitment: 250.0,
@@ -139,7 +138,7 @@ describe PaymentCommitmentsController, type: :request do
           payment_commitment: {
             start_date: '',
             period_discount: 'invalid',
-            dpc_commitment: 150.0,
+            dpc_tier: 2,
             note: ''
           }
         }

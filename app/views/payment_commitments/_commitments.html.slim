@@ -17,7 +17,8 @@ div
         th Annual Service Fee
         th Discount
         th Consortium Discount
-        th DPC tier
+        th Sponsored DPC items
+        th DPC price
         th LDF size
         th LDF amount
         th Annual Service Fee Due
@@ -32,6 +33,7 @@ div
           td.align-end= "#{commitment.period_discount}%"
           td.align-end= "#{commitment.consortium_discount}%"
           td.align-end= commitment.dpc_commitment
+          td.align-end= formatted_amount commitment.dpc_commitment_price
           td.align-end= commitment.ldf_size_limit ? filesize(ESTIMATED_FILES_SIZE[commitment.ldf_size_limit][:range].max) : 0
           td.align-end= formatted_amount commitment.ldf_commitment
           td.align-end= formatted_amount commitment.asf_due

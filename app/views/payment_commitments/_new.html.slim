@@ -7,12 +7,12 @@ h1 id="dialog-title" Add new contract
 = form_with url: payment_commitments_path, method: :post, local: false do |f|
   .c-input
     label.c-input__label [for=:commitment_years] Number of commitment years:
-    = f.number_field :commitment_years, value: params[:commitment_years], class: 'c-input__text'
+    = f.select :commitment_years, commitment_years_options,  { selected: params[:commitment_years] }, class: 'c-input__text'
   .c-input
     label.c-input__label [for=:start_date] Start date:
     = f.date_field :start_date, value: params[:start_date], class: 'c-input__text'
   .c-input
-    label.c-input__label [for=:include_year_0]
+    label.c-input__label
       | Include year 0:
       = f.check_box :include_year_0, {style: "margin-left: 10px", checked: params[:include_year_0]=='1'}, 1, 0
   .c-input
@@ -27,11 +27,11 @@ h1 id="dialog-title" Add new contract
     = f.number_field :consortium_discount, value: params[:consortium_discount], class: 'c-input__text'
   .c-input
     label.c-input__label [for=:dpc_tier] Data Publishing Charge (DPC) tier:
-    = f.number_field :dpc_tier, value: params[:dpc_tier], class: 'c-input__text'
+    = f.select :dpc_tier, dpc_pricing_tiers_options,  { selected: params[:dpc_tier] }, class: 'c-input__text'
 
   h3 Large Data Fees
   .c-input
-    label.c-input__label [for=:covers_ldf]
+    label.c-input__label
       | When checked, sponsor covers Large Data Fees
       = f.check_box :covers_ldf, {style: "margin-left: 10px", checked: params[:covers_ldf]=='1', id: 'payment_commitment_covers_ldf'}, 1, 0
   .c-input
