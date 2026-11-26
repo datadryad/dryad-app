@@ -14,6 +14,7 @@
 #  dpc_carryover        :integer
 #  dpc_commitment       :integer
 #  dpc_commitment_price :float(24)
+#  dpc_tier             :integer
 #  ldf_carryover        :float(24)
 #  ldf_commitment       :float(24)
 #  ldf_size_limit       :integer
@@ -34,11 +35,7 @@
 #
 describe PaymentCommitment, type: :model do
   let(:sponsor) { create(:journal_organization) }
-  let!(:payment_commitment) { create(:payment_commitment, sponsor: sponsor, year: 2026) }
-
-  describe '#destroy' do
-    it_should_behave_like 'soft delete record', :payment_commitment
-  end
+  let(:payment_commitment) { create(:payment_commitment, sponsor: sponsor, year: 2026) }
 
   describe 'associations' do
     it { is_expected.to belong_to(:sponsor) }
@@ -48,6 +45,8 @@ describe PaymentCommitment, type: :model do
     it { is_expected.to validate_presence_of(:note) }
 
     context 'year uniqueness validation' do
+      before { payment_commitment }
+
       it 'validates uniqueness scoped to sponsor with deleted_at condition' do
         new_commitment = build(:payment_commitment, sponsor: sponsor, year: 2026)
         expect(new_commitment).not_to be_valid
@@ -68,6 +67,27 @@ describe PaymentCommitment, type: :model do
         expect(new_commitment).to be_valid
       end
     end
+
+    context 'dpc_tier validation' do
+      it 'accepts valid dpc_tier values' do
+        commitment = build(:payment_commitment, sponsor: sponsor, year: 2026)
+
+        ESTIMATED_DATASETS.map { |a| a[:tier].to_i }.each do |tier|
+          commitment.dpc_tier = tier
+          expect(commitment).to be_valid
+        end
+      end
+
+      it 'rejects invalid dpc_tier values' do
+        commitment = build(:payment_commitment, sponsor: sponsor, year: 2026)
+
+        [0, -1, 999, 1000].each do |tier|
+          commitment.dpc_tier = tier
+          expect(commitment).not_to be_valid
+          expect(commitment.errors[:dpc_tier]).to include('is invalid')
+        end
+      end
+    end
   end
 
   describe 'callbacks' do
@@ -79,5 +99,9 @@ describe PaymentCommitment, type: :model do
         expect(payment_commitment.update_notes).to include(current_time.to_s => 'Test note')
       end
     end
+  end
+
+  describe '#destroy' do
+    it_should_behave_like 'soft delete record', :payment_commitment
   end
 end

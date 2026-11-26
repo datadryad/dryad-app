@@ -12,6 +12,8 @@ module Invoices
       @year = year
       @result = []
       @dpc_overage_charges = 0
+      @covers_dpc = sponsor.payment_configuration&.covers_dpc?
+      @covers_ldf = sponsor.payment_configuration&.covers_ldf?
     end
 
     def generate
@@ -23,10 +25,14 @@ module Invoices
       add_separator
       add_invoice_summary
       add_separator
-      add_dpc_year_usage
-      add_separator
-      add_ldf_year_usage
-      add_separator
+      if @covers_dpc
+        add_dpc_year_usage
+        add_separator
+      end
+      if @covers_ldf
+        add_ldf_year_usage
+        add_separator
+      end
       prepayment_balance
       add_separator
       next_year_summary
@@ -52,9 +58,6 @@ module Invoices
       end
       result << (['Annual Service Fee Bue'] + commitment_records.map(&:asf_due).map { |a| formatted_amount(a) })
       add_separator
-      # result << (['Prepaid ASF'] + commitment_records.map(&:asf_due).map { |a| formatted_amount(a) })
-      # result << (['Prepaid DPC'] + commitment_records.map(&:dpc_commitment).map { |a| formatted_amount(a) })
-      # result << (['Prepaid Large Data'] + commitment_records.map(&:ldf_commitment).map { |a| formatted_amount(a) })
       result << (['Prepaid (Flexible)'] + commitment_records.map(&:asf_prepaid).map { |a| formatted_amount(a) })
     end
 
@@ -70,8 +73,8 @@ module Invoices
       result << ['Annual Service Fee Subtotal', formatted_amount(asf_subtotal)]
       result << ['Discount (Consortium)', formatted_amount(-1 * asf_subtotal * current_commitment.consortium_discount / 100)]
       result << ['Annual Service Fee Paid', formatted_amount(asf_paid)]
-      result << ['Data Publishing Charge Paid', formatted_amount(current_commitment.dpc_commitment_price)]
-      result << ['Large Data Paid', formatted_amount(current_commitment.ldf_commitment)]
+      result << ['Data Publishing Charge Paid', formatted_amount(current_commitment.dpc_commitment_price)] if @covers_dpc
+      result << ['Large Data Paid', formatted_amount(current_commitment.ldf_commitment)] if @covers_ldf
       result << ['Additional Prepayment', formatted_amount(current_commitment.asf_prepaid)]
 
       # all paid payment amounts, including prepayment
@@ -136,13 +139,16 @@ module Invoices
       result << ['Discount (Consortium)', formatted_amount(-1 * asf_subtotal * next_commitment.consortium_discount / 100)]
       result << ['Annual Service Fee Due', formatted_amount(next_commitment.asf_due)]
       add_separator
-
-      result << ['Data Publishing Charge (# of datasets)', next_commitment.dpc_commitment]
-      result << ['Data Publishing Charge Carryover Credit (Due)', @dpc_for_next_year]
-      result << ['Data Publishing Charge - Amount due', formatted_amount(next_commitment.dpc_commitment_price)]
-      add_separator
-
       @total_next_invoice = next_commitment.asf_due + next_commitment.dpc_commitment_price + next_commitment.ldf_commitment
+
+      if @covers_dpc
+        result << ['Data Publishing Charge (# of datasets)', next_commitment.dpc_commitment]
+        result << ['Data Publishing Charge Carryover Credit (Due)', @dpc_for_next_year]
+        result << ['Data Publishing Charge - Amount due', formatted_amount(next_commitment.dpc_commitment_price)]
+        add_separator
+      end
+      return unless @covers_ldf
+
       result << ['Large Data Fee - Based on Previous Year Usage', formatted_amount(next_commitment.ldf_commitment)]
       result << ['Large Data Fee - Carryover Credit (Due)', formatted_amount(@ldf_for_next_year)]
       result << ['Large Data Fee - Amount Due', formatted_amount(next_commitment.ldf_commitment + @ldf_for_next_year)]
@@ -165,7 +171,7 @@ module Invoices
     end
 
     def consumed_dpc
-      Payments::Sponsor.new(sponsor, year: year).identifiers.published.count
+      Payments::Sponsor.new(sponsor, year: year).invoice_identifiers.count
     end
 
     def consumed_ldf
@@ -190,7 +196,7 @@ module Invoices
     end
 
     def next_commitment
-      PaymentCommitment.where(year: year + 1, sponsor: sponsor).first
+      @next_commitment ||= PaymentCommitment.where(year: year + 1, sponsor: sponsor).first
     end
   end
 end

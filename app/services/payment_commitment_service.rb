@@ -51,6 +51,7 @@ class PaymentCommitmentService
           dpc_commitment_price: tier[:price],
           dpc_commitment: tier[:range].max,
           dpc_carryover: 0,
+          dpc_tier: dpc_tier,
           covers_ldf: covers_ldf,
           ldf_commitment: ldf,
           ldf_carryover: 0,

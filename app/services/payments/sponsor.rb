@@ -20,6 +20,10 @@ module Payments
       @identifiers = ids
     end
 
+    def invoice_identifiers
+      identifiers.published
+    end
+
     def payment_configuration
       sponsor.payment_configuration
     end

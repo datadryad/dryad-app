@@ -1,4 +1,5 @@
 require 'csv'
+require 'stringio'
 
 module Invoices
   class Summary
@@ -13,12 +14,13 @@ module Invoices
     end
 
     def generate_csv
-      CSV.open(File.join(REPORTS_DIR, 'invoice.csv'), 'w') do |csv_instance|
+      csv_output = StringIO.new
+      CSV.open(csv_output, 'w') do |csv_instance|
         data.each do |row|
           csv_instance << row
         end
       end
-      true
+      csv_output.string
     end
 
     def generate_pdf

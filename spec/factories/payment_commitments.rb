@@ -14,6 +14,7 @@
 #  dpc_carryover        :integer
 #  dpc_commitment       :integer
 #  dpc_commitment_price :float(24)
+#  dpc_tier             :integer
 #  ldf_carryover        :float(24)
 #  ldf_commitment       :float(24)
 #  ldf_size_limit       :integer
@@ -39,6 +40,7 @@ FactoryBot.define do
     payment_plan { 'Annual' }
     dpc_commitment { 100.0 }
     dpc_carryover { 50.0 }
+    dpc_tier { 1 }
     ldf_commitment { 200.0 }
     ldf_carryover { 100.0 }
     asf { 25.0 }
