@@ -1,0 +1,55 @@
+h1 id="dialog-title" Edit contract for #{@commitment.year}
+= form_with url: payment_commitment_path(@commitment.id, sponsor_id: @sponsor.id, type: make_type(@sponsor)), method: :put, local: false, model: @commitment do |f|
+  - if flash[:alert]
+    .js-alert.c-alert--error role="alert"
+      .c-alert__text
+        = flash[:alert]
+
+  .c-input
+    label.c-input__label [for=:start_date] Start date:
+    = f.date_field :start_date, class: 'c-input__text'
+  .c-input
+    label.c-input__label [for=:asf] Annual Service Fee:
+    = f.number_field :asf, class: 'c-input__text'
+  .c-input
+    label.c-input__label [for=:asf_prepaid] Prepayment requested:
+    = f.number_field :asf_prepaid, class: 'c-input__text'
+  .c-input
+    label.c-input__label [for=:prepayment_carryover] Prepayment carryover form previous year:
+    = f.number_field :prepayment_carryover, class: 'c-input__text'
+
+  .c-input
+    label.c-input__label [for=:period_discount] Discount:
+    = f.number_field :period_discount, class: 'c-input__text'
+  .c-input
+    label.c-input__label [for=:consortium_discount] Consortium discount:
+    = f.number_field :consortium_discount, class: 'c-input__text'
+
+  .c-input
+    label.c-input__label [for=:dpc_tier] Data Publishing Charge (DPC) tier:
+    = f.select :dpc_tier, dpc_pricing_tiers_options,  { selected: @commitment.dpc_tier }, class: 'c-input__text'
+  .c-input
+    label.c-input__label [for=:dpc_carryover] DPC carryover from previous year:
+    = f.number_field :dpc_carryover, class: 'c-input__text'
+
+  h3 Large Data Fees
+  .c-input
+    label.c-input__label
+      | When checked, sponsor covers Large Data Fees
+      = f.check_box :covers_ldf, {style: "margin-left: 10px", checked: @commitment.covers_ldf}, 1, 0
+  .c-input
+    label.c-input__label [for=:ldf_size_limit] Limit file size for Large Data billed to partner
+    = f.select :ldf_size_limit, ldf_pricing_tiers_options,  { selected: @commitment.ldf_size_limit }, class: 'c-input__text', readonly: !@commitment.covers_ldf
+  .c-input
+    label.c-input__label [for=:ldf_commitment] Large Data Fee:
+    = f.number_field :ldf_commitment, class: 'c-input__text', readonly: !@commitment.covers_ldf
+  .c-input
+    label.c-input__label [for=:ldf_carryover] Large Data Fee carryover from previous year:
+    = f.number_field :ldf_carryover, class: 'c-input__text', readonly: !@commitment.covers_ldf
+
+  .c-input
+    label.c-input__label [for=:note] Note:
+    = f.textarea :note, class: 'c-input__textarea'
+  .c-modal__buttons-right
+    = submit_tag 'Save', class: 'o-button__plain-text2'
+    = button_tag 'Cancel', type: 'button', id: 'cancel_dialog', class:'o-button__plain-text7'

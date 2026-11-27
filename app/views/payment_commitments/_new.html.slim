@@ -1,0 +1,49 @@
+h1 id="dialog-title" Add new contract
+- if flash[:alert]
+  .js-alert.c-alert--error role="alert"
+    .c-alert__text
+      = flash[:alert]
+
+= form_with url: payment_commitments_path, method: :post, local: false do |f|
+  .c-input
+    label.c-input__label [for=:commitment_years] Number of commitment years:
+    = f.select :commitment_years, commitment_years_options,  { selected: params[:commitment_years] }, class: 'c-input__text'
+  .c-input
+    label.c-input__label [for=:start_date] Start date:
+    = f.date_field :start_date, value: params[:start_date], class: 'c-input__text'
+  .c-input
+    label.c-input__label
+      | Include year 0:
+      = f.check_box :include_year_0, {style: "margin-left: 10px", checked: params[:include_year_0]=='1'}, 1, 0
+  .c-input
+    label.c-input__label [for=:asf] Annual Service Fee:
+    = f.number_field :asf, value: params[:asf], class: 'c-input__text'
+  .c-input
+    label.c-input__label [for=:asf_prepaid] Prepayment requested:
+    = f.number_field :asf_prepaid, value: params[:asf_prepaid], class: 'c-input__text'
+  .c-input
+    label.c-input__label [for=:prepayment_carryover] Prepayment carryover form previous year:
+    = f.number_field :prepayment_carryover, value: params[:prepayment_carryover], class: 'c-input__text'
+
+  .c-input
+    label.c-input__label [for=:consortium_discount] Consortium discount:
+    = f.number_field :consortium_discount, value: params[:consortium_discount], class: 'c-input__text'
+  .c-input
+    label.c-input__label [for=:dpc_tier] Data Publishing Charge (DPC) tier:
+    = f.select :dpc_tier, dpc_pricing_tiers_options,  { selected: params[:dpc_tier] }, class: 'c-input__text'
+
+  h3 Large Data Fees
+  .c-input
+    label.c-input__label
+      | When checked, sponsor covers Large Data Fees
+      = f.check_box :covers_ldf, {style: "margin-left: 10px", checked: params[:covers_ldf]=='1', id: 'payment_commitment_covers_ldf'}, 1, 0
+  .c-input
+    label.c-input__label [for=:ldf_size_limit] Limit file size for Large Data billed to partner
+    = f.select :ldf_size_limit, ldf_pricing_tiers_options,  { selected: params[:ldf_size_limit] }, class: 'c-input__text', readonly: params[:covers_ldf]!='1', id: 'payment_commitment_ldf_size_limit'
+  .c-input
+    label.c-input__label [for=:ldf_commitment] Large Data Fee:
+    = f.number_field :ldf_commitment, value: params[:ldf_commitment], class: 'c-input__text', readonly: params[:covers_ldf]!='1', id: 'payment_commitment_ldf_commitment'
+
+  .c-modal__buttons-right
+    = submit_tag 'Save', class: 'o-button__plain-text2'
+    = button_tag 'Cancel', type: 'button', id: 'cancel_dialog', class:'o-button__plain-text7'

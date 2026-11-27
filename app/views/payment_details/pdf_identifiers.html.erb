@@ -1,0 +1,54 @@
+<% higher_level = @sponsor.class.method_defined?(:payers_sponsored) && @sponsor.payers_sponsored.reject{|y| y == @sponsor}.present? %>
+<div class="table-wrapper c-lined-table-wrapper" style="margin-top: .5rem; margin-bottom: 3rem">
+  <%= PayerDetailsService.new(@sponsor).name %>
+</div>
+
+<div class="table-wrapper c-lined-table-wrapper" style="margin-top: .5rem; margin-bottom: 3rem">
+  <%= @calculations %>
+</div>
+
+<div class="table-wrapper c-lined-table-wrapper" style="margin-top: .5rem">
+  <p>Datasets list</p>
+  <table class="c-lined-table" style="font-size: 10px" border="1">
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th>Publication status</th>
+        <th class="c-lined-table__sort">Publication date</th>
+        <th>Current size</th>
+        <th class="c-lined-table__sort">Last invoiced size</th>
+        <% if higher_level %>
+          <th>DPC paid by</th>
+        <% end %>
+        <th>Sponsored LDF</th>
+        <th>User paid LDF</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @identifiers.includes(:payments, latest_resource: [:last_curation_activity]).each do |ident| %>
+      <% res = ident.latest_resource %>
+      <tr>
+        <td>
+          <div><%= res.title.html_safe %></div>
+          <div class="c-lined-table__digits">DOI: <%= ident.identifier %></div>
+        </td>
+        <td><%= ident.pub_state.upcase_first %></td>
+        <td class="align-end c-lined-table__digits"><%= ident.publication_date&.strftime('%b %d, %Y') %></td>
+        <td class="align-end c-lined-table__digits"><%= filesize res.total_file_size %></td>
+        <td class="align-end c-lined-table__digits"><%= filesize ident.last_invoiced_file_size %></td>
+        <% if higher_level %>
+          <td><%= ident.payer_name %></td>
+        <% end %>
+        <td class="align-end c-lined-table__digits">
+          <% sum = ident.sponsored_payment_logs.sum(:ldf) %>
+          <%= number_to_currency(sum) if sum > 0 %>
+        </td>
+        <td class="align-end c-lined-table__digits">
+          <% sum = ident.payments.paid.sum(:amount) %>
+          <%= number_to_currency(sum) if sum > 0 %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>

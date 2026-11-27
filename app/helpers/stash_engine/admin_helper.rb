@@ -26,6 +26,19 @@ module StashEngine
       payment_details_sponsor_path(id: payer.id, type: make_type(payer))
     end
 
+    def payer_payment_details_path(sponsor)
+      payment_commitments_path(sponsor_id: sponsor.id, type: make_type(sponsor))
+    end
+
+    def sponsor_paths(dynamic_path, sponsor)
+      uri = URI.parse(dynamic_path)
+      query_hash = URI.decode_www_form(uri.query || '').to_h
+      query_hash.merge!(sponsor_id: sponsor.id, type: make_type(sponsor))
+
+      uri.query = URI.encode_www_form(query_hash)
+      uri.to_s
+    end
+
     def partner_nav_list
       return if current_user.system_user?
       return if current_user.roles.admin_roles.length == 1

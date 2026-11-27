@@ -1,7 +1,7 @@
 class PaymentDetailsController < StashEngine::ApplicationController
   before_action :require_user_login
   before_action :set_sponsor, except: :identifier
-  before_action :setup_paging, only: %i[sponsor dashboard]
+  before_action :setup_paging, only: %i[sponsor dashboard show]
 
   helper StashEngine::SortableTableHelper
 

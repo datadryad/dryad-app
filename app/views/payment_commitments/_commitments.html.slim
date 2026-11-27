@@ -1,0 +1,45 @@
+= stylesheet_link_tag 'payment_details'
+
+div
+  .admin-dashboard-results
+    h2 Contracts information
+    - if policy(:payment_commitment).new?
+      = form_with(url: new_payment_commitment_path(sponsor_id: @sponsor.id, type: make_type(@sponsor)), method: :get, local: false, html: { style: "margin-left: auto" }) do
+        button.o-button__plain-text7
+          i.fa.fa-plus aria-hidden="true" style="margin-right: 5px"
+          | Add new
+
+  .table-wrapper.c-lined-table-wrapper style="margin-top: 0"
+    table.c-lined-table
+      tr
+        th Year
+        th Commitment Year
+        th Annual Service Fee
+        th Discount
+        th Consortium Discount
+        th Sponsored DPC items
+        th DPC price
+        th LDF size
+        th LDF amount
+        th Annual Service Fee Due
+        th Prepayment
+        - if policy(:payment_commitment).edit?
+          th
+      - @sponsor.commitments.order(:year).each do |commitment|
+        tr
+          td= commitment.year
+          td= commitment.year_index
+          td.align-end= formatted_amount commitment.asf
+          td.align-end= "#{commitment.period_discount}%"
+          td.align-end= "#{commitment.consortium_discount}%"
+          td.align-end= commitment.dpc_commitment
+          td.align-end= formatted_amount commitment.dpc_commitment_price
+          td.align-end= commitment.ldf_size_limit ? filesize(ESTIMATED_FILES_SIZE[commitment.ldf_size_limit][:range].max) : 0
+          td.align-end= formatted_amount commitment.ldf_commitment
+          td.align-end= formatted_amount commitment.asf_due
+          td.align-end= formatted_amount commitment.asf_prepaid
+          - if policy(:payment_commitment).edit?
+            td
+              = form_with(url: edit_payment_commitment_path(id: commitment.id, sponsor_id: @sponsor.id, type: make_type(@sponsor)), method: :get, local: false) do
+                button.c-admin-edit-icon aria-label="Edit payment details" aria-haspopup="dialog" id="edit_button_#{@sponsor.id}"
+                  i.fa.fa-pencil aria-hidden="true"

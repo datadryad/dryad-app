@@ -1,0 +1,21 @@
+= stylesheet_link_tag 'payment_details'
+
+div
+  .admin-dashboard-results
+    h2 Invoices
+
+  - if @sponsor.invoices.any?
+    .table-wrapper.c-lined-table-wrapper style="margin-top: 0"
+      table.c-lined-table
+        tr
+          th Year
+          th Invoice amount
+          th style="width:100px"
+        - @sponsor.invoices.each do |invoice|
+          tr
+            td = invoice.year
+            td.align-end = formatted_amount invoice.amount
+            td
+              a href=invoice.download_url Download
+  - else
+    h2 No invoices

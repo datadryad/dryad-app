@@ -54,6 +54,32 @@ class PaymentConfiguration < ApplicationRecord
   end
   alias covers_dpc covers_dpc?
 
+  def payment_commitment
+    partner&.commitments&.find_by(year: Date.current.year)
+  end
+
+  def covers_ldf?
+    commitment = payment_commitment
+    return commitment.covers_ldf if commitment.present?
+
+    read_attribute(:covers_ldf)
+  end
+  alias covers_ldf covers_ldf?
+
+  def ldf_limit
+    commitment = payment_commitment
+    return commitment.ldf_size_limit if commitment.present?
+
+    read_attribute(:ldf_limit)
+  end
+
+  def yearly_ldf_limit
+    commitment = payment_commitment
+    return commitment.ldf_commitment.to_i + commitment.ldf_carryover.to_i if commitment.present?
+
+    read_attribute(:yearly_ldf_limit)
+  end
+
   private
 
   def notification_json

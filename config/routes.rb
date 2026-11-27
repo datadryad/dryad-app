@@ -391,6 +391,11 @@ Rails.application.routes.draw do
     end
   end
 
+  scope path: '/partner/:type/:sponsor_id' do
+    resources :payment_commitments, except: [:destroy] do
+    end
+  end
+
   ########################## StashDatacite support ######################################
 
   scope module: 'stash_datacite', path: '/stash_datacite' do

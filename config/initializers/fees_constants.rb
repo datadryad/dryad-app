@@ -1,21 +1,20 @@
 # frozen_string_literal: true
 
 # New payment system error messages
-OLD_PAYMENT_SYSTEM_MESSAGE = 'Payer is not on 2025 payment plan'.freeze
-MISSING_PAYER_MESSAGE = 'Payer is missing. Please use individual calculator.'.freeze
-OUT_OF_RANGE_MESSAGE = 'The value is out of defined range'.freeze
+OLD_PAYMENT_SYSTEM_MESSAGE = 'Payer is not on 2025 payment plan'
+MISSING_PAYER_MESSAGE = 'Payer is missing. Please use individual calculator.'
+OUT_OF_RANGE_MESSAGE = 'The value is out of defined range'
 
 INVOICE_FEE = 199
 PPR_FEE = 50
-PPR_COUPON_ID = 'PPR_DISCOUNT_2025'.freeze
+PPR_COUPON_ID = 'PPR_DISCOUNT_2025'
 
 # Waiver
-DISCOUNT_STORAGE_COUPON_ID = 'FEE_WAIVER_2025'.freeze
+DISCOUNT_STORAGE_COUPON_ID = 'FEE_WAIVER_2025'
 FREE_STORAGE_SIZE = 10_000_000_000 # 10 GB
 
-# rubocop:disable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
+# rubocop:disable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing, Layout/IndentationWidth, Layout/ElseAlignment, Layout/EndAlignment
 INDIVIDUAL_ESTIMATED_FILES_SIZE = if Rails.env.development? || Rails.env.dev?
-  # Values in MB
   [
     { tier: 1, range:             0..    5_000_000, price:    150 },
     { tier: 2, range:     5_000_001..   10_000_000, price:    180 },
@@ -82,7 +81,6 @@ ESTIMATED_DATASETS = [
   { tier: 15, range: 501..550, price: 53_500 },
   { tier: 16, range: 551..600, price: 58_250 }
 ].freeze
-# rubocop:enable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
 
 NORMAL_SERVICE_FEE = [
   { tier: 1, range:             0..    100_000_000, price:  5_000 },
@@ -127,3 +125,16 @@ PRODUCT_NAME_MAPPER = {
   ppr_fee: 'Private for Peer Review Fee',
   ppr_discount: 'Paid Private for Peer Review Fee'
 }.freeze
+
+COMMITMENT_DISCOUNTS = {
+  '3' => [50, 25, 0],
+  '1' => [0]
+}.freeze
+
+CONSORTIUM_DISCOUNT = [
+  { discount:  0, range:  0..    4 },
+  { discount: 10, range:  5..   10 },
+  { discount: 15, range: 11..   25 },
+  { discount: 20, range: 26..1_000 }
+].freeze
+# rubocop:enable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing, Layout/IndentationWidth, Layout/ElseAlignment, Layout/EndAlignment
