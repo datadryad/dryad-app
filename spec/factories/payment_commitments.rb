@@ -20,6 +20,7 @@
 #  ldf_size_limit       :integer
 #  payment_plan         :string(191)
 #  period_discount      :float(24)
+#  prepayment_carryover :float(24)
 #  sponsor_type         :string(191)
 #  start_date           :date
 #  update_notes         :json

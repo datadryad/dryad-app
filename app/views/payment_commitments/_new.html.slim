@@ -19,8 +19,11 @@ h1 id="dialog-title" Add new contract
     label.c-input__label [for=:asf] Annual Service Fee:
     = f.number_field :asf, value: params[:asf], class: 'c-input__text'
   .c-input
-    label.c-input__label [for=:asf_prepaid] Prepayment requested | Add total if applicable:
+    label.c-input__label [for=:asf_prepaid] Prepayment requested:
     = f.number_field :asf_prepaid, value: params[:asf_prepaid], class: 'c-input__text'
+  .c-input
+    label.c-input__label [for=:prepayment_carryover] Prepayment carryover form previous year:
+    = f.number_field :prepayment_carryover, value: params[:prepayment_carryover], class: 'c-input__text'
 
   .c-input
     label.c-input__label [for=:consortium_discount] Consortium discount:

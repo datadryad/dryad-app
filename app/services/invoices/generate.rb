@@ -21,18 +21,19 @@ module Invoices
     def as_pdf
       raise 'Invalid sponsor' unless sponsor.present?
 
-      invoice_data, = Invoices::Calculations.new(commitment, sponsor, year).generate
+      invoice_data, invoice_total = Invoices::Calculations.new(commitment, sponsor, year).generate
       summary = Invoices::Summary.new(invoice_data).generate_pdf
       pdf = generate_identifiers_list(summary)
 
-      File.open('reports/invoice.pdf', 'wb') do |file|
-        file << pdf
-      end
-
-      # if upload_to_s3(pdf, @file_path, s3_bucket_name: APP_CONFIG.s3.invoices_bucket)
-      #   inv = SponsorInvoice.find_or_initialize_by(sponsor: sponsor, year: year)
-      #   return inv.update(s3_key: @file_path, amount: invoice_total)
+      # save invoice locally
+      # File.open('reports/invoice.pdf', 'wb') do |file|
+      #   file << pdf
       # end
+
+      if upload_to_s3(pdf, @file_path, s3_bucket_name: APP_CONFIG.s3.invoices_bucket)
+        inv = SponsorInvoice.find_or_initialize_by(sponsor: sponsor, year: year)
+        return inv.update(s3_key: @file_path, amount: invoice_total)
+      end
       false
     end
 
@@ -53,8 +54,7 @@ module Invoices
 
       context = PdfTemplateContext.new
       context.instance_variable_set(:@sponsor, sponsor)
-      # context.instance_variable_set(:@identifiers, Payments::Sponsor.new(sponsor, year: year).invoice_identifiers)
-      context.instance_variable_set(:@identifiers, StashEngine::Identifier.none)
+      context.instance_variable_set(:@identifiers, Payments::Sponsor.new(sponsor, year: year).invoice_identifiers)
       context.instance_variable_set(:@calculations, summary)
       rendered_html = erb_template.result(context.instance_eval { binding })
 

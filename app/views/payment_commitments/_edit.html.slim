@@ -14,6 +14,9 @@ h1 id="dialog-title" Edit contract for #{@commitment.year}
   .c-input
     label.c-input__label [for=:asf_prepaid] Prepayment requested:
     = f.number_field :asf_prepaid, class: 'c-input__text'
+  .c-input
+    label.c-input__label [for=:prepayment_carryover] Prepayment carryover form previous year:
+    = f.number_field :prepayment_carryover, class: 'c-input__text'
 
   .c-input
     label.c-input__label [for=:period_discount] Discount:
